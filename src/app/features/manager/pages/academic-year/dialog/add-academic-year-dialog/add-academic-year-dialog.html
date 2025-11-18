@@ -1,0 +1,35 @@
+<form class="example-form" [formGroup]="form" >
+  <h2 mat-dialog-title>{{language.transform('add_academic_year')}}</h2>
+  <mat-dialog-content>
+    <mat-grid-list [cols]="1" rowHeight="100px">
+      @if(loading()){
+        <mat-grid-tile>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-grid-tile>
+      }
+      @else{
+        <mat-grid-tile >
+        <mat-form-field class="example-full-width" style="width: 100%;">
+          <mat-label >{{language.transform("academic_year_title")}}</mat-label>
+          <input type="number" matInput formControlName="academicYear">
+          @if(this.form.get('academicYear')?.hasError('required')){
+            <mat-error>
+              {{language.transform('field_required')}}
+            </mat-error>
+          }
+          @else if(this.form.get('academicYear')?.hasError('min')){
+            <mat-error>
+              {{language.transform('year_greater_than_or_equal_2025')}}
+            </mat-error>
+          }
+        </mat-form-field>
+      </mat-grid-tile>
+      }
+      
+    </mat-grid-list>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button matButton (click)="onNoClick()" [disabled]="loading()">{{language.transform('cancel')}}</button>
+    <button matButton="filled" cdkFocusInitial (click)="addAcademicYear()"[disabled]="loading()">{{language.transform('add')}}</button>
+  </mat-dialog-actions>
+</form>

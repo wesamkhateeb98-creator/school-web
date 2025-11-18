@@ -1,0 +1,23 @@
+@use '@angular/material' as mat;
+@use "../../../../../styles.scss" ;
+
+.example-form {
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.container-item{
+    width: 50vw;
+    background-color: var(--mat-sys-background);
+    padding: 20px 10px;
+    box-shadow: 1px 1px 2px #aaa;
+}
+
+@media (max-width: 599.99px) {
+    .container-item{
+        width: 100%;
+    }
+}

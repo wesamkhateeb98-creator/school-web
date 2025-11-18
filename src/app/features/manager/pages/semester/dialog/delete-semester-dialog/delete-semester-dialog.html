@@ -1,0 +1,17 @@
+
+<h2 mat-dialog-title>{{language.transform('delete_academic_year')}}</h2>
+<mat-dialog-content>
+
+    @if(loading()){
+    <mat-grid-tile>
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </mat-grid-tile>
+    }
+    @else{
+        <mat-label>{{language.transform('do_you_want_delete_question')}}</mat-label>
+    }
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button matButton (click)="onNoClick()" [disabled]="loading()">{{language.transform('cancel')}}</button>
+    <button matButton="filled" cdkFocusInitial (click)="deleteSemester()" [disabled]="loading()">{{language.transform('delete')}}</button>
+</mat-dialog-actions>

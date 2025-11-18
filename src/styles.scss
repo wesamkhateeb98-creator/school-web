@@ -1,1 +1,33 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@use './app/theme/src_theme-colors.scss' as theme;
+@use './app/theme/greenTheme.scss' as greenTheme;
+@use './app/theme/blueTheme.scss' as blueTheme;
+
+html{
+  @include mat.form-field-overrides((
+    disabled-input-text-placeholder-color: orange,
+      filled-active-indicator-color: var(--mat-sys-primary)
+  ));
+  @include mat.dialog-overrides((
+    container-elevation-shadow:1px 1px 2px #aaa,
+    container-shape:5px,
+    content-padding:5px 10px,
+    actions-padding:5px 10px
+  ));
+}
+
+.light{
+  color-scheme: light;
+}
+
+.dark{
+  color-scheme: dark;
+}
+
+.background-page{
+  background-color: var(--mat-sys-background);
+}
+
+.icon-error{
+  color: var(--mat-sys-error);
+}

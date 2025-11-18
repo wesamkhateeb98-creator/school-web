@@ -1,0 +1,51 @@
+
+<mat-card class="container-item">
+  <form class="example-form" [formGroup]="form">
+    <mat-form-field class="example-full-width">
+      <mat-label >{{language.transform("name")}}</mat-label>
+      <input type="text" matInput formControlName="name">
+      
+      @if(name?.hasError('required')){
+        <mat-error>
+          Name is <strong>required</strong>
+        </mat-error>
+      }
+      @else if(name?.hasError('minlength')){
+        <mat-error>
+          Name must be at least 4 characters
+        </mat-error>
+      }
+      @else if(name?.hasError('maxlength')){
+        <mat-error>
+          Name cannot exceed 20 characters
+        </mat-error>
+      }
+    </mat-form-field>
+    
+    <mat-form-field class="example-full-width">
+      <mat-label>Password</mat-label>
+      <input [type]="passwordvisibile?'text':'password'" matInput formControlName="password">
+      <button matSuffix matIconButton (click)="passwordvisibile = !passwordvisibile" >
+        <mat-icon >{{passwordvisibile? "visibility":"visibility_off"}}</mat-icon>
+      </button>
+      @if(password?.hasError('required')){
+        <mat-error>
+          Name is <strong>required</strong>
+        </mat-error>
+      }
+      @else if(password?.hasError('pattern')){
+        <mat-error>
+          Name must be at least 4 characters
+        </mat-error>
+      }
+      
+    </mat-form-field>
+
+
+     <div style="display: flex; justify-content: end; width: 100%;">
+        <button matButton="filled" (click)="login()">Basic</button>
+     </div>
+      {{loading()}}
+  </form>
+
+</mat-card>

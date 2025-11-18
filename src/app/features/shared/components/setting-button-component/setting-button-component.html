@@ -1,0 +1,43 @@
+<hr/>
+
+<mat-nav-list style="padding-top: 0;">
+    <a mat-list-item
+        [matMenuTriggerFor]="settings"  >
+        <mat-icon matListItemIcon>settings</mat-icon>
+        <span>{{language.transform('settings')}}</span>
+    </a>
+</mat-nav-list>
+        
+
+
+<mat-menu #settings="matMenu" yPosition="below">
+  <button mat-menu-item [matMenuTriggerFor]="themeMenu">{{language.transform('theme')}}</button>
+  <button mat-menu-item [matMenuTriggerFor]="colorMenu">{{language.transform('color')}}</button>
+  <button mat-menu-item [matMenuTriggerFor]="languageMenu">{{language.transform('language')}}</button>
+</mat-menu>
+
+<mat-menu #languageMenu="matMenu">
+  <button mat-menu-item (click)="language.setLanguage('ar')">{{language.transform('arabic')}}</button>
+  <button mat-menu-item (click)="language.setLanguage('en')">{{language.transform('english')}}</button>
+</mat-menu>
+
+<mat-menu #themeMenu="matMenu">
+  <button mat-menu-item (click)="theme.setMode('light')">
+    <mat-icon>light_mode</mat-icon>
+    <span>{{language.transform('light_mode')}}</span>
+  </button>
+  <button mat-menu-item (click)="theme.setMode('dark')">
+    <mat-icon>dark_mode</mat-icon>
+    <span>{{language.transform('dark_mode')}}</span>
+  </button>
+  <button mat-menu-item (click)="theme.setMode('system')">
+    <mat-icon>settings_night_sight</mat-icon>
+    <span>{{language.transform('system_mode')}}</span>
+  </button>
+</mat-menu>
+
+<mat-menu #colorMenu="matMenu">
+  <button mat-menu-item (click)="theme.setColor('green')">{{language.transform('green_color')}}</button>
+  <button mat-menu-item (click)="theme.setColor('blue')">{{language.transform('blue_color')}}</button>
+</mat-menu>
+
