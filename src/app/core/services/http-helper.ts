@@ -8,7 +8,7 @@ import { AuthService } from './auth-service';
   providedIn: 'root',
 })
 export class HttpHelper {
-    private readonly BASE_URL = 'http://localhost:5156/api/v1.0';
+  private readonly BASE_URL = 'http://localhost:5156/api/v1.0';
 
   constructor(public http: HttpClient, public language:Language, public authService:AuthService) {}
 
@@ -27,31 +27,23 @@ export class HttpHelper {
 
   get<T>(endpoint: string, filters?: Record<string, any>): Observable<T> {
     let params = this.buildParams(filters);
-    return this.http.get<T>( `${this.BASE_URL}/${endpoint}`, { params:params, headers:this.getHeader() },);
+    return this.http.get<T>( `${this.BASE_URL}/${endpoint}`, { params:params },);
   }
 
   post<T>(endpoint: string, body: any, filters?: Record<string, any>): Observable<T> {
-    console.log(body);
     const params = this.buildParams(filters);
-    return this.http.post<T>(`${this.BASE_URL}/${endpoint}`, body, { params, headers:this.getHeader() });
+    return this.http.post<T>(`${this.BASE_URL}/${endpoint}`, body, { params });
   }
 
   put<T>(endpoint: string, body: any, filters?: Record<string, any>): Observable<T> {
     const params = this.buildParams(filters);
-    return this.http.put<T>(`${this.BASE_URL}/${endpoint}`, body, { params , headers:this.getHeader()});
+    return this.http.put<T>(`${this.BASE_URL}/${endpoint}`, body, { params});
   }
 
   delete<T>(endpoint: string, filters?: Record<string, any>): Observable<T> {
     const params = this.buildParams(filters);
-    return this.http.delete<T>(`${this.BASE_URL}/${endpoint}`, { params , headers:this.getHeader()});
+    
+    return this.http.delete<T>(`${this.BASE_URL}/${endpoint}`, { params });
   }
 
-  getHeader(): HttpHeaders {
-    let auth = this.authService.getAuth();
-    console.log(auth);
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': auth? `Bearer ${auth.token}`:""
-    });
-  }
 }

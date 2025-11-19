@@ -32,7 +32,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'add_semester':'إضافة فضل دراسي',
         'start_date_must_less_than_end_date':'تاريخ البداية يجب أن يكون أصغر من تاريخ النهاية',
         'ok':"نعم",
-        'http_401':'الرجاء إعادة تسجيل الدخول'
+        'http_401':'الرجاء إعادة تسجيل الدخول',
+        'http_403':'ليس لديك صلاحية الوصول',
+        'http_404':'الخدمة غير موجودة',
+        'http_500':'خطأ في السيرفر',
+        "success":'تمت العملية بنجاح',
+        'close':'يغلق'
     },
     en:{
         'name':"Name",
@@ -67,7 +72,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'add_semester':'Add semester',
         'start_date_must_less_than_end_date':'The start date must be less than the end date.',
         'ok': 'Ok',
-        'http_401':'please login again'
+        'http_401':'please login again',
+        'http_403':'Don\'t have access to service',
+        'http_404':'The service doesn\'t exists',
+        'http_500':'Error in server',
+        "success":'The operation has successfully.',
+        'close':'Close'
     }
 }
 
@@ -113,7 +123,7 @@ export type ValidationMessagePhrases =
 'start_date_must_less_than_end_date';
 
 export type ButtonPhrases = 
-'add' | 'update' | 'delete' | 'cancel' | 'ok';
+'add' | 'update' | 'delete' | 'cancel' | 'ok'| 'close';
 
 export type SemesterPhrases = 
 'semester_title'|
@@ -123,5 +133,9 @@ export type SemesterPhrases =
 ;
 
 export type httpErrors = 
-'http_401'
+'http_401'|
+'http_403'|
+'http_404'|
+'http_500'|
+"success"
 ;

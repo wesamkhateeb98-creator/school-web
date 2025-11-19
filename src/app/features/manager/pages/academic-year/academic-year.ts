@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { AcademicYearViewModel } from './model/academic-year-view-model';
 import { DatePipe } from '@angular/common';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatCard } from "@angular/material/card";
 import { Language } from '../../../../core/services/language';
-import {  MatIconModule } from "@angular/material/icon";
+import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAcademicYearDialog } from './dialog/add-academic-year-dialog/add-academic-year-dialog';
@@ -15,6 +15,11 @@ import { HttpHelper } from '../../../../core/services/http-helper';
 import { AcademicYearFilterModel } from './model/academic-year-filter-model';
 import { Page } from '../../../../shared/model/page';
 import { AcademicYearModel } from './model/academic-year-model';
+import { successMatSnackbarConfig } from '../../../../core/consts';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomPaginator } from "../../../../shared/components/custom-paginator/custom-paginator";
+
+
 @Component({
   selector: 'app-academic-year',
   imports: [
@@ -23,54 +28,61 @@ import { AcademicYearModel } from './model/academic-year-model';
     MatPaginatorModule,
     MatCard,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    CustomPaginator
 ],
   templateUrl: './academic-year.html',
   styleUrl: './academic-year.scss',
 })
 
-export class AcademicYear implements OnInit{
-  academicYearViewModel!:AcademicYearViewModel[];
+export class AcademicYear{
+  academicYearViewModel = signal<AcademicYearViewModel[]>([]);
   headerTable:string[] = ['academic','createdAt','Action'];
-  filter!:AcademicYearFilterModel;
-  totalPages:number=1;
+  
+  
+
+  filter = signal<AcademicYearFilterModel>( {
+      pageSize:10,
+      selectedPage:5
+    });
+  totalPages= signal<number>(10);
 
   constructor(
     public language:Language, 
     public dialog :MatDialog,
     public router:Router,
-    public httpHelper:HttpHelper
+    public httpHelper:HttpHelper,
+    public matSnackBar:MatSnackBar
   ){
-    this.filter = {
-      pageSize:20,
-      selectedPage:2
-    }
-  }
-  ngOnInit(): void {
     this.onLoading();
   }
 
   onLoading(){
-    this.httpHelper.get<Page<AcademicYearModel>>('AcademicYearControlller',{
-      PageNumber:this.filter.selectedPage,
-      PageSize: this.filter.pageSize
+    this.httpHelper.get<Page<AcademicYearModel>>('AcademicYear',{
+      PageNumber:this.filter().selectedPage,
+      PageSize: this.filter().pageSize
     }).subscribe(
       (success)=>{
-        // console.log(success);
+        this.filter.update(x=>
+        {
+          x.pageSize = success.pageSize;
+          x.selectedPage = success.pageNumber;  
+          return x;
+        });
+        this.totalPages.set(success.countPages)
+        this.academicYearViewModel.set(
+          success.content.map((value=> new AcademicYearViewModel(
+            value.id,
+            value.year,
+            value.createdAt)
+          ))
+        )
       },
       (error)=>{
-        
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig);
         // console.log(error);
       }
     )
-    
-
-    this.academicYearViewModel = [
-      new AcademicYearViewModel(1,2022, new Date("2025-11-15T05:33:17.902Z")),
-      new AcademicYearViewModel(2,2023, new Date("2025-11-15T05:33:17.902Z")),
-      new AcademicYearViewModel(3,2024, new Date("2025-11-15T05:33:17.902Z")),
-      new AcademicYearViewModel(4,2025, new Date("2025-11-15T05:33:17.902Z"))
-    ];
   }
 
   openSemesterPage(academicYears:AcademicYearViewModel){
@@ -81,7 +93,12 @@ export class AcademicYear implements OnInit{
     const dialogRef = this.dialog.open(
       AddAcademicYearDialog, 
       {
-        width: "80%"
+        width: "80%",
+        data:{
+          addAcademicYear: (item:AcademicYearViewModel)=>this.academicYearViewModel.update(x=>{
+            return [item, ...x]
+          })
+        }
       }
     );
     
@@ -94,7 +111,12 @@ export class AcademicYear implements OnInit{
     const dialogRef = this.dialog.open(
       DeleteAcademicYear, 
       {
-        data:id,
+        data:{
+          id:id,
+          removeItem: (index:number)=>this.academicYearViewModel.update(x=>{
+            return x.filter(item => item.id !== index);
+          })
+        },
         width: "80%"
       }
     );
@@ -104,4 +126,5 @@ export class AcademicYear implements OnInit{
     });
   }
 
+  
 }

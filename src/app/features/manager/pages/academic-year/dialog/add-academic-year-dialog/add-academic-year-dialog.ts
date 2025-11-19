@@ -1,6 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { Language } from '../../../../../../core/services/language';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ManagerStateService } from '../../../../services/manager-state-service';
@@ -9,6 +9,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { HttpHelper } from '../../../../../../core/services/http-helper';
+import { MutateResponse } from '../../../../view-model/mutate-response';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
+import { AcademicYearViewModel } from '../../model/academic-year-view-model';
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -21,7 +26,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatSnackBarModule
   ],
   templateUrl: './add-academic-year-dialog.html',
   styleUrl: './add-academic-year-dialog.scss',
@@ -29,17 +35,23 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 export class AddAcademicYearDialog {
   loading = signal<boolean>(false);
   form!: FormGroup;
+  key:string = crypto.randomUUID();
+
+  data = inject(MAT_DIALOG_DATA);
+
 
   constructor(
     public dialogRef:MatDialogRef<AddAcademicYearDialog>,
     public language:Language,
     public managerState:ManagerStateService,
     public responsiveScreen:ResponsiveScreen,
-    public fb: FormBuilder
+    public fb: FormBuilder,
+    public http:HttpHelper,
+    public matSnackBar:MatSnackBar
   ){
     this.form = this.fb.group({
       academicYear:[
-        '',
+        '2025',
         [Validators.required,Validators.min(2024),]
       ]
     });
@@ -52,12 +64,27 @@ export class AddAcademicYearDialog {
   async addAcademicYear(){
     if(!this.form.valid)
       return;
-    console.log("123");
+    
     this.loading.set(true);
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    this.loading.set(false);
-    console.log("123");
 
-    this.dialogRef.close();
+    this.http.post<MutateResponse>("AcademicYear",{
+      key:this.key,
+      year:this.form.get('academicYear')?.value
+    }).subscribe(
+      success=>{
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
+        this.data.addAcademicYear(new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date()));
+        this.dialogRef.close();
+      },
+      error=>{
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+      }
+    );
+    this.loading.set(false);
   }
 }
+
+/*
+جرب أنشأ سناك بار خاص
+وضيف عليه أيقونة خطأ
+*/

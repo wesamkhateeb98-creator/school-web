@@ -12,7 +12,7 @@ import { ResponsiveScreen } from "../../../../../../core/services/responsive-scr
 import { startDateMustLessEndDateValidator } from "../../../../../../core/validator/validator";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
-import { ErrorTitleComponent } from "../../../../../../shared/error-title-component/error-title-component";
+import { ErrorTitleComponent } from "../../../../../../shared/components/error-title-component/error-title-component";
 
 @Component({
   selector: 'app-add-academic-year-dialog',

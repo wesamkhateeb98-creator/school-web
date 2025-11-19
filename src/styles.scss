@@ -31,3 +31,17 @@ html{
 .icon-error{
   color: var(--mat-sys-error);
 }
+
+
+.error-snackbar {
+  @include mat.snack-bar-overrides((
+    container-color: var(--mat-sys-error),
+  ));
+}
+
+
+.success-snackbar {
+  @include mat.snack-bar-overrides((
+    container-color: green,
+  ));
+}
