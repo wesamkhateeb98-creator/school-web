@@ -37,7 +37,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'http_404':'الخدمة غير موجودة',
         'http_500':'خطأ في السيرفر',
         "success":'تمت العملية بنجاح',
-        'close':'يغلق'
+        'close':'يغلق',
+        'of':'من'
     },
     en:{
         'name':"Name",
@@ -77,7 +78,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'http_404':'The service doesn\'t exists',
         'http_500':'Error in server',
         "success":'The operation has successfully.',
-        'close':'Close'
+        'close':'Close',
+        'of':"of"
     }
 }
 
@@ -123,7 +125,7 @@ export type ValidationMessagePhrases =
 'start_date_must_less_than_end_date';
 
 export type ButtonPhrases = 
-'add' | 'update' | 'delete' | 'cancel' | 'ok'| 'close';
+'add' | 'update' | 'delete' | 'cancel' | 'ok'| 'close' | 'of';
 
 export type SemesterPhrases = 
 'semester_title'|

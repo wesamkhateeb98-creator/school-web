@@ -17,7 +17,6 @@ import { Page } from '../../../../shared/model/page';
 import { AcademicYearModel } from './model/academic-year-model';
 import { successMatSnackbarConfig } from '../../../../core/consts';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CustomPaginator } from "../../../../shared/components/custom-paginator/custom-paginator";
 
 
 @Component({
@@ -28,8 +27,7 @@ import { CustomPaginator } from "../../../../shared/components/custom-paginator/
     MatPaginatorModule,
     MatCard,
     MatIconModule,
-    MatButtonModule,
-    CustomPaginator
+    MatButtonModule
 ],
   templateUrl: './academic-year.html',
   styleUrl: './academic-year.scss',
@@ -39,8 +37,6 @@ export class AcademicYear{
   academicYearViewModel = signal<AcademicYearViewModel[]>([]);
   headerTable:string[] = ['academic','createdAt','Action'];
   
-  
-
   filter = signal<AcademicYearFilterModel>( {
       pageSize:10,
       selectedPage:5

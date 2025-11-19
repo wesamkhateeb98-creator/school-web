@@ -36,24 +36,16 @@
     <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
 
     </table>
-    <!-- <mat-paginator 
-    [length]="totalPages() * filter().pageSize" 
-    
-    [pageSize]="filter().pageSize"
-    [pageSizeOptions]="[5, 10, 25, 100]"
-    
-    [pageIndex]="filter().selectedPage"
-    
-    (page)="onPageChange($event)" 
-    showFirstLastButtons="false"
-    
-    /> -->
+    <mat-paginator 
+        [length]="totalPages() * filter().pageSize" 
 
-    <app-custom-paginator 
-        [selectedPage]='filter().selectedPage' 
-        [countPage]='totalPages()'
-        />
+        [pageSize]="filter().pageSize"
+        
+        [pageIndex]="filter().selectedPage"
 
+        showFirstLastButtons="false"
+
+    />
 <!-- 
 Pagination
 Set filter in route
