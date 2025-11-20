@@ -1,8 +1,10 @@
-<div style="display: flex; justify-content: flex-end;">
-    <button matFab (click)="openAddDialog()">
+<div style="display: flex; justify-content: start;">
+    <h2>{{language.transform('academic_year_title')}}</h2>
+    <button matFab (click)="openAddDialog()" style="margin: 0 20px;">
         <mat-icon>add</mat-icon>
     </button>
 </div>
+
 <br/>
 <mat-card>
     <table mat-table [dataSource]="academicYearViewModel()" class="mat-elevation-z8">

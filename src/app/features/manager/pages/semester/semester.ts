@@ -66,6 +66,9 @@ export class Semester {
     this.onLoading();
   }
 
+    openAcademicYearPage(){
+      this.router.navigate(['manager/academic_year']);
+    }
 
   onLoading(){
     this.httpHelper.get<Page<SemesterViewModel>>('semester',{
@@ -131,17 +134,20 @@ export class Semester {
     }
 
   openDeleteDialog(id:number){
+    
     const dialogRef = this.dialog.open(
       DeleteSemesterDialog, 
       {
-        data:id,
+        data:{
+            id:id,
+            removeItem: (index:number)=>this.semesterViewModels.update(x=>{
+              return x.filter(item => item.id !== index);
+            })
+          },
         width: "80%"
       }
     );
     
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-    });
   }
 
   changeInPage(pageEvent:PageEvent){

@@ -1,10 +1,19 @@
-<div style="display: flex; justify-content: flex-end;">
-    <button matFab (click)="openAddDialog()">
-        <mat-icon>add</mat-icon>
-    </button>
+<div style="display: flex; justify-content: space-between;">
+    <div style="display: flex;">
+        <h2 >{{language.transform('semester_title')}}</h2>
+        <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    
+    
+    <button matFab (click)="openAcademicYearPage()" style="margin: 0 20px ">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+    
 </div>
 <br/>
-{{academicYearId}}
+
 <mat-card>
     <table mat-table [dataSource]="semesterViewModels()" class="mat-elevation-z8">
 
@@ -36,7 +45,7 @@
                     <mat-icon class="icon-update">edit</mat-icon>
                 </button>
                 
-                <button mat-icon-button (click)="openDeleteDialog(element.Id)">
+                <button mat-icon-button (click)="openDeleteDialog(element.id)">
                     <mat-icon class="icon-error">delete</mat-icon>
                 </button>
             </div>
