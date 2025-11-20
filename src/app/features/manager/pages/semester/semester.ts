@@ -3,7 +3,7 @@ import { Component, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { SemesterViewModel } from './model/semester-view-model';
 import { Language } from '../../../../core/services/language';
@@ -53,6 +53,16 @@ export class Semester {
     public parmas:ParamsService
   ){
     this.academicYearId = Number(route.snapshot.paramMap.get('id'));
+    this.filter.update(x=>{
+      const param = parmas.loadFromUrl<SemesterFilterViewModel>();
+
+      x.pageSize = param.pageSize? param.pageSize: 10;
+      x.selectedPage = param.selectedPage? param.selectedPage: 1
+      
+      parmas.setToUrl(x);
+
+      return x;
+    });
     this.onLoading();
   }
 
@@ -60,7 +70,8 @@ export class Semester {
   onLoading(){
     this.httpHelper.get<Page<SemesterViewModel>>('semester',{
       PageNumber:this.filter().selectedPage,
-      PageSize: this.filter().pageSize
+      PageSize: this.filter().pageSize,
+      academicYearId:this.academicYearId
     }).subscribe(
       (success)=>{
         this.filter.update(x=>
@@ -95,14 +106,14 @@ export class Semester {
   }
 
   
-    openUpdateDialog(semesterId: number){
+    openUpdateDialog(semesterViewModel: SemesterViewModel){
       const dialogRef = this.dialog.open(
         AddSemesterDialog, 
         {
           width: "80%",
           data:{     
             academicYearId: this.academicYearId,
-            semesterId: semesterId
+            semester: semesterViewModel
           }
         }
       );
@@ -132,4 +143,15 @@ export class Semester {
       console.log(result);
     });
   }
+
+  changeInPage(pageEvent:PageEvent){
+    this.filter.update(x=>
+        {
+          x.pageSize = pageEvent.pageSize;
+          x.selectedPage = pageEvent.pageIndex + 1;  
+          return x;
+        });
+      this.onLoading();
+      this.parmas.setToUrl(this.filter())
+  }  
 }

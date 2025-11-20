@@ -19,6 +19,7 @@ import { MutateResponse } from "../../../../view-model/mutate-response";
 import { AcademicYearViewModel } from "../../../academic-year/model/academic-year-view-model";
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
 import { yearMonthDay } from "../../../../../../core/formats/date-format";
+import { SemesterViewModel } from "../../model/semester-view-model";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -59,9 +60,9 @@ export class AddSemesterDialog {
   ){
     this.form = this.fb.group(
       {
-        name: ['WEssss', [Validators.required, Validators.minLength(3)]],
-        startDate: ['11-20-2025', [Validators.required]],
-        endDate: ['11-21-2025', [Validators.required]],
+        name: [ this.isUpdate()?this.data.semester.name:'', [Validators.required, Validators.minLength(3)]],
+        startDate: [this.isUpdate()?this.data.semester.startDate:'', [Validators.required]],
+        endDate: [this.isUpdate()?this.data.semester.endDate:'', [Validators.required]],
       },
       {
         validators: [startDateMustLessEndDateValidator]
@@ -98,7 +99,12 @@ addAcademicYear(){
     }).subscribe({
       next: (success) => {
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
-        const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
+        const data = new SemesterViewModel(
+          success.id,
+          this.form.get('name')?.value,
+          this.form.get('startDate')?.value,
+          this.form.get('endDate')?.value,
+          new Date());
         // this.data.ChangeAction(data);
         this.dialogRef.close({
           data
@@ -110,16 +116,23 @@ addAcademicYear(){
     });
   }
 
+
   updateAcademicYear(){
-    this.http.put<MutateResponse>("semester/" + this.data.semesterId,{
+    this.http.put<MutateResponse>("semester/" + this.data.semester.id,{
       name:this.form.get('name')?.value,
-      startDate:this.form.get('startDate')?.value,
-      endDate:this.form.get('endDate')?.value,
+      startDate:yearMonthDay( this.form.get('startDate')?.value),
+      endDate:yearMonthDay(this.form.get('endDate')?.value),
       academicYearId: this.data.academicYearId,
     }).subscribe({
       next: success=>{
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
-        const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
+        const data = new SemesterViewModel(
+          success.id,
+          this.form.get('name')?.value,
+          this.form.get('startDate')?.value,
+          this.form.get('endDate')?.value,
+          new Date());
+        // this.data.ChangeAction(data);
         this.dialogRef.close({
           data
         });
@@ -131,7 +144,7 @@ addAcademicYear(){
   }
 
   isUpdate () : boolean{
-    return this.data && this.data.item && this.data.item != null ;
+    return this.data && this.data.semester && this.data.semester != null ;
   }
 
 }

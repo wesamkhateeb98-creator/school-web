@@ -58,6 +58,8 @@ export class AcademicYear{
       x.pageSize = param.pageSize? param.pageSize: 10;
       x.selectedPage = param.selectedPage? param.selectedPage: 1
       
+      parmas.setToUrl(x);
+      
       return x;
     });
     this.onLoading();

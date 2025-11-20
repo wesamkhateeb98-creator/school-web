@@ -31,6 +31,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'end_date_title':"تاريخ النهاية",
         'min_length_3': 'طول النص يجب أن لا يقل عن 3 محارف',
         'add_semester':'إضافة فضل دراسي',
+        'update_semester':'تعديل فضل دراسي',
         'start_date_must_less_than_end_date':'تاريخ البداية يجب أن يكون أصغر من تاريخ النهاية',
         'ok':"نعم",
         'http_401':'الرجاء إعادة تسجيل الدخول',
@@ -73,6 +74,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'end_date_title':"End Date",
         'min_length_3': 'The length text must be greater than or equal 3',
         'add_semester':'Add semester',
+        'update_semester':'Update semester',
         'start_date_must_less_than_end_date':'The start date must be less than the end date.',
         'ok': 'Ok',
         'http_401':'please login again',
@@ -134,7 +136,8 @@ export type SemesterPhrases =
 'semester_title'|
 'start_date_title'|
 'end_date_title'|
-'add_semester'
+'add_semester'|
+'update_semester'
 ;
 
 export type httpErrors = 
