@@ -100,12 +100,6 @@ export class AcademicYear{
       AddAcademicYearDialog, 
       {
         width: "80%",
-        data:{
-          ChangeAction: (item:AcademicYearViewModel)=>this.academicYearViewModel.update(x=>{
-            return [item, ...x]
-          }),
-          isAdd:true
-        }
       }
     );
   }
@@ -115,23 +109,22 @@ export class AcademicYear{
       AddAcademicYearDialog, 
       {
         width: "80%",
-        data:{
-          ChangeAction: (item:AcademicYearViewModel)=>{
-            const index = this.academicYearViewModel().findIndex(x => x.id === item.id);
-            if (index !== -1) {
-              this.academicYearViewModel.update(arr => {
-                arr[index] = { ...arr[index], ...item };
-                return arr;
-              });
-              
-            }
-
-          },
-              
+        data:{     
           item:element
         }
       }
     );
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.academicYearViewModel.update(arr => 
+          {
+            arr = arr.map(x => x.id === result.data.id ? result.data : x);
+            return arr;
+          }
+        );
+        
+      }
+    });
   }
 
   openDeleteDialog(id:number){
@@ -147,10 +140,6 @@ export class AcademicYear{
         width: "80%"
       }
     );
-    
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-    });
   }
 
   changeInPage(pageEvent:PageEvent){

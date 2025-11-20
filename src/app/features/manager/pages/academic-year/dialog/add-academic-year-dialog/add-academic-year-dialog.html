@@ -30,6 +30,6 @@
   </mat-dialog-content>
   <mat-dialog-actions>
     <button matButton (click)="onNoClick()" [disabled]="loading()">{{language.transform('cancel')}}</button>
-    <button matButton="filled" cdkFocusInitial (click)="addAcademicYear()"[disabled]="loading()">{{language.transform(isAdd() ? 'add':'update')}}</button>
+    <button matButton="filled" cdkFocusInitial (click)="submit()"[disabled]="loading()">{{language.transform(isAdd() ? 'add':'update')}}</button>
   </mat-dialog-actions>
 </form>

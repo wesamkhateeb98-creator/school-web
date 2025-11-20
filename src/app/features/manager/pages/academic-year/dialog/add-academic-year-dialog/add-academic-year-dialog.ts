@@ -85,8 +85,11 @@ this.form = this.fb.group({
     }).subscribe(
       success=>{
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
-        this.data.ChangeAction(new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date()));
-        this.dialogRef.close();
+        const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
+        // this.data.ChangeAction(data);
+        this.dialogRef.close({
+          data
+        });
       },
       error=>{
         this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
@@ -95,14 +98,15 @@ this.form = this.fb.group({
   }
 
   updateAcademicYear(){
-    this.http.put<MutateResponse>("AcademicYear" + this.data.id,{
-      key:this.key,
+    this.http.put<MutateResponse>("AcademicYear/" + this.item().id,{
       year:this.form.get('academicYear')?.value
     }).subscribe(
       success=>{
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
-        this.data.ChangeAction(new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date()));
-        this.dialogRef.close();
+        const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
+        this.dialogRef.close({
+          data
+        });
       },
       error=>{
         this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
