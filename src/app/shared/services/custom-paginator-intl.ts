@@ -10,6 +10,9 @@ export class CustomPaginatorIntl extends MatPaginatorIntl {
     
   }
 
+  // 1. Customize the length-of-page label
+  override itemsPerPageLabel = '';
+
   // 3. Customize the range text (e.g., "1 – 10 de 100")
   override getRangeLabel = (page: number, pageSize: number, length: number): string => {
     if (length === 0) {

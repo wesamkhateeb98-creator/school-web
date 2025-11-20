@@ -39,7 +39,7 @@ export class AcademicYear{
   
   filter = signal<AcademicYearFilterModel>( {
       pageSize:10,
-      selectedPage:5
+      selectedPage:1
     });
   totalPages= signal<number>(10);
 
@@ -122,5 +122,13 @@ export class AcademicYear{
     });
   }
 
-  
+  changeInPage(pageEvent:PageEvent){
+    this.filter.update(x=>
+        {
+          x.pageSize = pageEvent.pageSize;
+          x.selectedPage = pageEvent.pageIndex + 1;  
+          return x;
+        });
+      this.onLoading();
+  }  
 }
