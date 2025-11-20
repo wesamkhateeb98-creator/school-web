@@ -1,5 +1,5 @@
 
-export class SemsterViewModel{
+export class SemesterViewModel{
     id:number;
     name:string;
     startDate:Date;

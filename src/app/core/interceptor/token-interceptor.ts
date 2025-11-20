@@ -6,7 +6,6 @@ import { AuthService } from '../services/auth-service';
 import { Language } from '../services/language';
 
 export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
-    
     const authService = inject(AuthService);
     const language = inject(Language);
     
@@ -15,6 +14,7 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
     let modifiedRequest = req;
 
     if (authData && authData.token) {
+      
       modifiedRequest = req.clone({ 
         setHeaders: {
           Authorization: `Bearer ${authData.token}`,

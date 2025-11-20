@@ -77,14 +77,8 @@ export class AcademicYear{
           return x;
         });
         //success.countPages
-        this.totalPages.set(1)
-        this.academicYearViewModel.set(
-          success.content.map((value=> new AcademicYearViewModel(
-            value.id,
-            value.year,
-            value.createdAt)
-          ))
-        )
+        this.totalPages.set(success.countPages)
+        this.academicYearViewModel.set(success.content)
       },
       (error)=>{
         this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig);
@@ -103,6 +97,12 @@ export class AcademicYear{
         width: "80%"
       }
     );
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.academicYearViewModel.update(arr => [result.data, ...arr]);
+        
+      }
+    });
   }
 
   openUpdateDialog(element: AcademicYearViewModel){
