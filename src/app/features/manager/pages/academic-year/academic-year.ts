@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { AcademicYearViewModel } from './model/academic-year-view-model';
 import { DatePipe } from '@angular/common';
@@ -17,6 +17,7 @@ import { Page } from '../../../../shared/model/page';
 import { AcademicYearModel } from './model/academic-year-model';
 import { successMatSnackbarConfig } from '../../../../core/consts';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ParamsService } from '../../../../core/services/params-service';
 
 
 @Component({
@@ -43,15 +44,25 @@ export class AcademicYear{
     });
   totalPages= signal<number>(10);
 
+
+
   constructor(
     public language:Language, 
     public dialog :MatDialog,
     public router:Router,
     public httpHelper:HttpHelper,
-    public matSnackBar:MatSnackBar
+    public matSnackBar:MatSnackBar,
+    public parmas:ParamsService
   ){
+    this.filter.update(x=>{
+      const param = parmas.loadFromUrl<AcademicYearFilterModel>();
+        x.pageSize = param.pageSize;
+        x.selectedPage = param.selectedPage
+      return x;
+    });
     this.onLoading();
   }
+
 
   onLoading(){
     this.httpHelper.get<Page<AcademicYearModel>>('AcademicYear',{
@@ -65,7 +76,8 @@ export class AcademicYear{
           x.selectedPage = success.pageNumber;  
           return x;
         });
-        this.totalPages.set(success.countPages)
+        //success.countPages
+        this.totalPages.set(20)
         this.academicYearViewModel.set(
           success.content.map((value=> new AcademicYearViewModel(
             value.id,
@@ -130,5 +142,6 @@ export class AcademicYear{
           return x;
         });
       this.onLoading();
+      this.parmas.setToUrl(this.filter())
   }  
 }
