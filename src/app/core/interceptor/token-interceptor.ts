@@ -27,7 +27,7 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
     return next(modifiedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = 'An unknown error occurred.';
-        console.log(error)
+        
         if (error.error instanceof ErrorEvent) {
           // Client-side error
           errorMessage = `Client Error: ${error.error.message}`;
@@ -44,9 +44,7 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
               errorMessage = language.transform('http_404') || 'Resource not found';
               break;
             case 409:
-              
               errorMessage = error.error.Title;
-              console.log(errorMessage);
               break;
             case 500:
               errorMessage = language.transform('http_500') || 'Internal server error';
@@ -61,9 +59,6 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
               }
           }
         }
-        
-        console.error('Intercepted HTTP Error:', errorMessage);
-        // Return the original error to maintain the full error context
         return throwError(() => error);
       })
     );

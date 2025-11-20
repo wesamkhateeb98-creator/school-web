@@ -52,7 +52,7 @@ export class AddAcademicYearDialog {
   ){
 this.form = this.fb.group({
       academicYear:[
-        this.isAdd()?'2025':this.item().year,
+        this.isUpdate()?this.item().year : "2025",
         [Validators.required,Validators.min(2024),]
       ]
     });
@@ -69,10 +69,10 @@ this.form = this.fb.group({
     
     this.loading.set(true);
 
-    if(this.isAdd()){
-      this.addAcademicYear();    
-    }else{
+    if(this.isUpdate()){
       this.updateAcademicYear();
+    }else{
+      this.addAcademicYear();    
     }
     
     this.loading.set(false);
@@ -114,8 +114,8 @@ this.form = this.fb.group({
     );
   }
 
-  isAdd () : boolean{
-    return this.data.item == undefined || this.data.item == null ;
+  isUpdate () : boolean{
+    return this.data && this.data.item && this.data.item != null ;
   }
 
   item() :AcademicYearModel{

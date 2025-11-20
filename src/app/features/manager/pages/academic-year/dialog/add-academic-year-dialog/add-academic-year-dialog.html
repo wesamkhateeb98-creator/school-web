@@ -1,5 +1,5 @@
-<form class="example-form" [formGroup]="form" >
-  <h2 mat-dialog-title>{{language.transform( isAdd() ? 'add_academic_year':'update_academic_year')}}</h2>
+<form class="example-form" [formGroup]="form" (ngSubmit)="submit()" >
+  <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_academic_year':'add_academic_year')}}</h2>
   <mat-dialog-content>
     <mat-grid-list [cols]="1" rowHeight="100px">
       @if(loading()){
@@ -30,6 +30,13 @@
   </mat-dialog-content>
   <mat-dialog-actions>
     <button matButton (click)="onNoClick()" [disabled]="loading()">{{language.transform('cancel')}}</button>
-    <button matButton="filled" cdkFocusInitial (click)="submit()"[disabled]="loading()">{{language.transform(isAdd() ? 'add':'update')}}</button>
+    <button 
+      matButton="filled" 
+      cdkFocusInitial 
+      type="submit"
+      [disabled]="loading()"
+      >
+      {{language.transform(isUpdate() ? 'update':'add')}}
+    </button>
   </mat-dialog-actions>
 </form>

@@ -54,8 +54,10 @@ export class AcademicYear{
   ){
     this.filter.update(x=>{
       const param = parmas.loadFromUrl<AcademicYearFilterModel>();
-        x.pageSize = param.pageSize;
-        x.selectedPage = param.selectedPage
+
+      x.pageSize = param.pageSize? param.pageSize: 10;
+      x.selectedPage = param.selectedPage? param.selectedPage: 1
+      
       return x;
     });
     this.onLoading();
@@ -75,7 +77,7 @@ export class AcademicYear{
           return x;
         });
         //success.countPages
-        this.totalPages.set(20)
+        this.totalPages.set(1)
         this.academicYearViewModel.set(
           success.content.map((value=> new AcademicYearViewModel(
             value.id,
@@ -86,7 +88,6 @@ export class AcademicYear{
       },
       (error)=>{
         this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig);
-        // console.log(error);
       }
     )
   }
@@ -99,7 +100,7 @@ export class AcademicYear{
     const dialogRef = this.dialog.open(
       AddAcademicYearDialog, 
       {
-        width: "80%",
+        width: "80%"
       }
     );
   }
