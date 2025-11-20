@@ -16,6 +16,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         "system_mode":"وضع النظام",
         'action':'الإجراءات',
         'add_academic_year':'إضافة السنة الأكادمية',
+        'update_academic_year':'تعديل السنة الأكادمية',
         'field_required':"الحقل مطلوب.",
         'year_greater_than_or_equal_2025': 'التاريخ يجب أن يكون أكبر أو يساوي 2025.',
         "do_you_want_delete_question":"هل أنت متأمد من أنك تريد إتمام عملية الحذف؟",
@@ -57,6 +58,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         "system_mode":"System mode",
         'action':'Action',
         'add_academic_year': 'Add academic year',
+        'update_academic_year': 'Update academic year',
         'field_required': 'The field is required.',
         'year_greater_than_or_equal_2025': 'The year must be greater than or equal 2025.',
         "do_you_want_delete_question":"Do you want to complete the deletion process?",
@@ -114,6 +116,7 @@ export type AcademicYearPhrases =
 'created_at_title'|
 'action'|
 'add_academic_year'|
+'update_academic_year'|
 'delete_academic_year'|
 'do_you_want_delete_question'|
 'details_academic_year';

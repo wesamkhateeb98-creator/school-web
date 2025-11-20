@@ -44,8 +44,6 @@ export class AcademicYear{
     });
   totalPages= signal<number>(10);
 
-
-
   constructor(
     public language:Language, 
     public dialog :MatDialog,
@@ -103,16 +101,37 @@ export class AcademicYear{
       {
         width: "80%",
         data:{
-          addAcademicYear: (item:AcademicYearViewModel)=>this.academicYearViewModel.update(x=>{
+          ChangeAction: (item:AcademicYearViewModel)=>this.academicYearViewModel.update(x=>{
             return [item, ...x]
-          })
+          }),
+          isAdd:true
         }
       }
     );
-    
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-    });
+  }
+
+  openUpdateDialog(element: AcademicYearViewModel){
+    const dialogRef = this.dialog.open(
+      AddAcademicYearDialog, 
+      {
+        width: "80%",
+        data:{
+          ChangeAction: (item:AcademicYearViewModel)=>{
+            const index = this.academicYearViewModel().findIndex(x => x.id === item.id);
+            if (index !== -1) {
+              this.academicYearViewModel.update(arr => {
+                arr[index] = { ...arr[index], ...item };
+                return arr;
+              });
+              
+            }
+
+          },
+              
+          item:element
+        }
+      }
+    );
   }
 
   openDeleteDialog(id:number){

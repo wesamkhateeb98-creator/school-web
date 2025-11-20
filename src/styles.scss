@@ -32,6 +32,9 @@ html{
   color: var(--mat-sys-error);
 }
 
+.icon-update{
+  color: orange;
+}
 
 .error-snackbar {
   @include mat.snack-bar-overrides((

@@ -1,12 +1,12 @@
 
 export class AcademicYearViewModel{
     id:number;
-    academicYear:string;
+    year:number;
     createdAt:Date;
 
     constructor(id:number,year:number,createdAt:Date){
         this.id = id;
-        this.academicYear = `${year}-${year+1}`;
+        this.year = year;
         this.createdAt = createdAt;
     }
 }
