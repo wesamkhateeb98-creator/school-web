@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterOutlet } from '@angular/router';
 import { Language } from '../../../core/services/language';
+import { Theme } from '../../../core/services/theme';
 
 @Component({
   selector: 'app-auth-layout',

@@ -1,11 +1,11 @@
-
+@use './../../../../styles.scss';
 
 .container{
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;    
-    background-color: var(--mat-sys-primary); 
+    background-color: var( --mat-sys-primary ); 
     padding: 16px; 
     box-sizing: border-box;
 
