@@ -43,7 +43,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'of':'من',
         'login': 'تسجيل الدخول',
         'logout':'تسجيل خروج',
-        'denied_title':"مرفوض"
+        'denied_title':"مرفوض",
+        'denied_header':'الوصول إلى واجهه التحكم غير مسموح',
+        'denied_content':"ليس لديك صلاحية الوصول إلى لوحة التحكم. هذه المنطقة مخصصة للاشخاص المصرح لهم فقط.",
+        'click_here_to_login_screen': 'انقر هنا للذهاب إلى واجهه تسجيل الدخول'
     },
     en:{
         'name':"Name",
@@ -89,7 +92,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'of':"of",
         'login':'Login',
         'logout':'logout',
-        'denied_title':"Denied"
+        'denied_title':"Denied",
+        "denied_header":"Access Denied",
+        'denied_content':"You don't have permission to Dashboard. This area is restricted to authorized personnel only.",
+        'click_here_to_login_screen':'Click here to go to login screen'
     }
 }
 
@@ -145,7 +151,8 @@ export type ButtonPhrases =
 'close' | 
 'of' | 
 'login'|
-'logout';
+'logout'|
+'click_here_to_login_screen';
 
 export type SemesterPhrases = 
 'semester_title'|
@@ -164,5 +171,7 @@ export type HttpErrors =
 ;
 
 export type Denied = 
-    'denied_title'
+    'denied_title'|
+    'denied_header'|
+    'denied_content'
 ;

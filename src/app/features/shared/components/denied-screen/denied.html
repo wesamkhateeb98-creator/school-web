@@ -1,19 +1,13 @@
 
 <div class="container">
     <div class="header">
-        <div class="icon">🚫</div>
-        <h1>403 - Access Denied</h1>
+        <h1>🚫 403 - {{language.transform('denied_header')}}</h1>
     </div>
+    <br/>
     <div class="content">
-        <p>You don't have permission to access this page. This area is restricted to authorized personnel only.</p>
-        
+        <p>{{language.transform('denied_content')}}</p>
         <div class="actions">
-            <a href="/" class="btn btn-primary">Go to Homepage</a>
-            <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
-        </div>
-        
-        <div class="contact-info">
-            <p>If you believe this is an error, please contact <a href="mailto:support@company.com">support@company.com</a></p>
+            <a href="/auth/login" class="btn btn-primary">{{language.transform('click_here_to_login_screen')}}</a>
         </div>
     </div>
 </div>

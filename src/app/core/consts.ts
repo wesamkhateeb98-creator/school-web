@@ -2,6 +2,8 @@ import { MatSnackBarConfig } from "@angular/material/snack-bar";
 import { PhrasesType } from "./resource/phrases";
 import { inject } from "@angular/core";
 import { Language } from "./services/language";
+import { AuthService } from "./services/auth-service";
+import { Router } from "@angular/router";
 
 export const errorMatSnackbarConfig:MatSnackBarConfig =
 {
