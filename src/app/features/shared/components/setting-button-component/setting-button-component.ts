@@ -5,6 +5,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { Theme } from '../../../../core/services/theme';
 import { Language } from '../../../../core/services/language';
+import { AuthService } from '../../../../core/services/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-setting-button-component',
@@ -14,5 +16,15 @@ import { Language } from '../../../../core/services/language';
 })
 
 export class SettingButtonComponent {
-  constructor(public theme:Theme,public language:Language){}
+  constructor(
+    public theme:Theme,
+    public language:Language, 
+    public authService:AuthService,
+    public router:Router
+  ){}
+
+  logout(){
+    this.authService.removeAuth();
+    this.router.navigate(['auth/login'])
+  }
 }

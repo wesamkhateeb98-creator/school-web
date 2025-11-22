@@ -9,6 +9,7 @@ import { HttpHelper } from '../../../../core/services/http-helper';
 import { AuthModel } from '../../../../core/model/auth-model';
 import { AuthService } from '../../../../core/services/auth-service';
 import { Language } from '../../../../core/services/language';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +31,13 @@ export class Login {
   passwordvisibile = false;
   form!: FormGroup;
   
-  constructor(public fb: FormBuilder, public httpHelper:HttpHelper, public authService:AuthService, public language:Language) { 
+  constructor(
+    public fb: FormBuilder, 
+    public httpHelper:HttpHelper, 
+    public authService:AuthService, 
+    public language:Language,
+    public route:Router
+  ) { 
     this.form = this.fb.group({
       name:[
         'Wesam',
@@ -66,13 +73,12 @@ export class Login {
       next:(response)=>{
         this.authService.setAuth(response);
         this.loading.set(false);
+        this.route.navigate(['']); 
       },
       error:(error)=>{
         console.log(JSON.stringify(error));
         this.loading.set(false);
       }
     })
-  
-    
   }
 }

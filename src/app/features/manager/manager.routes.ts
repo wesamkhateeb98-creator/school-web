@@ -6,13 +6,7 @@ import { Language } from "../../core/services/language";
 import { inject } from "@angular/core";
 import { PhrasesType } from "../../core/resource/phrases";
 import { Semester } from "./pages/semester/semester";
-
-const messageTitle = (title: PhrasesType) => {
-  return () => {
-    const language = inject(Language);
-    return language.transform(title);
-  };
-};
+import { messageTitle } from "../../core/consts";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -28,7 +22,7 @@ export const DASHBOARD_ROUTES: Routes = [
             component: Semester, 
             title: messageTitle('semester_title')
           },
-        ]
+        ],
       },
       { path: 'settings', component: Settings, title: 'User Settings' },
       { path: '', redirectTo: 'academic_year', pathMatch: 'full' },

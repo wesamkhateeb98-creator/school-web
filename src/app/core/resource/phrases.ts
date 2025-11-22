@@ -40,7 +40,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'http_500':'خطأ في السيرفر',
         "success":'تمت العملية بنجاح',
         'close':'يغلق',
-        'of':'من'
+        'of':'من',
+        'login': 'تسجيل الدخول',
+        'logout':'تسجيل خروج',
+        'denied_title':"مرفوض"
     },
     en:{
         'name':"Name",
@@ -83,7 +86,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'http_500':'Error in server',
         "success":'The operation has successfully.',
         'close':'Close',
-        'of':"of"
+        'of':"of",
+        'login':'Login',
+        'logout':'logout',
+        'denied_title':"Denied"
     }
 }
 
@@ -94,7 +100,8 @@ SettingsPhrases|
 ValidationMessagePhrases|
 ButtonPhrases|
 SemesterPhrases|
-httpErrors; 
+HttpErrors|
+Denied; 
 
 
 export type LoginPhrases = 
@@ -130,7 +137,15 @@ export type ValidationMessagePhrases =
 'start_date_must_less_than_end_date';
 
 export type ButtonPhrases = 
-'add' | 'update' | 'delete' | 'cancel' | 'ok'| 'close' | 'of';
+'add' | 
+'update' | 
+'delete' | 
+'cancel' | 
+'ok'| 
+'close' | 
+'of' | 
+'login'|
+'logout';
 
 export type SemesterPhrases = 
 'semester_title'|
@@ -140,10 +155,14 @@ export type SemesterPhrases =
 'update_semester'
 ;
 
-export type httpErrors = 
+export type HttpErrors = 
 'http_401'|
 'http_403'|
 'http_404'|
 'http_500'|
 "success"
+;
+
+export type Denied = 
+    'denied_title'
 ;

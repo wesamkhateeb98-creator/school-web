@@ -14,6 +14,10 @@
   <button mat-menu-item [matMenuTriggerFor]="themeMenu">{{language.transform('theme')}}</button>
   <button mat-menu-item [matMenuTriggerFor]="colorMenu">{{language.transform('color')}}</button>
   <button mat-menu-item [matMenuTriggerFor]="languageMenu">{{language.transform('language')}}</button>
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    <span>{{language.transform('logout')}}</span>
+  </button>
 </mat-menu>
 
 <mat-menu #languageMenu="matMenu">
