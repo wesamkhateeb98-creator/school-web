@@ -11,7 +11,7 @@ import { Language } from '../../../../../core/services/language';
 import { HttpHelper } from '../../../../../core/services/http-helper';
 
 @Component({
-  selector: 'app-basic-dialog',
+  selector: 'app-delete-dialog',
   imports: [
     MatButtonModule,
     MatDialogTitle,
@@ -23,10 +23,9 @@ import { HttpHelper } from '../../../../../core/services/http-helper';
     ReactiveFormsModule,
     MatProgressBarModule
   ],
-  templateUrl: './basic-dialog.html',
-  styleUrl: './basic-dialog.scss',
+  templateUrl: './delete-dialog.html'
 })
-export class BasicDialog {
+export class DeleteDialog {
   loading = signal<boolean>(false);
 
   data = inject(MAT_DIALOG_DATA);
@@ -36,13 +35,12 @@ input is :
 * title
 * subTitle
 * actionName
-* buttonClass
 * action()
 */
 
   constructor(
     public language:Language,
-    public dialogRef:MatDialogRef<BasicDialog>,
+    public dialogRef:MatDialogRef<DeleteDialog>,
     public http:HttpHelper,
     public matSnackBar:MatSnackBar
   ){
@@ -55,7 +53,7 @@ input is :
   
   async submit(){
     this.loading.set(true);
-    this.data.action()
+    this.data.action();
     this.loading.set(false);
   }
 }

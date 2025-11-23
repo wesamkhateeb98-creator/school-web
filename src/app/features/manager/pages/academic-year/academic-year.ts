@@ -9,15 +9,16 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAcademicYearDialog } from './dialog/add-academic-year-dialog/add-academic-year-dialog';
-import { DeleteAcademicYear } from './dialog/delete-academic-year/delete-academic-year';
 import { Router } from '@angular/router';
 import { HttpHelper } from '../../../../core/services/http-helper';
 import { AcademicYearFilterModel } from './model/academic-year-filter-model';
 import { Page } from '../../../shared/model/page';
 import { AcademicYearModel } from './model/academic-year-model';
-import { successMatSnackbarConfig } from '../../../../core/consts';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../core/services/params-service';
+import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
+import { MutateResponse } from '../../view-model/mutate-response';
 
 
 @Component({
@@ -132,13 +133,27 @@ export class AcademicYear{
 
   openDeleteDialog(id:number){
     const dialogRef = this.dialog.open(
-      DeleteAcademicYear, 
+      DeleteDialog, 
       {
         data:{
-          id:id,
-          removeItem: (index:number)=>this.academicYearViewModel.update(x=>{
-            return x.filter(item => item.id !== index);
-          })
+          title:this.language.transform('delete_academic_year'),
+          subTitle:this.language.transform('do_you_want_delete_question'),
+          action: ()=>{
+            this.httpHelper.delete<MutateResponse>("AcademicYear/"+id).subscribe(
+                      success=>{
+                        dialogRef.close();
+                        this.academicYearViewModel.update(x=>{
+                          return x.filter(item => item.id !== id);
+                        });
+                        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);                        
+                      },
+                      error=>{
+                        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+                      }
+                    );
+            
+            },
+          actionName: this.language.transform('delete'),
         },
         width: "80%"
       }
