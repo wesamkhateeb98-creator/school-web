@@ -13,7 +13,7 @@ import { DeleteAcademicYear } from './dialog/delete-academic-year/delete-academi
 import { Router } from '@angular/router';
 import { HttpHelper } from '../../../../core/services/http-helper';
 import { AcademicYearFilterModel } from './model/academic-year-filter-model';
-import { Page } from '../../../../shared/model/page';
+import { Page } from '../../../shared/model/page';
 import { AcademicYearModel } from './model/academic-year-model';
 import { successMatSnackbarConfig } from '../../../../core/consts';
 import { MatSnackBar } from '@angular/material/snack-bar';

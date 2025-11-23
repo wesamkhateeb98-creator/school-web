@@ -14,7 +14,7 @@ import { DeleteSemesterDialog } from './dialog/delete-semester-dialog/delete-sem
 import { HttpHelper } from '../../../../core/services/http-helper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../core/services/params-service';
-import { Page } from '../../../../shared/model/page';
+import { Page } from '../../../shared/model/page';
 import { SemesterFilterViewModel } from './model/semester-filter-view-model';
 import { successMatSnackbarConfig } from '../../../../core/consts';
 

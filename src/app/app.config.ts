@@ -4,7 +4,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './core/interceptor/token-interceptor';
-import { CustomPaginatorIntl } from './shared/services/custom-paginator-intl';
+import { CustomPaginatorIntl } from './features/shared/services/custom-paginator-intl';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
 export const appConfig: ApplicationConfig = {

@@ -12,7 +12,6 @@ import { ResponsiveScreen } from "../../../../../../core/services/responsive-scr
 import { startDateMustLessEndDateValidator } from "../../../../../../core/validator/validator";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
-import { ErrorTitleComponent } from "../../../../../../shared/components/error-title-component/error-title-component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpHelper } from "../../../../../../core/services/http-helper";
 import { MutateResponse } from "../../../../view-model/mutate-response";
@@ -20,6 +19,7 @@ import { AcademicYearViewModel } from "../../../academic-year/model/academic-yea
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
 import { yearMonthDay } from "../../../../../../core/formats/date-format";
 import { SemesterViewModel } from "../../model/semester-view-model";
+import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
