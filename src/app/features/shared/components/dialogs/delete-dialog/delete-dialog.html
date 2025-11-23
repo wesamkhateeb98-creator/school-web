@@ -8,10 +8,10 @@
     </mat-grid-tile>
     }
     @else{
-        <mat-label>{{data.subTitle}}</mat-label>
+        <mat-label>{{this.language.transform('do_you_want_delete_question')}}</mat-label>
     }
 </mat-dialog-content>
 <mat-dialog-actions>
     <button matButton (click)="onNoClick()" [disabled]="loading()">{{language.transform('cancel')}}</button>
-    <button matButton="filled" style="background-color :var(--mat-sys-error)" cdkFocusInitial (click)="submit()" [disabled]="loading()">{{data.actionName}}</button>
+    <button matButton="filled" style="background-color :var(--mat-sys-error)" cdkFocusInitial (click)="submit()" [disabled]="loading()">{{this.language.transform('delete')}}</button>
 </mat-dialog-actions>

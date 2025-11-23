@@ -46,7 +46,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'denied_title':"مرفوض",
         'denied_header':'الوصول إلى واجهه التحكم غير مسموح',
         'denied_content':"ليس لديك صلاحية الوصول إلى لوحة التحكم. هذه المنطقة مخصصة للاشخاص المصرح لهم فقط.",
-        'click_here_to_login_screen': 'انقر هنا للذهاب إلى واجهه تسجيل الدخول'
+        'click_here_to_login_screen': 'انقر هنا للذهاب إلى واجهه تسجيل الدخول',
+        'delete_semester': 'حذف الفصل'
     },
     en:{
         'name':"Name",
@@ -95,7 +96,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'denied_title':"Denied",
         "denied_header":"Access Denied",
         'denied_content':"You don't have permission to Dashboard. This area is restricted to authorized personnel only.",
-        'click_here_to_login_screen':'Click here to go to login screen'
+        'click_here_to_login_screen':'Click here to go to login screen',
+        'delete_semester':'Delete semester'
     }
 }
 
@@ -159,7 +161,8 @@ export type SemesterPhrases =
 'start_date_title'|
 'end_date_title'|
 'add_semester'|
-'update_semester'
+'update_semester'|
+'delete_semester'
 ;
 
 export type HttpErrors = 

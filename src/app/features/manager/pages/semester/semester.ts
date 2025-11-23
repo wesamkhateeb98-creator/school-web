@@ -10,13 +10,14 @@ import { Language } from '../../../../core/services/language';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AddSemesterDialog } from './dialog/add-semester-dialog/add-semester-dialog';
-import { DeleteSemesterDialog } from './dialog/delete-semester-dialog/delete-semester-dialog';
 import { HttpHelper } from '../../../../core/services/http-helper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../core/services/params-service';
 import { Page } from '../../../shared/model/page';
 import { SemesterFilterViewModel } from './model/semester-filter-view-model';
-import { successMatSnackbarConfig } from '../../../../core/consts';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
+import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
+import { MutateResponse } from '../../view-model/mutate-response';
 
 @Component({
   selector: 'app-semester-component',
@@ -136,14 +137,25 @@ export class Semester {
   openDeleteDialog(id:number){
     
     const dialogRef = this.dialog.open(
-      DeleteSemesterDialog, 
+      DeleteDialog, 
       {
         data:{
-            id:id,
-            removeItem: (index:number)=>this.semesterViewModels.update(x=>{
-              return x.filter(item => item.id !== index);
-            })
-          },
+          title:this.language.transform('delete_semester'),
+          action: ()=>{
+            this.httpHelper.delete<MutateResponse>("semester/"+id).subscribe(
+                      success=>{
+                        dialogRef.close();
+                        this.semesterViewModels.update(x=>{
+                          return x.filter(item => item.id !== id);
+                        })
+                        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);                        
+                      },
+                      error=>{
+                        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+                      }
+                    );
+            }  
+        },
         width: "80%"
       }
     );

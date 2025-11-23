@@ -137,7 +137,6 @@ export class AcademicYear{
       {
         data:{
           title:this.language.transform('delete_academic_year'),
-          subTitle:this.language.transform('do_you_want_delete_question'),
           action: ()=>{
             this.httpHelper.delete<MutateResponse>("AcademicYear/"+id).subscribe(
                       success=>{
@@ -151,9 +150,7 @@ export class AcademicYear{
                         this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
                       }
                     );
-            
-            },
-          actionName: this.language.transform('delete'),
+            }
         },
         width: "80%"
       }
