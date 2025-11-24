@@ -7,7 +7,6 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { MatInputModule } from "@angular/material/input";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { Language } from "../../../../../../core/services/language";
-import { ManagerStateService } from "../../../../services/manager-state-service";
 import { ResponsiveScreen } from "../../../../../../core/services/responsive-screen";
 import { startDateMustLessEndDateValidator } from "../../../../../../core/validator/validator";
 import { provideNativeDateAdapter } from "@angular/material/core";
@@ -15,7 +14,6 @@ import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpHelper } from "../../../../../../core/services/http-helper";
 import { MutateResponse } from "../../../../view-model/mutate-response";
-import { AcademicYearViewModel } from "../../../academic-year/model/academic-year-view-model";
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
 import { yearMonthDay } from "../../../../../../core/formats/date-format";
 import { SemesterViewModel } from "../../model/semester-view-model";
@@ -52,7 +50,6 @@ export class AddSemesterDialog {
   constructor(
     public dialogRef:MatDialogRef<AddSemesterDialog>,
     public language:Language,
-    public managerState:ManagerStateService,
     public responsiveScreen:ResponsiveScreen,
     public fb: FormBuilder,
     public http:HttpHelper,

@@ -3,7 +3,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { Language } from '../../../../../../core/services/language';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { ManagerStateService } from '../../../../services/manager-state-service';
 import { ResponsiveScreen } from '../../../../../../core/services/responsive-screen';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -44,7 +43,6 @@ export class AddAcademicYearDialog {
   constructor(
     public dialogRef:MatDialogRef<AddAcademicYearDialog>,
     public language:Language,
-    public managerState:ManagerStateService,
     public responsiveScreen:ResponsiveScreen,
     public fb: FormBuilder,
     public http:HttpHelper,
@@ -92,7 +90,7 @@ this.form = this.fb.group({
         });
       },
       error=>{
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
       }
     );
   }
@@ -109,7 +107,7 @@ this.form = this.fb.group({
         });
       },
       error=>{
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
       }
     );
   }

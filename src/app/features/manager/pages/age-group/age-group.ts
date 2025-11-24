@@ -81,7 +81,7 @@ export class AgeGroup {
         this.ageGroupViewModels.set(success.content)
       },
       error:(error)=>{
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), successMatSnackbarConfig);
       }
     })
   }
@@ -139,7 +139,7 @@ export class AgeGroup {
               this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);                        
             },
             error: error=>{
-              this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+              this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
             }
           });
             }  

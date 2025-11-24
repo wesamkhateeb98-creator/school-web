@@ -7,9 +7,7 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { MatInputModule } from "@angular/material/input";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { Language } from "../../../../../../core/services/language";
-import { ManagerStateService } from "../../../../services/manager-state-service";
 import { ResponsiveScreen } from "../../../../../../core/services/responsive-screen";
-import { startDateMustLessEndDateValidator } from "../../../../../../core/validator/validator";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -51,7 +49,6 @@ export class AddAgeGroupDialog {
   constructor(
     public dialogRef:MatDialogRef<AddAgeGroupDialog>,
     public language:Language,
-    public managerState:ManagerStateService,
     public responsiveScreen:ResponsiveScreen,
     public fb: FormBuilder,
     public http:HttpHelper,
@@ -103,7 +100,7 @@ addAcademicYear(){
         });
       },
       error: (error) => {
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
       }
     });
   }
@@ -128,7 +125,7 @@ addAcademicYear(){
         });
       },
       error: error=>{
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
       }
   });
   }

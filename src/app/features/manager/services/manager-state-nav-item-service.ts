@@ -4,7 +4,7 @@ import { NavItemViewModel } from '../view-model/NavItemViewModel';
 @Injectable({
   providedIn: 'root',
 })
-export class ManagerStateService {
+export class ManagerNavItemStateService {
   
   navItems: NavItemViewModel[] = [
     {
@@ -14,10 +14,10 @@ export class ManagerStateService {
       icon:"person"
     },
     {
-      url:"/manager/settings",
+      url:"/manager/age-group",
       isSelected:false,
-      name:"settings",
-      icon:"settings"
+      name:"age_group_title",
+      icon:"group"
     }
   ];
 

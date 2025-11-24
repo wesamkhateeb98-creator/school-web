@@ -84,7 +84,7 @@ export class AcademicYear{
         this.academicYearViewModel.set(success.content)
       },
       (error)=>{
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), successMatSnackbarConfig);
       }
     )
   }
@@ -147,7 +147,7 @@ export class AcademicYear{
                         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);                        
                       },
                       error=>{
-                        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+                        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
                       }
                     );
             }

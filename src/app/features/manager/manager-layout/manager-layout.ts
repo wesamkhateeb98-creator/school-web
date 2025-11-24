@@ -1,6 +1,6 @@
-import { Component, NgModule, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { ManagerStateService } from '../services/manager-state-service';
+import { ManagerNavItemStateService } from '../services/manager-state-nav-item-service';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -27,7 +27,7 @@ import { AuthService } from '../../../core/services/auth-service';
 export class DashboardLayout implements OnInit, OnDestroy  {
   
   constructor(
-    public managerState:ManagerStateService, 
+    public managerState:ManagerNavItemStateService, 
     public language:Language,
     public responseScreen:ResponsiveScreen
   ){}
