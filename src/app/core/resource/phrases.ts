@@ -38,6 +38,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'http_403':'ليس لديك صلاحية الوصول',
         'http_404':'الخدمة غير موجودة',
         'http_500':'خطأ في السيرفر',
+        'network_down': 'الشبكة مقطوعة',
+        'server_error': 'خطأ من المخدم',
         "success":'تمت العملية بنجاح',
         'close':'يغلق',
         'of':'من',
@@ -92,6 +94,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'http_403':'Don\'t have access to service',
         'http_404':'The service doesn\'t exists',
         'http_500':'Error in server',
+        'network_down': 'The network is down',
+        'server_error': 'Server error',
         "success":'The operation has successfully.',
         'close':'Close',
         'of':"of",
@@ -186,6 +190,8 @@ export type HttpErrors =
 'http_403'|
 'http_404'|
 'http_500'|
+'network_down'|
+'server_error'|
 "success"
 ;
 

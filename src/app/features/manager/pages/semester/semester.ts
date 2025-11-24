@@ -148,7 +148,7 @@ export class Semester {
                         this.semesterViewModels.update(x=>{
                           return x.filter(item => item.id !== id);
                         })
-                        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);                        
+                        this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig);                        
                       },
                       error=>{
                         this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);

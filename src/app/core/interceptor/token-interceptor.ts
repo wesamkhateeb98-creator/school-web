@@ -5,6 +5,11 @@ import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth-service';
 import { Language } from '../services/language';
 
+interface CustomError {
+  message: string;
+  status: number;
+}
+
 export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
     const authService = inject(AuthService);
     const language = inject(Language);
@@ -29,11 +34,13 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
         let errorMessage = 'An unknown error occurred.';
         console.log(error)
         if (error.error instanceof ErrorEvent) {
-          // Client-side error
           errorMessage = `Client Error: ${error.error.message}`;
         } else {
           // Server-side error
           switch (error.status) {
+            case 0:
+              errorMessage = language.transform('network_down');
+              break;
             case 401:
               errorMessage = language.transform('http_401');
               break;
@@ -41,9 +48,8 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
               errorMessage = language.transform('http_403') || 'Forbidden: Access denied';
               break;
             case 404:
-              errorMessage = language.transform('http_404') || 'Resource not found';
-              break;
             case 409:
+            case 412:
               errorMessage = error.error.Title;
               break;
             case 500:
@@ -55,11 +61,17 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
               } else if (error.error?.message) {
                 errorMessage = error.error.message;
               } else {
-                errorMessage = `Server Error ${error.status}: ${error.statusText}`;
+                errorMessage = language.transform('server_error');
               }
           }
         }
-        return throwError(() => error);
+        
+        const customError: CustomError = {
+          message: errorMessage,
+          status: 1
+        };
+
+        return throwError(() => customError);
       })
     );
 }

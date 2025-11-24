@@ -10,6 +10,8 @@ import { AuthModel } from '../../../../core/model/auth-model';
 import { AuthService } from '../../../../core/services/auth-service';
 import { Language } from '../../../../core/services/language';
 import { Router } from '@angular/router';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +38,8 @@ export class Login {
     public httpHelper:HttpHelper, 
     public authService:AuthService, 
     public language:Language,
-    public route:Router
+    public route:Router,
+    public matSnackBar:MatSnackBar,
   ) { 
     this.form = this.fb.group({
       name:[
@@ -74,9 +77,10 @@ export class Login {
         this.authService.setAuth(response);
         this.loading.set(false);
         this.route.navigate(['']); 
+        this.matSnackBar.open(this.language.transform("success"), this.language.transform('close'), successMatSnackbarConfig);
       },
       error:(error)=>{
-        console.log(JSON.stringify(error));
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
         this.loading.set(false);
       }
     })
