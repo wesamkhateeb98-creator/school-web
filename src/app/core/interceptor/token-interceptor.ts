@@ -32,7 +32,6 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
     return next(modifiedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
         let errorMessage = 'An unknown error occurred.';
-        console.log(error)
         if (error.error instanceof ErrorEvent) {
           errorMessage = `Client Error: ${error.error.message}`;
         } else {

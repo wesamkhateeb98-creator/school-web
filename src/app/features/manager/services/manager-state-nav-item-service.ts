@@ -11,7 +11,7 @@ export class ManagerNavItemStateService {
       url:"/manager/members",
       isSelected:false,
       name:"academic_year_title",
-      icon:"person"
+      icon:"date_range"
     },
     {
       url:"/manager/age-group",

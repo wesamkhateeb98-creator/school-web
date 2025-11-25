@@ -1,12 +1,7 @@
 <form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
-  <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_semester':'add_semester')}}</h2>
+  <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_age_group':'add_age_group')}}</h2>
   <mat-dialog-content>
-    
-    @if(this.form.hasError('dateRangeInvalid')){
-      <app-error-title-component [message]="language.transform('start_date_must_less_than_end_date')"/>
-      <br />
-    }
-    <mat-grid-list [cols]="loading()?1:2" rowHeight="70px" gutterSize="10px">
+    <mat-grid-list [cols]="1" rowHeight="70px" gutterSize="10px">
       @if(loading()){
         <mat-grid-tile>
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -25,35 +20,6 @@
             @else if(this.form.get('academicYear')?.hasError('minLength')){
               <mat-error>
                 {{language.transform('min_length_3')}}
-              </mat-error>
-            }
-          </mat-form-field>
-        </mat-grid-tile>
-        <mat-grid-tile >
-          <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("start_date_title")}}</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="startDate">
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            @if(this.form.get('startDate')?.hasError('required')){
-              <mat-error>
-                {{language.transform('field_required')}}
-              </mat-error>
-            }
-          </mat-form-field>
-        </mat-grid-tile>
-
-        <mat-grid-tile >
-          <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("end_date_title")}}</mat-label>
-            <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="pickerStart" formControlName="endDate">
-            
-            <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
-            <mat-datepicker #pickerStart></mat-datepicker>
-            @if(this.form.get('endDate')?.hasError('required')){
-              <mat-error>
-                {{language.transform('field_required')}}
               </mat-error>
             }
           </mat-form-field>

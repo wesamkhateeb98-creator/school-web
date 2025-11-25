@@ -8,15 +8,15 @@ import { MatInputModule } from "@angular/material/input";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { Language } from "../../../../../../core/services/language";
 import { ResponsiveScreen } from "../../../../../../core/services/responsive-screen";
+import { startDateMustLessEndDateValidator } from "../../../../../../core/validator/validator";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpHelper } from "../../../../../../core/services/http-helper";
 import { MutateResponse } from "../../../../view-model/mutate-response";
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
-import { yearMonthDay } from "../../../../../../core/formats/date-format";
+import { SubjectViewModel } from "../../model/subject-view-model";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
-import { AgeGroupViewModel } from "../../model/age-group-view-model";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -30,23 +30,23 @@ import { AgeGroupViewModel } from "../../model/age-group-view-model";
     MatInputModule,
     ReactiveFormsModule,
     MatProgressBarModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    ErrorTitleComponent
 ],
   providers:[provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './add-age-group-dialog.html',
-  styleUrl: './add-age-group-dialog.scss',
+  templateUrl: './add-subject-dialog.html',
+  styleUrl: './add-subject-dialog.scss',
 })
-export class AddAgeGroupDialog {
+export class AddSubjectDialog {
   loading = signal<boolean>(false);
   form!: FormGroup;
   key:string = crypto.randomUUID();
 
   data = inject(MAT_DIALOG_DATA);
 
-
   constructor(
-    public dialogRef:MatDialogRef<AddAgeGroupDialog>,
+    public dialogRef:MatDialogRef<AddSubjectDialog>,
     public language:Language,
     public responsiveScreen:ResponsiveScreen,
     public fb: FormBuilder,
@@ -55,9 +55,18 @@ export class AddAgeGroupDialog {
   ){
     this.form = this.fb.group(
       {
-        name: [ this.isUpdate()?this.data.ageGroup.name:'', [Validators.required, Validators.minLength(3)]],
+        subject: [ this.isUpdate()?this.data.subject.name:'', [Validators.required, Validators.minLength(3)]],
+        description: [ this.isUpdate()?this.data.subject.description:'', [Validators.required, Validators.minLength(3)]],
       }
     );
+  }
+
+  subject(){
+    return this.form.get('subject')
+  }
+
+  description(){
+    return this.form.get('description')
   }
 
   onNoClick(): void {
@@ -75,54 +84,62 @@ export class AddAgeGroupDialog {
     }else{
       this.addAcademicYear();    
     }
+    
     this.loading.set(false);
   }
 
 addAcademicYear(){
-    this.http.post<MutateResponse>("age-group",{
+    this.http.post<MutateResponse>("subject",{
       key:this.key,
-      name:this.form.get('name')?.value,
+      name:this.subject()?.value,
+      description:this.description()?.value,
+      ageGroupId: this.data.ageGroupId,
     }).subscribe({
       next: (success) => {
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
-        const data = new AgeGroupViewModel(
+        const data = new SubjectViewModel(
           success.id,
-          this.form.get('name')?.value,
+          this.subject()?.value,
+          this.description()?.value,
+          this.data.ageGroupId,
           new Date());
-        // this.data.ChangeAction(data);
         this.dialogRef.close({
           data
         });
       },
       error: (error) => {
-        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
       }
     });
   }
 
 
   updateAcademicYear(){
-    this.http.put<MutateResponse>("age-group/" + this.data.ageGroup.id,{
-      name:this.form.get('name')?.value,
+    this.http.put<MutateResponse>("subject/" + this.data.subject.id,{
+      name:this.subject()?.value,
+      description:this.description()?.value
     }).subscribe({
       next: success=>{
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
-        const data = new AgeGroupViewModel(
+        const data = new SubjectViewModel(
           success.id,
-          this.form.get('name')?.value,
+          this.subject()?.value,
+          this.description()?.value,
+          this.data.subject.ageGroupId,
           new Date());
+        // this.data.ChangeAction(data);
         this.dialogRef.close({
           data
         });
       },
       error: error=>{
-        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
       }
   });
   }
 
   isUpdate () : boolean{
-    return this.data && this.data.ageGroup && this.data.ageGroup != null ;
+    return this.data && this.data.subject && this.data.subject != null ;
   }
 
 }

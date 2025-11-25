@@ -68,7 +68,7 @@ export class AcademicYear{
 
 
   onLoading(){
-    this.httpHelper.get<Page<AcademicYearModel>>('AcademicYear',{
+    this.httpHelper.get<Page<AcademicYearModel>>('academic-year',{
       PageNumber:this.filter().selectedPage,
       PageSize: this.filter().pageSize
     }).subscribe(
@@ -138,7 +138,7 @@ export class AcademicYear{
         data:{
           title:this.language.transform('delete_academic_year'),
           action: ()=>{
-            this.httpHelper.delete<MutateResponse>("AcademicYear/"+id).subscribe(
+            this.httpHelper.delete<MutateResponse>("academic-year/"+id).subscribe(
                       success=>{
                         dialogRef.close();
                         this.academicYearViewModel.update(x=>{

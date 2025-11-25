@@ -53,7 +53,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'age_group_title': 'المرحلة العمرية',
         'add_age_group': 'إضافة مرحلة عمرية',
         'delete_age_group': 'حذف مرحلة عمرية',
-        'update_age_group': 'تعديل مرحلة عمرية'
+        'update_age_group': 'تعديل مرحلة عمرية',
+        'subject_title':'المادة',
+        'add_subject':'إضافة مادة',
+        'update_subject':'تعديل مادة',
+        'delete_subject': 'حذف مادة',
+        'description_title': 'الوصف'
     },
     en:{
         'name':"Name",
@@ -109,7 +114,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'age_group_title': 'Age Group',
         'add_age_group': 'Add age group',
         'delete_age_group': 'Delete age group',
-        'update_age_group': 'Update age group'
+        'update_age_group': 'Update age group',
+        'subject_title':'Subject',
+        'add_subject':'Add Subject',
+        'update_subject':'Update Subject',
+        'delete_subject': 'Delete Subject',
+        'description_title':"Description"
     }
 }
 
@@ -122,7 +132,8 @@ ButtonPhrases|
 SemesterPhrases|
 HttpErrors|
 Denied|
-AgeGroupPhrases; 
+AgeGroupPhrases|
+SubjectPhrases; 
 
 
 export type LoginPhrases = 
@@ -183,6 +194,14 @@ export type AgeGroupPhrases =
 'add_age_group'|
 'update_age_group'|
 'delete_age_group'
+;
+
+export type SubjectPhrases = 
+'subject_title'|
+'add_subject'|
+'update_subject'|
+'delete_subject'|
+'description_title'
 ;
 
 export type HttpErrors = 

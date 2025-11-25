@@ -77,7 +77,7 @@ this.form = this.fb.group({
   }
 
   addAcademicYear(){
-    this.http.post<MutateResponse>("AcademicYear",{
+    this.http.post<MutateResponse>("academic-year",{
       key:this.key,
       year:this.form.get('academicYear')?.value
     }).subscribe(
@@ -96,7 +96,7 @@ this.form = this.fb.group({
   }
 
   updateAcademicYear(){
-    this.http.put<MutateResponse>("AcademicYear/" + this.item().id,{
+    this.http.put<MutateResponse>("academic-year/" + this.item().id,{
       year:this.form.get('academicYear')?.value
     }).subscribe(
       success=>{
