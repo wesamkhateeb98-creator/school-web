@@ -46,7 +46,6 @@ export class AddSemesterDialog {
 
   data = inject(MAT_DIALOG_DATA);
 
-
   constructor(
     public dialogRef:MatDialogRef<AddSemesterDialog>,
     public language:Language,
@@ -57,7 +56,7 @@ export class AddSemesterDialog {
   ){
     this.form = this.fb.group(
       {
-        name: [ this.isUpdate()?this.data.semester.name:'', [Validators.required, Validators.minLength(3)]],
+        name: [ this.isUpdate()?this.data.semester.name:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
         startDate: [this.isUpdate()?this.data.semester.startDate:'', [Validators.required]],
         endDate: [this.isUpdate()?this.data.semester.endDate:'', [Validators.required]],
       },

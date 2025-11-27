@@ -30,6 +30,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'start_date_title':"تاريخ البداية",
         'end_date_title':"تاريخ النهاية",
         'min_length_3': 'طول النص يجب أن لا يقل عن 3 محارف',
+        'max_length_30': 'طول النص يجب ألا يتجاوز 30 محرف',
+        'max_length_100': 'طول النص يجب ألا يتجاوز 100 محرف',
         'add_semester':'إضافة فضل دراسي',
         'update_semester':'تعديل فضل دراسي',
         'start_date_must_less_than_end_date':'تاريخ البداية يجب أن يكون أصغر من تاريخ النهاية',
@@ -91,6 +93,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'start_date_title':"Start Date",
         'end_date_title':"End Date",
         'min_length_3': 'The length text must be greater than or equal 3',
+        'max_length_30': 'The text should not exceed 30 characters in length.',
+        'max_length_100': 'The text should not exceed 100 characters in length.',
         'add_semester':'Add semester',
         'update_semester':'Update semester',
         'start_date_must_less_than_end_date':'The start date must be less than the end date.',
@@ -166,6 +170,8 @@ export type ValidationMessagePhrases =
 'field_required'|
 'year_greater_than_or_equal_2025'|
 'min_length_3'|
+'max_length_30'|
+'max_length_100'|
 'start_date_must_less_than_end_date';
 
 export type ButtonPhrases = 

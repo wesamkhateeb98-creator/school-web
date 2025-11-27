@@ -22,9 +22,14 @@
                 {{language.transform('field_required')}}
               </mat-error>
             }
-            @else if(this.form.get('academicYear')?.hasError('minLength')){
+            @else if(this.form.get('name')?.hasError('minLength')){
               <mat-error>
                 {{language.transform('min_length_3')}}
+              </mat-error>
+            }
+            @else if(this.form.get('name')?.hasError('maxLength')){
+              <mat-error>
+                {{language.transform('max_length_30')}}
               </mat-error>
             }
           </mat-form-field>
