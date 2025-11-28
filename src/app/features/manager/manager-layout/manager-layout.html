@@ -25,7 +25,7 @@
                 <!-- {{language.direction() == 'rtl'?'side-nav-border-right':''}}  -->
 
                 @for (item of managerState.navItems; track $index) {
-                    <app-menu-item-component [navItem]="item" />
+                    <app-menu-item-component [navItem]="item" [level]="1"/>
                 }
             </mat-nav-list>
             
