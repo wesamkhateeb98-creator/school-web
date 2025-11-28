@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { NavItemViewModel } from '../../../view-model/NavItemViewModel';
+import { NavItemViewModel } from '../../../../shared/model/NavItemViewModel';
 import { Language } from '../../../../../core/services/language';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';

@@ -17,7 +17,7 @@ import { Page } from '../../../shared/model/page';
 import { AgeGroupFilterViewModel } from './model/age-group-filter-view-model';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
-import { MutateResponse } from '../../view-model/mutate-response';
+import { MutateResponse } from '../../../shared/model/mutate-response';
 
 @Component({
   selector: 'app-semester-component',

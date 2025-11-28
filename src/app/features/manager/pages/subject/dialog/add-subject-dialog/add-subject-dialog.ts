@@ -13,7 +13,7 @@ import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpHelper } from "../../../../../../core/services/http-helper";
-import { MutateResponse } from "../../../../view-model/mutate-response";
+import { MutateResponse } from "../../../../../shared/model/mutate-response";
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
 import { SubjectViewModel } from "../../model/subject-view-model";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";

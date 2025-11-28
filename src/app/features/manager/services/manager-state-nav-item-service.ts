@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NavItemViewModel } from '../view-model/NavItemViewModel';
+import { NavItemViewModel } from '../../shared/model/NavItemViewModel';
 
 @Injectable({
   providedIn: 'root',

@@ -18,7 +18,7 @@ import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../co
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../core/services/params-service';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
-import { MutateResponse } from '../../view-model/mutate-response';
+import { MutateResponse } from '../../../shared/model/mutate-response';
 
 
 @Component({

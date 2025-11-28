@@ -16,7 +16,7 @@ import { Page } from '../../../shared/model/page';
 import { SubjectFilterViewModel } from './model/subject-filter-view-model';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
-import { MutateResponse } from '../../view-model/mutate-response';
+import { MutateResponse } from '../../../shared/model/mutate-response';
 import { AddSubjectDialog } from './dialog/add-subject-dialog/add-subject-dialog';
 
 @Component({

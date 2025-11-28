@@ -9,7 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { HttpHelper } from '../../../../../../core/services/http-helper';
-import { MutateResponse } from '../../../../view-model/mutate-response';
+import { MutateResponse } from '../../../../../shared/model/mutate-response';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
 import { AcademicYearViewModel } from '../../model/academic-year-view-model';
