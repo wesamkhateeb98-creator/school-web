@@ -88,7 +88,7 @@ export class Semester {
         this.semesterViewModels.set(success.content)
       },
       (error)=>{
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
       }
     )
   }
@@ -148,10 +148,10 @@ export class Semester {
                         this.semesterViewModels.update(x=>{
                           return x.filter(item => item.id !== id);
                         })
-                        this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig);                        
+                        this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
                       },
                       error=>{
-                        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+                        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
                       }
                     );
             }  

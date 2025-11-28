@@ -94,7 +94,7 @@ addAcademicYear(){
       academicYearId: this.data.academicYearId,
     }).subscribe({
       next: (success) => {
-        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
         const data = new SemesterViewModel(
           success.id,
           this.form.get('name')?.value,
@@ -107,7 +107,7 @@ addAcademicYear(){
         });
       },
       error: (error) => {
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
     });
   }
@@ -121,7 +121,7 @@ addAcademicYear(){
       academicYearId: this.data.academicYearId,
     }).subscribe({
       next: success=>{
-        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
         const data = new SemesterViewModel(
           success.id,
           this.form.get('name')?.value,
@@ -134,7 +134,7 @@ addAcademicYear(){
         });
       },
       error: error=>{
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
   });
   }

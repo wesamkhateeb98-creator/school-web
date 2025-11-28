@@ -77,10 +77,10 @@ export class Login {
         this.authService.setAuth(response);
         this.loading.set(false);
         this.route.navigate(['']); 
-        this.matSnackBar.open(this.language.transform("success"), this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open(this.language.transform("success"), this.language.transform('close'), successMatSnackbarConfig(this.language));
       },
       error:(error)=>{
-        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
         this.loading.set(false);
       }
     })

@@ -84,7 +84,7 @@ export class AcademicYear{
         this.academicYearViewModel.set(success.content)
       },
       (error)=>{
-        this.matSnackBar.open(error.message, this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
     )
   }
@@ -144,10 +144,10 @@ export class AcademicYear{
                         this.academicYearViewModel.update(x=>{
                           return x.filter(item => item.id !== id);
                         });
-                        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);                        
+                        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));                        
                       },
                       error=>{
-                        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
+                        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
                       }
                     );
             }

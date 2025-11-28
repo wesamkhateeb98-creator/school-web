@@ -84,7 +84,7 @@ addAcademicYear(){
       name:this.form.get('name')?.value,
     }).subscribe({
       next: (success) => {
-        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
         const data = new AgeGroupViewModel(
           success.id,
           this.form.get('name')?.value,
@@ -95,7 +95,7 @@ addAcademicYear(){
         });
       },
       error: (error) => {
-        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
     });
   }
@@ -106,7 +106,7 @@ addAcademicYear(){
       name:this.form.get('name')?.value,
     }).subscribe({
       next: success=>{
-        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
         const data = new AgeGroupViewModel(
           success.id,
           this.form.get('name')?.value,
@@ -116,7 +116,7 @@ addAcademicYear(){
         });
       },
       error: error=>{
-        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
   });
   }

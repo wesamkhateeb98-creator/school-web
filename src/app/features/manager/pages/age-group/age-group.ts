@@ -82,7 +82,7 @@ export class AgeGroup {
         this.ageGroupViewModels.set(success.content)
       },
       error:(error)=>{
-        this.matSnackBar.open(error.message, this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), successMatSnackbarConfig(this.language));
       }
     })
   }
@@ -137,10 +137,10 @@ export class AgeGroup {
               this.ageGroupViewModels.update(x=>{
                 return x.filter(item => item.id !== id);
               })
-              this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);                        
+              this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));                        
             },
             error: error=>{
-              this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
+              this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
             }
           });
             }  

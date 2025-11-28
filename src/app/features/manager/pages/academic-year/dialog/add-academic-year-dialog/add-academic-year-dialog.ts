@@ -82,7 +82,7 @@ this.form = this.fb.group({
       year:this.form.get('academicYear')?.value
     }).subscribe(
       success=>{
-        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
         const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
         // this.data.ChangeAction(data);
         this.dialogRef.close({
@@ -90,7 +90,7 @@ this.form = this.fb.group({
         });
       },
       error=>{
-        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
     );
   }
@@ -100,14 +100,14 @@ this.form = this.fb.group({
       year:this.form.get('academicYear')?.value
     }).subscribe(
       success=>{
-        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig);
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
         const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
         this.dialogRef.close({
           data
         });
       },
       error=>{
-        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig);
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
     );
   }
