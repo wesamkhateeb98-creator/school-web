@@ -9,20 +9,62 @@ export class ManagerNavItemStateService {
   navItems: NavItemViewModel[] = [
     {
       url:"/manager/members",
-      isSelected:false,
       name:"academic_year_title",
-      icon:"date_range"
+      icon:"date_range",
+      isExpended:false
     },
     {
       url:"/manager/age-group",
-      isSelected:false,
       name:"age_group_title",
-      icon:"group"
+      icon:"group",
+      isExpended:false
+    },
+    {
+      url:"/manager/age-group",
+      name:"age_group_title",
+      icon:"group",
+      subItem:[
+        {
+          url:"/manager/members",
+          name:"academic_year_title",
+          icon:"date_range",
+          isExpended:false
+        },
+        {
+          url:"/manager/age-group",
+          name:"age_group_title",
+          icon:"group",
+          isExpended:false,
+          subItem:[
+            {
+              url:"/manager/members",
+              name:"academic_year_title",
+              icon:"date_range",
+              isExpended:false
+            },
+            {
+              url:"/manager/age-group",
+              name:"age_group_title",
+              icon:"group",
+              isExpended:false,
+              subItem:[{
+          url:"/manager/members",
+          name:"academic_year_title",
+          icon:"date_range",
+          isExpended:false
+        },
+        {
+          url:"/manager/age-group",
+          name:"age_group_title",
+          icon:"group",
+          isExpended:false
+        },  ]
+            },  
+          ]
+        },  
+      ],
+      isExpended:false
     }
   ];
 
-  selectItem(selectedItem: NavItemViewModel): void {
-    this.navItems.forEach(item => item.isSelected = false);
-    selectedItem.isSelected = true;
-  }
 }

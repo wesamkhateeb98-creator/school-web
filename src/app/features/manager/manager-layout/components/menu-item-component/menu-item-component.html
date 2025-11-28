@@ -1,0 +1,33 @@
+
+@if(!navItem.subItem){
+    <a mat-list-item 
+        [routerLink]="navItem.url" 
+        class="side-nav-item">
+        <mat-icon matListItemIcon>{{navItem.icon}}</mat-icon>
+        <span>{{language.transform(navItem.name)}}</span>
+    </a>
+}@else {
+    <a mat-list-item 
+        (click)="navItem.isExpended = !navItem.isExpended"
+        class="side-nav-item">
+        <mat-icon matListItemIcon style="font-size: 100%;">{{navItem.icon}}</mat-icon>
+        <span>{{language.transform(navItem.name)}}</span>
+        <span class="material-symbols-outlined">
+            arrow_drop_down
+        </span>
+        <!-- <mat-icon matListItemIcon>{{navItem.isExpended?'arrow_drop_down':'arrow_right'}}</mat-icon> -->
+    </a>
+
+    @if (navItem.isExpended) {
+        @for (item of navItem.subItem; track $index) {
+            <app-menu-item-component [navItem]="item"/>
+            <!-- <a mat-list-item 
+                [routerLink]="item.url" 
+                class="side-nav-item">
+                <mat-icon matListItemIcon>{{item.icon}}</mat-icon>
+                <span>{{language.transform(item.name)}}</span>
+            </a> -->
+        }
+    }
+    
+}

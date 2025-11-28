@@ -25,12 +25,7 @@
                 <!-- {{language.direction() == 'rtl'?'side-nav-border-right':''}}  -->
 
                 @for (item of managerState.navItems; track $index) {
-                    <a mat-list-item 
-                    routerLink="{{item.url}}" 
-                        class="side-nav-item">
-                        <mat-icon matListItemIcon>{{item.icon}}</mat-icon>
-                        <span>{{language.transform(item.name)}}</span>
-                    </a>
+                    <app-menu-item-component [navItem]="item" />
                 }
             </mat-nav-list>
             

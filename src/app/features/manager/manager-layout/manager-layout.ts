@@ -9,6 +9,7 @@ import { SettingButtonComponent } from "../../shared/components/setting-button-c
 import { Language } from '../../../core/services/language';
 import { ResponsiveScreen } from '../../../core/services/responsive-screen';
 import { AuthService } from '../../../core/services/auth-service';
+import { MenuItemComponent } from "./components/menu-item-component/menu-item-component";
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -17,9 +18,9 @@ import { AuthService } from '../../../core/services/auth-service';
     MatToolbarModule,
     MatIconModule,
     MatListModule,
-    RouterLink,
     RouterOutlet,
-    SettingButtonComponent
+    SettingButtonComponent,
+    MenuItemComponent
 ],
   templateUrl: './manager-layout.html',
   styleUrl: './manager-layout.scss',

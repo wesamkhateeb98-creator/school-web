@@ -1,0 +1,10 @@
+<a mat-list-item 
+    (click)="navItem.isExpended = !navItem.isExpended"
+    class="side-nav-item">
+    <mat-icon matListItemIcon style="font-size: 100%;">{{navItem.icon}}</mat-icon>
+    <span>{{language.transform(navItem.name)}}</span>
+    <span class="material-symbols-outlined">
+        arrow_drop_down
+    </span>
+    <!-- <mat-icon matListItemIcon>{{navItem.isExpended?'arrow_drop_down':'arrow_right'}}</mat-icon> -->
+</a>
