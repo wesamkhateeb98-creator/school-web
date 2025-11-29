@@ -11,13 +11,8 @@ import { ResponsiveScreen } from "../../../../../../core/services/responsive-scr
 import { startDateMustLessEndDateValidator } from "../../../../../../core/validator/validator";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { HttpHelper } from "../../../../../../core/services/http-helper";
-import { MutateResponse } from "../../../../../shared/model/mutate-response";
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
-import { yearMonthDay } from "../../../../../../core/formats/date-format";
-import { SemesterViewModel } from "../../model/semester-view-model";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
+import { SemesterEndpoints } from "../../../../endpoints/semester-endpoints";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -51,18 +46,12 @@ export class AddSemesterDialog {
     public language:Language,
     public responsiveScreen:ResponsiveScreen,
     public fb: FormBuilder,
-    public http:HttpHelper,
-    public matSnackBar:MatSnackBar
+    public semesterEndpoints: SemesterEndpoints
   ){
     this.form = this.fb.group(
       {
         name: [ this.isUpdate()?this.data.semester.name:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-        startDate: [this.isUpdate()?this.data.semester.startDate:'', [Validators.required]],
-        endDate: [this.isUpdate()?this.data.semester.endDate:'', [Validators.required]],
-      },
-      {
-        validators: [startDateMustLessEndDateValidator]
-      }
+      } 
     );
   }
 
@@ -85,58 +74,29 @@ export class AddSemesterDialog {
     this.loading.set(false);
   }
 
-addAcademicYear(){
-    this.http.post<MutateResponse>("semester",{
-      key:this.key,
-      name:this.form.get('name')?.value,
-      startDate:yearMonthDay( this.form.get('startDate')?.value),
-      endDate:yearMonthDay(this.form.get('endDate')?.value),
-      academicYearId: this.data.academicYearId,
-    }).subscribe({
-      next: (success) => {
-        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-        const data = new SemesterViewModel(
-          success.id,
-          this.form.get('name')?.value,
-          this.form.get('startDate')?.value,
-          this.form.get('endDate')?.value,
-          new Date());
-        // this.data.ChangeAction(data);
-        this.dialogRef.close({
-          data
-        });
-      },
-      error: (error) => {
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-      }
-    });
+  addAcademicYear(){
+    const data = this.semesterEndpoints.add(
+      this.key,
+      this.form.get('name')?.value
+    )
+    if(data != null){
+      this.dialogRef.close({
+        data
+      });
+    }
   }
 
 
   updateAcademicYear(){
-    this.http.put<MutateResponse>("semester/" + this.data.semester.id,{
-      name:this.form.get('name')?.value,
-      startDate:yearMonthDay( this.form.get('startDate')?.value),
-      endDate:yearMonthDay(this.form.get('endDate')?.value),
-      academicYearId: this.data.academicYearId,
-    }).subscribe({
-      next: success=>{
-        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-        const data = new SemesterViewModel(
-          success.id,
-          this.form.get('name')?.value,
-          this.form.get('startDate')?.value,
-          this.form.get('endDate')?.value,
-          new Date());
-        // this.data.ChangeAction(data);
-        this.dialogRef.close({
-          data
-        });
-      },
-      error: error=>{
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-      }
-  });
+    const data = this.semesterEndpoints.update(
+      this.data.semester.id,
+      this.form.get('name')?.value
+    );
+    if(data != null){
+      this.dialogRef.close({
+        data
+      });
+    }
   }
 
   isUpdate () : boolean{

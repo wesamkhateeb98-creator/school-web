@@ -12,15 +12,14 @@ export const DASHBOARD_ROUTES: Routes = [
     component: DashboardLayout, 
     children: [
       { 
-        path: 'academic_year', 
-        children:[
-          { path:'', component: AcademicYear, title: messageTitle('academic_year_title')},
-          { 
-            path:':id/semester', 
-            component: Semester, 
-            title: messageTitle('semester_title')
-          },
-        ],
+        path:'academic_year', 
+        component: AcademicYear, 
+        title: messageTitle('academic_year_title')
+      },
+      { 
+        path:'semster', 
+        component: Semester, 
+        title: messageTitle('semester_title')
       },
       { 
         path: 'age-group', 
@@ -37,4 +36,5 @@ export const DASHBOARD_ROUTES: Routes = [
       { path: '**', redirectTo: 'academic_year', pathMatch: 'full' },
     ],
   },
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

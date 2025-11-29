@@ -56,7 +56,7 @@ export class SubjectPage {
     this.ageGroupId = Number(route.snapshot.paramMap.get('id'));
 
     this.filter.update(x=>{
-      const param = parmas.loadFromUrl<SubjectFilterViewModel>();
+      const param = parmas.loadFromUrl<SubjectFilterViewModel>(this.filter());
 
       x.pageSize = param.pageSize? param.pageSize: 10;
       x.selectedPage = param.selectedPage? param.selectedPage: 1

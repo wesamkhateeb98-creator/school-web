@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,16 +8,17 @@ import { MatTableModule } from '@angular/material/table';
 import { SemesterViewModel } from './model/semester-view-model';
 import { Language } from '../../../../core/services/language';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AddSemesterDialog } from './dialog/add-semester-dialog/add-semester-dialog';
-import { HttpHelper } from '../../../../core/services/http-helper';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../core/services/params-service';
-import { Page } from '../../../shared/model/page';
 import { SemesterFilterViewModel } from './model/semester-filter-view-model';
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
-import { MutateResponse } from '../../../shared/model/mutate-response';
+import { SemesterEndpoints } from '../../endpoints/semester-endpoints';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { FormBuilder, FormGroup, ReactiveFormsModule, ɵInternalFormsSharedModule } from '@angular/forms';
+import { debounce, debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-semester-component',
@@ -27,80 +28,87 @@ import { MutateResponse } from '../../../shared/model/mutate-response';
     MatPaginatorModule,
     MatCard,
     MatIconModule,
-    MatButtonModule
-  ],
+    MatButtonModule,
+    MatExpansionModule,
+    MatFormFieldModule, MatInputModule,ReactiveFormsModule,
+    ɵInternalFormsSharedModule
+],
   templateUrl: './semester.html',
   styleUrl: './semester.scss',
 })
 export class Semester {
   semesterViewModels = signal<SemesterViewModel[]>([]);
-  headerTable:string[] = ['semester','startDate','endDate','createdAt','action'];
-  academicYearId!:number;
+  headerTable:string[] = ['semester','createdAt','action'];
+  form!: FormGroup;
+
 
   filter = signal<SemesterFilterViewModel>( {
       pageSize:10,
-      selectedPage:1
+      selectedPage:1,
+      name: ''
     });
 
-    totalPages= signal<number>(10);
+  totalPages= signal<number>(10);
 
   constructor(
     public language:Language, 
     public dialog :MatDialog,
-    route: ActivatedRoute,
     public router:Router,
-    public httpHelper:HttpHelper,
-    public matSnackBar:MatSnackBar,
-    public parmas:ParamsService
+    public parmas:ParamsService,
+    public semesterEndpoints:SemesterEndpoints,
+    public fb: FormBuilder,
   ){
-    this.academicYearId = Number(route.snapshot.paramMap.get('id'));
     this.filter.update(x=>{
-      const param = parmas.loadFromUrl<SemesterFilterViewModel>();
+      const param = parmas.loadFromUrl<SemesterFilterViewModel>(this.filter());
 
       x.pageSize = param.pageSize? param.pageSize: 10;
-      x.selectedPage = param.selectedPage? param.selectedPage: 1
-      
-      parmas.setToUrl(x);
+      x.selectedPage = param.selectedPage? param.selectedPage: 1;
+      console.log(param.name)
+      x.name = param.name
 
       return x;
     });
+    effect(()=>{
+      console.log("asdsad");
+      parmas.setToUrl(this.filter());
+    })
+    this.form = this.fb.group(
+      {
+        name: [this.filter().name??''],
+      } 
+    );
+    this.form.valueChanges.pipe(debounceTime(500)).subscribe(value=>{
+      this.filter.update(prev => ({ ...prev, name: value.name }));
+      this.onLoading();
+    })
     this.onLoading();
   }
 
-    openAcademicYearPage(){
-      this.router.navigate(['manager/academic_year']);
-    }
-
   onLoading(){
-    this.httpHelper.get<Page<SemesterViewModel>>('semester',{
-      PageNumber:this.filter().selectedPage,
-      PageSize: this.filter().pageSize,
-      academicYearId:this.academicYearId
-    }).subscribe(
-      (success)=>{
-        this.filter.update(x=>
+    const data = this.semesterEndpoints.get(
+      this.filter().selectedPage,
+      this.filter().pageSize,
+      this.filter().name
+    )
+
+    if(data != null){
+      this.filter.update(x=>
         {
-          x.pageSize = success.pageSize;
-          x.selectedPage = success.pageNumber;  
+          x.pageSize = data.pageSize;
+          x.selectedPage = data.pageNumber;  
           return x;
         });
-        this.totalPages.set(success.countPages)
-        this.semesterViewModels.set(success.content)
-      },
-      (error)=>{
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
-      }
-    )
+        this.totalPages.set(data.countPages)
+        this.semesterViewModels.set(data.content)
+    }
+
   }
 
   openAddDialog(){
     const dialogRef = this.dialog.open(
       AddSemesterDialog, 
       {
-        width: "80%",
-        data:{     
-          academicYearId: this.academicYearId
-        }
+        width: "80%"
       }
     );
     
@@ -115,8 +123,7 @@ export class Semester {
         AddSemesterDialog, 
         {
           width: "80%",
-          data:{     
-            academicYearId: this.academicYearId,
+          data:{
             semester: semesterViewModel
           }
         }
@@ -142,21 +149,16 @@ export class Semester {
         data:{
           title:this.language.transform('delete_semester'),
           action: ()=>{
-            this.httpHelper.delete<MutateResponse>("semester/"+id).subscribe(
-                      success=>{
-                        dialogRef.close();
-                        this.semesterViewModels.update(x=>{
-                          return x.filter(item => item.id !== id);
-                        })
-                        this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
-                      },
-                      error=>{
-                        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-                      }
-                    );
-            }  
-        },
-        width: "80%"
+            const idResponse = this.semesterEndpoints.delete(id)
+            if(idResponse != null){
+              dialogRef.close();
+                this.semesterViewModels.update(x=>{
+                  return x.filter(item => item.id !== id);
+              })
+            }
+          },
+          width: "80%"
+        }
       }
     );
     
@@ -169,7 +171,7 @@ export class Semester {
           x.selectedPage = pageEvent.pageIndex + 1;  
           return x;
         });
-      this.onLoading();
-      this.parmas.setToUrl(this.filter())
+    this.onLoading();
+    // this.parmas.setToUrl(this.filter())
   }  
 }

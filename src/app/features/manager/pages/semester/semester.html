@@ -1,18 +1,28 @@
-<div style="display: flex; justify-content: space-between;">
-    <div style="display: flex;">
-        <h2 >{{language.transform('semester_title')}}</h2>
-        <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
-            <mat-icon>add</mat-icon>
-        </button>
-    </div>
-    
-    
-    <button matFab (click)="openAcademicYearPage()" style="margin: 0 20px ">
-            <mat-icon>arrow_back</mat-icon>
-        </button>
-    
+<div style="display: flex; justify-content: start;">
+    <h2 >{{language.transform('semester_title')}}</h2>
+    <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
+        <mat-icon>add</mat-icon>
+    </button>
 </div>
+
 <br/>
+
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title> {{language.transform('filter')}}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form class="example-form" [formGroup]="form">
+        <mat-form-field  class="example-full-width" style="width: 100%;">
+            <mat-label>{{ language.transform("name") }}</mat-label>
+            <input type="text" matInput formControlName="name">
+        </mat-form-field>
+    </form>
+    
+</mat-expansion-panel>
+
+<br/>
+
 
 <mat-card>
     <table mat-table [dataSource]="semesterViewModels()" class="mat-elevation-z8">
@@ -23,21 +33,11 @@
     </ng-container>
 
     <ng-container matColumnDef="{{headerTable[1]}}">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('start_date_title')}} </th>
-        <td mat-cell *matCellDef="let element"> {{ element.startDate|date:'yyyy-MM-dd' }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="{{headerTable[2]}}">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('end_date_title')}} </th>
-        <td mat-cell *matCellDef="let element"> {{ element.endDate|date:'yyyy-MM-dd' }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="{{headerTable[3]}}">
         <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('created_at_title')}} </th>
         <td mat-cell *matCellDef="let element"> {{ element.createdAt|date:'yyyy-MM-dd HH:mm:ss' }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="{{headerTable[4]}}" stickyEnd>
+    <ng-container matColumnDef="{{headerTable[2]}}" stickyEnd>
         <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
         <td mat-cell *matCellDef="let element"> 
             <div style="display: flex; justify-content: space-between;">

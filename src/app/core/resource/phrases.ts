@@ -60,7 +60,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'add_subject':'إضافة مادة',
         'update_subject':'تعديل مادة',
         'delete_subject': 'حذف مادة',
-        'description_title': 'الوصف'
+        'description_title': 'الوصف',
+        'registrations_title': 'تسجيلات',
+        'filter':'فلتر'
     },
     en:{
         'name':"Name",
@@ -123,7 +125,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'add_subject':'Add Subject',
         'update_subject':'Update Subject',
         'delete_subject': 'Delete Subject',
-        'description_title':"Description"
+        'description_title':"Description",
+        'registrations_title': 'Registrations',
+        'filter':'filter'
     }
 }
 
@@ -137,8 +141,13 @@ SemesterPhrases|
 HttpErrors|
 Denied|
 AgeGroupPhrases|
-SubjectPhrases; 
+SubjectPhrases|
+GlobalType ;
 
+
+export type GlobalType = 
+'registrations_title' |
+'filter'
 
 export type LoginPhrases = 
 'name' 
@@ -225,3 +234,5 @@ export type Denied =
     'denied_header'|
     'denied_content'
 ;
+
+

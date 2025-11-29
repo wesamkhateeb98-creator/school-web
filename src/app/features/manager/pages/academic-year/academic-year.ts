@@ -54,7 +54,7 @@ export class AcademicYear{
     public parmas:ParamsService
   ){
     this.filter.update(x=>{
-      const param = parmas.loadFromUrl<AcademicYearFilterModel>();
+      const param = parmas.loadFromUrl<AcademicYearFilterModel>(this.filter());
 
       x.pageSize = param.pageSize? param.pageSize: 10;
       x.selectedPage = param.selectedPage? param.selectedPage: 1
