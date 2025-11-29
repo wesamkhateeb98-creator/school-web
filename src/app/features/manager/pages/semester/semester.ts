@@ -63,13 +63,11 @@ export class Semester {
 
       x.pageSize = param.pageSize? param.pageSize: 10;
       x.selectedPage = param.selectedPage? param.selectedPage: 1;
-      console.log(param.name)
       x.name = param.name
 
       return x;
     });
     effect(()=>{
-      console.log("asdsad");
       parmas.setToUrl(this.filter());
     })
     this.form = this.fb.group(

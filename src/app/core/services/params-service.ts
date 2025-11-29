@@ -19,10 +19,6 @@ export class ParamsService {
     for (const key of Object.keys(defaultFilter)) {
       if (params.hasOwnProperty(key)) {
         const value = params[key];
-        console.log(key)
-        
-        console.log(key)
-        console.log(value)
         if (typeof defaultFilter[key] === 'string' || defaultFilter[key] === undefined) {
           filter[key] = value !== null && value !== undefined ? String(value) : null;
         } else {
@@ -42,6 +38,8 @@ export class ParamsService {
     for (const key of Object.keys(filter)) {
       const value = filter[key];
       if (value !== null && value !== '') {
+        if(typeof value == 'string' && value.trim().length == 0)
+          continue;
         queryParams[key] = value;
       }
     }
@@ -49,7 +47,7 @@ export class ParamsService {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
-      queryParamsHandling: 'merge',
+      queryParamsHandling: 'replace',
     });
   }
 }
