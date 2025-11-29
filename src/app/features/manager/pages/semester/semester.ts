@@ -21,6 +21,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, ɵInternalFormsSharedModul
 import { debounce, debounceTime } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-semester-component',
@@ -33,7 +34,8 @@ import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../co
     MatButtonModule,
     MatExpansionModule,
     MatFormFieldModule, MatInputModule,ReactiveFormsModule,
-    ɵInternalFormsSharedModule
+    ɵInternalFormsSharedModule,
+    MatProgressBarModule 
 ],
   templateUrl: './semester.html',
   styleUrl: './semester.scss',
@@ -42,7 +44,7 @@ export class Semester {
   semesterViewModels = signal<SemesterViewModel[]>([]);
   headerTable:string[] = ['semester','createdAt','action'];
   form!: FormGroup;
-
+  loading = signal<boolean>(false) ;
 
   filter = signal<SemesterFilterViewModel>( {
       pageSize:10,
@@ -91,26 +93,27 @@ export class Semester {
       this.filter().pageSize,
       this.filter().name
     )
-
+    this.loading.set(true);
     result.subscribe({
-            next:(success)=>{
-              this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-              
-              this.filter.update(x=>
-              {
-                x.pageSize = success.pageSize;
-                x.selectedPage = success.pageNumber;  
-                return x;
-              });
-              this.totalPages.set(success.countPages)
-              this.semesterViewModels.set(success.content)
-
-              return success;
-            },
-            error:(error)=>{
-              this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
-            }
-        })
+      next:(success)=>{
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        
+        this.filter.update(x=>
+        {
+          x.pageSize = success.pageSize;
+          x.selectedPage = success.pageNumber;  
+          return x;
+        });
+        this.totalPages.set(success.countPages)
+        this.semesterViewModels.set(success.content)
+        this.loading.set(false);
+        
+      },
+      error:(error)=>{
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
+        this.loading.set(false);
+      }
+    })
   }
 
   openAddDialog(){

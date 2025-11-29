@@ -14,6 +14,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
 import { AcademicYearViewModel } from '../../model/academic-year-view-model';
 import { AcademicYearModel } from '../../model/academic-year-model';
+import { AcademicYearEndpoints } from '../../../../endpoints/academic-year-endpoints';
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -45,7 +46,7 @@ export class AddAcademicYearDialog {
     public language:Language,
     public responsiveScreen:ResponsiveScreen,
     public fb: FormBuilder,
-    public http:HttpHelper,
+    public academicYearEndpoints:AcademicYearEndpoints,
     public matSnackBar:MatSnackBar
   ){
 this.form = this.fb.group({
@@ -77,39 +78,36 @@ this.form = this.fb.group({
   }
 
   addAcademicYear(){
-    this.http.post<MutateResponse>("academic-year",{
-      key:this.key,
-      year:this.form.get('academicYear')?.value
-    }).subscribe(
-      success=>{
-        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-        const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
-        // this.data.ChangeAction(data);
-        this.dialogRef.close({
-          data
-        });
-      },
-      error=>{
-        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-      }
-    );
+    this.academicYearEndpoints.add(this.key,this.form.get('academicYear')?.value)
+      .subscribe({
+        next: success=>{
+          this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+          const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
+          // this.data.ChangeAction(data);
+          this.dialogRef.close({
+            data
+          });
+        },
+        error: error=>{
+          this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        }    
+    });
   }
 
   updateAcademicYear(){
-    this.http.put<MutateResponse>("academic-year/" + this.item().id,{
-      year:this.form.get('academicYear')?.value
-    }).subscribe(
-      success=>{
+    this.academicYearEndpoints.update(this.item().id,this.form.get('academicYear')?.value)
+    .subscribe({
+      next:success=>{
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
         const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
         this.dialogRef.close({
           data
         });
       },
-      error=>{
+      error: error=>{
         this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
-    );
+    });
   }
 
   isUpdate () : boolean{

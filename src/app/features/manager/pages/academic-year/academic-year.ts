@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { AcademicYearViewModel } from './model/academic-year-view-model';
 import { DatePipe } from '@angular/common';
@@ -10,16 +10,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { AddAcademicYearDialog } from './dialog/add-academic-year-dialog/add-academic-year-dialog';
 import { Router } from '@angular/router';
-import { HttpHelper } from '../../../../core/services/http-helper';
 import { AcademicYearFilterModel } from './model/academic-year-filter-model';
-import { Page } from '../../../shared/model/page';
-import { AcademicYearModel } from './model/academic-year-model';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../core/services/params-service';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
-import { MutateResponse } from '../../../shared/model/mutate-response';
-
+import { AcademicYearEndpoints } from '../../endpoints/academic-year-endpoints';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-academic-year',
@@ -29,7 +26,8 @@ import { MutateResponse } from '../../../shared/model/mutate-response';
     MatPaginatorModule,
     MatCard,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressBarModule
 ],
   templateUrl: './academic-year.html',
   styleUrl: './academic-year.scss',
@@ -38,7 +36,8 @@ import { MutateResponse } from '../../../shared/model/mutate-response';
 export class AcademicYear{
   academicYearViewModel = signal<AcademicYearViewModel[]>([]);
   headerTable:string[] = ['academic','createdAt','Action'];
-  
+  loading = signal<boolean>(false);
+
   filter = signal<AcademicYearFilterModel>( {
       pageSize:10,
       selectedPage:1
@@ -49,7 +48,7 @@ export class AcademicYear{
     public language:Language, 
     public dialog :MatDialog,
     public router:Router,
-    public httpHelper:HttpHelper,
+    public academicYearEndpoints:AcademicYearEndpoints,
     public matSnackBar:MatSnackBar,
     public parmas:ParamsService
   ){
@@ -68,25 +67,28 @@ export class AcademicYear{
 
 
   onLoading(){
-    this.httpHelper.get<Page<AcademicYearModel>>('academic-year',{
-      PageNumber:this.filter().selectedPage,
-      PageSize: this.filter().pageSize
-    }).subscribe(
-      (success)=>{
+    this.loading.set(true);
+
+    this.academicYearEndpoints.get(
+      this.filter().selectedPage,
+      this.filter().pageSize
+    ).subscribe({
+      next:(success)=>{
         this.filter.update(x=>
         {
           x.pageSize = success.pageSize;
           x.selectedPage = success.pageNumber;  
           return x;
         });
-        //success.countPages
         this.totalPages.set(success.countPages)
         this.academicYearViewModel.set(success.content)
+        this.loading.set(false);
       },
-      (error)=>{
+      error: (error)=>{
         this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        this.loading.set(false);
       }
-    )
+    })
   }
 
   openSemesterPage(academicYears:AcademicYearViewModel){
@@ -138,19 +140,19 @@ export class AcademicYear{
         data:{
           title:this.language.transform('delete_academic_year'),
           action: ()=>{
-            this.httpHelper.delete<MutateResponse>("academic-year/"+id).subscribe(
-                      success=>{
-                        dialogRef.close();
-                        this.academicYearViewModel.update(x=>{
-                          return x.filter(item => item.id !== id);
-                        });
-                        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));                        
-                      },
-                      error=>{
-                        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-                      }
-                    );
-            }
+            this.academicYearEndpoints.delete(id).subscribe({
+              next: success=>{
+                dialogRef.close();
+                this.academicYearViewModel.update(x=>{
+                  return x.filter(item => item.id !== id);
+                });
+                this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));                        
+              },
+              error: error=>{
+                this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+              }
+            });
+          }
         },
         width: "80%"
       }
