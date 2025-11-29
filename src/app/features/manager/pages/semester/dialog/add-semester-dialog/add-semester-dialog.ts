@@ -13,6 +13,9 @@ import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
 import { SemesterEndpoints } from "../../../../endpoints/semester-endpoints";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
+import { SemesterViewModel } from "../../model/semester-view-model";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -46,7 +49,8 @@ export class AddSemesterDialog {
     public language:Language,
     public responsiveScreen:ResponsiveScreen,
     public fb: FormBuilder,
-    public semesterEndpoints: SemesterEndpoints
+    public semesterEndpoints: SemesterEndpoints,
+    public matSnackBar:MatSnackBar,
   ){
     this.form = this.fb.group(
       {
@@ -75,28 +79,50 @@ export class AddSemesterDialog {
   }
 
   addAcademicYear(){
-    const data = this.semesterEndpoints.add(
+    const result = this.semesterEndpoints.add(
       this.key,
       this.form.get('name')?.value
     )
-    if(data != null){
-      this.dialogRef.close({
-        data
+    
+    result.subscribe({
+        next: (success) => {
+          this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+          const data = new SemesterViewModel(
+            success.id,
+            this.form.get('name')?.value,
+            new Date());
+          this.dialogRef.close({
+            data
+          });
+        },
+        error: (error) => {
+          this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        }
       });
-    }
   }
 
 
   updateAcademicYear(){
-    const data = this.semesterEndpoints.update(
+    const result = this.semesterEndpoints.update(
       this.data.semester.id,
       this.form.get('name')?.value
     );
-    if(data != null){
-      this.dialogRef.close({
-        data
-      });
-    }
+
+    result.subscribe({
+      next: success=>{
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        const data = new SemesterViewModel(
+          success.id,
+          this.form.get('name')?.value,
+          new Date());
+        this.dialogRef.close({
+          data
+        });  
+      },
+      error: error=>{
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+      }
+    });
   }
 
   isUpdate () : boolean{

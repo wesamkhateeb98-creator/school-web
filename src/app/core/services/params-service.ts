@@ -15,7 +15,6 @@ export class ParamsService {
     const params = this.route.snapshot.queryParams;
 
     const filter: any = {};
-    console.log(Object.keys(defaultFilter));
     for (const key of Object.keys(defaultFilter)) {
       if (params.hasOwnProperty(key)) {
         const value = params[key];

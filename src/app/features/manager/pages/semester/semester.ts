@@ -19,6 +19,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ɵInternalFormsSharedModule } from '@angular/forms';
 import { debounce, debounceTime } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 
 @Component({
   selector: 'app-semester-component',
@@ -57,6 +59,7 @@ export class Semester {
     public parmas:ParamsService,
     public semesterEndpoints:SemesterEndpoints,
     public fb: FormBuilder,
+    public matSnackBar:MatSnackBar,
   ){
     this.filter.update(x=>{
       const param = parmas.loadFromUrl<SemesterFilterViewModel>(this.filter());
@@ -82,24 +85,32 @@ export class Semester {
     this.onLoading();
   }
 
-  onLoading(){
-    const data = this.semesterEndpoints.get(
+  async onLoading(){
+    const result = this.semesterEndpoints.get(
       this.filter().selectedPage,
       this.filter().pageSize,
       this.filter().name
     )
 
-    if(data != null){
-      this.filter.update(x=>
-        {
-          x.pageSize = data.pageSize;
-          x.selectedPage = data.pageNumber;  
-          return x;
-        });
-        this.totalPages.set(data.countPages)
-        this.semesterViewModels.set(data.content)
-    }
+    result.subscribe({
+            next:(success)=>{
+              this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+              
+              this.filter.update(x=>
+              {
+                x.pageSize = success.pageSize;
+                x.selectedPage = success.pageNumber;  
+                return x;
+              });
+              this.totalPages.set(success.countPages)
+              this.semesterViewModels.set(success.content)
 
+              return success;
+            },
+            error:(error)=>{
+              this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
+            }
+        })
   }
 
   openAddDialog(){
@@ -147,13 +158,20 @@ export class Semester {
         data:{
           title:this.language.transform('delete_semester'),
           action: ()=>{
-            const idResponse = this.semesterEndpoints.delete(id)
-            if(idResponse != null){
-              dialogRef.close();
-                this.semesterViewModels.update(x=>{
-                  return x.filter(item => item.id !== id);
-              })
-            }
+            const result = this.semesterEndpoints.delete(id)
+            
+            result.subscribe({
+              next: success=>{
+                this.semesterViewModels.update(x=> {
+                  return x.filter(y=> y.id != success.id)
+                })
+                this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
+                dialogRef.close();
+              },
+              error: error=>{
+                this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+              }
+            })
           },
           width: "80%"
         }
