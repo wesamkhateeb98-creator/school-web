@@ -1,6 +1,6 @@
 <form class="example-form" [formGroup]="form" (ngSubmit)="submit()" >
   <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_academic_year':'add_academic_year')}}</h2>
-  <mat-dialog-content>1
+  <mat-dialog-content>
     <mat-grid-list [cols]="1" rowHeight="100px">
       @if(loading()){
         <mat-grid-tile>

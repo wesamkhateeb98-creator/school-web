@@ -1,57 +1,139 @@
+<div style="padding: 10px 20px;">    
+    <mat-dialog-content>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title> {{language.transform('add_semester')}} </mat-panel-title>
+            </mat-expansion-panel-header>
+            <form class="example-form" [formGroup]="semesterForm">
+                @if(this.semesterForm.hasError('dateRangeInvalid')){
+                    <app-error-title-component [message]="language.transform('start_date_must_less_than_end_date')"/>
+                    <br />
+                }
+                @else {
+                    <mat-grid-list cols="2" rowHeight="80PX">
+                        <mat-grid-tile>
+                            
+                            <mat-form-field class="example-full-width">
+                                <mat-label>{{language.transform('semester_title')}}</mat-label>
+                                <input type="text"
+                                    aria-label="Number"
+                                    matInput
+                                    formControlName="name"
+                                    [matAutocomplete]="auto"
+                                    (change)="change($event)"
+                                    [readonly]="loading()">
+                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                                    <!-- @for (option of filteredOptions | async; track option) {
+                                        <mat-option [value]="option">{{option}}</mat-option>
+                                    } -->
+                            </mat-autocomplete>
+                        </mat-form-field>
+
+                        </mat-grid-tile>
+
+                        <mat-grid-tile>
+                            <mat-form-field class="example-full-width" style="width: 100%;" >
+                                <mat-label >{{language.transform("start_date_title")}}</mat-label>
+                                <input matInput [matDatepicker]="picker" formControlName="startDate" [readonly]="loading()">
+                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="loading()"/>
+                                <mat-datepicker #picker></mat-datepicker>
+                                @if(this.semesterForm.get('startDate')?.hasError('required')){
+                                <mat-error>
+                                    {{language.transform('field_required')}}
+                                </mat-error>
+                                }
+                            </mat-form-field>
+
+                        </mat-grid-tile>
+                        
+                        <mat-grid-tile>
+                            <mat-form-field class="example-full-width" style="width: 100%;">
+                                <mat-label >{{language.transform("end_date_title")}}</mat-label>
+                                <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="pickerStart" formControlName="endDate" [readonly]="loading()">
+                                <mat-datepicker-toggle matIconSuffix [for]="pickerStart" [disabled]="loading()"/>
+                                <mat-datepicker #pickerStart></mat-datepicker>
+                                @if(this.semesterForm.get('endDate')?.hasError('required')){
+                                <mat-error>
+                                    {{language.transform('field_required')}}
+                                </mat-error>
+                                }
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                    </mat-grid-list>
+                    <div style="display: flex; justify-content: end;">
+                        <button 
+                            matButton="filled" 
+                            cdkFocusInitial 
+                            type="submit"
+                            [disabled]="this.loading()"
+                            (click)="addSemester()"
+                            >
+                            {{language.transform('add')}}
+                        </button>
+                    </div>
+
+                }
+            </form>
+            
+        </mat-expansion-panel>
+
+        <br/>
+
+        <mat-card>
+            @if(this.loading())
+            {
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            }
+            <table mat-table [dataSource]="semesterForAcademicYear()" class="mat-elevation-z8">
+
+            <ng-container matColumnDef="{{headerTable[0]}}">
+                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('start_date_title')}} </th>
+                <td mat-cell *matCellDef="let element"> {{ element.startDate|date:'yyyy-MM-dd' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="{{headerTable[1]}}">
+                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('end_date_title')}} </th>
+                <td mat-cell *matCellDef="let element">{{ element.endDate|date:'yyyy-MM-dd' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="{{headerTable[2]}}">
+                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('semester_title')}} </th>
+                <td mat-cell *matCellDef="let element"> {{ element.semesterName }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="{{headerTable[3]}}">
+                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('created_at_title')}} </th>
+                <td mat-cell *matCellDef="let element"> {{ element.createdAt|date:'yyyy-MM-dd HH:mm:ss' }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="{{headerTable[4]}}">
+                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <div style="display: flex; justify-content: space-between;">
+                        <button mat-icon-button (click)="openDeleteDialog(element.id)">
+                            <mat-icon class="icon-error">delete</mat-icon>
+                        </button>
+                    </div>
+                </td>
+            </ng-container>
 
 
-<mat-card>
-    @if(this.loading())
-    {
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    }
+            <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
+            
+            <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
 
-    <table mat-table [dataSource]="semesterForAcademicYear()" class="mat-elevation-z8">
-
-    <ng-container matColumnDef="{{headerTable[0]}}">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('start_date_title')}} </th>
-        <td mat-cell *matCellDef="let element"> {{ element.startDate|date:'yyyy-MM-dd' }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="{{headerTable[1]}}">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('end_date_title')}} </th>
-        <td mat-cell *matCellDef="let element">{{ element.endDate|date:'yyyy-MM-dd' }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="{{headerTable[2]}}">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('semester_title')}} </th>
-        <td mat-cell *matCellDef="let element"> {{ element.semesterName }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="{{headerTable[3]}}">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('created_at_title')}} </th>
-        <td mat-cell *matCellDef="let element"> {{ element.createdAt|date:'yyyy-MM-dd HH:mm:ss' }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="{{headerTable[4]}}">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
-        <td mat-cell *matCellDef="let element"> 
-            <div style="display: flex; justify-content: space-between;">
-                <button mat-icon-button (click)="openDeleteDialog(element.id)">
-                    <mat-icon class="icon-error">delete</mat-icon>
-                </button>
-            </div>
-        </td>
-    </ng-container>
-
-
-    <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
-    
-    <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
-
-    </table>
-    <mat-paginator 
-        [length]="totalPages() * filter().pageSize" 
-        [pageSize]="filter().pageSize"
-        [pageIndex]="filter().selectedPage - 1"
-        
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        showFirstLastButtons="false"
-        (page)="changeInPage($event)"
-    />
-</mat-card>
+            </table>
+            <mat-paginator 
+                [length]="totalPages() * filter().pageSize" 
+                [pageSize]="filter().pageSize"
+                [pageIndex]="filter().selectedPage - 1"
+                
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                showFirstLastButtons="false"
+                (page)="changeInPage($event)"
+            />
+        </mat-card>
+    </mat-dialog-content>
+</div>

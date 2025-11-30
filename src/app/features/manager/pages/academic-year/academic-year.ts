@@ -17,6 +17,7 @@ import { ParamsService } from '../../../../core/services/params-service';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { AcademicYearEndpoints } from '../../endpoints/academic-year-endpoints';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { AssignSemesterToAcademicYear } from './dialog/assign-semester-to-academic-year/assign-semester-to-academic-year';
 
 @Component({
   selector: 'app-academic-year',
@@ -90,11 +91,7 @@ export class AcademicYear{
       }
     })
   }
-
-  openSemesterPage(academicYears:AcademicYearViewModel){
-    this.router.navigate(['manager/academic_year',academicYears.id,'semester']);
-  }
-
+  
   openAddDialog(){
     const dialogRef = this.dialog.open(
       AddAcademicYearDialog, 
@@ -169,4 +166,14 @@ export class AcademicYear{
       this.onLoading();
       this.parmas.setToUrl(this.filter())
   }  
+
+  openDetailsDialog(){
+    this.dialog.open(
+      AssignSemesterToAcademicYear, 
+      {
+        width: "80%"
+      }
+    );
+  }
+
 }
