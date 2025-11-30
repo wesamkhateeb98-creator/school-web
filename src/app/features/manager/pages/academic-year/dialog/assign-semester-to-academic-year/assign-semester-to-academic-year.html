@@ -20,16 +20,17 @@
                                     matInput
                                     formControlName="name"
                                     [matAutocomplete]="auto"
-                                    (change)="change($event)"
                                     [readonly]="loading()">
-                                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                                    <!-- @for (option of filteredOptions | async; track option) {
-                                        <mat-option [value]="option">{{option}}</mat-option>
-                                    } -->
-                            </mat-autocomplete>
+                                <mat-autocomplete 
+                                    autoActiveFirstOption 
+                                    [displayWith]="displayFn"
+                                    #auto="matAutocomplete">
+                                    @for (option of semesterViewModels(); track option) {
+                                        <mat-option [value]="option">{{option.name}}</mat-option>
+                                    }
+                                </mat-autocomplete>
                         </mat-form-field>
-
-                        </mat-grid-tile>
+                    </mat-grid-tile>
 
                         <mat-grid-tile>
                             <mat-form-field class="example-full-width" style="width: 100%;" >

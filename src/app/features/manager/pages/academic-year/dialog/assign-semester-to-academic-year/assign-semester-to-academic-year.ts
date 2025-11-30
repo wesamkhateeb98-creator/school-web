@@ -1,5 +1,5 @@
-import { Component, signal } from '@angular/core';
-import { MatDialogRef, MatDialogContent } from '@angular/material/dialog';
+import { Component, inject, signal } from '@angular/core';
+import { MatDialogRef, MatDialogContent, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddAcademicYearDialog } from '../add-academic-year-dialog/add-academic-year-dialog';
 import { Language } from '../../../../../../core/services/language';
 import { SemesterForAcademicYearViewModel } from '../../model/semester-for-academic-year-view-model';
@@ -23,6 +23,11 @@ import { ErrorTitleComponent } from "../../../../../shared/components/error-titl
 import { MatDatepickerInput, MatDatepickerModule } from "@angular/material/datepicker";
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
+import { AcademicYearEndpoints } from '../../../../endpoints/academic-year-endpoints';
+import { errorMatSnackbarConfig } from '../../../../../../core/consts';
+import { debounceTime, distinctUntilChanged, filter, Observable, switchMap } from 'rxjs';
+import { SemesterEndpoints } from '../../../../endpoints/semester-endpoints';
+import { SemesterViewModel } from '../../../semester/model/semester-view-model';
 
 
 @Component({
@@ -56,11 +61,12 @@ import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 })
 export class AssignSemesterToAcademicYear {
   semesterForAcademicYear = signal<SemesterForAcademicYearViewModel[]>([]);
+  semesterViewModels = signal<SemesterViewModel[]>([]);
   loading = signal<boolean>(false);
-
   headerTable:string[] = ['startDate','endDate','semesterName','createdAt','Action'];
-
   semesterForm!: FormGroup;
+  data = inject(MAT_DIALOG_DATA);
+
 
   filter = signal<SemesterForAcademicYearFilter>( {
       pageSize:10,
@@ -74,7 +80,9 @@ export class AssignSemesterToAcademicYear {
     public language:Language,
     public matSnackBar:MatSnackBar,
     public parmas:ParamsService,
-    public fb:FormBuilder
+    public fb:FormBuilder,
+    public academicYearEndpoints:AcademicYearEndpoints,
+    public semesterEndpoints:SemesterEndpoints
   ){
     this.semesterForm = this.fb.group(
       {
@@ -86,7 +94,25 @@ export class AssignSemesterToAcademicYear {
         validators: [startDateMustLessEndDateValidator]
       }
     );
+    this.semesterForm.get('name')!.valueChanges
+      .pipe(
+        debounceTime(500),          
+        distinctUntilChanged(),     
+        filter(value => value && value.length >= 3), 
+        switchMap(value => semesterEndpoints.get(1,5,value))
+      )
+      .subscribe(results => {
+        this.semesterViewModels.set(results.content);  
+      });
+
+    this.onLoading();
   }
+
+  displayFn = (option?: SemesterViewModel): string =>  {
+    console.log(option);
+    return option ? option.name : '';
+  }
+
 
   addSemester(){
     if(!this.semesterForm.valid)
@@ -98,7 +124,28 @@ export class AssignSemesterToAcademicYear {
   }
 
   onLoading(){
-
+    const result = this.academicYearEndpoints.getSemester(
+      this.data.academicYearId,
+      this.filter().selectedPage,
+      this.filter().pageSize
+    );
+    result.subscribe({
+      next: success=>{
+        this.filter.update(x=>
+        {
+          x.pageSize = success.pageSize;
+          x.selectedPage = success.pageNumber;  
+          return x;
+        });
+        this.totalPages.set(success.countPages)
+        this.semesterForAcademicYear.set(success.content)
+        this.loading.set(false);
+      },
+      error: error =>{
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        this.loading.set(false);
+      }
+    })
   }
 
   changeInPage(pageEvent:PageEvent){
@@ -116,7 +163,4 @@ export class AssignSemesterToAcademicYear {
     
   }
 
-  change($event:Event){
-    console.log($event)
-  }
 }

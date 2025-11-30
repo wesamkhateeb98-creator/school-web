@@ -167,11 +167,14 @@ export class AcademicYear{
       this.parmas.setToUrl(this.filter())
   }  
 
-  openDetailsDialog(){
+  openDetailsDialog(academicYearId:number){
     this.dialog.open(
       AssignSemesterToAcademicYear, 
       {
-        width: "80%"
+        width: "80%",
+        data:{
+          academicYearId: academicYearId
+        }
       }
     );
   }

@@ -33,7 +33,7 @@
                 <button mat-icon-button (click)="openDeleteDialog(element.id)">
                     <mat-icon class="icon-error">delete</mat-icon>
                 </button>
-                <button mat-icon-button (click)="openDetailsDialog()" [disabled]="element.lock">
+                <button mat-icon-button (click)="openDetailsDialog(element.id)" [disabled]="element.lock">
                     <mat-icon>info</mat-icon>
                 </button>
             </div>
