@@ -171,7 +171,7 @@ export class AcademicYear{
     this.dialog.open(
       AssignSemesterToAcademicYear, 
       {
-        width: "80%",
+        minWidth: '80vw',
         data:{
           academicYearId: academicYearId
         }

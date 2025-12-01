@@ -29,3 +29,8 @@ export const messageTitle = (title: PhrasesType) => {
     return language.transform(title);
   };
 };
+
+export function ToDateOnly(date:Date)
+{
+    return date.toISOString().split('T')[0];
+}

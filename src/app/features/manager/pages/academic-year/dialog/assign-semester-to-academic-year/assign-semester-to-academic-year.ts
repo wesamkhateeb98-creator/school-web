@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {  MatTableModule } from "@angular/material/table";
 import { MatIconModule } from "@angular/material/icon";
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { SemesterForAcademicYearFilter } from '../../model/semester-for-academic-year-filter';
@@ -24,7 +24,7 @@ import { MatDatepickerInput, MatDatepickerModule } from "@angular/material/datep
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 import { AcademicYearEndpoints } from '../../../../endpoints/academic-year-endpoints';
-import { errorMatSnackbarConfig } from '../../../../../../core/consts';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
 import { debounceTime, distinctUntilChanged, filter, Observable, switchMap } from 'rxjs';
 import { SemesterEndpoints } from '../../../../endpoints/semester-endpoints';
 import { SemesterViewModel } from '../../../semester/model/semester-view-model';
@@ -66,7 +66,7 @@ export class AssignSemesterToAcademicYear {
   headerTable:string[] = ['startDate','endDate','semesterName','createdAt','Action'];
   semesterForm!: FormGroup;
   data = inject(MAT_DIALOG_DATA);
-
+  key:string = crypto.randomUUID();
 
   filter = signal<SemesterForAcademicYearFilter>( {
       pageSize:10,
@@ -98,29 +98,24 @@ export class AssignSemesterToAcademicYear {
       .pipe(
         debounceTime(500),          
         distinctUntilChanged(),     
-        filter(value => value && value.length >= 3), 
+        filter(value => value && value.length >= 1), 
         switchMap(value => semesterEndpoints.get(1,5,value))
       )
       .subscribe(results => {
         this.semesterViewModels.set(results.content);  
       });
 
+    semesterEndpoints.get(1,5,'').subscribe({
+      next: results => {
+        this.semesterViewModels.set(results.content);  
+      }
+    })
     this.onLoading();
   }
 
   displayFn = (option?: SemesterViewModel): string =>  {
     console.log(option);
     return option ? option.name : '';
-  }
-
-
-  addSemester(){
-    if(!this.semesterForm.valid)
-      return;
-    this.loading.set(true);
-    setTimeout(() => {
-      this.loading.set(false);
-    }, 20000);
   }
 
   onLoading(){
@@ -159,8 +154,62 @@ export class AssignSemesterToAcademicYear {
       this.parmas.setToUrl(this.filter())
   }  
   
-  openDeleteDialog(id:number){
+
+  
+  addSemester(){
+    if(!this.semesterForm.valid)
+      return;
     
+    this.loading.set(true);
+    
+    this.academicYearEndpoints.addSemester(
+      this.key,
+      this.data.academicYearId,
+      this.semesterForm.value.name.id,
+      this.semesterForm.value.startDate,
+      this.semesterForm.value.endDate
+    ).subscribe({
+      next: success=>{
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        const data:SemesterForAcademicYearViewModel = {
+          id: success.id,
+          semesterId: this.semesterForm.value.name.id,
+          semesterName: this.semesterForm.value.name.semesterName,
+          startDate: this.semesterForm.value.startDate,
+          endDate:this.semesterForm.value.endDate,
+          createdAt: new Date()
+        };
+        this.semesterForAcademicYear.update(x=>[data,...x]);
+        this.loading.set(false); 
+        this.key = crypto.randomUUID();
+      },
+      error: error => {
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        this.loading.set(false); 
+      }
+    })
+  }
+
+
+  deleteSemester(id:number){
+    this.loading.set(true);
+    
+    this.academicYearEndpoints.deleteSemester(
+      this.data.academicYearId,
+      id
+    ).subscribe({
+      next: success=>{
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        
+        this.semesterForAcademicYear.update(x=>x.filter(x=>x.id != id));
+        
+        this.loading.set(false); 
+      },
+      error: error => {
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        this.loading.set(false); 
+      }
+    })
   }
 
 }

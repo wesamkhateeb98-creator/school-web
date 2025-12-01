@@ -40,6 +40,10 @@ export class HttpHelper {
     return this.http.put<T>(`${this.BASE_URL}/${endpoint}`, body, { params});
   }
 
+  patch<T>(endpoint: string, body: any): Observable<T> {
+    return this.http.patch<T>(`${this.BASE_URL}/${endpoint}`, body);
+  }
+
   delete<T>(endpoint: string, filters?: Record<string, any>): Observable<T> {
     const params = this.buildParams(filters);
     
