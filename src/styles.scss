@@ -42,7 +42,6 @@ html{
   ));
 }
 
-
 .success-snackbar {
   @include mat.snack-bar-overrides((
     container-color: green,

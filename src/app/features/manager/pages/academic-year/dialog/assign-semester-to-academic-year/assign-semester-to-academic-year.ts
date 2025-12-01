@@ -14,7 +14,7 @@ import { SemesterForAcademicYearFilter } from '../../model/semester-for-academic
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../../../core/services/params-service';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldControl, MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { startDateMustLessEndDateValidator } from '../../../../../../core/validator/validator';
@@ -67,6 +67,7 @@ export class AssignSemesterToAcademicYear {
   semesterForm!: FormGroup;
   data = inject(MAT_DIALOG_DATA);
   key:string = crypto.randomUUID();
+  semesterForAcademicYearId = signal<number|null>(null);
 
   filter = signal<SemesterForAcademicYearFilter>( {
       pageSize:10,
@@ -154,12 +155,37 @@ export class AssignSemesterToAcademicYear {
       this.parmas.setToUrl(this.filter())
   }  
   
+  setUpdateMode(semesterForAcademicYear:SemesterForAcademicYearViewModel){
+    this.semesterForAcademicYearId.set(semesterForAcademicYear.id);
+    this.semesterForm.patchValue({
+      name: {
+        id: semesterForAcademicYear.semesterId,
+        name: semesterForAcademicYear.semesterName,
+      },
+      startDate: semesterForAcademicYear.startDate,
+      endDate: semesterForAcademicYear.endDate
+    });
+  }
 
-  
-  addSemester(){
+  submit(){
+    if(!this.semesterForm.valid)
+      return;
+    if(this.semesterForAcademicYearId())
+      this.updateSemester();
+    else  
+      this.addSemester();
+  }
+
+  updateSemester(){
     if(!this.semesterForm.valid)
       return;
     
+    // this.loading.set(true);
+    
+    this.semesterForAcademicYearId.set(null);
+  }
+  
+  addSemester(){
     this.loading.set(true);
     
     this.academicYearEndpoints.addSemester(
@@ -190,7 +216,6 @@ export class AssignSemesterToAcademicYear {
     })
   }
 
-
   deleteSemester(id:number){
     this.loading.set(true);
     
@@ -211,5 +236,4 @@ export class AssignSemesterToAcademicYear {
       }
     })
   }
-
 }

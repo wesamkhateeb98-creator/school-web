@@ -2,7 +2,7 @@
     <mat-dialog-content>
         <mat-expansion-panel>
             <mat-expansion-panel-header>
-                <mat-panel-title> {{language.transform('add_semester')}} </mat-panel-title>
+                <mat-panel-title style="font-weight: bold;"> {{ language.transform(semesterForAcademicYearId()?'update_semester':'add_semester')}} </mat-panel-title>
             </mat-expansion-panel-header>
             <form class="example-form" [formGroup]="semesterForm">
                 @if(this.semesterForm.hasError('dateRangeInvalid')){
@@ -69,9 +69,8 @@
                         cdkFocusInitial 
                         type="submit"
                         [disabled]="this.loading()"
-                        (click)="addSemester()"
-                        >
-                        {{language.transform('add')}}
+                        (click)="submit()">
+                        {{language.transform(semesterForAcademicYearId()?'update':'add')}}
                     </button>
                     
                 </div>
@@ -82,59 +81,66 @@
 
         <br/>
 
-        <mat-card>
-            @if(this.loading())
-            {
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            }
-            <table mat-table [dataSource]="semesterForAcademicYear()" class="mat-elevation-z8">
+        @if(!semesterForAcademicYearId()){
+            <mat-card>
+                @if(this.loading())
+                {
+                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                }
+                <table mat-table [dataSource]="semesterForAcademicYear()" class="mat-elevation-z8">
 
-            <ng-container matColumnDef="{{headerTable[0]}}">
-                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('start_date_title')}} </th>
-                <td mat-cell *matCellDef="let element"> {{ element.startDate|date:'yyyy-MM-dd' }} </td>
-            </ng-container>
+                <ng-container matColumnDef="{{headerTable[0]}}">
+                    <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('start_date_title')}} </th>
+                    <td mat-cell *matCellDef="let element"> {{ element.startDate|date:'yyyy-MM-dd' }} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="{{headerTable[1]}}">
-                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('end_date_title')}} </th>
-                <td mat-cell *matCellDef="let element">{{ element.endDate|date:'yyyy-MM-dd' }} </td>
-            </ng-container>
+                <ng-container matColumnDef="{{headerTable[1]}}">
+                    <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('end_date_title')}} </th>
+                    <td mat-cell *matCellDef="let element">{{ element.endDate|date:'yyyy-MM-dd' }} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="{{headerTable[2]}}">
-                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('semester_title')}} </th>
-                <td mat-cell *matCellDef="let element"> {{ element.semesterName }} </td>
-            </ng-container>
+                <ng-container matColumnDef="{{headerTable[2]}}">
+                    <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('semester_title')}} </th>
+                    <td mat-cell *matCellDef="let element"> {{ element.semesterName }} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="{{headerTable[3]}}">
-                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('created_at_title')}} </th>
-                <td mat-cell *matCellDef="let element"> {{ element.createdAt|date:'yyyy-MM-dd HH:mm:ss' }} </td>
-            </ng-container>
+                <ng-container matColumnDef="{{headerTable[3]}}">
+                    <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('created_at_title')}} </th>
+                    <td mat-cell *matCellDef="let element"> {{ element.createdAt|date:'yyyy-MM-dd HH:mm:ss' }} </td>
+                </ng-container>
 
-            <ng-container matColumnDef="{{headerTable[4]}}">
-                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
-                <td mat-cell *matCellDef="let element"> 
-                    <div style="display: flex; justify-content: space-between;">
-                        <button mat-icon-button (click)="deleteSemester(element.id)">
-                            <mat-icon class="icon-error">delete</mat-icon>
-                        </button>
-                    </div>
-                </td>
-            </ng-container>
+                <ng-container matColumnDef="{{headerTable[4]}}">
+                    <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
+                    <td mat-cell *matCellDef="let element" style="display: flex; justify-content: space-between;"> 
+                        <div style="display: flex; justify-content: space-between;">
+                            <button mat-icon-button (click)="setUpdateMode(element)">
+                                <mat-icon class="icon-update">edit</mat-icon>
+                            </button>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;" >
+                            <button mat-icon-button (click)="deleteSemester(element.id)">
+                                <mat-icon class="icon-error">delete</mat-icon>
+                            </button>
+                        </div>
+                    </td>
+                </ng-container>
 
 
-            <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
-            
-            <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
-
-            </table>
-            <mat-paginator 
-                [length]="totalPages() * filter().pageSize" 
-                [pageSize]="filter().pageSize"
-                [pageIndex]="filter().selectedPage - 1"
+                <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
                 
-                [pageSizeOptions]="[5, 10, 25, 100]"
-                showFirstLastButtons="false"
-                (page)="changeInPage($event)"
-            />
-        </mat-card>
+                <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
+
+                </table>
+                <mat-paginator 
+                    [length]="totalPages() * filter().pageSize" 
+                    [pageSize]="filter().pageSize"
+                    [pageIndex]="filter().selectedPage - 1"
+                    
+                    [pageSizeOptions]="[5, 10, 25, 100]"
+                    showFirstLastButtons="false"
+                    (page)="changeInPage($event)"
+                />
+            </mat-card>
+        }
     </mat-dialog-content>
 </div>
