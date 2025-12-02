@@ -47,7 +47,7 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
               errorMessage = language.transform('http_403');
               break;
             case 404:
-              errorMessage = language.transform('http_404');
+              errorMessage = error.error.Title;
               break;
             case 409:
             case 412:

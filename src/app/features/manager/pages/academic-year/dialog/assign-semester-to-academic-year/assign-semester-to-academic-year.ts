@@ -162,8 +162,8 @@ export class AssignSemesterToAcademicYear {
         id: semesterForAcademicYear.semesterId,
         name: semesterForAcademicYear.semesterName,
       },
-      startDate: semesterForAcademicYear.startDate,
-      endDate: semesterForAcademicYear.endDate
+      startDate: new Date(semesterForAcademicYear.startDate),
+      endDate: new Date(semesterForAcademicYear.endDate)
     });
   }
 
@@ -180,9 +180,37 @@ export class AssignSemesterToAcademicYear {
     if(!this.semesterForm.valid)
       return;
     
-    // this.loading.set(true);
+    this.academicYearEndpoints.updateSemester(
+      this.data.academicYearId,
+      this.semesterForAcademicYearId()??0,
+      this.semesterForm.value.name.id,
+      this.semesterForm.value.startDate,
+      this.semesterForm.value.endDate
+    ).subscribe({
+      next: success=>{
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        
+        this.semesterForAcademicYear.update(x=>
+          x.map(x=>{
+            if(this.semesterForAcademicYearId() != x.id) return x;
+
+            x.semesterId = this.semesterForm.value.name.id;
+            x.semesterName = this.semesterForm.value.name.id;
+            x.startDate = this.semesterForm.value.startDate;
+            x.endDate = this.semesterForm.value.endDate;
+            
+            return x;
+          })
+        );
+        this.loading.set(false); 
+        this.semesterForAcademicYearId.set(null);
+      },
+      error: error => {
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        this.loading.set(false); 
+      }
+    })
     
-    this.semesterForAcademicYearId.set(null);
   }
   
   addSemester(){

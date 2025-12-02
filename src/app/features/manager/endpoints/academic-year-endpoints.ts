@@ -47,7 +47,7 @@ export class AcademicYearEndpoints {
   }
 
   addSemester(key:string,academicYearId:number, semesterId:number, startDate:Date , endDate:Date):Observable<MutateResponse>{
-    return this.http.patch<MutateResponse>(`academic-year/${academicYearId}/assign-semester`,{
+    return this.http.post<MutateResponse>(`academic-year/${academicYearId}/semester/assign`,{
       key:key,
       semsterId:semesterId,
       startDate: ToDateOnly(startDate),
@@ -55,6 +55,16 @@ export class AcademicYearEndpoints {
     })
   }
   deleteSemester(academicYearId:number ,academicYearSemesterId:number):Observable<MutateResponse>{
-    return this.http.delete<MutateResponse>(`academic-year/${academicYearId}/unassign-semester/${academicYearSemesterId}`);
+    return this.http.delete<MutateResponse>(`academic-year/${academicYearId}/semester-in-academic-year/${academicYearSemesterId}/unassign`);
+  }
+
+  updateSemester(academicYearId:number, semesterInAcademicYearId:number, semesterId:number, startDate:Date , endDate:Date):Observable<MutateResponse>{
+    return this.http.put<MutateResponse>(`academic-year/${academicYearId}/semester-in-academic-year/${semesterInAcademicYearId}`,{
+      semsterId:semesterId,
+      startDate: ToDateOnly(startDate),
+      endDate: ToDateOnly(endDate)
+    })
   }
 }
+
+
