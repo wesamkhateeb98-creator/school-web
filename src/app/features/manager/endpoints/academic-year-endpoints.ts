@@ -4,7 +4,7 @@ import { MutateResponse } from '../../shared/model/mutate-response';
 import { Page } from '../../shared/model/page';
 import { Observable } from 'rxjs';
 import { AcademicYearModel } from '../pages/academic-year/model/academic-year-model';
-import { SemesterForAcademicYearViewModel } from '../pages/academic-year/model/semester-for-academic-year-view-model';
+import { SemesterForAcademicYearModel, SemesterForAcademicYearViewModel } from '../pages/academic-year/model/semester-for-academic-year-view-model';
 import { ToDateOnly } from '../../../core/consts';
 
 @Injectable({
@@ -39,8 +39,8 @@ export class AcademicYearEndpoints {
     return this.http.delete<MutateResponse>("academic-year/"+id);
   }
   
-  getSemester(academicYearId:number, selectedPage:number, pageSize:number):Observable<Page<SemesterForAcademicYearViewModel>>{
-    return this.http.get<Page<SemesterForAcademicYearViewModel>>(`academic-year/${academicYearId}/semesters`,{
+  getSemester(academicYearId:number, selectedPage:number, pageSize:number):Observable<Page<SemesterForAcademicYearModel>>{
+    return this.http.get<Page<SemesterForAcademicYearModel>>(`academic-year/${academicYearId}/semesters`,{
         PageNumber: selectedPage,
         PageSize: pageSize
       })
@@ -54,11 +54,13 @@ export class AcademicYearEndpoints {
       endDate: ToDateOnly(endDate)
     })
   }
+
   deleteSemester(academicYearId:number ,academicYearSemesterId:number):Observable<MutateResponse>{
     return this.http.delete<MutateResponse>(`academic-year/${academicYearId}/semester-in-academic-year/${academicYearSemesterId}/unassign`);
   }
 
   updateSemester(academicYearId:number, semesterInAcademicYearId:number, semesterId:number, startDate:Date , endDate:Date):Observable<MutateResponse>{
+    console.log(ToDateOnly(startDate));
     return this.http.put<MutateResponse>(`academic-year/${academicYearId}/semester-in-academic-year/${semesterInAcademicYearId}`,{
       semsterId:semesterId,
       startDate: ToDateOnly(startDate),

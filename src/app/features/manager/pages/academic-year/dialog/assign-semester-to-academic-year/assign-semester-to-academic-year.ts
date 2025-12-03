@@ -24,7 +24,7 @@ import { MatDatepickerInput, MatDatepickerModule } from "@angular/material/datep
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 import { AcademicYearEndpoints } from '../../../../endpoints/academic-year-endpoints';
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
+import { errorMatSnackbarConfig, StringToDate, successMatSnackbarConfig } from '../../../../../../core/consts';
 import { debounceTime, distinctUntilChanged, filter, Observable, switchMap } from 'rxjs';
 import { SemesterEndpoints } from '../../../../endpoints/semester-endpoints';
 import { SemesterViewModel } from '../../../semester/model/semester-view-model';
@@ -134,7 +134,17 @@ export class AssignSemesterToAcademicYear {
           return x;
         });
         this.totalPages.set(success.countPages)
-        this.semesterForAcademicYear.set(success.content)
+        
+        this.semesterForAcademicYear.set(
+          success.content.map(x=>({
+              id: x.id,
+              startDate: StringToDate(x.startDate),
+              endDate: StringToDate(x.endDate),
+              semesterId: x.semesterId,
+              semesterName: x.semesterName,
+              createdAt: new Date(x.createdAt)
+            } as SemesterForAcademicYearViewModel) ))
+
         this.loading.set(false);
       },
       error: error =>{

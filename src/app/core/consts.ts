@@ -32,6 +32,11 @@ export const messageTitle = (title: PhrasesType) => {
 
 export function ToDateOnly(date:Date)
 {
-  // console.log(date);
-  return `${date.getFullYear()}/${date.getMonth()}/${date.getDay()}`//date.toISOString().split('T')[0];
+  return date.toISOString().substring(0, 10);
+}
+
+export function StringToDate(dateString:string){
+  const [year, month, day] = dateString.split("-").map(Number);
+
+  return new Date(year, month - 1, day);
 }
