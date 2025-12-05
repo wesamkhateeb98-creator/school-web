@@ -82,7 +82,13 @@ export class AcademicYear{
           return x;
         });
         this.totalPages.set(success.countPages)
-        this.academicYearViewModel.set(success.content)
+        this.academicYearViewModel.set(
+          success.content.map(x=>({
+            id: x.id,
+            year: x.year,
+            lock: x.lock,
+            createdAt: x.createdAt
+          } as AcademicYearViewModel)))
         this.loading.set(false);
       },
       error: (error)=>{

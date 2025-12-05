@@ -1,83 +1,94 @@
 <div style="padding: 10px 20px;">    
     <mat-dialog-content>
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                <mat-panel-title style="font-weight: bold;"> {{ language.transform(semesterForAcademicYearId()?'update_semester':'add_semester')}} </mat-panel-title>
-            </mat-expansion-panel-header>
-            <form class="example-form" [formGroup]="semesterForm">
-                @if(this.semesterForm.hasError('dateRangeInvalid')){
-                    <app-error-title-component [message]="language.transform('start_date_must_less_than_end_date')"/>
-                    <br />
-                }
-                
-                <mat-grid-list cols="2" rowHeight="80px" gutterSize="20px">
-                    <mat-grid-tile>
-                        <mat-form-field style="width: 100%;">
-                            <mat-label>{{language.transform('semester_title')}}</mat-label>
-                            <input type="text"
-                                aria-label="Number"
-                                matInput
-                                formControlName="name"
-                                [matAutocomplete]="auto"
-                                [readonly]="loading()">
-                            <mat-autocomplete 
-                                autoActiveFirstOption 
-                                [displayWith]="displayFn"
-                                #auto="matAutocomplete">
-                                @for (option of semesterViewModels(); track option) {
-                                    <mat-option [value]="option">{{option.name}}</mat-option>
+        <mat-accordion class="example-headers-align" multi>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title style="font-weight: bold;"> {{ language.transform(semesterForAcademicYearId()?'update_semester':'add_semester')}} </mat-panel-title>
+                </mat-expansion-panel-header>
+                <form class="example-form" [formGroup]="semesterForm">
+                    @if(this.semesterForm.hasError('dateRangeInvalid')){
+                        <app-error-title-component [message]="language.transform('start_date_must_less_than_end_date')"/>
+                        <br />
+                    }
+                    <mat-grid-list cols="2" rowHeight="80px" gutterSize="20px">
+                        <mat-grid-tile>
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>{{language.transform('semester_title')}}</mat-label>
+                                <input type="text"
+                                    aria-label="Number"
+                                    matInput
+                                    formControlName="name"
+                                    [matAutocomplete]="auto"
+                                    [readonly]="loading()">
+                                <mat-autocomplete 
+                                    autoActiveFirstOption 
+                                    [displayWith]="displayFn"
+                                    #auto="matAutocomplete">
+                                    @for (option of semesterViewModels(); track option) {
+                                        <mat-option [value]="option">{{option.name}}</mat-option>
+                                    }
+                                </mat-autocomplete>
+                        </mat-form-field>
+                    </mat-grid-tile>
+
+                        <mat-grid-tile>
+                            <mat-form-field class="example-full-width" style="width: 100%;" >
+                                <mat-label >{{language.transform("start_date_title")}}</mat-label>
+                                <input matInput [matDatepicker]="picker" formControlName="startDate" [readonly]="loading()">
+                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="loading()"/>
+                                <mat-datepicker #picker></mat-datepicker>
+                                @if(this.semesterForm.get('startDate')?.hasError('required')){
+                                <mat-error>
+                                    {{language.transform('field_required')}}
+                                </mat-error>
                                 }
-                            </mat-autocomplete>
-                    </mat-form-field>
-                </mat-grid-tile>
+                            </mat-form-field>
 
-                    <mat-grid-tile>
-                        <mat-form-field class="example-full-width" style="width: 100%;" >
-                            <mat-label >{{language.transform("start_date_title")}}</mat-label>
-                            <input matInput [matDatepicker]="picker" formControlName="startDate" [readonly]="loading()">
-                            <mat-hint>MM/DD/YYYY</mat-hint>
-                            <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="loading()"/>
-                            <mat-datepicker #picker></mat-datepicker>
-                            @if(this.semesterForm.get('startDate')?.hasError('required')){
-                            <mat-error>
-                                {{language.transform('field_required')}}
-                            </mat-error>
-                            }
-                        </mat-form-field>
+                        </mat-grid-tile>
+                        
+                        <mat-grid-tile>
+                            <mat-form-field class="example-full-width" style="width: 100%;">
+                                <mat-label >{{language.transform("end_date_title")}}</mat-label>
+                                <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="pickerStart" formControlName="endDate" [readonly]="loading()">
+                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                <mat-datepicker-toggle matIconSuffix [for]="pickerStart" [disabled]="loading()"/>
+                                <mat-datepicker #pickerStart></mat-datepicker>
+                                @if(this.semesterForm.get('endDate')?.hasError('required')){
+                                <mat-error>
+                                    {{language.transform('field_required')}}
+                                </mat-error>
+                                }
+                            </mat-form-field>
+                        </mat-grid-tile>
 
-                    </mat-grid-tile>
-                    
-                    <mat-grid-tile>
-                        <mat-form-field class="example-full-width" style="width: 100%;">
-                            <mat-label >{{language.transform("end_date_title")}}</mat-label>
-                            <input matInput placeholder="MM/DD/YYYY" [matDatepicker]="pickerStart" formControlName="endDate" [readonly]="loading()">
-                            <mat-hint>MM/DD/YYYY</mat-hint>
-                            <mat-datepicker-toggle matIconSuffix [for]="pickerStart" [disabled]="loading()"/>
-                            <mat-datepicker #pickerStart></mat-datepicker>
-                            @if(this.semesterForm.get('endDate')?.hasError('required')){
-                            <mat-error>
-                                {{language.transform('field_required')}}
-                            </mat-error>
-                            }
-                        </mat-form-field>
-                    </mat-grid-tile>
+                    </mat-grid-list>
+                    <div style="display: flex; justify-content: end;">
+                        @if(semesterForAcademicYearId())
+                        {
+                            <button 
+                                matIconButton 
+                                (click)="setUpdateMode(null)"
+                                [disabled]="this.loading()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        }
+                        <button 
+                            matButton="filled" 
+                            cdkFocusInitial 
+                            type="submit"
+                            [disabled]="this.loading()"
+                            (click)="submit()">
+                            {{language.transform(semesterForAcademicYearId()?'update':'add')}}
+                        </button>
+                        
+                    </div>
 
-                </mat-grid-list>
-                <div style="display: flex; justify-content: end;">
-                    <button 
-                        matButton="filled" 
-                        cdkFocusInitial 
-                        type="submit"
-                        [disabled]="this.loading()"
-                        (click)="submit()">
-                        {{language.transform(semesterForAcademicYearId()?'update':'add')}}
-                    </button>
-                    
-                </div>
-
-            </form>
-            
-        </mat-expansion-panel>
+                </form>
+                
+            </mat-expansion-panel>
+        </mat-accordion>
 
         <br/>
 

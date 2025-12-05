@@ -29,7 +29,10 @@
     </mat-grid-list>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button matButton (click)="onNoClick()" [disabled]="loading()">{{language.transform('cancel')}}</button>
+    <button matButton 
+      type="button"   
+      (click)="onNoClick()" 
+      [disabled]="loading()">{{language.transform('cancel')}}</button>
     <button 
       matButton="filled" 
       cdkFocusInitial 

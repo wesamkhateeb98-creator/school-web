@@ -3,9 +3,10 @@ import { HttpHelper } from '../../../core/services/http-helper';
 import { MutateResponse } from '../../shared/model/mutate-response';
 import { Page } from '../../shared/model/page';
 import { Observable } from 'rxjs';
-import { AcademicYearModel } from '../pages/academic-year/model/academic-year-model';
 import { SemesterForAcademicYearModel, SemesterForAcademicYearViewModel } from '../pages/academic-year/model/semester-for-academic-year-view-model';
 import { ToDateOnly } from '../../../core/consts';
+import { AcademicYearViewModel } from '../pages/academic-year/model/academic-year-view-model';
+import { AcademicYearModel } from '../pages/academic-year/model/academic-year-model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,13 +19,13 @@ export class AcademicYearEndpoints {
   add(key:string, name:string): Observable<MutateResponse>{
     return this.http.post<MutateResponse>("academic-year",{
       key:key,
-      name:name,
+      year:name,
     })
   }
 
   update(semesterId:number, name:string): Observable<MutateResponse>{
     return this.http.put<MutateResponse>("academic-year/" + semesterId,{
-      name:name
+      year:name
     })
   }
 

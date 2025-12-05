@@ -82,7 +82,7 @@ this.form = this.fb.group({
       .subscribe({
         next: success=>{
           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-          const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
+          const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,false,new Date());
           // this.data.ChangeAction(data);
           this.dialogRef.close({
             data
@@ -99,7 +99,7 @@ this.form = this.fb.group({
     .subscribe({
       next:success=>{
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-        const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
+        const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,this.data.item.lock,new Date());
         this.dialogRef.close({
           data
         });

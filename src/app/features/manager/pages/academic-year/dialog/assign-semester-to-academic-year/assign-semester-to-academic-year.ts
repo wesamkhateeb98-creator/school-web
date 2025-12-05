@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
 import { MatDialogRef, MatDialogContent, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AddAcademicYearDialog } from '../add-academic-year-dialog/add-academic-year-dialog';
 import { Language } from '../../../../../../core/services/language';
@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { SemesterForAcademicYearFilter } from '../../model/semester-for-academic-year-filter';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../../../core/services/params-service';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -58,6 +58,8 @@ import { SemesterViewModel } from '../../../semester/model/semester-view-model';
   ],
   templateUrl: './assign-semester-to-academic-year.html',
   styleUrl: './assign-semester-to-academic-year.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+
 })
 export class AssignSemesterToAcademicYear {
   semesterForAcademicYear = signal<SemesterForAcademicYearViewModel[]>([]);
@@ -68,6 +70,8 @@ export class AssignSemesterToAcademicYear {
   data = inject(MAT_DIALOG_DATA);
   key:string = crypto.randomUUID();
   semesterForAcademicYearId = signal<number|null>(null);
+  accordion = viewChild.required(MatAccordion);
+
 
   filter = signal<SemesterForAcademicYearFilter>( {
       pageSize:10,
@@ -144,7 +148,7 @@ export class AssignSemesterToAcademicYear {
               semesterName: x.semesterName,
               createdAt: new Date(x.createdAt)
             } as SemesterForAcademicYearViewModel) ))
-
+        
         this.loading.set(false);
       },
       error: error =>{
@@ -165,16 +169,25 @@ export class AssignSemesterToAcademicYear {
       this.parmas.setToUrl(this.filter())
   }  
   
-  setUpdateMode(semesterForAcademicYear:SemesterForAcademicYearViewModel){
-    this.semesterForAcademicYearId.set(semesterForAcademicYear.id);
+  empty(){
+    this.semesterForm.patchValue({
+          name: "",
+          startDate: null,
+          endDate: null
+        });
+  }
+
+  setUpdateMode(semesterForAcademicYear:(SemesterForAcademicYearViewModel | null)){
+    this.semesterForAcademicYearId.set(semesterForAcademicYear?.id??null);
     this.semesterForm.patchValue({
       name: {
-        id: semesterForAcademicYear.semesterId,
-        name: semesterForAcademicYear.semesterName,
+        id: semesterForAcademicYear?.semesterId?? '',
+        name: semesterForAcademicYear?.semesterName?? '',
       },
-      startDate: new Date(semesterForAcademicYear.startDate),
-      endDate: new Date(semesterForAcademicYear.endDate)
+      startDate: semesterForAcademicYear ? new Date(semesterForAcademicYear.startDate): null,
+      endDate: semesterForAcademicYear? new Date(semesterForAcademicYear.endDate): null
     });
+    this.accordion().openAll();
   }
 
   submit(){
@@ -214,6 +227,7 @@ export class AssignSemesterToAcademicYear {
         );
         this.loading.set(false); 
         this.semesterForAcademicYearId.set(null);
+        this.empty();
       },
       error: error => {
         this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
@@ -246,6 +260,7 @@ export class AssignSemesterToAcademicYear {
         this.semesterForAcademicYear.update(x=>[data,...x]);
         this.loading.set(false); 
         this.key = crypto.randomUUID();
+        this.empty();
       },
       error: error => {
         this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
