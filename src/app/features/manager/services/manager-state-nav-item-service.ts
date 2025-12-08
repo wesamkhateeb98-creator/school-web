@@ -32,6 +32,32 @@ export class ManagerNavItemStateService {
         }
       ],
       isExpended:false
+    },
+    {
+      icon: "person",
+      name: 'user_title',
+      isExpended:false,
+      subItem:[
+        {
+          url:"/manager/users/students",
+          name:"students_title",
+          icon:"escalator_warning",
+          isExpended:false
+        },
+        {
+          url:"/manager/users/teachers",
+          name:"teachers_title",
+          icon:"contacts_product",
+          isExpended:false
+        },
+        {
+          url:"/manager/users/managerial",
+          name:"managerial_title",
+          icon:"manage_accounts",
+          isExpended:false
+        },
+        
+      ]
     }
   ];
 

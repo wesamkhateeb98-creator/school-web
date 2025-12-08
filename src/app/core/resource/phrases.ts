@@ -62,7 +62,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'delete_subject': 'حذف مادة',
         'description_title': 'الوصف',
         'registrations_title': 'تسجيلات',
-        'filter':'فلتر'
+        'filter':'فلتر',
+        'user_title':'المستخدمين',
+        'students_title':'الطلاب',
+        'teachers_title':'المدرسين',
+        'managerial_title': 'الكادر الإداري'
     },
     en:{
         'name':"Name",
@@ -127,7 +131,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'delete_subject': 'Delete Subject',
         'description_title':"Description",
         'registrations_title': 'Registrations',
-        'filter':'filter'
+        'filter':'filter',
+        'students_title':'Students',
+        'user_title':'User',
+        'teachers_title':'Teachers',
+        'managerial_title': 'Managerial'
     }
 }
 
@@ -142,8 +150,20 @@ HttpErrors|
 Denied|
 AgeGroupPhrases|
 SubjectPhrases|
-GlobalType ;
+GlobalType|
+PersonPhrases ;
 
+export type PersonPhrases = 
+'user_title'|
+StudentPhrases|
+TeacherPhrases|
+ManagerialPhrases
+
+export type StudentPhrases = 'students_title';
+
+export type TeacherPhrases = 'teachers_title';
+
+export type ManagerialPhrases = 'managerial_title';
 
 export type GlobalType = 
 'registrations_title' |

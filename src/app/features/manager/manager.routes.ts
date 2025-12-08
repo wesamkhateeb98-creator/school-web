@@ -5,6 +5,9 @@ import { Semester } from "./pages/semester/semester";
 import { messageTitle } from "../../core/consts";
 import { AgeGroup } from "./pages/age-group/age-group";
 import { SubjectPage } from "./pages/subject/subject";
+import { StudentsPage } from "./pages/student-page/students-page";
+import { TeacherPage } from "./pages/teacher-page/teacher-page";
+import { ManagerialPage } from "./pages/managerial-page/managerial-page";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -30,6 +33,14 @@ export const DASHBOARD_ROUTES: Routes = [
             component: SubjectPage, 
             title: messageTitle('subject_title')
           },
+        ],
+      },
+      { 
+        path: 'users', 
+        children:[
+          { path:'students', component: StudentsPage, title: messageTitle('students_title')},
+          { path:'teachers', component: TeacherPage, title: messageTitle('teachers_title')},
+          { path:'managerial', component: ManagerialPage, title: messageTitle('managerial_title')},
         ],
       },
       { path: '', redirectTo: 'academic_year', pathMatch: 'full' },

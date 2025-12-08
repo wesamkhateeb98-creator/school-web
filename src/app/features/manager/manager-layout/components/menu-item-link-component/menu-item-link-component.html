@@ -4,9 +4,9 @@
             (click)="navItem.isExpended = !navItem.isExpended"
             class="side-nav-item">
             <mat-icon matListItemIcon>{{navItem.icon}}</mat-icon>
-            <div style="display: flex; justify-content: start; align-items: center;">
+            <div style="display: flex; justify-content: space-between; align-items: center; ">
                 <span>{{language.transform(navItem.name)}}</span>    
-                <mat-icon matListItemIcon>{{navItem.isExpended?"arrow_drop_down":"arrow_right"}}</mat-icon>    
+                <mat-icon matListItemIcon style="margin: 0;">{{navItem.isExpended?"arrow_drop_down":"arrow_right"}}</mat-icon>    
             </div>
         
         </a>

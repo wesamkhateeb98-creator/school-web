@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-student-page',
   imports: [],
-  templateUrl: './student-page.html',
-  styleUrl: './student-page.scss',
+  templateUrl: './students-page.html',
+  styleUrl: './students-page.scss',
 })
-export class StudentPage {
+export class StudentsPage {
 
 }
