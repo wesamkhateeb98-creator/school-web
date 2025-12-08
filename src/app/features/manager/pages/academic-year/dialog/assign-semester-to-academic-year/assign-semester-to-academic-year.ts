@@ -179,6 +179,15 @@ export class AssignSemesterToAcademicYear {
 
   setUpdateMode(semesterForAcademicYear:(SemesterForAcademicYearViewModel | null)){
     this.semesterForAcademicYearId.set(semesterForAcademicYear?.id??null);
+    this.semesterViewModels.set([
+      new SemesterViewModel(
+        semesterForAcademicYear?.semesterId?? 0,
+        semesterForAcademicYear?.semesterName?? '',
+        false,
+        new Date(),
+      )
+    ])
+    console.log(JSON.stringify(this.semesterViewModels));
     this.semesterForm.patchValue({
       name: {
         id: semesterForAcademicYear?.semesterId?? '',
