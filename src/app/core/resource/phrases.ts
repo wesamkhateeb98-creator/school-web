@@ -66,7 +66,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'user_title':'المستخدمين',
         'students_title':'الطلاب',
         'teachers_title':'المدرسين',
-        'managerial_title': 'الكادر الإداري'
+        'managerial_title': 'الكادر الإداري',
+        'fatherName_title':'اسم الأب',
+        'motherName_title':'اسم الأم',
+        'phonenumber_title':'رقم الهاتف',
+        'address_title':'العنوان',
+        'birthday_title': 'تاريخ الميلاد'
     },
     en:{
         'name':"Name",
@@ -135,7 +140,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'students_title':'Students',
         'user_title':'User',
         'teachers_title':'Teachers',
-        'managerial_title': 'Managerial'
+        'managerial_title': 'Managerial',
+        'fatherName_title':'Father name',
+        'motherName_title':'Mother name',
+        'phonenumber_title':'Phonenumber',
+        'address_title':'Address',
+        'birthday_title': 'Birthday'
     }
 }
 
@@ -159,7 +169,14 @@ StudentPhrases|
 TeacherPhrases|
 ManagerialPhrases
 
-export type StudentPhrases = 'students_title';
+export type StudentPhrases = 
+'students_title'|
+'fatherName_title'|
+'motherName_title'|
+'phonenumber_title'|
+'address_title'|
+'birthday_title'
+;
 
 export type TeacherPhrases = 'teachers_title';
 
