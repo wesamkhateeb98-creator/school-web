@@ -9,6 +9,11 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { StudentFilterViewModel } from './view-model/student-filter-view-model';
 import { ParamsService } from '../../../../core/services/params-service';
 import { MatButtonModule } from '@angular/material/button';
+import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { StudentEndpoints } from '../../endpoints/student-endpoint';
 
 @Component({
   selector: 'app-student-page',
@@ -51,7 +56,10 @@ export class StudentsPage {
 
   constructor(
     public language:Language,
-    public parmas:ParamsService
+    public dialog :MatDialog,
+    public parmas:ParamsService,
+    public matSnackBar:MatSnackBar,
+    public studentEndpoints:StudentEndpoints
   ){
     this.loadStudentViewModel();
   }
@@ -102,7 +110,29 @@ export class StudentsPage {
   }
 
   openDeleteDialog(id:number){
-
+    const dialogRef = this.dialog.open(
+      DeleteDialog, 
+      {
+        data:{
+          title:this.language.transform('delete_age_group'),
+          action: ()=>{
+            this.studentEndpoints.delete(id).subscribe({
+            next:success=>{
+              dialogRef.close();
+              this.students.update(x=>{
+                return x.filter(item => item.id !== id);
+              })
+              this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));                        
+            },
+            error: error=>{
+              this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+            }
+          });
+            }  
+        },
+        width: "80%"
+      }
+    );
   }
 
   changeInPage(pageEvent:PageEvent){
