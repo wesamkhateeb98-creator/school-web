@@ -1,7 +1,7 @@
 export class StudentFilterViewModel {
     name?: string;
-    phoneNumber?: string;
-    ageGroupId?: number;
+    phonenumber?: string;
+    ageGroupName?: string;
     pageNumber: number;
     pageSize: number;
 
@@ -9,12 +9,12 @@ export class StudentFilterViewModel {
         pageNumber: number,
         pageSize: number,
         name?: string,
-        phoneNumber?: string,
-        ageGroupId?: number,
+        phonenumber?: string,
+        ageGroupName?: string,
     ) {
         this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.ageGroupId = ageGroupId;
+        this.phonenumber = phonenumber;
+        this.ageGroupName = ageGroupName;
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
     }

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, effect, signal } from '@angular/core';
 import { StudentViewModel } from './view-model/student-view-model';
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { MatTableModule } from '@angular/material/table';
@@ -14,6 +14,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StudentEndpoints } from '../../endpoints/student-endpoint';
+import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from "@angular/material/expansion";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { debounceTime } from 'rxjs';
+import { MatGridList, MatGridTile } from "@angular/material/grid-list";
+import { AgeGroupEndpoints } from '../../endpoints/age-group-endpoint';
+import { AgeGroupModel } from '../../endpoints/models/age-group/age-group-model';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-student-page',
@@ -23,18 +32,26 @@ import { StudentEndpoints } from '../../endpoints/student-endpoint';
     MatCardModule,
     MatIconModule,
     MatPaginatorModule,
-    MatButtonModule
-  ],
+    MatButtonModule,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatFormFieldModule, MatInputModule, ReactiveFormsModule,
+    MatGridList,
+    MatGridTile,
+    MatAutocompleteModule
+],
   templateUrl: './students-page.html',
   styleUrl: './students-page.scss',
 })
 export class StudentsPage {
   students = signal<StudentViewModel[]>([]);
+  ageGroups = signal<AgeGroupModel[]>([]);
   studentFilter = signal<StudentFilterViewModel>(
     {
-      name:undefined,
-      ageGroupId: undefined,
-      phoneNumber: undefined,
+      name:"",
+      ageGroupName: "",
+      phonenumber: "",
       pageNumber:1,
       pageSize:10
     }
@@ -54,14 +71,77 @@ export class StudentsPage {
     'action'
   ];
 
+  form!: FormGroup;
+
+
   constructor(
     public language:Language,
     public dialog :MatDialog,
     public parmas:ParamsService,
     public matSnackBar:MatSnackBar,
-    public studentEndpoints:StudentEndpoints
+    public studentEndpoints:StudentEndpoints,
+    public ageGroupEndpoint:AgeGroupEndpoints,
+    public fb: FormBuilder,
   ){
+    this.loadAgeGroup();
+    this.setFilterFromUrl()
+    this.initiateForm();
     this.loadStudentViewModel();
+  }
+
+  loadAgeGroup(name?:string){
+    this.ageGroupEndpoint.get(name??'',1,5)
+      .subscribe(x=>{
+        this.ageGroups.set(x.content) 
+      });
+  }
+
+  setFilterFromUrl(){
+    this.studentFilter.update(x=>{
+        const param = this.parmas.loadFromUrl<StudentFilterViewModel>(this.studentFilter());
+
+        if(param.ageGroupName?.length??0 > 0){
+          this.ageGroupEndpoint.get(param.ageGroupName??'',1,1).subscribe(
+            x=>{
+              this.ageGroups.set(x.content);
+              this.form.get('ageGroup')?.setValue(x.content[0]);
+            }
+          );
+        }
+
+        x.pageSize = param.pageSize? param.pageSize: 10;
+        x.pageNumber = param.pageNumber? param.pageNumber: 1;
+        x.name = param.name
+        x.phonenumber =  param.phonenumber;
+        x.ageGroupName = param.ageGroupName;
+        return x;
+      });
+    effect(()=>{
+      this.parmas.setToUrl(this.studentFilter());
+    })
+  }
+
+  initiateForm(){
+    this.form = this.fb.group(
+      {
+        name: [this.studentFilter().name??''],
+        phonenumber: [this.studentFilter().phonenumber??''],
+        ageGroup: [null],
+      } 
+    );
+    this.form.valueChanges.pipe(debounceTime(500)).subscribe(value=>{
+      
+      this.studentFilter.update(prev => 
+        ({ 
+          ...prev, 
+          name: value.name,
+          phonenumber: value.phonenumber,
+          ageGroupName: value.ageGroup.name
+        }));
+
+      this.loadStudentViewModel();
+    })
+    this.loadStudentViewModel()
   }
 
   loadStudentViewModel(){
@@ -145,4 +225,8 @@ export class StudentsPage {
       this.loading();
       this.parmas.setToUrl(this.studentFilter())
   }  
+
+  displayFn = (option?: AgeGroupModel): string =>  {
+    return option ? option.name : '';
+  }
 }

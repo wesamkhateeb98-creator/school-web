@@ -49,8 +49,8 @@ export class StudentEndpoints {
   get(filter:StudentFilterViewModel):Observable<Page<StudentModel>>{
     return this.http.get<Page<StudentModel>>('academic-year',{
         name: filter.name,
-        phoneNumber: filter.phoneNumber,
-        AgeGroupId: filter.ageGroupId,
+        phoneNumber: filter.phonenumber,
+        AgeGroupName: filter.ageGroupName,
         pageNumber: filter.pageNumber,
         pageSize: filter.pageSize
       })

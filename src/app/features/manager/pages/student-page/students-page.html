@@ -1,11 +1,60 @@
 
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title> {{language.transform('filter')}}</mat-panel-title>
+    </mat-expansion-panel-header>
 
-<mat-card>
+    <form class="example-form" [formGroup]="form">
+        <mat-grid-list [cols]="2" rowHeight="70px" gutterSize="10px">
+            
+            <mat-grid-tile>
+                <mat-form-field  class="example-full-width" style="width: 100%;">
+                    <mat-label>{{ language.transform("name") }}</mat-label>
+                    <input type="text" matInput formControlName="name">
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field  class="example-full-width" style="width: 100%;">
+                    <mat-label>{{ language.transform("phonenumber_title") }}</mat-label>
+                    <input type="text" matInput formControlName="phonenumber">
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field style="width: 100%;">
+                    <mat-label>{{language.transform('age_group_title')}}</mat-label>
+                    <input type="text"
+                        aria-label="Number"
+                        matInput
+                        formControlName="ageGroup"
+                        [matAutocomplete]="auto"
+                        [readonly]="loading()">
+                    <mat-autocomplete 
+                        autoActiveFirstOption 
+                        [displayWith]="displayFn"
+                        #auto="matAutocomplete">
+                        @for (option of ageGroups(); track option) {
+                            <mat-option [value]="option">{{option.name}}</mat-option>
+                        }
+                    </mat-autocomplete>
+                </mat-form-field>
+            </mat-grid-tile>
+            
+            
+        </mat-grid-list>
+    </form>
+    
+</mat-expansion-panel>
+
+<br/>
+
+<mat-card style="overflow-x: auto;">
     @if(this.loading())
     {
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     }
-    <table mat-table [dataSource]="students()" class="mat-elevation-z8">
+    <table mat-table [dataSource]="students()" class="mat-elevation-z8" style="width: 80%;">
 
         <ng-container matColumnDef="{{headerTable[0]}}" sticky>
             <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('name')}} </th>
