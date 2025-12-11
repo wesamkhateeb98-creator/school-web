@@ -23,6 +23,7 @@ import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 import { AgeGroupEndpoints } from '../../endpoints/age-group-endpoint';
 import { AgeGroupModel } from '../../endpoints/models/age-group/age-group-model';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AddStudentDialog } from './components/add-student-dialog/add-student-dialog';
 
 @Component({
   selector: 'app-student-page',
@@ -39,7 +40,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatGridList,
     MatGridTile,
-    MatAutocompleteModule
+    MatAutocompleteModule    
 ],
   templateUrl: './students-page.html',
   styleUrl: './students-page.scss',
@@ -183,6 +184,20 @@ export class StudentsPage {
           lock: true
       }
     ]);
+  }
+
+  openAddDialog(){
+    const dialogRef = this.dialog.open(
+      AddStudentDialog, 
+      {
+        width: "80vw",
+        maxWidth: "80vw"
+      }
+    );
+    
+    dialogRef.afterClosed().subscribe(result => {
+      this.students.update(arr => [result.data, ...arr]);
+    });
   }
 
   openUpdateDialog(student:StudentViewModel){

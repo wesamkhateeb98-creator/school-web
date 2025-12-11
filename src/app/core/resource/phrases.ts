@@ -67,11 +67,16 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'students_title':'الطلاب',
         'teachers_title':'المدرسين',
         'managerial_title': 'الكادر الإداري',
-        'fatherName_title':'اسم الأب',
-        'motherName_title':'اسم الأم',
+        'father_name_title':'اسم الأب',
+        'mother_name_title':'اسم الأم',
         'phonenumber_title':'رقم الهاتف',
         'address_title':'العنوان',
-        'birthday_title': 'تاريخ الميلاد'
+        'birthday_title': 'تاريخ الميلاد',
+        'first_name_title':'الاسم الأول',
+        'last_name_title':'الكنية',
+        'max_length_50':'النص يجب أن يكون أصغر من 50 محرف.',
+        'year_less_than_current_year':'السنة يجب أن تكون أصغر من السنة الحالية',
+        'number_digit_between_7_10':'عدد الأرقام يجب أن يكون من 7 إلى ال 10'
     },
     en:{
         'name':"Name",
@@ -141,11 +146,16 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'user_title':'User',
         'teachers_title':'Teachers',
         'managerial_title': 'Managerial',
-        'fatherName_title':'Father name',
-        'motherName_title':'Mother name',
+        'father_name_title':'Father name',
+        'mother_name_title':'Mother name',
         'phonenumber_title':'Phonenumber',
         'address_title':'Address',
-        'birthday_title': 'Birthday'
+        'birthday_title': 'Birthday',
+        'first_name_title':'First name',
+        'last_name_title':'Last name',
+        'max_length_50':'The text must be less than 50.',
+        'year_less_than_current_year':'The year must be less than current year',
+        'number_digit_between_7_10':'The numnber of digits must be from 7 to 10 '
     }
 }
 
@@ -171,11 +181,13 @@ ManagerialPhrases
 
 export type StudentPhrases = 
 'students_title'|
-'fatherName_title'|
-'motherName_title'|
+'father_name_title'|
+'mother_name_title'|
 'phonenumber_title'|
 'address_title'|
-'birthday_title'
+'birthday_title'|
+'first_name_title'|
+'last_name_title'
 ;
 
 export type TeacherPhrases = 'teachers_title';
@@ -217,8 +229,11 @@ export type ValidationMessagePhrases =
 'year_greater_than_or_equal_2025'|
 'min_length_3'|
 'max_length_30'|
+'max_length_50'|
 'max_length_100'|
-'start_date_must_less_than_end_date';
+'start_date_must_less_than_end_date'|
+'year_less_than_current_year'|
+'number_digit_between_7_10';
 
 export type ButtonPhrases = 
 'add' | 

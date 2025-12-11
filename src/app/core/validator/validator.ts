@@ -18,3 +18,20 @@ export function startDateMustLessEndDateValidator(control: AbstractControl) : Va
   }
   return null;
 }
+
+export function maxYearValidator(maxYear: number) {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) return null; 
+
+    const inputDate = new Date(control.value);
+    if (isNaN(inputDate.getTime())) {
+      return { invalidDate: true }; 
+    }
+
+    if (inputDate.getFullYear() > maxYear) {
+      return { maxYearExceeded: { maxYear } };
+    }
+
+    return null;
+  };
+}

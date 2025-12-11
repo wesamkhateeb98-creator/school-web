@@ -1,0 +1,184 @@
+<form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content>
+    <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_semester':'add_semester')}}</h2>
+    
+    @if(this.form.hasError('dateRangeInvalid')){
+      <app-error-title-component [message]="language.transform('start_date_must_less_than_end_date')"/>
+      <br />
+    }
+    <mat-grid-list [cols]="2" rowHeight="70px" gutterSize="10px">
+      @if(loading()){
+        <mat-grid-tile>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-grid-tile>
+      }
+      @else{
+        <mat-grid-tile >
+          <mat-form-field style="width: 100%;">
+                <mat-label>{{language.transform('age_group_title')}}</mat-label>
+                <input type="text"
+                    aria-label="Number"
+                    matInput
+                    formControlName="ageGroup"
+                    [matAutocomplete]="auto"
+                    [readonly]="loading()">
+                <mat-autocomplete 
+                    autoActiveFirstOption 
+                    [displayWith]="displayFn"
+                    #auto="matAutocomplete">
+                    @for (option of ageGroups(); track option) {
+                        <mat-option [value]="option">{{option.name}}</mat-option>
+                    }
+                </mat-autocomplete>
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile >
+            <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label >{{language.transform("first_name_title")}}</mat-label>
+            <input type="text" matInput formControlName="firstName">
+            @if(this.form.get('firstName')?.hasError('required')){
+              <mat-error>
+                {{language.transform('field_required')}}
+              </mat-error>
+            }
+            @else if(this.form.get('firstName')?.hasError('minLength')){
+              <mat-error>
+                {{language.transform('min_length_3')}}
+              </mat-error>
+            }
+            @else if(this.form.get('firstName')?.hasError('maxLength')){
+              <mat-error>
+                {{language.transform('max_length_30')}}
+              </mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+         <mat-grid-tile >
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label >{{language.transform("last_name_title")}}</mat-label>
+            <input type="text" matInput formControlName="lastName">
+            @if(this.form.get('lastName')?.hasError('required')){
+              <mat-error>
+                {{language.transform('field_required')}}
+              </mat-error>
+            }
+            @else if(this.form.get('lastName')?.hasError('minLength')){
+              <mat-error>
+                {{language.transform('min_length_3')}}
+              </mat-error>
+            }
+            @else if(this.form.get('lastName')?.hasError('maxLength')){
+              <mat-error>
+                {{language.transform('max_length_30')}}
+              </mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+         <mat-grid-tile >
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label >{{language.transform("father_name_title")}}</mat-label>
+            <input type="text" matInput formControlName="fatherName">
+            @if(this.form.get('fatherName')?.hasError('required')){
+              <mat-error>
+                {{language.transform('field_required')}}
+              </mat-error>
+            }
+            @else if(this.form.get('fatherName')?.hasError('minLength')){
+              <mat-error>
+                {{language.transform('min_length_3')}}
+              </mat-error>
+            }
+            @else if(this.form.get('fatherName')?.hasError('maxLength')){
+              <mat-error>
+                {{language.transform('max_length_30')}}
+              </mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+         <mat-grid-tile >
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label >{{language.transform("mother_name_title")}}</mat-label>
+            <input type="text" matInput formControlName="motherName">
+            @if(this.form.get('motherName')?.hasError('required')){
+              <mat-error>
+                {{language.transform('field_required')}}
+              </mat-error>
+            }
+            @else if(this.form.get('motherName')?.hasError('minLength')){
+              <mat-error>
+                {{language.transform('min_length_3')}}
+              </mat-error>
+            }
+            @else if(this.form.get('motherName')?.hasError('maxLength')){
+              <mat-error>
+                {{language.transform('max_length_30')}}
+              </mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+         <mat-grid-tile >
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label >{{language.transform("address_title")}}</mat-label>
+            <input type="text" matInput formControlName="address">
+            @if(this.form.get('address')?.hasError('required')){
+              <mat-error>
+                {{language.transform('field_required')}}
+              </mat-error>
+            }
+            @else if(this.form.get('address')?.hasError('minLength')){
+              <mat-error>
+                {{language.transform('min_length_3')}}
+              </mat-error>
+            }
+            @else if(this.form.get('address')?.hasError('maxLength')){
+              <mat-error>
+                {{language.transform('max_length_50')}}
+              </mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile >
+            <mat-form-field class="example-full-width" style="width: 100%;" >
+                <mat-label >{{language.transform("birthday_title")}}</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="birthday" [readonly]="loading()">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="loading()"/>
+                <mat-datepicker #picker></mat-datepicker>
+                @if(this.form.get('birthday')?.hasError('required')){
+                    <mat-error>
+                    {{language.transform('field_required')}}
+                    </mat-error>
+                }
+                @else if(this.form.get('birthday')?.hasError('invalidDate')){
+                    <mat-error>
+                    {{language.transform('year_less_than_current_year')}}
+                    </mat-error>
+                }
+            </mat-form-field>
+          
+        </mat-grid-tile>
+         <mat-grid-tile >
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label >{{language.transform("phonenumber_title")}}</mat-label>
+            <input type="text" matInput formControlName="phoneNumber">
+            @if(this.form.get('phoneNumber')?.hasError('required')){
+              <mat-error>
+                {{language.transform('field_required')}}
+              </mat-error>
+            }
+            @else if(this.form.get('phoneNumber')?.hasError('pattern')){
+              <mat-error>
+                {{language.transform('number_digit_between_7_10')}}
+              </mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+      }
+      
+    </mat-grid-list>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button matButton (click)="onNoClick()" type="button" [disabled]="loading()">{{language.transform('cancel')}}</button>
+    <button matButton="filled" cdkFocusInitial [disabled]="loading()">{{language.transform(isUpdate() ? 'update':'add')}}</button>
+  </mat-dialog-actions>
+</form>
