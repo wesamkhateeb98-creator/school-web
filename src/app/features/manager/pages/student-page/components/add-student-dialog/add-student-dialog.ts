@@ -15,6 +15,9 @@ import { maxYearValidator } from '../../../../../../core/validator/validator';
 import { MatDatepickerInput, MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
+import { StudentEndpoints } from '../../../../endpoints/student-endpoint';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
+import { StudentViewModel } from '../../view-model/student-view-model';
 
 @Component({
   selector: 'app-add-student-dialog',
@@ -52,25 +55,43 @@ export class AddStudentDialog{
     public matSnackBar:MatSnackBar,
     public dialogRef:MatDialogRef<AddStudentDialog>,
     public ageGroupEndpoint:AgeGroupEndpoints,
+    public studentEndpoint:StudentEndpoints,
   ){ 
-    this.form = this.fb.group({
-      ageGroup: [null, [Validators.required]],
-      firstName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      lastName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      fatherName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      motherName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      address: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-      birthday: ['', [Validators.required, maxYearValidator(new Date().getFullYear())]],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{7,10}$/)]],  // رقم هاتف أرقام فقط
-    });
-    this.loadAgeGroup();
+    this.intiateForm();
   }
 
-  loadAgeGroup(name?:string){
-    this.ageGroupEndpoint.get(name??'',1,5)
-      .subscribe(x=>{
-        this.ageGroups.set(x.content) 
+  async intiateForm(){
+    const updateMode = this.isUpdate();
+
+    await this.loadAgeGroup(
+      updateMode? this.data.student.ageGroupName: '',
+      ()=>{
+        if(this.isUpdate()){
+          this.form.get('ageGroup')?.setValue(this.ageGroups()[0]);
+        }
       });
+
+    this.form = this.fb.group({
+      ageGroup: [null, [Validators.required]],
+      firstName:  [updateMode? this.data.student.firstName:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      lastName:   [updateMode? this.data.student.lastName:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      fatherName: [updateMode? this.data.student.fatherName:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      motherName: [updateMode? this.data.student.motherName:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      address:    [updateMode? this.data.student.address:'', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      birthday:   [updateMode? this.data.student.birthday:'', [Validators.required, maxYearValidator(new Date().getFullYear())]],
+      phoneNumber:[updateMode? this.data.student.phoneNumber:'', [Validators.required, Validators.pattern(/^\d{7,10}$/)]],  // رقم هاتف أرقام فقط
+    });
+  }
+
+  async loadAgeGroup(name?:string ,callback?:()=>void){
+    const result = this.ageGroupEndpoint.get(name??'',1,5);
+
+    result.subscribe(x=>{
+      this.ageGroups.set(x.content) 
+      if(callback)
+        callback();
+    });
+
   }
   
 
@@ -78,7 +99,103 @@ export class AddStudentDialog{
     this.dialogRef.close();
   }
 
-  submit(){}
+  submit(){
+    if(!this.form.valid)
+      return;
+    
+    this.loading.set(true);
+
+    if(this.isUpdate()){
+      this.updateAcademicYear();
+    }else{
+      this.addStudent();    
+    }
+    
+    this.loading.set(false);
+  }
+
+  addStudent(){
+    const result = this.studentEndpoint.add(
+      this.key,
+      {
+        firstName: this.form.value.firstName,
+        lastName: this.form.value.lastName,
+        fatherName: this.form.value.fatherName,
+        motherName: this.form.value.motherName,
+        phoneNumber: this.form.value.phoneNumber,
+        address: this.form.value.address,
+        ageGroup: this.form.value.ageGroup,
+        birthday: this.form.value.birthday
+      }
+    )
+    
+    result.subscribe({
+        next: (success) => {
+          this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+          const data = new StudentViewModel(
+            success.id,
+            this.form.value.ageGroup.id,
+            this.form.value.ageGroup.name,
+            this.form.value.firstName,
+            this.form.value.lastName,
+            this.form.value.fatherName,
+            this.form.value.motherName,
+            this.form.value.address,
+            this.form.value.birthday,
+            this.form.value.phoneNumber,
+            false
+          );
+          this.dialogRef.close({
+            data
+          });
+        },
+        error: (error) => {
+          this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        }
+      });
+  }
+
+
+  updateAcademicYear(){
+    const result = this.studentEndpoint.update(
+      this.data.student.id,
+      {
+        firstName: this.form.value.firstName,
+        lastName: this.form.value.lastName,
+        fatherName: this.form.value.fatherName,
+        motherName: this.form.value.motherName,
+        phoneNumber: this.form.value.phoneNumber,
+        address: this.form.value.address,
+        ageGroup: this.form.value.ageGroup,
+        birthday: this.form.value.birthday
+      }
+    )
+
+    result.subscribe({
+      next: success=>{
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        const data = new StudentViewModel(
+            success.id,
+            this.form.value.ageGroup.id,
+            this.form.value.ageGroup.name,
+            this.form.value.firstName,
+            this.form.value.lastName,
+            this.form.value.fatherName,
+            this.form.value.motherName,
+            this.form.value.address,
+            this.form.value.birthday,
+            this.form.value.phoneNumber,
+            false
+          );
+        this.dialogRef.close({
+          data
+        });  
+      },
+      error: error=>{
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+      }
+    });
+  }
 
   data = inject(MAT_DIALOG_DATA);
 

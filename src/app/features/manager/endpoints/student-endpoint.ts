@@ -3,10 +3,6 @@ import { HttpHelper } from '../../../core/services/http-helper';
 import { MutateResponse } from '../../shared/model/mutate-response';
 import { Page } from '../../shared/model/page';
 import { Observable } from 'rxjs';
-import { SemesterForAcademicYearModel, SemesterForAcademicYearViewModel } from '../pages/academic-year/model/semester-for-academic-year-view-model';
-import { ToDateOnly } from '../../../core/consts';
-import { AcademicYearViewModel } from '../pages/academic-year/model/academic-year-view-model';
-import { AcademicYearModel } from '../pages/academic-year/model/academic-year-model';
 import { AddStudentViewModel } from '../pages/student-page/view-model/add-student-view-model';
 import { StudentModel } from './models/student/student-model';
 import { StudentFilterViewModel } from '../pages/student-page/view-model/student-filter-view-model';
@@ -47,7 +43,7 @@ export class StudentEndpoints {
   }
 
   get(filter:StudentFilterViewModel):Observable<Page<StudentModel>>{
-    return this.http.get<Page<StudentModel>>('academic-year',{
+    return this.http.get<Page<StudentModel>>('student',{
         name: filter.name,
         phoneNumber: filter.phonenumber,
         AgeGroupName: filter.ageGroupName,

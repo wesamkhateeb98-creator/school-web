@@ -146,44 +146,44 @@ export class StudentsPage {
   }
 
   loadStudentViewModel(){
-    this.students.set([
-      {
-          id: 1,
-          ageGroupId: 5,
-          ageGroupName: "Grade 5",
-          name: "John Doe",
-          fatherName: "Michael",
-          motherName: "Sarah",
-          address: "123 Main St",
-          birthday: new Date("2015-05-15T00:00:00.000Z"),
-          phoneNumber: "555-1234",
-          lock: false
+    
+    this.loading.set(true);
+    
+    const result = this.studentEndpoints.get(this.studentFilter())
+
+    result.subscribe({
+      next:(success)=>{
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        
+        this.studentFilter.update(x=>
+        {
+          x.pageSize = success.pageSize;
+          x.pageNumber = success.pageNumber;  
+          return x;
+        });
+        this.totalPages.set(success.countPages)
+        this.students.set(
+            success.content.map(x=> new StudentViewModel(
+            x.id,
+            x.ageGroupId,
+            x.ageGroupName,
+            x.firstName,
+            x.lastName,
+            x.fatherName,
+            x.motherName,
+            x.address,
+            x.birthday,
+            x.phoneNumber,
+            false
+          )));
+        this.loading.set(false);
+        
       },
-      {
-          id: 2,
-          ageGroupId: 5,
-          ageGroupName: "Grade 5",
-          name: "Jane Smith",
-          fatherName: "Robert",
-          motherName: "Emily",
-          address: "456 Oak St",
-          birthday: new Date("2015-06-20T00:00:00.000Z"),
-          phoneNumber: "555-5678",
-          lock: false
-      },
-      {
-          id: 3,
-          ageGroupId: 6,
-          ageGroupName: "Grade 6",
-          name: "John Williams", // Duplicate first name
-          fatherName: "David",
-          motherName: "Lisa",
-          address: "789 Pine St",
-          birthday: new Date("2014-04-10T00:00:00.000Z"),
-          phoneNumber: "555-9012",
-          lock: true
+      error:(error)=>{
+        this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
+        this.loading.set(false);
       }
-    ]);
+    })
   }
 
   openAddDialog(){
@@ -201,7 +201,27 @@ export class StudentsPage {
   }
 
   openUpdateDialog(student:StudentViewModel){
-
+    const dialogRef = this.dialog.open(
+      AddStudentDialog, 
+      {
+        width: "80vw",
+        maxWidth: "80vw",
+        data:{
+          student: student
+        }
+      }
+    );
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.students.update(arr => 
+          {
+            arr = arr.map(x => x.id === result.data.id ? result.data : x);
+            return arr;
+          }
+        );
+        
+      }
+    });
   }
 
   openDeleteDialog(id:number){
