@@ -44,7 +44,7 @@ export class StudentEndpoints {
     return this.http.get<Page<StudentModel>>('student',{
         name: filter.name,
         phoneNumber: filter.phonenumber,
-        AgeGroupName: filter.ageGroupName,
+        AgeGroupId: filter.ageGroup?.id??0 >= 0? filter.ageGroup?.id : 0,
         pageNumber: filter.pageNumber,
         pageSize: filter.pageSize
       })

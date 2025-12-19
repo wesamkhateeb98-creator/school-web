@@ -11,11 +11,11 @@ export interface Params {
 export class ParamsService {
   constructor(private router: Router, private route: ActivatedRoute) {}
 
-  loadGenericFromUrl() {return this.route.snapshot.queryParams} 
+  loadGenericFromUrl():Params {return this.route.snapshot.queryParams} 
 
   loadFromUrl<T extends Params>(defaultFilter: T): T {
     const params = this.route.snapshot.queryParams;
-    console.log(params);
+    
     const filter: any = {};
     for (const key of Object.keys(defaultFilter)) {
       if (params.hasOwnProperty(key)) {

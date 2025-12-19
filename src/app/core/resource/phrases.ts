@@ -75,7 +75,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'full_name_title':'الاسم الكامل',
         'max_length_50':'النص يجب أن يكون أصغر من 50 محرف.',
         'year_less_than_current_year':'السنة يجب أن تكون أصغر من السنة الحالية',
-        'number_digit_between_7_10':'عدد الأرقام يجب أن يكون من 7 إلى ال 10'
+        'number_digit_between_7_10':'عدد الأرقام يجب أن يكون من 7 إلى ال 10',
+        'all_title': 'الكل'
     },
     en:{
         'name':"Name",
@@ -153,7 +154,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'full_name_title':'Full name',
         'max_length_50':'The text must be less than 50.',
         'year_less_than_current_year':'The year must be less than current year',
-        'number_digit_between_7_10':'The numnber of digits must be from 7 to 10 '
+        'number_digit_between_7_10':'The numnber of digits must be from 7 to 10 ',
+        'all_title': 'All'
     }
 }
 
@@ -193,7 +195,8 @@ export type ManagerialPhrases = 'managerial_title';
 
 export type GlobalType = 
 'registrations_title' |
-'filter'
+'filter'|
+'all_title'
 
 export type LoginPhrases = 
 'name' 

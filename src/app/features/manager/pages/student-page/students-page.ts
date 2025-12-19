@@ -50,9 +50,6 @@ export class StudentsPage {
   ageGroups = signal<AgeGroupModel[]>([]);
   studentFilter = signal<StudentFilterViewModel>(
     {
-      name:"",
-      ageGroupName: "",
-      phonenumber: "",
       pageNumber:1,
       pageSize:10
     }
@@ -93,32 +90,39 @@ export class StudentsPage {
   loadAgeGroup(name?:string){
     this.ageGroupEndpoint.get(name??'',1,5)
       .subscribe(x=>{
-        this.ageGroups.set(x.content) 
+        this.ageGroups.set(x.content)
       });
+
   }
 
   setFilterFromUrl(){
     this.studentFilter.update(x=>{
-        const param = this.parmas.loadFromUrl<StudentFilterViewModel>(this.studentFilter());
-
-        if(param.ageGroupName?.length??0 > 0){
-          this.ageGroupEndpoint.get(param.ageGroupName??'',1,1).subscribe(
-            x=>{
-              this.ageGroups.set(x.content);
-              this.form.get('ageGroup')?.setValue(x.content[0]);
+        const param = this.parmas.loadGenericFromUrl();
+        if(param['ageGroupName']?.length??0 > 0){
+          this.ageGroupEndpoint.get(param['ageGroupName']??'',1,1).subscribe(
+            s=>{
+              this.ageGroups.set(s.content);
+              this.form.get('ageGroup')?.setValue(s.content[0]);
+              x.ageGroup = s.content[0];
             }
           );
         }
 
-        x.pageSize = param.pageSize? param.pageSize: 10;
-        x.pageNumber = param.pageNumber? param.pageNumber: 1;
-        x.name = param.name
-        x.phonenumber =  param.phonenumber;
-        x.ageGroupName = param.ageGroupName;
+        x.pageSize = param['pageSize']?  param['pageSize']: 10;
+        x.pageNumber = param['pageNumber']? param['pageNumber']: 1;
+        x.name = param['fullName']
+        x.phonenumber =  param['phonenumber'];
+        
         return x;
       });
     effect(()=>{
-      this.parmas.setToUrl(this.studentFilter());
+      this.parmas.setToUrl({
+        'pageSize':this.studentFilter().pageSize,
+        'pageNumber':this.studentFilter().pageNumber,
+        'fullName':this.studentFilter().name,
+        'phonenumber':this.studentFilter().phonenumber,
+        'ageGroupName':this.studentFilter().ageGroup?.name,
+      });
     })
   }
 
@@ -130,17 +134,24 @@ export class StudentsPage {
         ageGroup: [null],
       } 
     );
+
     this.form.valueChanges.pipe(debounceTime(500)).subscribe(value=>{
       this.studentFilter.update(prev => 
-        ({ 
+        ({
           ...prev, 
           name: value.fullName?? '',
           phonenumber: value.phonenumber??'',
-          ageGroupName: value.ageGroup?.name??""
+          ageGroup: value.ageGroup
         }));
 
       this.loadStudentViewModel();
     })
+
+    this.form.get('ageGroup')?.valueChanges.pipe(debounceTime(500)).subscribe(value=>{
+      if(value.length > 0) 
+        this.loadAgeGroup(value);
+    })
+
     this.loadStudentViewModel()
   }
 

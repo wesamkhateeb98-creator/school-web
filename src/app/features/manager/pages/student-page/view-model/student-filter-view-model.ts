@@ -1,7 +1,9 @@
+import { AgeGroupModel } from "../../../endpoints/models/age-group/age-group-model";
+
 export class StudentFilterViewModel {
     name?: string;
     phonenumber?: string;
-    ageGroupName?: string;
+    ageGroup?: AgeGroupModel;
     pageNumber: number;
     pageSize: number;
 
@@ -10,11 +12,11 @@ export class StudentFilterViewModel {
         pageSize: number,
         name?: string,
         phonenumber?: string,
-        ageGroupName?: string,
+        ageGroup?: AgeGroupModel,
     ) {
         this.name = name;
         this.phonenumber = phonenumber;
-        this.ageGroupName = ageGroupName;
+        this.ageGroup = ageGroup;
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
     }
