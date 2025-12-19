@@ -4,11 +4,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogContent, MatDialogActions, MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
-import { MatGridList, MatGridTile } from "@angular/material/grid-list";
+import { MatGridList, MatGridTile, MatLine } from "@angular/material/grid-list";
 import { Language } from '../../../../../../core/services/language';
 import { MatProgressBar } from "@angular/material/progress-bar";
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatAutocomplete, MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { AgeGroupModel } from '../../../../endpoints/models/age-group/age-group-model';
 import { AgeGroupEndpoints } from '../../../../endpoints/age-group-endpoint';
 import { maxYearValidator } from '../../../../../../core/validator/validator';
@@ -73,8 +73,7 @@ export class AddStudentDialog{
 
     this.form = this.fb.group({
       ageGroup: [null, [Validators.required]],
-      firstName:  [updateMode? this.data.student.firstName:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
-      lastName:   [updateMode? this.data.student.lastName:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
+      fullName:  [updateMode? this.data.student.fullName:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       fatherName: [updateMode? this.data.student.fatherName:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       motherName: [updateMode? this.data.student.motherName:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       address:    [updateMode? this.data.student.address:'', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
@@ -118,8 +117,7 @@ export class AddStudentDialog{
     const result = this.studentEndpoint.add(
       this.key,
       {
-        firstName: this.form.value.firstName,
-        lastName: this.form.value.lastName,
+        fullName: this.form.value.fullName,
         fatherName: this.form.value.fatherName,
         motherName: this.form.value.motherName,
         phoneNumber: this.form.value.phoneNumber,
@@ -136,8 +134,7 @@ export class AddStudentDialog{
             success.id,
             this.form.value.ageGroup.id,
             this.form.value.ageGroup.name,
-            this.form.value.firstName,
-            this.form.value.lastName,
+            this.form.value.fullName,
             this.form.value.fatherName,
             this.form.value.motherName,
             this.form.value.address,
@@ -160,8 +157,7 @@ export class AddStudentDialog{
     const result = this.studentEndpoint.update(
       this.data.student.id,
       {
-        firstName: this.form.value.firstName,
-        lastName: this.form.value.lastName,
+        fullName: this.form.value.fullName,
         fatherName: this.form.value.fatherName,
         motherName: this.form.value.motherName,
         phoneNumber: this.form.value.phoneNumber,
@@ -178,8 +174,7 @@ export class AddStudentDialog{
             success.id,
             this.form.value.ageGroup.id,
             this.form.value.ageGroup.name,
-            this.form.value.firstName,
-            this.form.value.lastName,
+            this.form.value.fullName,
             this.form.value.fatherName,
             this.form.value.motherName,
             this.form.value.address,

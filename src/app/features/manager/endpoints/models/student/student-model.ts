@@ -2,8 +2,7 @@ export interface StudentModel {
     id: number;
     ageGroupId: number;
     ageGroupName: string;
-    firstName: string;
-    lastName: string;
+    fullName: string;
     fatherName: string;
     motherName: string;
     address: string;

@@ -125,19 +125,18 @@ export class StudentsPage {
   initiateForm(){
     this.form = this.fb.group(
       {
-        name: [this.studentFilter().name??''],
+        fullName: [this.studentFilter().name??''],
         phonenumber: [this.studentFilter().phonenumber??''],
         ageGroup: [null],
       } 
     );
     this.form.valueChanges.pipe(debounceTime(500)).subscribe(value=>{
-      
       this.studentFilter.update(prev => 
         ({ 
           ...prev, 
-          name: value.name,
-          phonenumber: value.phonenumber,
-          ageGroupName: value.ageGroup.name
+          name: value.fullName?? '',
+          phonenumber: value.phonenumber??'',
+          ageGroupName: value.ageGroup?.name??""
         }));
 
       this.loadStudentViewModel();
@@ -167,8 +166,7 @@ export class StudentsPage {
             x.id,
             x.ageGroupId,
             x.ageGroupName,
-            x.firstName,
-            x.lastName,
+            x.fullName,
             x.fatherName,
             x.motherName,
             x.address,

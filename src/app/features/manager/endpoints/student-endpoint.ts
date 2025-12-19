@@ -19,8 +19,7 @@ export class StudentEndpoints {
     return this.http.post<MutateResponse>("student",{
       "key": key,
       "ageGroupId": addModel.ageGroup.id,
-      "firstName": addModel.firstName,
-      "lastName": addModel.lastName,
+      "fullName": addModel.fullName,
       "fatherName": addModel.fatherName,
       "motherName": addModel.motherName,
       "address": addModel.address,
@@ -32,8 +31,7 @@ export class StudentEndpoints {
   update(studentId:number, addModel:AddStudentViewModel): Observable<MutateResponse>{
     return this.http.put<MutateResponse>(`student/${studentId}`,{
       "ageGroupId": addModel.ageGroup.id,
-      "firstName": addModel.firstName,
-      "lastName": addModel.lastName,
+      "fullName": addModel.fullName,
       "fatherName": addModel.fatherName,
       "motherName": addModel.motherName,
       "address": addModel.address,

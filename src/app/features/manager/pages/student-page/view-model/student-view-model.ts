@@ -2,9 +2,7 @@ export class StudentViewModel {
     id: number;
     ageGroupId: number;
     ageGroupName: string;
-    firstName: string;
-    lastName: string;
-    name: string;
+    fullName: string;
     fatherName: string;
     motherName: string;
     address: string;
@@ -16,8 +14,7 @@ export class StudentViewModel {
         id: number,
         ageGroupId: number,
         ageGroupName: string,
-        firstName: string,
-        lastName: string,
+        fullName: string,
         fatherName: string,
         motherName: string,
         address: string,
@@ -28,9 +25,7 @@ export class StudentViewModel {
         this.id = id;
         this.ageGroupId = ageGroupId;
         this.ageGroupName = ageGroupName;
-        this.name = `${firstName} ${lastName}`;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.fullName = fullName;
         
         this.fatherName = fatherName;
         this.motherName = motherName;

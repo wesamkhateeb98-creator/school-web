@@ -72,8 +72,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'phonenumber_title':'رقم الهاتف',
         'address_title':'العنوان',
         'birthday_title': 'تاريخ الميلاد',
-        'first_name_title':'الاسم الأول',
-        'last_name_title':'الكنية',
+        'full_name_title':'الاسم الكامل',
         'max_length_50':'النص يجب أن يكون أصغر من 50 محرف.',
         'year_less_than_current_year':'السنة يجب أن تكون أصغر من السنة الحالية',
         'number_digit_between_7_10':'عدد الأرقام يجب أن يكون من 7 إلى ال 10'
@@ -151,8 +150,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'phonenumber_title':'Phonenumber',
         'address_title':'Address',
         'birthday_title': 'Birthday',
-        'first_name_title':'First name',
-        'last_name_title':'Last name',
+        'full_name_title':'Full name',
         'max_length_50':'The text must be less than 50.',
         'year_less_than_current_year':'The year must be less than current year',
         'number_digit_between_7_10':'The numnber of digits must be from 7 to 10 '
@@ -186,8 +184,7 @@ export type StudentPhrases =
 'phonenumber_title'|
 'address_title'|
 'birthday_title'|
-'first_name_title'|
-'last_name_title'
+'full_name_title'
 ;
 
 export type TeacherPhrases = 'teachers_title';

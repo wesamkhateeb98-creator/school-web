@@ -13,67 +13,29 @@
         </mat-grid-tile>
       }
       @else{
-        <mat-grid-tile >
-          <mat-form-field style="width: 100%;">
-                <mat-label>{{language.transform('age_group_title')}}</mat-label>
-                <input type="text"
-                    aria-label="Number"
-                    matInput
-                    formControlName="ageGroup"
-                    [matAutocomplete]="auto"
-                    [readonly]="loading()">
-                <mat-autocomplete 
-                    autoActiveFirstOption 
-                    [displayWith]="displayFn"
-                    #auto="matAutocomplete">
-                    @for (option of ageGroups(); track option) {
-                        <mat-option [value]="option">{{option.name}}</mat-option>
-                    }
-                </mat-autocomplete>
-            </mat-form-field>
-        </mat-grid-tile>
+        
         <mat-grid-tile >
             <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("first_name_title")}}</mat-label>
-            <input type="text" matInput formControlName="firstName">
-            @if(this.form.get('firstName')?.hasError('required')){
+            <mat-label >{{language.transform("full_name_title")}}</mat-label>
+            <input type="text" matInput formControlName="fullName">
+            @if(this.form.get('fullName')?.hasError('required')){
               <mat-error>
                 {{language.transform('field_required')}}
               </mat-error>
             }
-            @else if(this.form.get('firstName')?.hasError('minLength')){
+            @else if(this.form.get('fullName')?.hasError('minLength')){
               <mat-error>
                 {{language.transform('min_length_3')}}
               </mat-error>
             }
-            @else if(this.form.get('firstName')?.hasError('maxLength')){
+            @else if(this.form.get('fullName')?.hasError('maxLength')){
               <mat-error>
                 {{language.transform('max_length_30')}}
               </mat-error>
             }
           </mat-form-field>
         </mat-grid-tile>
-         <mat-grid-tile >
-          <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("last_name_title")}}</mat-label>
-            <input type="text" matInput formControlName="lastName">
-            @if(this.form.get('lastName')?.hasError('required')){
-              <mat-error>
-                {{language.transform('field_required')}}
-              </mat-error>
-            }
-            @else if(this.form.get('lastName')?.hasError('minLength')){
-              <mat-error>
-                {{language.transform('min_length_3')}}
-              </mat-error>
-            }
-            @else if(this.form.get('lastName')?.hasError('maxLength')){
-              <mat-error>
-                {{language.transform('max_length_30')}}
-              </mat-error>
-            }
-          </mat-form-field>
-        </mat-grid-tile>
+        
          <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
             <mat-label >{{language.transform("father_name_title")}}</mat-label>
@@ -95,6 +57,7 @@
             }
           </mat-form-field>
         </mat-grid-tile>
+
          <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
             <mat-label >{{language.transform("mother_name_title")}}</mat-label>
@@ -116,27 +79,26 @@
             }
           </mat-form-field>
         </mat-grid-tile>
+
+        
          <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("address_title")}}</mat-label>
-            <input type="text" matInput formControlName="address">
-            @if(this.form.get('address')?.hasError('required')){
+            <mat-label >{{language.transform("phonenumber_title")}}</mat-label>
+            <input type="text" matInput formControlName="phoneNumber">
+            @if(this.form.get('phoneNumber')?.hasError('required')){
               <mat-error>
                 {{language.transform('field_required')}}
               </mat-error>
             }
-            @else if(this.form.get('address')?.hasError('minLength')){
+            @else if(this.form.get('phoneNumber')?.hasError('pattern')){
               <mat-error>
-                {{language.transform('min_length_3')}}
-              </mat-error>
-            }
-            @else if(this.form.get('address')?.hasError('maxLength')){
-              <mat-error>
-                {{language.transform('max_length_50')}}
+                {{language.transform('number_digit_between_7_10')}}
               </mat-error>
             }
           </mat-form-field>
         </mat-grid-tile>
+
+
         <mat-grid-tile >
             <mat-form-field class="example-full-width" style="width: 100%;" >
                 <mat-label >{{language.transform("birthday_title")}}</mat-label>
@@ -157,22 +119,49 @@
             </mat-form-field>
           
         </mat-grid-tile>
-         <mat-grid-tile >
+
+        <mat-grid-tile >
+          <mat-form-field style="width: 100%;">
+                <mat-label>{{language.transform('age_group_title')}}</mat-label>
+                <input type="text"
+                    aria-label="Number"
+                    matInput
+                    formControlName="ageGroup"
+                    [matAutocomplete]="auto"
+                    [readonly]="loading()">
+                <mat-autocomplete 
+                    autoActiveFirstOption 
+                    [displayWith]="displayFn"
+                    #auto="matAutocomplete">
+                    @for (option of ageGroups(); track option) {
+                        <mat-option [value]="option">{{option.name}}</mat-option>
+                    }
+                </mat-autocomplete>
+            </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="2">
           <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("phonenumber_title")}}</mat-label>
-            <input type="text" matInput formControlName="phoneNumber">
-            @if(this.form.get('phoneNumber')?.hasError('required')){
+            <mat-label >{{language.transform("address_title")}}</mat-label>
+            <input type="text" matInput formControlName="address">
+            @if(this.form.get('address')?.hasError('required')){
               <mat-error>
                 {{language.transform('field_required')}}
               </mat-error>
             }
-            @else if(this.form.get('phoneNumber')?.hasError('pattern')){
+            @else if(this.form.get('address')?.hasError('minLength')){
               <mat-error>
-                {{language.transform('number_digit_between_7_10')}}
+                {{language.transform('min_length_3')}}
+              </mat-error>
+            }
+            @else if(this.form.get('address')?.hasError('maxLength')){
+              <mat-error>
+                {{language.transform('max_length_50')}}
               </mat-error>
             }
           </mat-form-field>
         </mat-grid-tile>
+
       }
       
     </mat-grid-list>
