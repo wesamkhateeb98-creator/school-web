@@ -76,7 +76,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'max_length_50':'النص يجب أن يكون أصغر من 50 محرف.',
         'year_less_than_current_year':'السنة يجب أن تكون أصغر من السنة الحالية',
         'number_digit_between_7_10':'عدد الأرقام يجب أن يكون من 7 إلى ال 10',
-        'all_title': 'الكل'
+        'all_title': 'الكل',
+        'add_teacher':'إضافة مدرس',
+        'update_teacher': 'تعديل مدرس'
     },
     en:{
         'name':"Name",
@@ -155,7 +157,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'max_length_50':'The text must be less than 50.',
         'year_less_than_current_year':'The year must be less than current year',
         'number_digit_between_7_10':'The numnber of digits must be from 7 to 10 ',
-        'all_title': 'All'
+        'all_title': 'All',
+        'add_teacher':'Add teacher',
+        'update_teacher': 'Update teacher'
     }
 }
 
@@ -189,7 +193,10 @@ export type StudentPhrases =
 'full_name_title'
 ;
 
-export type TeacherPhrases = 'teachers_title';
+export type TeacherPhrases = 
+'teachers_title'|
+'update_teacher'|
+'add_teacher';
 
 export type ManagerialPhrases = 'managerial_title';
 
