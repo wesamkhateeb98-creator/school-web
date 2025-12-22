@@ -43,3 +43,15 @@ export function StringToDate(dateString:string){
   console.log(new Date(year, month - 1, day));
   return new Date(year, month - 1, day);
 }
+
+
+// export permissionMap: Record<number, string> = {
+//   1: 'AA',
+//   2: 'BB'
+// };
+
+// // Method to transform the array [1, 2] to "AA, BB"
+// getPermissionNames(ids: number[] | undefined): string {
+//   if (!ids || ids.length === 0) return '-';
+//   return ids.map(id => this.permissionMap[id] || id).join(', ');
+// }

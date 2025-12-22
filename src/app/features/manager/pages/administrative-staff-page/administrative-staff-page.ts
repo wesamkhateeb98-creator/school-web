@@ -16,13 +16,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DatePipe } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { AddAdministrativeStaffDialog } from './add-administrative-staff-dialog/add-administrative-staff-dialog';
+import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
+import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 
 @Component({
   selector: 'app-managerial-page',
@@ -33,6 +33,11 @@ import { AddAdministrativeStaffDialog } from './add-administrative-staff-dialog/
     MatIconModule,
     MatPaginatorModule,
     MatButtonModule,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatGridList,
+    MatGridTile,
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatAutocompleteModule,
     DatePipe
@@ -56,8 +61,8 @@ export class ManagerialPage {
   headerTable: string[] = [
     'name',
     'phonenumber',
-    'createdAt',
     'permissions',
+    'createdAt',
     'action'
   ];
 
@@ -127,8 +132,7 @@ export class ManagerialPage {
       });
       
       this.totalPages.set(success.countPages);
-      
-      // Mapping now includes the permissions array from your new model
+
       this.administrativeStaffs.set(
         success.content.map(x => new AdministrativeStaffViewModel(
           x.id,
@@ -139,7 +143,7 @@ export class ManagerialPage {
           x.permissions ?? [] // Ensure permissions are passed to the constructor
         ))
       );
-      
+
       this.loading.set(false);
     },
     error: (error) => {
