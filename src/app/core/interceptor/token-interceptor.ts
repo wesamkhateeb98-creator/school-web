@@ -46,12 +46,12 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
             case 403:
               errorMessage = language.transform('http_403');
               break;
+            case 400:
             case 404:
-              errorMessage = error.error.Title;
-              break;
             case 409:
             case 412:
-              errorMessage = error.error.Title;
+              console.log(error)
+              errorMessage = error.error.title;
               break;
             case 500:
               errorMessage = language.transform('http_500') || 'Internal server error';

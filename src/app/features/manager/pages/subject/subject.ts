@@ -69,7 +69,7 @@ export class SubjectPage {
   }
 
     openAcademicYearPage(){
-      this.router.navigate(['manager/academic_year']);
+      this.router.navigate(['manager/age-group']);
     }
 
   onLoading(){

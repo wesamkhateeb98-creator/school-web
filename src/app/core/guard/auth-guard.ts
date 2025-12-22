@@ -20,7 +20,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     return router.parseUrl('/auth/login');
   }
   
-  if ( data.role === 1 ) {
+  if ( data.role === 3 ) {
     return true; 
   } else {
     return router.parseUrl('denied');

@@ -7,7 +7,7 @@ import { AgeGroup } from "./pages/age-group/age-group";
 import { SubjectPage } from "./pages/subject/subject";
 import { StudentsPage } from "./pages/student-page/students-page";
 import { TeacherPage } from "./pages/teacher-page/teacher-page";
-import { ManagerialPage } from "./pages/managerial-page/managerial-page";
+import { ManagerialPage } from "./pages/administrative-staff-page/administrative-staff-page";
 
 export const DASHBOARD_ROUTES: Routes = [
   {

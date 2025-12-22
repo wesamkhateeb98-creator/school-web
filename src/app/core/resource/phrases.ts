@@ -78,7 +78,14 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'number_digit_between_7_10':'عدد الأرقام يجب أن يكون من 7 إلى ال 10',
         'all_title': 'الكل',
         'add_teacher':'إضافة مدرس',
-        'update_teacher': 'تعديل مدرس'
+        'update_teacher': 'تعديل مدرس',
+        'administrative_staff_title':'الكادر الإداري',
+        'permissions_title': 'الصلاحيات',
+        'delete_staff': 'حذف كادر إداري',
+        'update_administrative_staff':'تعديل كادر إداري',
+        'add_administrative_staff': 'إضافة كادر إداري',
+        'educational_supervisor_title':'المشرف التربوي',
+        'registrar_title':'أمين السر'
     },
     en:{
         'name':"Name",
@@ -159,7 +166,14 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'number_digit_between_7_10':'The numnber of digits must be from 7 to 10 ',
         'all_title': 'All',
         'add_teacher':'Add teacher',
-        'update_teacher': 'Update teacher'
+        'update_teacher': 'Update teacher',
+        'administrative_staff_title':'Administrative staff',
+        'permissions_title': 'Permissions',
+        'delete_staff': 'Delete administrative staff',
+        'update_administrative_staff':'Update administrative staff',
+        'add_administrative_staff': 'Add administrative staff',
+        'educational_supervisor_title':'Educational supervisor',
+        'registrar_title':'Registrar'
     }
 }
 
@@ -181,7 +195,17 @@ export type PersonPhrases =
 'user_title'|
 StudentPhrases|
 TeacherPhrases|
+AdmistrativeStaffPhrases|
 ManagerialPhrases
+
+export type AdmistrativeStaffPhrases = 
+'administrative_staff_title'|
+'permissions_title'|
+'delete_staff'|
+'update_administrative_staff'|
+'add_administrative_staff'|
+'educational_supervisor_title'|
+'registrar_title';
 
 export type StudentPhrases = 
 'students_title'|

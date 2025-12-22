@@ -32,7 +32,7 @@ export class TeacherEndpoints {
   }
 
   get(filter:TeacherFilterViewModel):Observable<Page<TeacherModel>>{
-    return this.http.get<Page<StudentModel>>('teacher',{
+    return this.http.get<Page<TeacherModel>>('teacher',{
         name: filter.name,
         phoneNumber: filter.phonenumber,
         pageNumber: filter.pageNumber,

@@ -1,0 +1,58 @@
+<form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
+    <h2 mat-dialog-title>
+        {{ language.transform(isUpdate() ? 'update_administrative_staff' : 'add_administrative_staff') }}
+    </h2>
+
+    <mat-dialog-content>
+        <mat-grid-list [cols]="2" rowHeight="85px" gutterSize="15px">
+            @if(loading()){
+                <mat-grid-tile colspan="2">
+                    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                </mat-grid-tile>
+            } @else {
+                <mat-grid-tile>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>{{ language.transform("full_name_title") }}</mat-label>
+                        <input type="text" matInput formControlName="fullName">
+                        @if(form.get('fullName')?.hasError('required')){
+                            <mat-error>{{ language.transform('field_required') }}</mat-error>
+                        }
+                    </mat-form-field>
+                </mat-grid-tile>
+
+                <mat-grid-tile>
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>{{ language.transform("phonenumber_title") }}</mat-label>
+                        <input type="text" matInput formControlName="phoneNumber">
+                        @if(form.get('phoneNumber')?.hasError('pattern')){
+                            <mat-error>{{ language.transform('number_digit_between_7_10') }}</mat-error>
+                        }
+                    </mat-form-field>
+                </mat-grid-tile>
+
+                <mat-grid-tile colspan="2">
+                    <mat-form-field style="width: 100%;">
+                        <mat-label>{{ language.transform("permissions_title") }}</mat-label>
+                        <mat-select formControlName="permissions" multiple>
+                            @for (perm of permissionList; track perm.id) {
+                                <mat-option [value]="perm.id">{{ perm.name }}</mat-option>
+                            }
+                        </mat-select>
+                        @if(form.get('permissions')?.hasError('required')){
+                            <mat-error>{{ language.transform('field_required') }}</mat-error>
+                        }
+                    </mat-form-field>
+                </mat-grid-tile>
+            }
+        </mat-grid-list>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button (click)="onNoClick()" type="button" [disabled]="loading()">
+            {{ language.transform('cancel') }}
+        </button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading() || form.invalid">
+            {{ language.transform(isUpdate() ? 'update' : 'add') }}
+        </button>
+    </mat-dialog-actions>
+</form>
