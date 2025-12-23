@@ -29,6 +29,12 @@ export class ManagerNavItemStateService {
           name:"semester_title",
           icon:"date_range",
           isExpended:false
+        },
+         {
+          url:"/manager/classes",
+          name:"classes_title",
+          icon:"door_sliding",
+          isExpended:false
         }
       ],
       isExpended:false

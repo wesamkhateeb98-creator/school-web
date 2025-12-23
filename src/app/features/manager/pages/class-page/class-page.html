@@ -1,0 +1,85 @@
+<div style="display: flex; justify-content: start; align-items: center;">
+    <h2>{{ language.transform('classes_title') }}</h2>
+    <button mat-fab (click)="openAddDialog()" style="margin: 0 20px">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
+
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title> {{ language.transform('filter') }}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="form">
+        <mat-grid-list [cols]="2" rowHeight="70px" gutterSize="10px">
+            <mat-grid-tile>
+                <mat-form-field style="width: 100%;">
+                    <mat-label>{{ language.transform("age_group_title") }}</mat-label>
+                    <input type="number" matInput formControlName="ageGroupId">
+                </mat-form-field>
+            </mat-grid-tile>
+
+            <mat-grid-tile>
+                <mat-form-field style="width: 100%;">
+                    <mat-label>{{ language.transform("academic_year_title")  }}</mat-label>
+                    <input type="number" matInput formControlName="academicYearId">
+                </mat-form-field>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </form>
+</mat-expansion-panel>
+
+<br/>
+
+<mat-card style="overflow-x: auto;">
+    @if(this.loading()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+    <table mat-table [dataSource]="classes()" class="mat-elevation-z8" style="width: 100%;">
+
+        <ng-container matColumnDef="ageGroupName">
+            <th mat-header-cell *matHeaderCellDef> {{ language.transform('age_group_title') }} </th>
+            <td mat-cell *matCellDef="let element"> {{ element.ageGroupName }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="academicYear">
+            <th mat-header-cell *matHeaderCellDef> {{ language.transform('academic_year_title') }} </th>
+            <td mat-cell *matCellDef="let element"> {{ element.academicYear }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="section">
+            <th mat-header-cell *matHeaderCellDef> {{ language.transform('section_title') }} </th>
+            <td mat-cell *matCellDef="let element"> {{ element.section }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef> {{ language.transform('created_at_title') }} </th>
+            <td mat-cell *matCellDef="let element"> {{ element.createdAt | date:'yyyy-MM-dd HH:mm' }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef> {{ language.transform('action') }} </th>
+            <td mat-cell *matCellDef="let element"> 
+                <div style="display: flex; gap: 10px;">
+                    <button mat-icon-button (click)="openUpdateDialog(element)">
+                        <mat-icon color="primary">edit</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="openDeleteDialog(element.id)" [disabled]="element.lock">
+                        <mat-icon color="warn">delete</mat-icon>
+                    </button>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
+        <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
+    </table>
+
+    <mat-paginator 
+        [length]="totalPages() * classFilter().pageSize" 
+        [pageSize]="classFilter().pageSize"
+        [pageIndex]="classFilter().pageNumber - 1"
+        [pageSizeOptions]="[5, 10, 25]"
+        (page)="changeInPage($event)"
+    />
+</mat-card>

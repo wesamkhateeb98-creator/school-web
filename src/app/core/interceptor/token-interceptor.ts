@@ -50,7 +50,6 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
             case 404:
             case 409:
             case 412:
-              console.log(error)
               errorMessage = error.error.title;
               break;
             case 500:

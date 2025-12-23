@@ -85,7 +85,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'update_administrative_staff':'تعديل كادر إداري',
         'add_administrative_staff': 'إضافة كادر إداري',
         'educational_supervisor_title':'المشرف التربوي',
-        'registrar_title':'أمين السر'
+        'registrar_title':'أمين السر',
+        'delete_class_confirm':'حذف الصف',
+        'section_title':'الشعبة',
+        'add_class':'إضافة صف',
+        'update_class':"تعديل صف",
+        'classes_title':'الصفوف'
     },
     en:{
         'name':"Name",
@@ -173,7 +178,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'update_administrative_staff':'Update administrative staff',
         'add_administrative_staff': 'Add administrative staff',
         'educational_supervisor_title':'Educational supervisor',
-        'registrar_title':'Registrar'
+        'registrar_title':'Registrar',
+        'delete_class_confirm':'Delete class',
+        'section_title':'Section',
+        'add_class':'Add class',
+        'update_class':"Update class",
+        'classes_title':"Classes"
     }
 }
 
@@ -189,7 +199,16 @@ Denied|
 AgeGroupPhrases|
 SubjectPhrases|
 GlobalType|
-PersonPhrases ;
+PersonPhrases |
+ClassPhrases;
+
+export type ClassPhrases = 
+'delete_class_confirm'|
+'section_title'|
+'add_class'|
+'update_class'|
+'classes_title'
+;
 
 export type PersonPhrases = 
 'user_title'|
