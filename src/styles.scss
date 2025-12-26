@@ -47,3 +47,28 @@ html{
     container-color: green,
   ));
 }
+
+
+::-webkit-scrollbar {
+  width: 8px;  /* Width of the vertical scrollbar */
+  height: 8px; /* Height of the horizontal scrollbar */
+}
+
+/* 2. The Track (the background) */
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+/* 3. The Thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2); /* Light grey for light mode */
+  border-radius: 10px;
+  border: 2px solid transparent; /* Creates padding around the thumb */
+  background-clip: content-box;
+}
+
+/* 4. Hover effect */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+  background-clip: content-box;
+}
