@@ -160,7 +160,10 @@ export class ClassPage implements OnInit{
     this.ageGroups$ = this.form.get('ageGroup')!.valueChanges.pipe(
       startWith(""),
       debounceTime(300),
-      switchMap(value => this.ageGroupEndpoint.get((value as AgeGroupModel).name || "" , 1, 20)),
+      switchMap(value => {
+        console.log(value)
+        return this.ageGroupEndpoint.get((value as AgeGroupModel)?.name || "" , 1, 20);
+      }),
       map(response => response.content)
     );
 
@@ -169,8 +172,10 @@ export class ClassPage implements OnInit{
       startWith(""),
       debounceTime(300),
       switchMap((value) => {
-        console.log((value as AcademicYearModel).year);
-        return this.academicYearEndpoint.get(1, 20,(value as AcademicYearModel).year);
+        console.log(value);
+        console.log(typeof value);
+        console.log(+value);
+        return this.academicYearEndpoint.get(1, 20,(Number.isNaN(+value) ?undefined:+value ) );
       }),
       map(response => response.content)
     );
@@ -197,6 +202,8 @@ export class ClassPage implements OnInit{
     this.form.patchValue({ "academicYearId": event.option.value.id, "academicYear":event.option.value }, { emitEvent: false });
     
     this.setFilterToUrl(); 
+
+    this.loadClassViewModel();
   }
 
   onAgeGroupSelected(event: any) {
@@ -205,6 +212,8 @@ export class ClassPage implements OnInit{
     this.form.patchValue({ ageGroupId: event.option.value.id });
     
     this.setFilterToUrl()
+
+    this.loadClassViewModel();
   }
 
   loadClassViewModel() {
