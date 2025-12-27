@@ -65,13 +65,24 @@ export class AddClassDialog implements OnInit {
 
   initiateForm() {
     const classData = this.data?.classData;
+
     this.form = this.fb.group({
-      ageGroupId: [classData?.ageGroupId || '', [Validators.required]],
       academicYearId: [classData?.academicYearId || '', [Validators.required]],
-      section: [classData?.section || '', [Validators.required, Validators.min(3),Validators.max(30)]],
+      academicYear: [classData?.academicYear || ''],
+      section: [classData?.section || '', [Validators.required, Validators.min(1),Validators.max(100)]],
+      ageGroupId: [classData?.ageGroupId || '', [Validators.required]],
       ageGroupName: [classData?.ageGroupName || ''],
-      academicYearName: [classData?.academicYear || '']
     });
+
+    if(this.isUpdate()){
+      this.ageGroupEndpoint.get(classData?.ageGroupName,1,1)
+        .subscribe(x=> this.form.patchValue({
+          ageGroupName: x.content[0],
+          ageGroupId:x.content[0].id
+        }));
+    }
+    
+
   }
 
   setupAutocompletes() {
@@ -80,11 +91,21 @@ export class AddClassDialog implements OnInit {
       startWith(''),
       debounceTime(300),
       switchMap(value => this.ageGroupEndpoint.get(typeof value === 'string' ? value : '', 1, 20)),
-      map(response => response.content)
+      map(response => response.content),
+      tap(items => {
+        // Auto-select first item on initialization
+        if (!this.isUpdate() && items.length > 0 && !this.form.get('ageGroupId')?.value) {
+          const first = items[0];
+          this.form.patchValue({
+            ageGroupId: first.id,
+            academicYear: first 
+          }, { emitEvent: false });
+        }
+      })
     );
 
     // Academic Year Autocomplete Logic
-    this.academicYears$ = this.form.get('academicYearName')!.valueChanges.pipe(
+    this.academicYears$ = this.form.get('academicYear')!.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
       switchMap((value) => {
@@ -92,12 +113,11 @@ export class AddClassDialog implements OnInit {
       }),
       map(response => response.content),
       tap(items => {
-        // Auto-select first item on initialization
         if (!this.isUpdate() && items.length > 0 && !this.form.get('academicYearId')?.value) {
           const first = items[0];
           this.form.patchValue({
             academicYearId: first.id,
-            academicYearName: first // Store the whole object to allow display math
+            academicYear: first 
           }, { emitEvent: false });
         }
       })
@@ -111,15 +131,14 @@ export class AddClassDialog implements OnInit {
   displayAcademicYear = (item: any): string => {
     if (!item) return "";
     
-    // If it's the model object (from auto-select or dropdown)
     if (item && typeof item === 'object' && item.year) {
       const year = Number(item.year);
       return `${year}/${year + 1}`;
     }
 
-    // If the user is currently typing a number, just show the number
     return item.toString();
   }
+
   onAgeGroupSelected(event: any) {
     this.form.patchValue({ ageGroupId: event.option.value.id });
   }

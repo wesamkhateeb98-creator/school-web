@@ -90,7 +90,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'section_title':'الشعبة',
         'add_class':'إضافة صف',
         'update_class':"تعديل صف",
-        'classes_title':'الصفوف'
+        'classes_title':'الصفوف',
+        'min_number_1':'الرقم المخل يجب أن يكون أكبر من 1'
     },
     en:{
         'name':"Name",
@@ -183,7 +184,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'section_title':'Section',
         'add_class':'Add class',
         'update_class':"Update class",
-        'classes_title':"Classes"
+        'classes_title':"Classes",
+        'min_number_1':'The input number must be greater than or equal 1.'
     }
 }
 
@@ -283,7 +285,8 @@ export type ValidationMessagePhrases =
 'max_length_100'|
 'start_date_must_less_than_end_date'|
 'year_less_than_current_year'|
-'number_digit_between_7_10';
+'number_digit_between_7_10'|
+'min_number_1';
 
 export type ButtonPhrases = 
 'add' | 

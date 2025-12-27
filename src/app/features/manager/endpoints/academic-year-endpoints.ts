@@ -29,10 +29,11 @@ export class AcademicYearEndpoints {
     })
   }
 
-  get(selectedPage:number, pageSize:number):Observable<Page<AcademicYearModel>>{
+  get(selectedPage:number, pageSize:number,academicYear?:number):Observable<Page<AcademicYearModel>>{
     return this.http.get<Page<AcademicYearModel>>('academic-year',{
         PageNumber: selectedPage,
-        PageSize: pageSize
+        PageSize: pageSize,
+        year:academicYear
       })
   }
 
