@@ -65,7 +65,7 @@ export class AddClassDialog implements OnInit {
 
   initiateForm() {
     const classData = this.data?.classData;
-
+    
     this.form = this.fb.group({
       academicYearId: [classData?.academicYearId || '', [Validators.required]],
       academicYear: [classData?.academicYear || ''],
@@ -73,16 +73,6 @@ export class AddClassDialog implements OnInit {
       ageGroupId: [classData?.ageGroupId || '', [Validators.required]],
       ageGroupName: [classData?.ageGroupName || ''],
     });
-
-    if(this.isUpdate()){
-      this.ageGroupEndpoint.get(classData?.ageGroupName,1,1)
-        .subscribe(x=> this.form.patchValue({
-          ageGroupName: x.content[0],
-          ageGroupId:x.content[0].id
-        }));
-    }
-    
-
   }
 
   setupAutocompletes() {
@@ -90,17 +80,16 @@ export class AddClassDialog implements OnInit {
     this.ageGroups$ = this.form.get('ageGroupName')!.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
-      switchMap(value => this.ageGroupEndpoint.get(typeof value === 'string' ? value : '', 1, 20)),
+      switchMap(value => {
+        return this.ageGroupEndpoint.get(this.data?.classData.ageGroupName?? value, 1, 20)
+      }),
       map(response => response.content),
       tap(items => {
-        // Auto-select first item on initialization
-        if (!this.isUpdate() && items.length > 0 && !this.form.get('ageGroupId')?.value) {
-          const first = items[0];
-          this.form.patchValue({
-            ageGroupId: first.id,
-            academicYear: first 
-          }, { emitEvent: false });
-        }
+        const first = items[0];
+        this.form.patchValue({
+          ageGroupId: first.id,
+          ageGroupName: first
+        }, { emitEvent: false });
       })
     );
 
@@ -108,18 +97,14 @@ export class AddClassDialog implements OnInit {
     this.academicYears$ = this.form.get('academicYear')!.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
-      switchMap((value) => {
-        return this.academicYearEndpoint.get(1, 20);
-      }),
+      switchMap(value => this.academicYearEndpoint.get(1, 20,this.data?.classData.academicYear ?? value)),
       map(response => response.content),
       tap(items => {
-        if (!this.isUpdate() && items.length > 0 && !this.form.get('academicYearId')?.value) {
-          const first = items[0];
-          this.form.patchValue({
-            academicYearId: first.id,
-            academicYear: first 
-          }, { emitEvent: false });
-        }
+        const first = items[0];
+        this.form.patchValue({
+          academicYearId: first.id,
+          academicYear: first 
+        }, { emitEvent: false });
       })
     );
   }

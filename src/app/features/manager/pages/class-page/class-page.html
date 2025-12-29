@@ -17,7 +17,7 @@
                         <mat-label>{{ language.transform("age_group_title") }}</mat-label>
                         <input type="text" matInput formControlName="ageGroup" [matAutocomplete]="autoAge">
                         @if (form.get('ageGroup')?.value) {
-                            <button matSuffix mat-icon-button aria-label="Clear" (click)="form.get('ageGroup')?.setValue(null); $event.stopPropagation()">
+                            <button matSuffix mat-icon-button aria-label="Clear" (click)="clearAgeGroup(); $event.stopPropagation();">
                                 <mat-icon>close</mat-icon>
                             </button>
                         }

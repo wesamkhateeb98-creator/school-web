@@ -52,6 +52,7 @@ import { Page } from '../../../shared/model/page';
   styleUrl: './class-page.scss',
 })
 export class ClassPage implements OnInit{
+[x: string]: any;
   classes = signal<ClassModel[]>([]);
   classFilter = signal<ClassFilterViewModel>({
     pageNumber: 1,
@@ -96,7 +97,7 @@ export class ClassPage implements OnInit{
       this.form.patchValue({ "academicYearId": academicYear.id, "academicYear":academicYear}, { emitEvent: false });
     }
 
-    this.loadClassViewModel();   
+    this.loadClasses();   
   }
   
   initiateForm() {
@@ -118,7 +119,6 @@ export class ClassPage implements OnInit{
         'academicYear': this.classFilter().academicYear?.year
       });
   }
-
 
   async syncFiltersFromUrl() {
     const params = this.params.loadGenericFromUrl();
@@ -161,7 +161,6 @@ export class ClassPage implements OnInit{
       startWith(""),
       debounceTime(300),
       switchMap(value => {
-        console.log(value)
         return this.ageGroupEndpoint.get((value as AgeGroupModel)?.name || "" , 1, 20);
       }),
       map(response => response.content)
@@ -172,9 +171,6 @@ export class ClassPage implements OnInit{
       startWith(""),
       debounceTime(300),
       switchMap((value) => {
-        console.log(value);
-        console.log(typeof value);
-        console.log(+value);
         return this.academicYearEndpoint.get(1, 20,(Number.isNaN(+value) ?undefined:+value ) );
       }),
       map(response => response.content)
@@ -196,6 +192,16 @@ export class ClassPage implements OnInit{
       return item.toString();
   }
 
+  clearAgeGroup(){
+    this.form.get('ageGroup')?.setValue(null);
+    
+    this.classFilter.update(f => ({ ...f, ageGroup: undefined }));
+
+    this.setFilterToUrl();
+
+    this.loadClasses()
+  }
+
   onAcademicYearSelected(event: any) {
     this.classFilter.update(f => ({ ...f, academicYear: event.option.value }));
         
@@ -203,7 +209,7 @@ export class ClassPage implements OnInit{
     
     this.setFilterToUrl(); 
 
-    this.loadClassViewModel();
+    this.loadClasses();
   }
 
   onAgeGroupSelected(event: any) {
@@ -213,10 +219,10 @@ export class ClassPage implements OnInit{
     
     this.setFilterToUrl()
 
-    this.loadClassViewModel();
+    this.loadClasses();
   }
 
-  loadClassViewModel() {
+  loadClasses() {
     this.loading.set(true);
     this.classEndpoints.get(this.classFilter()).subscribe({
       next: (success) => {
@@ -240,7 +246,7 @@ export class ClassPage implements OnInit{
 
     dialogRef.afterClosed().subscribe(result => {
       if (result?.data) {
-        this.loadClassViewModel(); // Refresh to get formatted data from server
+        this.loadClasses(); // Refresh to get formatted data from server
       }
     });
   }
@@ -254,7 +260,7 @@ export class ClassPage implements OnInit{
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.loadClassViewModel();
+      if (result) this.loadClasses();
     });
   }
 
@@ -283,6 +289,6 @@ export class ClassPage implements OnInit{
       pageSize: pageEvent.pageSize,
       pageNumber: pageEvent.pageIndex + 1
     }));
-    this.loadClassViewModel();
+    this.loadClasses();
   }
 }

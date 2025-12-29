@@ -50,7 +50,7 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
             case 404:
             case 409:
             case 412:
-              errorMessage = error.error.title;
+              errorMessage = error.error.Title || error.error.title;
               break;
             case 500:
               errorMessage = language.transform('http_500') || 'Internal server error';
@@ -66,12 +66,10 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
           }
         }
         
-        const customError: CustomError = {
+        return throwError(() => <CustomError>{
           message: errorMessage,
-          status: 1
-        };
-
-        return throwError(() => customError);
+          status: error.status
+        });
       })
     );
 }
