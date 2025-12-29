@@ -28,7 +28,7 @@
                         <input type="text" matInput formControlName="academicYear" [matAutocomplete]="autoYear">
                         <mat-autocomplete #autoYear="matAutocomplete" [displayWith]="displayAcademicYear" (optionSelected)="onAcademicYearSelected($event)">
                             @for (year of academicYears$ | async; track year.id) {
-                                <mat-option [value]="year">{{ year.year }}</mat-option>
+                                <mat-option [value]="year">{{ `${year.year}/${year.year + 1}` }}</mat-option>
                             }
                         </mat-autocomplete>
                     </mat-form-field>

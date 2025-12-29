@@ -97,7 +97,7 @@ export class ClassPage implements OnInit{
       this.form.patchValue({ "academicYearId": academicYear.id, "academicYear":academicYear}, { emitEvent: false });
     }
 
-    this.loadClasses();   
+    this.loadClassViewModel();   
   }
   
   initiateForm() {
@@ -199,7 +199,7 @@ export class ClassPage implements OnInit{
 
     this.setFilterToUrl();
 
-    this.loadClasses()
+    this.loadClassViewModel()
   }
 
   onAcademicYearSelected(event: any) {
@@ -209,7 +209,7 @@ export class ClassPage implements OnInit{
     
     this.setFilterToUrl(); 
 
-    this.loadClasses();
+    this.loadClassViewModel();
   }
 
   onAgeGroupSelected(event: any) {
@@ -219,10 +219,10 @@ export class ClassPage implements OnInit{
     
     this.setFilterToUrl()
 
-    this.loadClasses();
+    this.loadClassViewModel();
   }
 
-  loadClasses() {
+  loadClassViewModel() {
     this.loading.set(true);
     this.classEndpoints.get(this.classFilter()).subscribe({
       next: (success) => {
@@ -246,7 +246,7 @@ export class ClassPage implements OnInit{
 
     dialogRef.afterClosed().subscribe(result => {
       if (result?.data) {
-        this.loadClasses(); // Refresh to get formatted data from server
+        this.loadClassViewModel(); // Refresh to get formatted data from server
       }
     });
   }
@@ -260,7 +260,7 @@ export class ClassPage implements OnInit{
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result) this.loadClasses();
+      if (result) this.loadClassViewModel();
     });
   }
 
@@ -289,6 +289,6 @@ export class ClassPage implements OnInit{
       pageSize: pageEvent.pageSize,
       pageNumber: pageEvent.pageIndex + 1
     }));
-    this.loadClasses();
+    this.loadClassViewModel();
   }
 }

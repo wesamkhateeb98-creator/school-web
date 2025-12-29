@@ -65,7 +65,7 @@ export class AddClassDialog implements OnInit {
 
   initiateForm() {
     const classData = this.data?.classData;
-    
+
     this.form = this.fb.group({
       academicYearId: [classData?.academicYearId || '', [Validators.required]],
       academicYear: [classData?.academicYear || ''],
@@ -74,39 +74,54 @@ export class AddClassDialog implements OnInit {
       ageGroupName: [classData?.ageGroupName || ''],
     });
   }
-
   setupAutocompletes() {
-    // Age Group Autocomplete Logic
+    // Age Group Logic
     this.ageGroups$ = this.form.get('ageGroupName')!.valueChanges.pipe(
-      startWith(''),
+      startWith(this.data?.classData?.ageGroupName || ''), // Start with existing name if updating
       debounceTime(300),
       switchMap(value => {
-        return this.ageGroupEndpoint.get(this.data?.classData.ageGroupName?? value, 1, 20)
+        // If value is an object (selected from autocomplete), use its name, otherwise use string
+        const search = typeof value === 'object' ? value.name : value;
+        return this.ageGroupEndpoint.get(search, 1, 20);
       }),
       map(response => response.content),
       tap(items => {
-        const first = items[0];
-        this.form.patchValue({
-          ageGroupId: first.id,
-          ageGroupName: first
-        }, { emitEvent: false });
+        // Auto-select first item if we are in "Update" mode and form is currently empty
+        if (this.isUpdate() && items.length > 0 && !this.form.get('ageGroupId')?.value) {
+          this.patchAgeGroup(items[0]);
+        }
       })
     );
 
-    // Academic Year Autocomplete Logic
+    // Academic Year Logic
     this.academicYears$ = this.form.get('academicYear')!.valueChanges.pipe(
-      startWith(''),
+      startWith(this.data?.classData?.academicYear || ''),
       debounceTime(300),
-      switchMap(value => this.academicYearEndpoint.get(1, 20,this.data?.classData.academicYear ?? value)),
+      switchMap(value => {
+        const search = typeof value === 'object' ? value.year : value;
+        return this.academicYearEndpoint.get(1, 20, search);
+      }),
       map(response => response.content),
       tap(items => {
-        const first = items[0];
-        this.form.patchValue({
-          academicYearId: first.id,
-          academicYear: first 
-        }, { emitEvent: false });
+        if (this.isUpdate() && items.length > 0 && !this.form.get('academicYearId')?.value) {
+          this.patchAcademicYear(items[0]);
+        }
       })
     );
+  }
+
+  private patchAgeGroup(item: AgeGroupModel) {
+    this.form.patchValue({
+      ageGroupId: item.id,
+      ageGroupName: item 
+    }, { emitEvent: false });
+  }
+
+  private patchAcademicYear(item: AcademicYearModel) {
+    this.form.patchValue({
+      academicYearId: item.id,
+      academicYear: item 
+    }, { emitEvent: false });
   }
 
   displayAgeGroup(item: AgeGroupModel): string {
