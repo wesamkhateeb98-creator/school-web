@@ -183,7 +183,6 @@ export class AssignSemesterToAcademicYear {
       new SemesterViewModel(
         semesterForAcademicYear?.semesterId?? 0,
         semesterForAcademicYear?.semesterName?? '',
-        false,
         new Date(),
       )
     ])

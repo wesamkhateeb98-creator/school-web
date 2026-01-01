@@ -65,11 +65,11 @@
                         <mat-icon class="icon-update">edit</mat-icon>
                     </button>
                     
-                    <button mat-icon-button (click)="openDeleteDialog(element.id)" [disabled]="element.lock">
+                    <button mat-icon-button (click)="openDeleteDialog(element.id)" >
                         <mat-icon class="icon-error">delete</mat-icon>
                     </button>
 
-                    <button mat-icon-button (click)="openAccountCodeDialog(element.id,element.phoneNumber)" [disabled]="element.lock">
+                    <button mat-icon-button (click)="openAccountCodeDialog(element.id,element.phoneNumber)" >
                         <mat-icon class="icon-success">verified_user</mat-icon>
                     </button>                    
                 </div>

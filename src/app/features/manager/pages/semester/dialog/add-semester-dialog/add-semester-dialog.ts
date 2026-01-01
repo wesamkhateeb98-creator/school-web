@@ -90,7 +90,6 @@ export class AddSemesterDialog {
           const data = new SemesterViewModel(
             success.id,
             this.form.get('name')?.value,
-            false,
             new Date());
           this.dialogRef.close({
             data
@@ -115,7 +114,6 @@ export class AddSemesterDialog {
         const data = new SemesterViewModel(
           success.id,
           this.form.get('name')?.value,
-          this.data.semester.lock,
           new Date());
         this.dialogRef.close({
           data

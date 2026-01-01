@@ -8,5 +8,4 @@ export interface StudentModel {
     address: string;
     birthday: Date;
     phoneNumber: string;
-    lock: boolean;
 }

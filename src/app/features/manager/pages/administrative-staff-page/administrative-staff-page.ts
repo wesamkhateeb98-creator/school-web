@@ -139,9 +139,8 @@ export class ManagerialPage {
           x.id,
           x.fullName,
           x.phoneNumber,
-          new Date(), // Or x.createdAt if your API returns it
-          false,
-          x.permissions ?? [] // Ensure permissions are passed to the constructor
+          new Date(), 
+          x.permissions ?? [] 
         ))
       );
 

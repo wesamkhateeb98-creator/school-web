@@ -86,7 +86,6 @@ export class AcademicYear{
           success.content.map(x=>({
             id: x.id,
             year: x.year,
-            lock: x.lock,
             createdAt: x.createdAt
           } as AcademicYearViewModel)))
         this.loading.set(false);

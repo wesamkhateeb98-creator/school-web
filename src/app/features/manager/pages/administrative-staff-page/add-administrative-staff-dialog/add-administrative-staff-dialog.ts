@@ -96,7 +96,6 @@ export class AddAdministrativeStaffDialog implements OnInit {
           payload.fullName,
           payload.phoneNumber,
           new Date(), 
-          false,
           payload.permissions
         );
 
