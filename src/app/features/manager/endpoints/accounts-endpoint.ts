@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHelper } from '../../../core/services/http-helper';
-import { Observable } from 'rxjs';
+import { delay, Observable } from 'rxjs';
 import { AccountCodeModel } from './models/Accounts/account-code-model';
 
 @Injectable({
@@ -15,6 +15,12 @@ export class AccountsEndpoints {
     return this.http.get<AccountCodeModel>('account/code',{
         id:id,
       })
+  }
+
+  generateCode(id:number):Observable<AccountCodeModel>{
+    return this.http.post<AccountCodeModel>('account/generate-code',{
+        id:id
+    });
   }
 }
 

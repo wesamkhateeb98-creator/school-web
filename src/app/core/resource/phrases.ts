@@ -94,7 +94,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'min_number_1':'الرقم المخل يجب أن يكون أكبر من 1',
         'verification-code':'رمز التحقق',
         'code':'الرمز',
-        'copy':'نسخ'
+        'copy':'نسخ',
+        'generate-code':'إنشاء رمز',
+        'no-code-available':'لا يوجد رمز متاح.'
     },
     en:{
         'name':"Name",
@@ -191,7 +193,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'min_number_1':'The input number must be greater than or equal 1.',
         'verification-code':'Verification Code',
         'code':'Code',
-        'copy':'Copy'
+        'copy':'Copy',
+        'generate-code':'Generate Code',
+        'no-code-available':'No code available.'
     }
 }
 
@@ -220,6 +224,7 @@ export type ClassPhrases =
 
 export type PersonPhrases = 
 'user_title'|
+'no-code-available'|
 StudentPhrases|
 TeacherPhrases|
 AdmistrativeStaffPhrases|
@@ -307,7 +312,8 @@ export type ButtonPhrases =
 'login'|
 'logout'|
 'click_here_to_login_screen'|
-'copy';
+'copy'|
+'generate-code';
 
 export type SemesterPhrases = 
 'semester_title'|

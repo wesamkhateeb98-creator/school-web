@@ -10,8 +10,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { successMatSnackbarConfig } from '../../../../core/consts';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { MessageService } from '../../../../core/services/message-service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-account-code-dialog',
@@ -19,7 +20,8 @@ import { MessageService } from '../../../../core/services/message-service';
     MatDialogContent, MatFormField, MatLabel, MatDialogActions,
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatAutocompleteModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './account-code-dialog.html',
   styleUrl: './account-code-dialog.scss',
@@ -83,4 +85,34 @@ export class AccountCodeDialog implements OnInit {
         );
   }
 
+
+  async generateCode(){
+    this.loading.set(true);
+    
+    this.accountsEndpoints.generateCode(this.data.id).subscribe({
+      next:(success) => {
+        
+        this.matSnackBar.open(
+          this.language.transform("success"), 
+          this.language.transform('close'), 
+          successMatSnackbarConfig(this.language)
+        );
+        
+        this.form.patchValue({code: success.code});
+
+        this.loading.set(false);
+
+        this.existingCode.set(true);
+      },
+      error:(err) => {
+        this.matSnackBar.open(
+                  err.error?.Title || err.message, 
+                  this.language.transform('close'), 
+                  errorMatSnackbarConfig(this.language)
+                );
+
+        this.loading.set(false);
+      }
+    })
+  }
 }
