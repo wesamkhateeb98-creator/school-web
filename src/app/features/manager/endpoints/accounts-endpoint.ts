@@ -11,7 +11,7 @@ export class AccountsEndpoints {
     public http:HttpHelper
   ){}
 
-  get(id:number):Observable<AccountCodeModel>{
+  getCode(id:number):Observable<AccountCodeModel>{
     return this.http.get<AccountCodeModel>('account/code',{
         id:id,
       })

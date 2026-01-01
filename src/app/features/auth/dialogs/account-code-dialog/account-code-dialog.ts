@@ -36,21 +36,28 @@ export class AccountCodeDialog implements OnInit {
   messageService = inject(MessageService);
   matSnackBar = inject(MatSnackBar);
 
-  ngOnInit() {
+  existingCode = signal<boolean>(true);
 
+  ngOnInit() {
     this.form = this.fb.group({
       phoneNumber: [this.data.phoneNumber],
       code: ['']
     });
 
-    this.accountsEndpoints.get(this.data.id).subscribe({
+    this.accountsEndpoints.getCode(this.data.id).subscribe({
       next: (res) => {
-        console.log("soso")
+        
         this.form.patchValue({code: res.code});
+        
+        this.existingCode.set(true);
+
         this.loading.set(false);
       },
-      error: () => (this.loading.set(false))
-    });
+      error: (error) => {
+        this.loading.set(false)
+        if(error.status == 404)
+          this.existingCode.set(false);
+    }});
   }
 
   copyToClipboard() {

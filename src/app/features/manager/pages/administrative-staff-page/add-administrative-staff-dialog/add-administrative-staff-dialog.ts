@@ -15,6 +15,7 @@ import { AdministrativeStaffEndpoints } from '../../../endpoints/administrative-
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../core/consts';
 import { AdministrativeStaffViewModel } from '../view-model/administrative-staff-view-model';
 import { AddAdministrativeStaffViewModel } from '../view-model/add-administrative-staff-view-model';
+import { PermissionService } from '../../../../../core/services/permission-service';
 
 @Component({
   selector: 'app-add-administrative-staff-dialog',
@@ -36,16 +37,13 @@ export class AddAdministrativeStaffDialog implements OnInit {
   private data = inject(MAT_DIALOG_DATA);
   public language = inject(Language);
   public matSnackBar = inject(MatSnackBar);
+  public permissionService = inject(PermissionService);
+
 
   loading = signal<boolean>(false);
   form!: FormGroup;
   key: string = crypto.randomUUID();
 
-  // Mock permission list - replace with your actual permission data source
-  permissionList = [
-    { id: 1, name: this.language.transform('educational_supervisor_title') },
-    { id: 2, name: this.language.transform('registrar_title') }
-  ];
 
   ngOnInit() {
     this.initiateForm();

@@ -24,6 +24,7 @@ import { AddAdministrativeStaffDialog } from './add-administrative-staff-dialog/
 import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
+import { PermissionService } from '../../../../core/services/permission-service';
 
 @Component({
   selector: 'app-managerial-page',
@@ -76,6 +77,7 @@ export class ManagerialPage {
     public matSnackBar: MatSnackBar,
     public staffEndpoints: AdministrativeStaffEndpoints, // Renamed endpoint
     public fb: FormBuilder,
+    public permissionService:PermissionService
   ) {
     this.setFilterFromUrl();
     this.initiateForm();
