@@ -23,6 +23,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AddAdministrativeStaffDialog } from './add-administrative-staff-dialog/add-administrative-staff-dialog';
 import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
 
 @Component({
   selector: 'app-managerial-page',
@@ -218,8 +219,15 @@ export class ManagerialPage {
       x.pageNumber = pageEvent.pageIndex + 1;
       return x;
     });
-    // Removed unnecessary this.loading() call as it is a signal getter
+    
     this.params.setToUrl(this.staffFilter());
-    this.loadStaffViewModel(); // Added to trigger reload on page change
+    this.loadStaffViewModel(); 
+  }
+
+  openAccountCodeDialog(id: number, phone: string) {
+    this.dialog.open(AccountCodeDialog, {
+      width: '50%',
+      data: { id: id, phoneNumber: phone }
+    });
   }
 }

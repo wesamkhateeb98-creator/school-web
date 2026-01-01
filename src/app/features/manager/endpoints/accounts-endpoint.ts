@@ -1,0 +1,21 @@
+import { Injectable } from '@angular/core';
+import { HttpHelper } from '../../../core/services/http-helper';
+import { Observable } from 'rxjs';
+import { AccountCodeModel } from './models/Accounts/account-code-model';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AccountsEndpoints {
+  constructor(
+    public http:HttpHelper
+  ){}
+
+  get(id:number):Observable<AccountCodeModel>{
+    return this.http.get<AccountCodeModel>('account/code',{
+        id:id,
+      })
+  }
+}
+
+

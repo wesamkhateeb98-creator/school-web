@@ -24,6 +24,7 @@ import { AgeGroupEndpoints } from '../../endpoints/age-group-endpoint';
 import { AgeGroupModel } from '../../endpoints/models/age-group/age-group-model';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AddStudentDialog } from './components/add-student-dialog/add-student-dialog';
+import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
 
 @Component({
   selector: 'app-student-page',
@@ -268,9 +269,17 @@ export class StudentsPage {
         });
       this.loading();
       this.parmas.setToUrl(this.studentFilter())
+      this.loadStudentViewModel();
   }  
 
   displayFn = (option?: AgeGroupModel): string =>  {
     return option ? option.name : '';
+  }
+
+  openAccountCodeDialog(id: number, phone: string) {
+    this.dialog.open(AccountCodeDialog, {
+      width: '50%',
+      data: { id: id, phoneNumber: phone }
+    });
   }
 }

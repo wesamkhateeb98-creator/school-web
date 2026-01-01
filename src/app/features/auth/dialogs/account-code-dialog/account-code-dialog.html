@@ -1,0 +1,25 @@
+
+<form [formGroup]="form" class="example-form">
+  <h2 mat-dialog-title style="padding: 0px 26px;">{{ language.transform("verification-code") }}</h2>
+  <mat-dialog-content>
+    @if(loading()){
+      <div >Loading code...</div>
+    }
+    @else {
+        <mat-form-field class="example-full-width"  style="width: 100%;">
+          <mat-label>{{ language.transform("phonenumber_title") }}</mat-label>
+          <input type="text" matInput formControlName="phoneNumber" readonly>
+        </mat-form-field>
+      
+        <mat-form-field class="example-full-width" style="width: 100%;">
+          <mat-label>{{ language.transform("code") }}</mat-label>
+          <input type="text" matInput formControlName="code" readonly>
+        </mat-form-field>
+    }
+  </mat-dialog-content>
+
+</form>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-flat-button (click)="copyToClipboard()" [disabled]="loading() || !(data.phoneNumber && form.value.code)">{{language.transform('copy')}} </button>
+    <button mat-button mat-dialog-close (click)="dialogRef.close()">{{language.transform('close')}}</button>
+  </mat-dialog-actions>

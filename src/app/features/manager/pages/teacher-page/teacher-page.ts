@@ -23,6 +23,7 @@ import { debounceTime } from 'rxjs';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { AddTeacherDialog } from './add-teacher-dialog/add-teacher-dialog';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
+import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
 
 @Component({
   selector: 'app-teacher-page',
@@ -79,7 +80,7 @@ export class TeacherPage {
   ){
     this.setFilterFromUrl()
     this.initiateForm();
-    this.loadStudentViewModel();
+    this.loadTeacherViewModel();
   }
 
   setFilterFromUrl(){
@@ -118,13 +119,13 @@ export class TeacherPage {
           phonenumber: value.phonenumber??''
         }));
 
-      this.loadStudentViewModel();
+      this.loadTeacherViewModel();
     })
 
-    this.loadStudentViewModel()
+    this.loadTeacherViewModel()
   }
 
-  loadStudentViewModel(){
+  loadTeacherViewModel(){
     
     this.loading.set(true);
     
@@ -232,5 +233,13 @@ export class TeacherPage {
         });
       this.loading();
       this.parmas.setToUrl(this.teacherFilter())
+      this.loadTeacherViewModel();
+  }
+
+  openAccountCodeDialog(id: number, phone: string) {
+    this.dialog.open(AccountCodeDialog, {
+      width: '50%',
+      data: { id: id, phoneNumber: phone }
+    });
   }
 }

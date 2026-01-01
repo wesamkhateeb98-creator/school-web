@@ -43,7 +43,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'network_down': 'الشبكة مقطوعة',
         'server_error': 'خطأ من المخدم',
         "success":'تمت العملية بنجاح',
-        'close':'يغلق',
+        'close':'إغلاق',
         'of':'من',
         'login': 'تسجيل الدخول',
         'logout':'تسجيل خروج',
@@ -91,7 +91,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'add_class':'إضافة صف',
         'update_class':"تعديل صف",
         'classes_title':'الصفوف',
-        'min_number_1':'الرقم المخل يجب أن يكون أكبر من 1'
+        'min_number_1':'الرقم المخل يجب أن يكون أكبر من 1',
+        'verification-code':'رمز التحقق',
+        'code':'الرمز',
+        'copy':'نسخ'
     },
     en:{
         'name':"Name",
@@ -185,7 +188,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'add_class':'Add class',
         'update_class':"Update class",
         'classes_title':"Classes",
-        'min_number_1':'The input number must be greater than or equal 1.'
+        'min_number_1':'The input number must be greater than or equal 1.',
+        'verification-code':'Verification Code',
+        'code':'Code',
+        'copy':'Copy'
     }
 }
 
@@ -251,7 +257,9 @@ export type GlobalType =
 'all_title'
 
 export type LoginPhrases = 
-'name' 
+'name' |
+'verification-code'|
+'code'
 
 export type SettingsPhrases = 
 'settings'|
@@ -298,7 +306,8 @@ export type ButtonPhrases =
 'of' | 
 'login'|
 'logout'|
-'click_here_to_login_screen';
+'click_here_to_login_screen'|
+'copy';
 
 export type SemesterPhrases = 
 'semester_title'|

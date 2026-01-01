@@ -68,6 +68,10 @@
                     <button mat-icon-button (click)="openDeleteDialog(element.id)" [disabled]="element.lock">
                         <mat-icon class="icon-error">delete</mat-icon>
                     </button>
+
+                    <button mat-icon-button (click)="openAccountCodeDialog(element.id,element.phoneNumber)" [disabled]="element.lock">
+                        <mat-icon class="icon-success">verified_user</mat-icon>
+                    </button>                    
                 </div>
             </td>
         </ng-container>
