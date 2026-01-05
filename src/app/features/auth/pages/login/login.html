@@ -2,22 +2,17 @@
 <mat-card class="container-item">
   <form class="example-form" [formGroup]="form">
     <mat-form-field class="example-full-width">
-      <mat-label >{{language.transform("name")}}</mat-label>
-      <input type="text" matInput formControlName="name">
+      <mat-label >{{language.transform("phonenumber_title")}}</mat-label>
+      <input type="text" matInput formControlName="phonenumber">
       
-      @if(name?.hasError('required')){
+      @if(phonenumber?.hasError('required')){
         <mat-error>
-          Name is <strong>required</strong>
+          {{language.transform('field_required')}}
         </mat-error>
       }
-      @else if(name?.hasError('minlength')){
+      @else if(phonenumber?.hasError('pattern')){
         <mat-error>
-          Name must be at least 4 characters
-        </mat-error>
-      }
-      @else if(name?.hasError('maxlength')){
-        <mat-error>
-          Name cannot exceed 20 characters
+          {{language.transform('validation_phonenumber_pattern')}}
         </mat-error>
       }
     </mat-form-field>
@@ -30,12 +25,12 @@
       </button>
       @if(password?.hasError('required')){
         <mat-error>
-          Name is <strong>required</strong>
+          {{language.transform('field_required')}}
         </mat-error>
       }
       @else if(password?.hasError('pattern')){
         <mat-error>
-          Name must be at least 4 characters
+          {{language.transform('validation_password_pattern')}}
         </mat-error>
       }
       

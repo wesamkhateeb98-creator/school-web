@@ -96,7 +96,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'code':'الرمز',
         'copy':'نسخ',
         'generate-code':'إنشاء رمز',
-        'no-code-available':'لا يوجد رمز متاح.'
+        'no-code-available':'لا يوجد رمز متاح.',
+        "validation_phonenumber_pattern": "يجب أن يكون رقم الهاتف بطول 10 أرقام ويبدأ بـ 09",
+        "validation_password_pattern": "يجب أن تحتوي كلمة المرور على أحرف كبيرة وصغيرة، أرقام، ورموز، وألا يقل طولها عن 8 محارف"
     },
     en:{
         'name':"Name",
@@ -195,7 +197,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'code':'Code',
         'copy':'Copy',
         'generate-code':'Generate Code',
-        'no-code-available':'No code available.'
+        'no-code-available':'No code available.',
+        "validation_phonenumber_pattern": "Phone number must be 10 digits long and start with 09",
+        "validation_password_pattern": "Password must be at least 8 characters long and contain uppercase and lowercase letters, numbers, and symbols"
     }
 }
 
@@ -264,7 +268,9 @@ export type GlobalType =
 export type LoginPhrases = 
 'name' |
 'verification-code'|
-'code'
+'code'|
+'validation_password_pattern'|
+'validation_phonenumber_pattern'
 
 export type SettingsPhrases = 
 'settings'|

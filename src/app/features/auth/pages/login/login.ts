@@ -42,9 +42,9 @@ export class Login {
     public matSnackBar:MatSnackBar,
   ) { 
     this.form = this.fb.group({
-      name:[
-        'Wesam',
-        [Validators.required, Validators.minLength(4), Validators.maxLength(20)]
+      phonenumber:[
+        '',
+        [Validators.required, Validators.pattern('^09\\d{8}$')]
       ],
       password:[
         'Wesam@204',
@@ -52,9 +52,9 @@ export class Login {
       ]
     });
   }
-  
-  get name() {
-    return this.form.get('name');
+
+  get phonenumber() {
+    return this.form.get('phonenumber');
   }
   
   get password() {
@@ -70,7 +70,7 @@ export class Login {
     this.loading.set(true);
     
     this.httpHelper.post<AuthModel>('account/sign-in',{
-      username:this.name?.value,
+      phonenumber:this.phonenumber?.value,
       password:this.password?.value
     }).subscribe({
       next:(response)=>{
