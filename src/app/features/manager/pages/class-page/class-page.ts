@@ -52,7 +52,7 @@ import { Page } from '../../../shared/model/page';
   styleUrl: './class-page.scss',
 })
 export class ClassPage implements OnInit{
-[x: string]: any;
+  // [x: string]: any;
   classes = signal<ClassModel[]>([]);
   classFilter = signal<ClassFilterViewModel>({
     pageNumber: 1,

@@ -49,10 +49,11 @@ export class AddAcademicYearDialog {
     public academicYearEndpoints:AcademicYearEndpoints,
     public matSnackBar:MatSnackBar
   ){
+    const year = new Date().getFullYear()
 this.form = this.fb.group({
       academicYear:[
-        this.isUpdate()?this.item().year : "2025",
-        [Validators.required,Validators.min(2024),]
+        this.isUpdate()?this.item().year : "",
+        [Validators.required,Validators.min(year - 1), Validators.max(year)]
       ]
     });
 
@@ -82,7 +83,7 @@ this.form = this.fb.group({
       .subscribe({
         next: success=>{
           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-          const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
+          const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,1,new Date());
           // this.data.ChangeAction(data);
           this.dialogRef.close({
             data
@@ -99,7 +100,7 @@ this.form = this.fb.group({
     .subscribe({
       next:success=>{
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-        const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,new Date());
+        const data = new AcademicYearViewModel(success.id,this.form.get('academicYear')?.value,1,new Date());
         this.dialogRef.close({
           data
         });

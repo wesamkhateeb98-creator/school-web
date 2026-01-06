@@ -8,8 +8,8 @@ import { AuthService } from './auth-service';
   providedIn: 'root',
 })
 export class HttpHelper {
-  // private readonly BASE_URL = 'http://localhost:5156/api/v1.0';
-  private readonly BASE_URL = 'https://overanxious-rosalinda-haematocryal.ngrok-free.dev/api/v1.0';
+  private readonly BASE_URL = 'http://localhost:5156/api/v1.0';
+  // private readonly BASE_URL = 'https://overanxious-rosalinda-haematocryal.ngrok-free.dev/api/v1.0';
 
   constructor(public http: HttpClient, public language:Language, public authService:AuthService) {}
 

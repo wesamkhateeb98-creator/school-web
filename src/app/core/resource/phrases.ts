@@ -98,7 +98,14 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'generate-code':'إنشاء رمز',
         'no-code-available':'لا يوجد رمز متاح.',
         "validation_phonenumber_pattern": "يجب أن يكون رقم الهاتف بطول 10 أرقام ويبدأ بـ 09",
-        "validation_password_pattern": "يجب أن تحتوي كلمة المرور على أحرف كبيرة وصغيرة، أرقام، ورموز، وألا يقل طولها عن 8 محارف"
+        "validation_password_pattern": "يجب أن تحتوي كلمة المرور على أحرف كبيرة وصغيرة، أرقام، ورموز، وألا يقل طولها عن 8 محارف",
+        'year_must_equal_currenct_year_or_less_than_one': 'السنة الدراسية يجب أن تكون مطابقة لسنة الحالية أو السابقة',
+        'end_academic_year':'إنهاء السنة الدراسية.',
+        'started':'بدأ',
+        'ended':'منتهي',
+        'status':'الحالة',
+        'end_title':'إنهاء',
+        'do_you_want_end_question':'هل تريد إنهاء السنة؟؟'
     },
     en:{
         'name':"Name",
@@ -199,7 +206,14 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'generate-code':'Generate Code',
         'no-code-available':'No code available.',
         "validation_phonenumber_pattern": "Phone number must be 10 digits long and start with 09",
-        "validation_password_pattern": "Password must be at least 8 characters long and contain uppercase and lowercase letters, numbers, and symbols"
+        "validation_password_pattern": "Password must be at least 8 characters long and contain uppercase and lowercase letters, numbers, and symbols",
+        'year_must_equal_currenct_year_or_less_than_one': 'The academic year must match the current year or the previous year.',
+        'end_academic_year':'End academic year',
+        'started':'Started',
+        'ended':'Closed',
+        'status':'Status',
+        'end_title':'End',
+        'do_you_want_end_question':'Do you want to end academicYear ??'
     }
 }
 
@@ -293,7 +307,13 @@ export type AcademicYearPhrases =
 'update_academic_year'|
 'delete_academic_year'|
 'do_you_want_delete_question'|
-'details_academic_year';
+'details_academic_year'|
+'end_academic_year'|
+'status'|
+'started'|
+'ended'|
+'end_title'|
+'do_you_want_end_question';
 
 export type ValidationMessagePhrases = 
 'field_required'|
@@ -305,7 +325,8 @@ export type ValidationMessagePhrases =
 'start_date_must_less_than_end_date'|
 'year_less_than_current_year'|
 'number_digit_between_7_10'|
-'min_number_1';
+'min_number_1'|
+'year_must_equal_currenct_year_or_less_than_one';
 
 export type ButtonPhrases = 
 'add' | 

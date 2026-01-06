@@ -1,5 +1,5 @@
 import { inject, Inject, Injectable } from "@angular/core";
-import { Language } from "./language";
+import { Language } from "../../services/language";
 
 @Injectable({
   providedIn: 'root',
@@ -22,3 +22,5 @@ export class PermissionService {
     return this.permissions.find(p => p.id === id) ?? null;
   }
 }
+
+

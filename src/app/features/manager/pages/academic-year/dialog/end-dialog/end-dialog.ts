@@ -7,8 +7,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Language } from '../../../../../core/services/language';
-import { HttpHelper } from '../../../../../core/services/http-helper';
+import { Language } from '../../../../../../core/services/language';
+import { HttpHelper } from '../../../../../../core/services/http-helper';
 
 @Component({
   selector: 'app-delete-dialog',
@@ -23,16 +23,16 @@ import { HttpHelper } from '../../../../../core/services/http-helper';
     ReactiveFormsModule,
     MatProgressBarModule
   ],
-  templateUrl: './delete-dialog.html'
+  templateUrl: './end-dialog.html'
 })
-export class DeleteDialog {
+export class EndDialog {
   loading = signal<boolean>(false);
 
   data = inject(MAT_DIALOG_DATA);
 
   constructor(
     public language:Language,
-    public dialogRef:MatDialogRef<DeleteDialog>,
+    public dialogRef:MatDialogRef<EndDialog>,
     public http:HttpHelper,
     public matSnackBar:MatSnackBar
   ){

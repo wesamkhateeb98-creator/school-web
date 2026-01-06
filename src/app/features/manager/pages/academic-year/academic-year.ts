@@ -18,6 +18,9 @@ import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/d
 import { AcademicYearEndpoints } from '../../endpoints/academic-year-endpoints';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AssignSemesterToAcademicYear } from './dialog/assign-semester-to-academic-year/assign-semester-to-academic-year';
+import { AcademicYearService } from '../../../../core/enums/service/academic-year-service';
+import { AcademicYearStatus } from '../../../../core/enums/academic-year-status';
+import { EndDialog } from './dialog/end-dialog/end-dialog';
 
 @Component({
   selector: 'app-academic-year',
@@ -36,7 +39,7 @@ import { AssignSemesterToAcademicYear } from './dialog/assign-semester-to-academ
 
 export class AcademicYear{
   academicYearViewModel = signal<AcademicYearViewModel[]>([]);
-  headerTable:string[] = ['academic','createdAt','Action'];
+  headerTable:string[] = ['academic','status','createdAt','Action'];
   loading = signal<boolean>(false);
 
   filter = signal<AcademicYearFilterModel>( {
@@ -51,7 +54,8 @@ export class AcademicYear{
     public router:Router,
     public academicYearEndpoints:AcademicYearEndpoints,
     public matSnackBar:MatSnackBar,
-    public parmas:ParamsService
+    public parmas:ParamsService,
+    public academicYearService:AcademicYearService
   ){
     this.filter.update(x=>{
       const param = parmas.loadFromUrl<AcademicYearFilterModel>(this.filter());
@@ -66,10 +70,9 @@ export class AcademicYear{
     this.onLoading();
   }
 
-
   onLoading(){
     this.loading.set(true);
-
+    
     this.academicYearEndpoints.get(
       this.filter().selectedPage,
       this.filter().pageSize
@@ -86,6 +89,7 @@ export class AcademicYear{
           success.content.map(x=>({
             id: x.id,
             year: x.year,
+            status:x.status,
             createdAt: x.createdAt
           } as AcademicYearViewModel)))
         this.loading.set(false);
@@ -147,6 +151,32 @@ export class AcademicYear{
                 dialogRef.close();
                 this.academicYearViewModel.update(x=>{
                   return x.filter(item => item.id !== id);
+                });
+                this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));                        
+              },
+              error: error=>{
+                this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+              }
+            });
+          }
+        },
+        width: "80%"
+      }
+    );
+  }
+
+  openEndDialog(id:number){
+    const dialogRef = this.dialog.open(
+      EndDialog, 
+      {
+        data:{
+          title:this.language.transform('end_academic_year'),
+          action: ()=>{
+            this.academicYearEndpoints.end(id).subscribe({
+              next: success=>{
+                dialogRef.close();
+                this.academicYearViewModel.update(x=>{
+                  return x.map(item => item.id === id ? {...item,status: AcademicYearStatus.Ended} : item);
                 });
                 this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));                        
               },

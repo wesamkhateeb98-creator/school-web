@@ -23,10 +23,15 @@ export class AcademicYearEndpoints {
     })
   }
 
-  update(semesterId:number, name:string): Observable<MutateResponse>{
-    return this.http.put<MutateResponse>("academic-year/" + semesterId,{
+  update(academicYearId:number, name:string): Observable<MutateResponse>{
+    return this.http.put<MutateResponse>("academic-year/" + academicYearId,{
       year:name
     })
+  }
+
+  end(academicYearId:number): Observable<MutateResponse>{
+    console.log(academicYearId);
+    return this.http.patch<MutateResponse>("academic-year/" + academicYearId + '/end',{})
   }
 
   get(selectedPage:number, pageSize:number,academicYear?:number):Observable<Page<AcademicYearModel>>{

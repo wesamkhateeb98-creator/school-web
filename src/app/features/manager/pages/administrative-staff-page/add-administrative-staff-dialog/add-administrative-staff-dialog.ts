@@ -15,7 +15,7 @@ import { AdministrativeStaffEndpoints } from '../../../endpoints/administrative-
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../core/consts';
 import { AdministrativeStaffViewModel } from '../view-model/administrative-staff-view-model';
 import { AddAdministrativeStaffViewModel } from '../view-model/add-administrative-staff-view-model';
-import { PermissionService } from '../../../../../core/services/permission-service';
+import { PermissionService } from '../../../../../core/enums/service/permission-service';
 
 @Component({
   selector: 'app-add-administrative-staff-dialog',

@@ -17,9 +17,9 @@
               {{language.transform('field_required')}}
             </mat-error>
           }
-          @else if(this.form.get('academicYear')?.hasError('min')){
+          @else if(this.form.get('academicYear')?.hasError('min') || this.form.get('academicYear')?.hasError('max')){
             <mat-error>
-              {{language.transform('year_greater_than_or_equal_2025')}}
+              {{language.transform('year_must_equal_currenct_year_or_less_than_one')}}
             </mat-error>
           }
         </mat-form-field>
