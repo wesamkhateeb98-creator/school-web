@@ -35,14 +35,26 @@ export class ClassEndpoints {
     }
 
     get(filter: ClassFilterViewModel): Observable<Page<ClassModel>> {
-        // console.log("filter is :")
-        // console.log(filter);
-        // console.log(filter.academicYear?.id)
         return this.http.get<Page<ClassModel>>(this.baseUrl, {
             AgeGroupId: filter.ageGroup?.id,
             AcademicYearId: filter.academicYear?.id,
             PageNumber: filter.pageNumber,
             PageSize: filter.pageSize
+        });
+    }
+
+    getByOpenAcademicYear(pageNumber:number, pageSize:number, ageGroupId?:number): Observable<Page<ClassModel>> {
+        return this.http.get<Page<ClassModel>>('class/open-academic-year', {
+            AgeGroupId: ageGroupId,
+            PageNumber: pageNumber,
+            PageSize: pageSize
+        });
+    }
+
+    getByAccountIdYear(pageNumber:number, pageSize:number, accountId:number): Observable<Page<ClassModel>> {
+        return this.http.get<Page<ClassModel>>(`class/management/account/${accountId}`, {
+            PageNumber: pageNumber,
+            PageSize: pageSize
         });
     }
 

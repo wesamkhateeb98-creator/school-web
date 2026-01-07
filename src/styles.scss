@@ -48,6 +48,11 @@ html{
   width: 100%;
 }
 
+.justify-end{
+  display: flex;
+  justify-content: end;
+}
+
 .error-snackbar {
   @include mat.snack-bar-overrides((
     container-color: var(--mat-sys-error),

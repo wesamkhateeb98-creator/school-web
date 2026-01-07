@@ -105,7 +105,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'ended':'منتهي',
         'status':'الحالة',
         'end_title':'إنهاء',
-        'do_you_want_end_question':'هل تريد إنهاء السنة؟؟'
+        'do_you_want_end_question':'هل تريد إنهاء السنة؟؟',
+        'class_title':"الصف",
+        'assign_student':'تكليف طالب',
+        'select_from_here':'أختر من هنا'
     },
     en:{
         'name':"Name",
@@ -213,7 +216,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'ended':'Closed',
         'status':'Status',
         'end_title':'End',
-        'do_you_want_end_question':'Do you want to end academicYear ??'
+        'do_you_want_end_question':'Do you want to end academicYear ??',
+        'class_title':"Class",
+        'assign_student':'Assign student',
+        'select_from_here':'Select from here.'
     }
 }
 
@@ -237,7 +243,8 @@ export type ClassPhrases =
 'section_title'|
 'add_class'|
 'update_class'|
-'classes_title'
+'classes_title'|
+'class_title'
 ;
 
 export type PersonPhrases = 
@@ -264,7 +271,8 @@ export type StudentPhrases =
 'phonenumber_title'|
 'address_title'|
 'birthday_title'|
-'full_name_title'
+'full_name_title'|
+'assign_student'
 ;
 
 export type TeacherPhrases = 
@@ -277,7 +285,8 @@ export type ManagerialPhrases = 'managerial_title';
 export type GlobalType = 
 'registrations_title' |
 'filter'|
-'all_title'
+'all_title'|
+'select_from_here'
 
 export type LoginPhrases = 
 'name' |

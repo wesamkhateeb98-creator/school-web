@@ -25,6 +25,7 @@ import { AgeGroupModel } from '../../endpoints/models/age-group/age-group-model'
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AddStudentDialog } from './components/add-student-dialog/add-student-dialog';
 import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
+import { AssignStudentDialog } from './components/assign-student-dialog/assign-student-dialog';
 
 @Component({
   selector: 'app-student-page',
@@ -44,7 +45,6 @@ import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/acc
     MatAutocompleteModule    
 ],
   templateUrl: './students-page.html',
-  styleUrl: './students-page.scss',
 })
 export class StudentsPage {
   students = signal<StudentViewModel[]>([]);
@@ -256,6 +256,20 @@ export class StudentsPage {
             }  
         },
         width: "80%"
+      }
+    );
+  }
+
+  openAssignStudentDialog(viewModel:StudentViewModel){
+    const dialogRef = this.dialog.open(
+      AssignStudentDialog, 
+      {
+        data:{
+          ageGroupId: viewModel.ageGroupId,
+          accountId: viewModel.id
+        },
+        width: "80vw",
+        maxWidth: "80vw"
       }
     );
   }

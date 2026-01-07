@@ -22,6 +22,20 @@ export class AccountsEndpoints {
         id:id
     });
   }
+
+  assignStudent(accountId:number ,classId:number , key:string ){
+    return this.http.post(`account/assign/student/${accountId}/class/${classId}`,{
+      key:key
+    });
+  }
+
+  assignTeacher(accountId:number ,classId:number , key:string ){
+    return this.http.post(`account/assign/teacher/${accountId}/class/${classId}`,{
+      key:key
+    });
+  }
+
+  unassingAccount(accountId:number ,accountClassAssignmentId:number){
+    return this.http.delete(`account/unassign/account/${accountId}/assignment/${accountClassAssignmentId}`);
+  }
 }
-
-
