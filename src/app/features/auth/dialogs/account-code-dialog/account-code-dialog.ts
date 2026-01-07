@@ -1,7 +1,5 @@
 import { Component, inject, Inject, OnInit, signal } from '@angular/core';
-import { AccountCodeModel } from '../../../manager/endpoints/models/Accounts/account-code-model';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
-import { AccountsEndpoints } from '../../../manager/endpoints/accounts-endpoint';
 import { MatFormField, MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Language } from '../../../../core/services/language';
@@ -13,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { MessageService } from '../../../../core/services/message-service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AccountsEndpoints } from '../../../manager/shared/endpoints/accounts-endpoint';
 
 @Component({
   selector: 'app-account-code-dialog',

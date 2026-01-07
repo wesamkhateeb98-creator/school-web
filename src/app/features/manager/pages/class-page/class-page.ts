@@ -1,12 +1,10 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
-import { ClassModel } from '../../endpoints/models/class/class-model';
 import { ClassFilterViewModel } from './view-model/class-filter-view-model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Language } from '../../../../core/services/language';
 import { MatDialog } from '@angular/material/dialog';
 import { ParamsService } from '../../../../core/services/params-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ClassEndpoints } from '../../endpoints/class-endpoint';
 import { debounceTime, filter, firstValueFrom, map, of, startWith, switchMap, tap } from 'rxjs';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -24,10 +22,12 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { AddClassDialog } from './add-teacher-dialog/add-class-dialog';
 import { AcademicYearModel } from '../academic-year/model/academic-year-model';
-import { AgeGroupEndpoints } from '../../endpoints/age-group-endpoint';
-import { AcademicYearEndpoints } from '../../endpoints/academic-year-endpoints';
-import { AgeGroupModel } from '../../endpoints/models/age-group/age-group-model';
 import { Page } from '../../../shared/model/page';
+import { ClassModel } from '../../shared/endpoints/models/class/class-model';
+import { AgeGroupEndpoints } from '../../shared/endpoints/age-group-endpoint';
+import { AcademicYearEndpoints } from '../../shared/endpoints/academic-year-endpoints';
+import { ClassEndpoints } from '../../shared/endpoints/class-endpoint';
+import { AgeGroupModel } from '../../shared/endpoints/models/age-group/age-group-model';
 
 @Component({
   selector: 'app-class-page',

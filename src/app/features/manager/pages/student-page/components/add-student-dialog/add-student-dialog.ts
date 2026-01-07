@@ -9,15 +9,15 @@ import { Language } from '../../../../../../core/services/language';
 import { MatProgressBar } from "@angular/material/progress-bar";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
-import { AgeGroupModel } from '../../../../endpoints/models/age-group/age-group-model';
-import { AgeGroupEndpoints } from '../../../../endpoints/age-group-endpoint';
+import { AgeGroupEndpoints } from '../../../../shared/endpoints/age-group-endpoint';
 import { maxYearValidator } from '../../../../../../core/validator/validator';
 import { MatDatepickerInput, MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
-import { StudentEndpoints } from '../../../../endpoints/student-endpoint';
+import { StudentEndpoints } from '../../../../shared/endpoints/student-endpoint';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
 import { StudentViewModel } from '../../view-model/student-view-model';
+import { AgeGroupModel } from '../../../../shared/endpoints/models/age-group/age-group-model';
 
 @Component({
   selector: 'app-add-student-dialog',
@@ -35,7 +35,6 @@ import { StudentViewModel } from '../../view-model/student-view-model';
     MatButtonModule
 ],
   templateUrl: './add-student-dialog.html',
-  styleUrl: './add-student-dialog.scss',
   providers:[
     provideNativeDateAdapter()
   ]
@@ -43,11 +42,13 @@ import { StudentViewModel } from '../../view-model/student-view-model';
 export class AddStudentDialog{
   loading = signal<boolean>(false);
 
-
   form!: FormGroup;
+
   key:string = crypto.randomUUID();
 
   ageGroups = signal<AgeGroupModel[]>([]);
+
+  minDate = new Date(1998, 0, 1);
 
   constructor(
     public language:Language,

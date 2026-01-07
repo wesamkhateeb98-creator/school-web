@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpHelper } from '../../../core/services/http-helper';
-import { MutateResponse } from '../../shared/model/mutate-response';
-import { Page } from '../../shared/model/page';
+import { HttpHelper } from '../../../../core/services/http-helper';
+import { MutateResponse } from '../../../shared/model/mutate-response';
+import { Page } from '../../../shared/model/page';
 import { Observable } from 'rxjs';
-import { StudentModel } from './models/student/student-model';
-import { AddTeacherViewModel } from '../pages/teacher-page/view-model/add-teacher-view-model';
-import { TeacherFilterViewModel } from '../pages/teacher-page/view-model/teacher-filter-view-model';
+import { AddTeacherViewModel } from '../../pages/teacher-page/view-model/add-teacher-view-model';
+import { TeacherFilterViewModel } from '../../pages/teacher-page/view-model/teacher-filter-view-model';
 import { TeacherModel } from './models/teacher/teacher-model';
 
 @Injectable({

@@ -1,27 +1,26 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatFormField, MatFormFieldModule, MatLabel } from "@angular/material/form-field";
-import { Language } from '../../../../../../core/services/language';
 import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ClassModel } from '../../../../endpoints/models/class/class-model';
 import { debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
-import { ClassEndpoints } from '../../../../endpoints/class-endpoint';
 import { AsyncPipe } from '@angular/common';
-import { AccountsEndpoints } from '../../../../endpoints/accounts-endpoint';
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from '@angular/material/expansion';
-import { MatGridList, MatGridTile } from '@angular/material/grid-list';
+import { ClassEndpoints } from '../../../../shared/endpoints/class-endpoint';
+import { Language } from '../../../../../../core/services/language';
+import { ClassModel } from '../../../../shared/endpoints/models/class/class-model';
 import { AssignmentFilter } from '../../view-model/assignment-filter';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
+import { AccountsEndpoints } from '../../../../shared/endpoints/accounts-endpoint';
 
 @Component({
   selector: 'app-account-code-dialog',
@@ -38,8 +37,7 @@ import { AssignmentFilter } from '../../view-model/assignment-filter';
     MatIconModule,
     MatPaginatorModule,
     MatExpansionPanel,
-    MatExpansionPanelHeader,
-    MatExpansionPanelTitle
+    MatExpansionPanelHeader
 ],
   templateUrl: './assign-student-dialog.html',
 })
@@ -113,7 +111,17 @@ export class AssignStudentDialog implements OnInit {
       class: [''],
     });
   }
+
   setupAutocompletes() {
+    this.class$ = this.form.get('class')!.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      switchMap(value => {
+        return this.classEndpoints.getByOpenAcademicYear(1, 20,this.data.ageGroupId);
+      }),
+      map(response => response.content),
+    );
+
     this.class$ = this.form.get('class')!.valueChanges.pipe(
       startWith(''),
       debounceTime(300),

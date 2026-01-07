@@ -12,13 +12,14 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Language } from '../../../../../core/services/language';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../core/consts';
-import { AgeGroupModel } from '../../../endpoints/models/age-group/age-group-model';
+
 import { AcademicYearModel } from '../../academic-year/model/academic-year-model';
 import { debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
-import { ClassEndpoints } from '../../../endpoints/class-endpoint';
-import { AgeGroupEndpoints } from '../../../endpoints/age-group-endpoint';
-import { AcademicYearEndpoints } from '../../../endpoints/academic-year-endpoints';
 import { AsyncPipe } from '@angular/common';
+import { ClassEndpoints } from '../../../shared/endpoints/class-endpoint';
+import { AgeGroupEndpoints } from '../../../shared/endpoints/age-group-endpoint';
+import { AcademicYearEndpoints } from '../../../shared/endpoints/academic-year-endpoints';
+import { AgeGroupModel } from '../../../shared/endpoints/models/age-group/age-group-model';
 
 @Component({
   selector: 'app-add-student-dialog',

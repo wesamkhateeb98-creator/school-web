@@ -15,7 +15,7 @@ import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../co
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../core/services/params-service';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
-import { AcademicYearEndpoints } from '../../endpoints/academic-year-endpoints';
+import { AcademicYearEndpoints } from '../../shared/endpoints/academic-year-endpoints';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AssignSemesterToAcademicYear } from './dialog/assign-semester-to-academic-year/assign-semester-to-academic-year';
 import { AcademicYearService } from '../../../../core/enums/service/academic-year-service';

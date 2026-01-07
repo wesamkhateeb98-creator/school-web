@@ -6,7 +6,7 @@ import { Language } from '../../../../core/services/language';
 import { MatDialog } from '@angular/material/dialog';
 import { ParamsService } from '../../../../core/services/params-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AdministrativeStaffEndpoints } from '../../endpoints/administrative-staff-endpoint';
+import { AdministrativeStaffEndpoints } from '../../shared/endpoints/administrative-staff-endpoint';
 import { debounceTime } from 'rxjs';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';

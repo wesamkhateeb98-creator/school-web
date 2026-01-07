@@ -11,7 +11,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Language } from '../../../../../core/services/language';
-import { AdministrativeStaffEndpoints } from '../../../endpoints/administrative-staff-endpoint';
+import { AdministrativeStaffEndpoints } from '../../../shared/endpoints/administrative-staff-endpoint';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../core/consts';
 import { AdministrativeStaffViewModel } from '../view-model/administrative-staff-view-model';
 import { AddAdministrativeStaffViewModel } from '../view-model/add-administrative-staff-view-model';

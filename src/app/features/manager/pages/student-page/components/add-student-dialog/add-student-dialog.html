@@ -102,7 +102,7 @@
         <mat-grid-tile >
             <mat-form-field class="example-full-width" style="width: 100%;" >
                 <mat-label >{{language.transform("birthday_title")}}</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="birthday" [readonly]="loading()">
+                <input matInput [matDatepicker]="picker" [min]="minDate" formControlName="birthday" [readonly]="loading()">
                 <mat-hint>MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="loading()"/>
                 <mat-datepicker #picker></mat-datepicker>

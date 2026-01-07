@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpHelper } from '../../../core/services/http-helper';
-import { MutateResponse } from '../../shared/model/mutate-response';
-import { Page } from '../../shared/model/page';
-import { Observable } from 'rxjs';
-import { SemesterForAcademicYearModel, SemesterForAcademicYearViewModel } from '../pages/academic-year/model/semester-for-academic-year-view-model';
-import { ToDateOnly } from '../../../core/consts';
-import { AcademicYearViewModel } from '../pages/academic-year/model/academic-year-view-model';
-import { AcademicYearModel } from '../pages/academic-year/model/academic-year-model';
+import { Injectable } from "@angular/core";
+import { HttpHelper } from "../../../../core/services/http-helper";
+import { Observable } from "rxjs";
+import { MutateResponse } from "../../../shared/model/mutate-response";
+import { Page } from "../../../shared/model/page";
+import { AcademicYearModel } from "../../pages/academic-year/model/academic-year-model";
+import { SemesterForAcademicYearModel } from "../../pages/academic-year/model/semester-for-academic-year-view-model";
+import { ToDateOnly } from "../../../../core/consts";
 
 @Injectable({
   providedIn: 'root',

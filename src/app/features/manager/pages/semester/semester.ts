@@ -13,7 +13,7 @@ import { AddSemesterDialog } from './dialog/add-semester-dialog/add-semester-dia
 import { ParamsService } from '../../../../core/services/params-service';
 import { SemesterFilterViewModel } from './model/semester-filter-view-model';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
-import { SemesterEndpoints } from '../../endpoints/semester-endpoints';
+import { SemesterEndpoints } from '../../shared/endpoints/semester-endpoints';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';

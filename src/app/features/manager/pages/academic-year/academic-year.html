@@ -43,6 +43,7 @@
                 </button>
 
                 <button mat-icon-button 
+                        [disabled]="element.status == 2"
                         (click)="openEndDialog(element.id)" >
                     <mat-icon class="icon-success">stop</mat-icon>
                 </button>

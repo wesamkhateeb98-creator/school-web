@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpHelper } from '../../../core/services/http-helper';
-import { MutateResponse } from '../../shared/model/mutate-response';
-import { Page } from '../../shared/model/page';
+import { HttpHelper } from '../../../../core/services/http-helper';
+import { MutateResponse } from '../../../shared/model/mutate-response';
+import { Page } from '../../../shared/model/page';
 import { Observable } from 'rxjs';
-import { AddClassViewModel } from '../pages/class-page/view-model/add-class-view-model';
+import { AddClassViewModel } from '../../pages/class-page/view-model/add-class-view-model';
 import { ClassModel } from './models/class/class-model';
-import { ClassFilterViewModel } from '../pages/class-page/view-model/class-filter-view-model';
+import { ClassFilterViewModel } from '../../pages/class-page/view-model/class-filter-view-model';
 
 @Injectable({
     providedIn: 'root',

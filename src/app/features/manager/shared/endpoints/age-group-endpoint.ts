@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpHelper } from '../../../core/services/http-helper';
-import { MutateResponse } from '../../shared/model/mutate-response';
-import { Page } from '../../shared/model/page';
+import { HttpHelper } from '../../../../core/services/http-helper';
+import { MutateResponse } from '../../../shared/model/mutate-response';
+import { Page } from '../../../shared/model/page';
 import { Observable } from 'rxjs';
 import { AgeGroupModel } from './models/age-group/age-group-model';
 

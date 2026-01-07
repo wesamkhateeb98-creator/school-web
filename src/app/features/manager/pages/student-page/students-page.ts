@@ -13,18 +13,18 @@ import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/d
 import { MatDialog } from '@angular/material/dialog';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StudentEndpoints } from '../../endpoints/student-endpoint';
 import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from "@angular/material/expansion";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { debounceTime } from 'rxjs';
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
-import { AgeGroupEndpoints } from '../../endpoints/age-group-endpoint';
-import { AgeGroupModel } from '../../endpoints/models/age-group/age-group-model';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AddStudentDialog } from './components/add-student-dialog/add-student-dialog';
 import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
+import { AgeGroupModel } from '../../shared/endpoints/models/age-group/age-group-model';
+import { StudentEndpoints } from '../../shared/endpoints/student-endpoint';
+import { AgeGroupEndpoints } from '../../shared/endpoints/age-group-endpoint';
 import { AssignStudentDialog } from './components/assign-student-dialog/assign-student-dialog';
 
 @Component({

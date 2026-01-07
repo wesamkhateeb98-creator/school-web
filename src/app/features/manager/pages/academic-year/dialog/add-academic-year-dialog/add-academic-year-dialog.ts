@@ -8,13 +8,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { HttpHelper } from '../../../../../../core/services/http-helper';
-import { MutateResponse } from '../../../../../shared/model/mutate-response';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
 import { AcademicYearViewModel } from '../../model/academic-year-view-model';
 import { AcademicYearModel } from '../../model/academic-year-model';
-import { AcademicYearEndpoints } from '../../../../endpoints/academic-year-endpoints';
+import { AcademicYearEndpoints } from '../../../../shared/endpoints/academic-year-endpoints';
 
 @Component({
   selector: 'app-add-academic-year-dialog',

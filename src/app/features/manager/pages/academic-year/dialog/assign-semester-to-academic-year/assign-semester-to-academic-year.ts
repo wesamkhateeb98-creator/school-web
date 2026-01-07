@@ -23,10 +23,10 @@ import { ErrorTitleComponent } from "../../../../../shared/components/error-titl
 import { MatDatepickerInput, MatDatepickerModule } from "@angular/material/datepicker";
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
-import { AcademicYearEndpoints } from '../../../../endpoints/academic-year-endpoints';
+import { AcademicYearEndpoints } from '../../../../shared/endpoints/academic-year-endpoints';
 import { errorMatSnackbarConfig, StringToDate, successMatSnackbarConfig } from '../../../../../../core/consts';
 import { debounceTime, distinctUntilChanged, filter, Observable, switchMap } from 'rxjs';
-import { SemesterEndpoints } from '../../../../endpoints/semester-endpoints';
+import { SemesterEndpoints } from '../../../../shared/endpoints/semester-endpoints';
 import { SemesterViewModel } from '../../../semester/model/semester-view-model';
 
 

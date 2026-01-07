@@ -18,7 +18,7 @@ import { Language } from '../../../../core/services/language';
 import { MatDialog } from '@angular/material/dialog';
 import { ParamsService } from '../../../../core/services/params-service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TeacherEndpoints } from '../../endpoints/teacher-endpoint';
+import { TeacherEndpoints } from '../../shared/endpoints/teacher-endpoint';
 import { debounceTime } from 'rxjs';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { AddTeacherDialog } from './add-teacher-dialog/add-teacher-dialog';

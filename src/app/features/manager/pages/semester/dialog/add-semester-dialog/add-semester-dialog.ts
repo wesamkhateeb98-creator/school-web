@@ -12,7 +12,7 @@ import { startDateMustLessEndDateValidator } from "../../../../../../core/valida
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
-import { SemesterEndpoints } from "../../../../endpoints/semester-endpoints";
+import { SemesterEndpoints } from "../../../../shared/endpoints/semester-endpoints";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
 import { SemesterViewModel } from "../../model/semester-view-model";

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpHelper } from '../../../core/services/http-helper';
-import { MutateResponse } from '../../shared/model/mutate-response';
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../core/consts';
-import { SemesterViewModel } from '../pages/semester/model/semester-view-model';
-import { Page } from '../../shared/model/page';
+import { HttpHelper } from '../../../../core/services/http-helper';
+import { MutateResponse } from '../../../shared/model/mutate-response';
+import { SemesterViewModel } from '../../pages/semester/model/semester-view-model';
+import { Page } from '../../../shared/model/page';
 import { Observable } from 'rxjs';
 
 @Injectable({
