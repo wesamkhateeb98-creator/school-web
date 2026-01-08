@@ -1,35 +1,85 @@
-<form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
-  <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_age_group':'add_age_group')}}</h2>
-  <mat-dialog-content>
-    <mat-grid-list [cols]="1" rowHeight="70px" gutterSize="10px">
-      @if(loading()){
-        <mat-grid-tile>
-          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-        </mat-grid-tile>
-      }
-      @else{
-        <mat-grid-tile >
-          <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("name")}}</mat-label>
-            <input type="text" matInput formControlName="name">
-            @if(this.form.get('name')?.hasError('required')){
-              <mat-error>
-                {{language.transform('field_required')}}
-              </mat-error>
-            }
-            @else if(this.form.get('academicYear')?.hasError('minLength')){
-              <mat-error>
-                {{language.transform('min_length_3')}}
-              </mat-error>
-            }
-          </mat-form-field>
-        </mat-grid-tile>
-      }
-      
-    </mat-grid-list>
-  </mat-dialog-content>
-  <mat-dialog-actions>
-    <button matButton (click)="onNoClick()" type="button" [disabled]="loading()">{{language.transform('cancel')}}</button>
-    <button matButton="filled" cdkFocusInitial [disabled]="loading()">{{language.transform(isUpdate() ? 'update':'add')}}</button>
-  </mat-dialog-actions>
-</form>
+<mat-dialog-content>
+  @if(loading()){
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+  }
+  @else {
+    <form [formGroup]="form" class="example-form">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <h2 mat-dialog-title style="padding: 0px 26px;">{{ language.transform("add_subject_to_age_group") }}</h2>
+        </mat-expansion-panel-header>
+        
+        <mat-form-field style="width: 100%;">
+            <mat-label>{{ language.transform("class_title") }}</mat-label>
+            <input type="text" matInput formControlName="subject" [matAutocomplete]="autoAge">
+            <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displaySubject" (optionSelected)="onSubjectSelected($event)">
+                @for (item of subjects$ | async; track item.id) {
+                    <mat-option [value]="item">{{ displaySubject(item) }}</mat-option>
+                }
+            </mat-autocomplete>
+        </mat-form-field>
+        <div class='justify-end'>
+          <button mat-button mat-flat-button (click)="addSubject()">{{language.transform('ok')}} </button>
+        </div>
+      </mat-expansion-panel>
+    </form>
+    <br/>
+    <mat-card style="overflow-x: auto;">
+        @if(this.loading())
+        {
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        }
+        <table mat-table [dataSource]="assignedSubjects()" class="mat-elevation-z8" style="width: 80%;">
+
+          <ng-container matColumnDef="{{headerTable[0]}}" sticky>
+              <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('subject_title')}} </th>
+              <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="{{headerTable[1]}}">
+              <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('description_title')}} </th>
+              <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="{{headerTable[2]}}">
+              <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('created_at_title')}} </th>
+              <td mat-cell *matCellDef="let element"> {{ element.createdAt|date:'yyyy-MM-dd HH:mm:ss' }} </td>
+          </ng-container>
+            <ng-container matColumnDef="{{headerTable[3]}}" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <div style="display: flex; justify-content: space-between;">
+                        
+                        <button mat-icon-button (click)="removeSubject(element.id)" >
+                            <mat-icon class="icon-error">remove</mat-icon>
+                        </button>
+
+                    </div>
+                </td>
+            </ng-container>
+
+
+            <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
+            <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
+
+        </table>
+        <mat-paginator 
+            [length]="totalPages() * filter().pageSize" 
+            [pageSize]="filter().pageSize"
+            [pageIndex]="filter().pageNumber - 1"
+            
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            showFirstLastButtons="false"
+            (page)="changeInPage($event)"
+        />
+    </mat-card>
+    <br/>
+  }
+
+</mat-dialog-content>
+
+<mat-dialog-actions [align]="'end'">
+  <button mat-button mat-dialog-close (click)="dialogRef.close()">{{language.transform('close')}}</button>
+</mat-dialog-actions>

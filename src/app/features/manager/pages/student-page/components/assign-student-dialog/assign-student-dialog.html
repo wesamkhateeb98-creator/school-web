@@ -14,7 +14,7 @@
         <mat-form-field style="width: 100%;">
             <mat-label>{{ language.transform("class_title") }}</mat-label>
             <input type="text" matInput formControlName="class" [matAutocomplete]="autoAge">
-            <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayAgeGroup" (optionSelected)="onClassSelected($event)">
+            <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayClass" (optionSelected)="onClassSelected($event)">
                 @for (item of class$ | async; track item.id) {
                     <mat-option [value]="item">{{ `${item.ageGroupName} ${item.section}` }}</mat-option>
                 }

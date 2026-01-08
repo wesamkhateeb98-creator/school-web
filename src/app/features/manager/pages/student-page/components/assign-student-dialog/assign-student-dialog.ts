@@ -179,7 +179,7 @@ export class AssignStudentDialog implements OnInit {
     this.form.patchValue({ classId: event.option.value.id });
   }
 
-  displayAgeGroup(item: ClassModel): string {
+  displayClass(item: ClassModel): string {
     return item?`${item.ageGroupName} ${item.section}`:"";
   }
 

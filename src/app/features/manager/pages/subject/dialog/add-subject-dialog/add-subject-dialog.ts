@@ -37,7 +37,6 @@ import { SubjectEndpoints } from "../../../../shared/endpoints/subject-endpoint"
   providers:[provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './add-subject-dialog.html',
-  styleUrl: './add-subject-dialog.scss',
 })
 export class AddSubjectDialog {
   loading = signal<boolean>(false);

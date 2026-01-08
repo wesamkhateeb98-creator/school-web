@@ -108,7 +108,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'do_you_want_end_question':'هل تريد إنهاء السنة؟؟',
         'class_title':"الصف",
         'assign_student':'تكليف طالب',
-        'select_from_here':'أختر من هنا'
+        'select_from_here':'أختر من هنا',
+        'add_subject_to_age_group':'إضافة مادة لسنة دراسية'
     },
     en:{
         'name':"Name",
@@ -219,7 +220,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'do_you_want_end_question':'Do you want to end academicYear ??',
         'class_title':"Class",
         'assign_student':'Assign student',
-        'select_from_here':'Select from here.'
+        'select_from_here':'Select from here.',
+        'add_subject_to_age_group':'Add subject to age group'
     }
 }
 
@@ -364,7 +366,8 @@ export type AgeGroupPhrases =
 'age_group_title'|
 'add_age_group'|
 'update_age_group'|
-'delete_age_group'
+'delete_age_group'|
+'add_subject_to_age_group'
 ;
 
 export type SubjectPhrases = 
