@@ -21,9 +21,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { TeacherEndpoints } from '../../shared/endpoints/teacher-endpoint';
 import { debounceTime } from 'rxjs';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
-import { AddTeacherDialog } from './add-teacher-dialog/add-teacher-dialog';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
+import { SubjectForTeacherDialog } from './dialogs/subject-for-teacher-dialog/subject-for-teacher-dialog';
+import { AddTeacherDialog } from './dialogs/add-teacher-dialog/add-teacher-dialog';
 
 @Component({
   selector: 'app-teacher-page',
@@ -241,5 +242,17 @@ export class TeacherPage {
       width: '50%',
       data: { id: id, phoneNumber: phone }
     });
+  }
+
+  openSubjectPage(id:number){
+    this.dialog.open(
+      SubjectForTeacherDialog, 
+      {
+        data:{
+          teacherId: id
+        },
+        width: "80%"
+      }
+    );
   }
 }

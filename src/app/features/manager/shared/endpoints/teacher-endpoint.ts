@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { AddTeacherViewModel } from '../../pages/teacher-page/view-model/add-teacher-view-model';
 import { TeacherFilterViewModel } from '../../pages/teacher-page/view-model/teacher-filter-view-model';
 import { TeacherModel } from './models/teacher/teacher-model';
+import { SubjectForTeacherModel } from './models/teacher/subject-for-teacher-model';
 
 @Injectable({
   providedIn: 'root',
@@ -43,4 +44,22 @@ export class TeacherEndpoints {
     return this.http.delete<MutateResponse>(`teacher/${id}`);
   }
   
+  addSubject(id:number,subjectId:number): Observable<MutateResponse>{
+      console.log(id);
+      console.log(subjectId);
+      return this.http.post<MutateResponse>(`teacher/${id}/subject`,{
+        "subjectId": subjectId
+      });
+    }
+  
+  deleteSubject(id:number, subjectAgeGroupId:number): Observable<MutateResponse>{
+    return this.http.delete<MutateResponse>(`teacher/${id}/subject/${subjectAgeGroupId}`);
+  }
+  
+  getSubjects(id:number,pageNumber:number,pageSize:number): Observable<Page<SubjectForTeacherModel>>{
+    return this.http.get<Page<SubjectForTeacherModel>>(`teacher/${id}/subjects`,{
+      pageNumber:pageNumber,
+      pageSize:pageSize
+    });
+  }
 }

@@ -10,10 +10,10 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
-import { Language } from '../../../../../core/services/language';
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../core/consts';
-import { TeacherViewModel } from '../view-model/teacher-view-model';
-import { TeacherEndpoints } from '../../../shared/endpoints/teacher-endpoint';
+import { TeacherEndpoints } from '../../../../shared/endpoints/teacher-endpoint';
+import { Language } from '../../../../../../core/services/language';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
+import { TeacherViewModel } from '../../view-model/teacher-view-model';
 
 @Component({
   selector: 'app-add-student-dialog',
