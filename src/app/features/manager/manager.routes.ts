@@ -37,6 +37,11 @@ export const DASHBOARD_ROUTES: Routes = [
         ],
       },
       { 
+        path:'subjects', 
+        component: SubjectPage, 
+        title: messageTitle('subject_title')
+      },
+      { 
         path: 'users', 
         children:[
           { path:'students', component: StudentsPage, title: messageTitle('students_title')},

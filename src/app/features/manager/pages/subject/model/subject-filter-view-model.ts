@@ -1,5 +1,4 @@
 export interface SubjectFilterViewModel{
-    selectedPage:number;
+    pageNumber:number;
     pageSize:number;
-    ageGroup?:number
 }

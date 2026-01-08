@@ -14,8 +14,6 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpHelper } from "../../../../../../core/services/http-helper";
 import { MutateResponse } from "../../../../../shared/model/mutate-response";
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
-import { yearMonthDay } from "../../../../../../core/formats/date-format";
-import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
 import { AgeGroupViewModel } from "../../model/age-group-view-model";
 
 @Component({
@@ -35,7 +33,6 @@ import { AgeGroupViewModel } from "../../model/age-group-view-model";
   providers:[provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './add-age-group-dialog.html',
-  styleUrl: './add-age-group-dialog.scss',
 })
 export class AddAgeGroupDialog {
   loading = signal<boolean>(false);

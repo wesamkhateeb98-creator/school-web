@@ -18,6 +18,7 @@ import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../co
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { MutateResponse } from '../../../shared/model/mutate-response';
 import { AddSubjectDialog } from './dialog/add-subject-dialog/add-subject-dialog';
+import { SubjectEndpoints } from '../../shared/endpoints/subject-endpoint';
 
 @Component({
   selector: 'app-semester-component',
@@ -30,7 +31,6 @@ import { AddSubjectDialog } from './dialog/add-subject-dialog/add-subject-dialog
     MatButtonModule
   ],
   templateUrl: './subject.html',
-  styleUrl: './subject.scss',
 })
 export class SubjectPage {
   subjectViewModels = signal<SubjectViewModel[]>([]);
@@ -39,7 +39,7 @@ export class SubjectPage {
 
   filter = signal<SubjectFilterViewModel>( {
       pageSize:10,
-      selectedPage:1
+      pageNumber:1
     });
 
   totalPages= signal<number>(10);
@@ -51,7 +51,8 @@ export class SubjectPage {
     public router:Router,
     public httpHelper:HttpHelper,
     public matSnackBar:MatSnackBar,
-    public parmas:ParamsService
+    public parmas:ParamsService,
+    public subjectEndpoints:SubjectEndpoints
   ){
     this.ageGroupId = Number(route.snapshot.paramMap.get('id'));
 
@@ -59,7 +60,7 @@ export class SubjectPage {
       const param = parmas.loadFromUrl<SubjectFilterViewModel>(this.filter());
 
       x.pageSize = param.pageSize? param.pageSize: 10;
-      x.selectedPage = param.selectedPage? param.selectedPage: 1
+      x.pageNumber = param.pageNumber? param.pageNumber: 1
       
       parmas.setToUrl(x);
 
@@ -73,25 +74,22 @@ export class SubjectPage {
     }
 
   onLoading(){
-    this.httpHelper.get<Page<SubjectViewModel>>('subject',{
-      PageNumber:this.filter().selectedPage,
-      PageSize: this.filter().pageSize,
-      ageGroupId:this.ageGroupId
-    }).subscribe({
-      next:(success)=>{
-        this.filter.update(x=>
-        {
-          x.pageSize = success.pageSize;
-          x.selectedPage = success.pageNumber;  
-          return x;
-        });
-        this.totalPages.set(success.countPages)
-        this.subjectViewModels.set(success.content)
-      },
-      error:(error)=>{
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
-      }
-    })
+    this.subjectEndpoints.get(this.filter().pageNumber,this.filter().pageNumber,"")
+      .subscribe({
+        next:(success)=>{
+          this.filter.update(x=>
+          {
+            x.pageSize = success.pageSize;
+            x.pageNumber = success.pageNumber;  
+            return x;
+          });
+          this.totalPages.set(success.countPages)
+          this.subjectViewModels.set(success.content)
+        },
+        error:(error)=>{
+          this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
+        }
+      })
   }
 
   openAddDialog(){
@@ -137,25 +135,25 @@ export class SubjectPage {
   }
 
   openDeleteDialog(id:number){
-    
     const dialogRef = this.dialog.open(
       DeleteDialog, 
       {
         data:{
           title:this.language.transform('delete_subject'),
           action: ()=>{
-            this.httpHelper.delete<MutateResponse>("subject/"+id).subscribe(
-                      success=>{
-                        dialogRef.close();
-                        this.subjectViewModels.update(x=>{
-                          return x.filter(item => item.id !== id);
-                        })
-                        this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
-                      },
-                      error=>{
-                        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-                      }
-                    );
+            this.subjectEndpoints.delete(id)
+              .subscribe({
+                next:success=>{
+                  dialogRef.close();
+                  this.subjectViewModels.update(x=>{
+                    return x.filter(item => item.id !== id);
+                  })
+                  this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
+                },
+                error: error=>{
+                  this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+                }
+              });
             }  
         },
         width: "80%"
@@ -168,7 +166,7 @@ export class SubjectPage {
     this.filter.update(x=>
         {
           x.pageSize = pageEvent.pageSize;
-          x.selectedPage = pageEvent.pageIndex + 1;  
+          x.pageNumber = pageEvent.pageIndex + 1;  
           return x;
         });
       this.onLoading();
