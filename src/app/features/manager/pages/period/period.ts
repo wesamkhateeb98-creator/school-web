@@ -16,6 +16,9 @@ import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/d
 import { SubjectEndpoints } from '../../shared/endpoints/subject-endpoint';
 import { PeriodModel } from '../../shared/endpoints/models/Period/period-model';
 import { PeriodFilterViewModel } from './model/period-filter-view-model';
+import { PeriodEndpoints } from '../../shared/endpoints/period-endpoint';
+import { AddPeriodDialog } from './dialog/add-subject-dialog/add-period-dialog';
+import { AddSubjectDialog } from '../subject/dialog/add-subject-dialog/add-subject-dialog';
 
 @Component({
   selector: 'app-semester-component',
@@ -30,8 +33,8 @@ import { PeriodFilterViewModel } from './model/period-filter-view-model';
   templateUrl: './period.html',
 })
 export class PeriodPage {
-  subjectViewModels = signal<PeriodModel[]>([]);
-  headerTable:string[] = ['subject','description','createdAt','action'];
+  periods = signal<PeriodModel[]>([]);
+  headerTable:string[] = ['lessonNumber','FromTime','ToTime','createdAt','action'];
   ageGroupId!:number;
 
   filter = signal<PeriodFilterViewModel>( {
@@ -44,75 +47,72 @@ export class PeriodPage {
   constructor(
     public language:Language, 
     public dialog :MatDialog,
-    route: ActivatedRoute,
     public router:Router,
     public httpHelper:HttpHelper,
     public matSnackBar:MatSnackBar,
     public parmas:ParamsService,
-    public subjectEndpoints:SubjectEndpoints
+    public period:PeriodEndpoints
   ){
     this.onLoading();
   }
 
   onLoading(){
-    // this.subjectEndpoints.get(this.filter().pageNumber,this.filter().pageNumber,"")
-    //   .subscribe({
-    //     next:(success)=>{
-    //       this.filter.update(x=>
-    //       {
-    //         x.pageSize = success.pageSize;
-    //         x.pageNumber = success.pageNumber;  
-    //         return x;
-    //       });
-    //       this.totalPages.set(success.countPages)
-    //       this.subjectViewModels.set(success.content)
-    //     },
-    //     error:(error)=>{
-    //       this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
-    //     }
-    //   })
+    this.period.get(this.filter().pageNumber,this.filter().pageNumber)
+      .subscribe({
+        next:(success)=>{
+          this.filter.update(x=>
+          {
+            x.pageSize = success.pageSize;
+            x.pageNumber = success.pageNumber;  
+            return x;
+          });
+
+          this.totalPages.set(success.countPages)
+          
+          this.periods.set(success.content)
+        },
+        error:(error)=>{
+          this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
+        }
+      })
   }
 
   openAddDialog(){
-    // const dialogRef = this.dialog.open(
-    //   AddSubjectDialog, 
-    //   {
-    //     width: "80%",
-    //     data:{     
-    //       ageGroupId: this.ageGroupId
-    //     }
-    //   }
-    // );
+    const dialogRef = this.dialog.open(
+      AddPeriodDialog, 
+      {
+        width: "80%"
+      }
+    );
     
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if(result)
-    //     this.subjectViewModels.update(arr => [result.data, ...arr]);
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+        this.periods.update(arr => [result.data, ...arr]);
+    });
   }
 
   
-  openUpdateDialog(periodModel: PeriodModel){
-    // const dialogRef = this.dialog.open(
-    //   AddSubjectDialog, 
-    //   {
-    //     width: "80%",
-    //     data:{     
-    //       ageGroupId: this.ageGroupId,
-    //       subject: subjectViewModel
-    //     }
-    //   }
-    // );
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   if (result) {
-    //     this.subjectViewModels.update(arr => 
-    //       {
-    //         arr = arr.map(x => x.id === result.data.id ? result.data : x);
-    //         return arr;
-    //       }
-    //     );
+  openUpdateDialog(period: PeriodModel){
+    const dialogRef = this.dialog.open(
+      AddSubjectDialog, 
+      {
+        width: "80%",
+        data:{     
+          period: period
+        }
+      }
+    );
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.periods.update(arr => 
+          {
+            arr = arr.map(x => x.id === result.data.id ? result.data : x);
+            return arr;
+          }
+        );
         
-    //   }
-    // });
+      }
+    });
   }
 
   openDeleteDialog(id:number){
@@ -122,11 +122,11 @@ export class PeriodPage {
         data:{
           title:this.language.transform('delete_subject'),
           action: ()=>{
-            this.subjectEndpoints.delete(id)
+            this.period.delete(id)
               .subscribe({
                 next:success=>{
                   dialogRef.close();
-                  this.subjectViewModels.update(x=>{
+                  this.periods.update(x=>{
                     return x.filter(item => item.id !== id);
                   })
                   this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));

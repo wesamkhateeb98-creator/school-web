@@ -112,7 +112,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'add_subject_to_age_group':'إضافة مادة لسنة دراسية',
         'assign_subject_to_teacher': 'تكليف مادة للمدرس',
         'class_schedules_title': 'جدول صفي',
-        'periods_title': 'فترة زمنية'
+        'periods_title': 'فترة زمنية',
+        "min_number_0": "القيمة يجب أن تكون أكبر من أو تساوي 0",
+        "invalid_time_pattern": "صيغة الوقت غير صحيحة (HH:mm)",
+        "from_time_title": "من الساعة",
+        "to_time_title": "إلى الساعة",
+        'lesson_number_title': 'رقم الحصة'
     },
     en:{
         'name':"Name",
@@ -227,7 +232,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'add_subject_to_age_group':'Add subject to age group',
         'assign_subject_to_teacher': 'Assign subject to teacher',
         'class_schedules_title': 'Class schedules',
-        'periods_title': 'Periods'
+        'periods_title': 'Periods',
+        "min_number_0": "The value must be greater than or equal to 0",
+        "invalid_time_pattern": "Invalid time format (HH:mm)",
+        "from_time_title": "From time",
+        "to_time_title": "To time",
+        'lesson_number_title': 'Lesson number'
     }
 }
 
@@ -259,7 +269,10 @@ PeriodPhrases
 
 export type ClassSchedulePhrases = 'class_schedules_title'
 
-export type PeriodPhrases = 'periods_title'
+export type PeriodPhrases = 'periods_title'|
+'from_time_title'|
+'to_time_title'|
+'lesson_number_title'
 
 export type PersonPhrases = 
 'user_title'|
@@ -350,7 +363,9 @@ export type ValidationMessagePhrases =
 'year_less_than_current_year'|
 'number_digit_between_7_10'|
 'min_number_1'|
-'year_must_equal_currenct_year_or_less_than_one';
+'year_must_equal_currenct_year_or_less_than_one'|
+'min_number_0'|
+'invalid_time_pattern';
 
 export type ButtonPhrases = 
 'add' | 
