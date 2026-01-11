@@ -31,7 +31,7 @@ export class PeriodEndpoints {
   }
 
   get(pageNumber:number, pageSize:number):Observable<Page<PeriodModel>>{
-    return this.http.get('period',{
+    return this.http.get('web/period',{
         pageNumber: pageNumber,
         pageSize: pageSize,
         name: name

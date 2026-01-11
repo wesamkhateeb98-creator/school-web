@@ -17,6 +17,7 @@ import { ErrorTitleComponent } from "../../../../../shared/components/error-titl
 import { PeriodEndpoints } from "../../../../shared/endpoints/period-endpoint";
 import { PeriodModel } from "../../../../shared/endpoints/models/Period/period-model";
 import { MatTimepickerModule } from "@angular/material/timepicker";
+import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 
 
 @Component({
@@ -33,7 +34,8 @@ import { MatTimepickerModule } from "@angular/material/timepicker";
     MatProgressBarModule,
     MatDatepickerModule,
     ErrorTitleComponent,
-    MatTimepickerModule
+    MatTimepickerModule,
+    NgxMatTimepickerModule
 ],
   providers:[provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,

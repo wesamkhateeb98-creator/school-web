@@ -6,6 +6,8 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './core/interceptor/token-interceptor';
 import { CustomPaginatorIntl } from './features/shared/services/custom-paginator-intl';
 import { MatPaginatorIntl } from '@angular/material/paginator';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,6 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),    
     provideHttpClient(withInterceptors([tokenInterceptor])),
-    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }
+    { provide: MatPaginatorIntl, useClass: CustomPaginatorIntl },
+    provideAnimationsAsync()
   ]
 };
