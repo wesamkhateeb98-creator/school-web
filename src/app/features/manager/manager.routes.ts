@@ -9,6 +9,7 @@ import { StudentsPage } from "./pages/student-page/students-page";
 import { TeacherPage } from "./pages/teacher-page/teacher-page";
 import { ManagerialPage } from "./pages/administrative-staff-page/administrative-staff-page";
 import { ClassPage } from "./pages/class-page/class-page";
+import { PeriodPage } from "./pages/period/period";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -51,8 +52,16 @@ export const DASHBOARD_ROUTES: Routes = [
       },
       { 
         path:'classes', 
-        component: ClassPage, 
-        title: messageTitle('classes_title')
+        children:[
+          { path:'', component: ClassPage, title: messageTitle('classes_title')},
+          { 
+            path:'class-schedules',
+            children:[
+              { path:'', component: ClassPage, title: messageTitle('class_schedules_title')},
+              { path:'periods', component: PeriodPage, title: messageTitle('periods_title')},
+            ] 
+          }
+        ]
       },
       { path: '', redirectTo: 'academic_year', pathMatch: 'full' },
       { path: '**', redirectTo: 'academic_year', pathMatch: 'full' },

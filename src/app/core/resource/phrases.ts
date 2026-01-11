@@ -110,7 +110,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'assign_student':'تكليف طالب',
         'select_from_here':'أختر من هنا',
         'add_subject_to_age_group':'إضافة مادة لسنة دراسية',
-        'assign_subject_to_teacher': 'تكليف مادة للمدرس'
+        'assign_subject_to_teacher': 'تكليف مادة للمدرس',
+        'class_schedules_title': 'جدول صفي',
+        'periods_title': 'فترة زمنية'
     },
     en:{
         'name':"Name",
@@ -223,7 +225,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'assign_student':'Assign student',
         'select_from_here':'Select from here.',
         'add_subject_to_age_group':'Add subject to age group',
-        'assign_subject_to_teacher': 'Assign subject to teacher'
+        'assign_subject_to_teacher': 'Assign subject to teacher',
+        'class_schedules_title': 'Class schedules',
+        'periods_title': 'Periods'
     }
 }
 
@@ -248,8 +252,14 @@ export type ClassPhrases =
 'add_class'|
 'update_class'|
 'classes_title'|
-'class_title'
+'class_title'|
+ClassSchedulePhrases|
+PeriodPhrases
 ;
+
+export type ClassSchedulePhrases = 'class_schedules_title'
+
+export type PeriodPhrases = 'periods_title'
 
 export type PersonPhrases = 
 'user_title'|
