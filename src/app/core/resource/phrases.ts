@@ -117,7 +117,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         "invalid_time_pattern": "صيغة الوقت غير صحيحة (HH:mm)",
         "from_time_title": "من الساعة",
         "to_time_title": "إلى الساعة",
-        'lesson_number_title': 'رقم الحصة'
+        'lesson_number_title': 'رقم الحصة',
+        'end_time_must_less_than_from_time':'وقت النهاية يجب أن يكون أصغر من وقت البداية'
     },
     en:{
         'name':"Name",
@@ -237,7 +238,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         "invalid_time_pattern": "Invalid time format (HH:mm)",
         "from_time_title": "From time",
         "to_time_title": "To time",
-        'lesson_number_title': 'Lesson number'
+        'lesson_number_title': 'Lesson number',
+        'end_time_must_less_than_from_time':'End time must be less than from time'
     }
 }
 
@@ -272,7 +274,8 @@ export type ClassSchedulePhrases = 'class_schedules_title'
 export type PeriodPhrases = 'periods_title'|
 'from_time_title'|
 'to_time_title'|
-'lesson_number_title'
+'lesson_number_title'|
+'end_time_must_less_than_from_time'
 
 export type PersonPhrases = 
 'user_title'|

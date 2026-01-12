@@ -18,6 +18,7 @@ import { PeriodEndpoints } from "../../../../shared/endpoints/period-endpoint";
 import { PeriodModel } from "../../../../shared/endpoints/models/Period/period-model";
 import { MatTimepickerModule } from "@angular/material/timepicker";
 import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
+import { fromTimeMustLessThanToTimeValidator } from "../../../../../../core/validator/validator";
 
 
 @Component({
@@ -60,10 +61,17 @@ export class AddPeriodDialog {
     this.form = this.fb.group(
       {
         lessonNumber: [ this.isUpdate()?this.data.period.lessonNumber:'', [Validators.required, Validators.min(0),Validators.max(12)]],
-        fromTime: [ this.isUpdate()?this.data.period.fromTime:'', [Validators.required, Validators.pattern('\\d{2}:\\d{2}')]],
-        toTime: [ this.isUpdate()?this.data.period.toTime:'', [Validators.required, Validators.pattern('\\d{2}:\\d{2}')]],
+        fromTime: [ this.isUpdate()?this.data.period.fromTime:'', [Validators.required]],
+        toTime: [ this.isUpdate()?this.data.period.toTime:'', [Validators.required]],
+      },
+      {
+        validators:fromTimeMustLessThanToTimeValidator
       }
     );
+  }
+
+  a(){
+    return JSON.stringify(this.form.errors);
   }
 
   onNoClick(): void {

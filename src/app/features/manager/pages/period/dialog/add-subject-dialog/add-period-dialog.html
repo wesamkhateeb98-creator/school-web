@@ -1,8 +1,8 @@
 <form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
   <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_subject':'add_subject')}}</h2>
   <mat-dialog-content>    
-    @if(this.form.hasError('dateRangeInvalid')){
-      <app-error-title-component [message]="language.transform('start_date_must_less_than_end_date')"/>
+    @if(this.form.hasError('timeRangeInvalid')){
+      <app-error-title-component [message]="language.transform('end_time_must_less_than_from_time')"/>
       <br />
     }
     <mat-grid-list [cols]="loading()?1:2" rowHeight="70px" gutterSize="10px">
@@ -47,11 +47,6 @@
                 {{language.transform('field_required')}}
               </mat-error>
             }
-            @else if(this.form.get('fromTime')?.hasError('pattern')){
-              <mat-error>
-                {{language.transform('invalid_time_pattern')}}
-              </mat-error>
-            }
           </mat-form-field>
         </mat-grid-tile>
 
@@ -67,15 +62,9 @@
             <ngx-mat-timepicker-toggle matSuffix [for]="toTime"></ngx-mat-timepicker-toggle>
             
             <ngx-mat-timepicker #toTime color="primary"></ngx-mat-timepicker>
-            
             @if(this.form.get('toTime')?.hasError('required')){
               <mat-error>
                 {{language.transform('field_required')}}
-              </mat-error>
-            }
-            @else if(this.form.get('toTime')?.hasError('pattern')){
-              <mat-error>
-                {{language.transform('invalid_time_pattern')}}
               </mat-error>
             }
           </mat-form-field>

@@ -19,6 +19,7 @@ export function startDateMustLessEndDateValidator(control: AbstractControl) : Va
   return null;
 }
 
+
 export function maxYearValidator(maxYear: number) {
   return (control: AbstractControl): ValidationErrors | null => {
     if (!control.value) return null; 
@@ -31,7 +32,43 @@ export function maxYearValidator(maxYear: number) {
     if (inputDate.getFullYear() > maxYear) {
       return { maxYearExceeded: { maxYear } };
     }
-
+    
     return null;
   };
+}
+  
+export function fromTimeMustLessThanToTimeValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+
+  const fromTime = control.get('fromTime')?.value;
+  const toTime   = control.get('toTime')?.value;
+
+  if (!fromTime || !toTime) {
+    return null;
+  }
+
+  const fromMinutes = convert12HourTimeToMinutes(fromTime);
+  console.log(fromMinutes);
+  const toMinutes   = convert12HourTimeToMinutes(toTime);
+  console.log(toMinutes);
+  if (fromMinutes >= toMinutes) {
+    console.log('Validation Error: fromTime is not less than toTime');
+    return { timeRangeInvalid: true };
+  }
+
+  return null;
+}
+function convert12HourTimeToMinutes(time: string): number {
+  // Example: "12:00 AM", "01:30 PM"
+  const [timePart, modifier] = time.trim().split(' ');
+  let [hours, minutes] = timePart.split(':').map(Number);
+
+  if (modifier.toUpperCase() === 'AM') {
+    if (hours === 12) hours = 0;
+  } else { // PM
+    if (hours !== 12) hours += 12;
+  }
+
+  return hours * 60 + minutes;
 }
