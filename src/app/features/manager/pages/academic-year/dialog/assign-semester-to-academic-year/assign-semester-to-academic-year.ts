@@ -119,7 +119,7 @@ export class AssignSemesterToAcademicYear {
   }
 
   displayFn = (option?: SemesterViewModel): string =>  {
-    console.log(option);
+    
     return option ? option.name : '';
   }
 
@@ -186,7 +186,7 @@ export class AssignSemesterToAcademicYear {
         new Date(),
       )
     ])
-    console.log(JSON.stringify(this.semesterViewModels));
+    
     this.semesterForm.patchValue({
       name: {
         id: semesterForAcademicYear?.semesterId?? '',

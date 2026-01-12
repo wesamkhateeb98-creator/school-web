@@ -118,7 +118,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         "from_time_title": "من الساعة",
         "to_time_title": "إلى الساعة",
         'lesson_number_title': 'رقم الحصة',
-        'end_time_must_less_than_from_time':'وقت النهاية يجب أن يكون أصغر من وقت البداية'
+        'end_time_must_less_than_from_time':'وقت النهاية يجب أن يكون أصغر من وقت البداية',
+        'confirm':'تأكيد'
     },
     en:{
         'name':"Name",
@@ -239,7 +240,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         "from_time_title": "From time",
         "to_time_title": "To time",
         'lesson_number_title': 'Lesson number',
-        'end_time_must_less_than_from_time':'End time must be less than from time'
+        'end_time_must_less_than_from_time':'End time must be less than from time',
+        'confirm':'Confirm'
     }
 }
 
@@ -382,7 +384,8 @@ export type ButtonPhrases =
 'logout'|
 'click_here_to_login_screen'|
 'copy'|
-'generate-code';
+'generate-code'|
+'confirm';
 
 export type SemesterPhrases = 
 'semester_title'|

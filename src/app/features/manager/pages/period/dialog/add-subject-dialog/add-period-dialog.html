@@ -38,10 +38,23 @@
                   placeholder="00:00" 
                   readonly>
             
-            <ngx-mat-timepicker-toggle matSuffix [for]="fromTime"></ngx-mat-timepicker-toggle>
+            <ngx-mat-timepicker-toggle 
+              matSuffix 
+              [for]="fromTime"/>
             
-            <ngx-mat-timepicker #fromTime color="primary"></ngx-mat-timepicker>
+            <ngx-mat-timepicker 
+              #fromTime color="primary" 
+              [cancelBtnTmpl]="cancelBtn"
+              [confirmBtnTmpl]="okBtn"/>
             
+            <ng-template #cancelBtn>
+              <button mat-button>{{language.transform('cancel')}}</button>
+            </ng-template>
+
+            <ng-template #okBtn>
+              <button mat-button>{{language.transform('confirm')}}</button>
+            </ng-template>
+
             @if(this.form.get('fromTime')?.hasError('required')){
               <mat-error>
                 {{language.transform('field_required')}}
@@ -58,10 +71,24 @@
                   [ngxMatTimepicker]="toTime" 
                   placeholder="00:00" 
                   readonly>
+                  
+            <ngx-mat-timepicker-toggle 
+              matSuffix 
+              [for]="toTime"/>
             
-            <ngx-mat-timepicker-toggle matSuffix [for]="toTime"></ngx-mat-timepicker-toggle>
+            <ngx-mat-timepicker 
+              #toTime color="primary" 
+              [cancelBtnTmpl]="cancelBtn"
+              [confirmBtnTmpl]="okBtn"/>
             
-            <ngx-mat-timepicker #toTime color="primary"></ngx-mat-timepicker>
+            <ng-template #cancelBtn>
+              <button mat-button>{{language.transform('cancel')}}</button>
+            </ng-template>
+
+            <ng-template #okBtn>
+              <button mat-button>{{language.transform('confirm')}}</button>
+            </ng-template>
+
             @if(this.form.get('toTime')?.hasError('required')){
               <mat-error>
                 {{language.transform('field_required')}}

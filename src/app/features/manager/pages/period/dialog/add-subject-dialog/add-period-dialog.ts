@@ -12,14 +12,13 @@ import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpHelper } from "../../../../../../core/services/http-helper";
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
+import { errorMatSnackbarConfig, successMatSnackbarConfig, time12hTo24, time24hTo12 } from "../../../../../../core/consts";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
 import { PeriodEndpoints } from "../../../../shared/endpoints/period-endpoint";
 import { PeriodModel } from "../../../../shared/endpoints/models/Period/period-model";
 import { MatTimepickerModule } from "@angular/material/timepicker";
 import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 import { fromTimeMustLessThanToTimeValidator } from "../../../../../../core/validator/validator";
-
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -58,11 +57,12 @@ export class AddPeriodDialog {
     public matSnackBar:MatSnackBar,
     public periodEndpoints:PeriodEndpoints
   ){
+    console.log(this.data.period);
     this.form = this.fb.group(
       {
         lessonNumber: [ this.isUpdate()?this.data.period.lessonNumber:'', [Validators.required, Validators.min(0),Validators.max(12)]],
-        fromTime: [ this.isUpdate()?this.data.period.fromTime:'10:00 AM', [Validators.required]],
-        toTime: [ this.isUpdate()?this.data.period.toTime:'09:00 AM', [Validators.required]],
+        fromTime: [ this.isUpdate()?this.data.period.fromTime:'', [Validators.required]],
+        toTime: [ this.isUpdate()?this.data.period.toTime:'', [Validators.required]],
       },
       {
         validators:fromTimeMustLessThanToTimeValidator
@@ -81,20 +81,21 @@ export class AddPeriodDialog {
     this.loading.set(true);
 
     if(this.isUpdate()){
-      this.updateAcademicYear();
+      this.updatePeriod();
     }else{
-      this.addAcademicYear();    
+      this.addPeriod();    
     }
     
     this.loading.set(false);
   }
 
-addAcademicYear(){
+addPeriod(){
   this.periodEndpoints.add(
     this.key,
     this.form.value.lessonNumber,
-    this.form.value.fromTime,
-    this.form.value.toTime)
+    time12hTo24(this.form.value.fromTime as string),
+    time12hTo24(this.form.value.toTime as string)
+  )
     .subscribe({
       next: (success) => {
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
@@ -109,18 +110,18 @@ addAcademicYear(){
         });
       },
       error: (error) => {
-        this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        this.matSnackBar.open(error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
     });
   }
 
 
-  updateAcademicYear(){
+  updatePeriod(){
     this.periodEndpoints.update(
       this.data.period.id,
       this.form.value.lessonNumber,
-      this.form.value.fromTime,
-      this.form.value.toTime)
+      time12hTo24(this.form.value.fromTime as string),
+      time12hTo24(this.form.value.toTime as string))
       .subscribe({
         next: success=>{
           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
@@ -135,13 +136,14 @@ addAcademicYear(){
           });
         },
         error: error=>{
-          this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+          
+          this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
         }
       });
   }
 
   isUpdate () : boolean{
-    return this.data && this.data.subject && this.data.subject != null ;
+    return this.data && this.data.period && this.data.period != null ;
   }
 
 }

@@ -172,7 +172,7 @@ export class Semester {
                 dialogRef.close();
               },
               error: error=>{
-                console.log(error)
+                
                 this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
               }
             })

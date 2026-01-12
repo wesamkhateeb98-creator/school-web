@@ -30,6 +30,13 @@ export class PeriodEndpoints {
     })
   }
 
+  shift(id:number, hour:number, second:number, sign:boolean): Observable<MutateResponse>{
+    return this.http.put<MutateResponse>(`web/period/${id}`,{
+      "shiftTime": `${hour<10?`0${hour}`:hour}:${second<10?`0${second}`:second}:00`,
+      "sign": sign
+    })
+  }
+
   get(pageNumber:number, pageSize:number):Observable<Page<PeriodModel>>{
     return this.http.get('web/period',{
         pageNumber: pageNumber,

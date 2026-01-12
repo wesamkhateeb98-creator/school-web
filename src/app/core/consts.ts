@@ -38,20 +38,42 @@ export function ToDateOnly(date:Date)
 }
 
 export function StringToDate(dateString:string){
-  console.log(dateString)
   const [year, month, day] = dateString.split("-").map(Number);
-  console.log(new Date(year, month - 1, day));
+  
   return new Date(year, month - 1, day);
 }
 
+export function time12hTo24(time: string): string {
+  const [timePart, modifier] = time.trim().split(' ');
+  let [hours, minutes] = timePart.split(':').map(Number);
 
-// export permissionMap: Record<number, string> = {
-//   1: 'AA',
-//   2: 'BB'
-// };
+  if (modifier.toUpperCase() === 'AM') {
+    if (hours === 12) hours = 0;
+  } else {
+    if (hours !== 12) hours += 12;
+  }
 
-// // Method to transform the array [1, 2] to "AA, BB"
-// getPermissionNames(ids: number[] | undefined): string {
-//   if (!ids || ids.length === 0) return '-';
-//   return ids.map(id => this.permissionMap[id] || id).join(', ');
-// }
+  return `${hours}:${minutes}:00`;
+}
+
+export function time24hTo12(time: string): string {
+  const [hours, minutes] = time.split(':').map(Number);
+  
+  let period = 'AM';
+  let displayHours = hours;
+  
+  if (hours >= 12) {
+    period = 'PM';
+    if (hours > 12) {
+      displayHours = hours - 12;
+    }
+  }
+  
+  if (hours === 0) {
+    displayHours = 12;
+  }
+  
+  const paddedMinutes = minutes.toString().padStart(2, '0');
+
+  return `${displayHours}:${paddedMinutes} ${period}`;
+}

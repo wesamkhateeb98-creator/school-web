@@ -49,11 +49,11 @@ export function fromTimeMustLessThanToTimeValidator(
   }
 
   const fromMinutes = convert12HourTimeToMinutes(fromTime);
-  console.log(fromMinutes);
+  
   const toMinutes   = convert12HourTimeToMinutes(toTime);
-  console.log(toMinutes);
+  
   if (fromMinutes >= toMinutes) {
-    console.log('Validation Error: fromTime is not less than toTime');
+    
     return { timeRangeInvalid: true };
   }
 

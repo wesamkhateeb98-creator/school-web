@@ -29,7 +29,7 @@ export class AcademicYearEndpoints {
   }
 
   end(academicYearId:number): Observable<MutateResponse>{
-    console.log(academicYearId);
+    
     return this.http.patch<MutateResponse>("academic-year/" + academicYearId + '/end',{})
   }
 
@@ -66,7 +66,7 @@ export class AcademicYearEndpoints {
   }
 
   updateSemester(academicYearId:number, semesterInAcademicYearId:number, semesterId:number, startDate:Date , endDate:Date):Observable<MutateResponse>{
-    console.log(ToDateOnly(startDate));
+    
     return this.http.put<MutateResponse>(`academic-year/${academicYearId}/semester-in-academic-year/${semesterInAcademicYearId}`,{
       semsterId:semesterId,
       startDate: ToDateOnly(startDate),

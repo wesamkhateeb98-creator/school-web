@@ -45,8 +45,7 @@ export class TeacherEndpoints {
   }
   
   addSubject(id:number,subjectId:number): Observable<MutateResponse>{
-      console.log(id);
-      console.log(subjectId);
+      
       return this.http.post<MutateResponse>(`teacher/${id}/subject`,{
         "subjectId": subjectId
       });

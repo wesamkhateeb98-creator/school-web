@@ -43,4 +43,8 @@ export class Language {
   transform(value: PhrasesType ): string {
     return Phrases[this.language()][value];
   }
+
+  getLanguageCode():string{
+    return this.language() == 'ar' ? 'ar-AE' : 'en-US';
+  }
 }
