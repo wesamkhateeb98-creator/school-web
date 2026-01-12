@@ -61,17 +61,13 @@ export class AddPeriodDialog {
     this.form = this.fb.group(
       {
         lessonNumber: [ this.isUpdate()?this.data.period.lessonNumber:'', [Validators.required, Validators.min(0),Validators.max(12)]],
-        fromTime: [ this.isUpdate()?this.data.period.fromTime:'', [Validators.required]],
-        toTime: [ this.isUpdate()?this.data.period.toTime:'', [Validators.required]],
+        fromTime: [ this.isUpdate()?this.data.period.fromTime:'10:00 AM', [Validators.required]],
+        toTime: [ this.isUpdate()?this.data.period.toTime:'09:00 AM', [Validators.required]],
       },
       {
         validators:fromTimeMustLessThanToTimeValidator
       }
     );
-  }
-
-  a(){
-    return JSON.stringify(this.form.errors);
   }
 
   onNoClick(): void {
