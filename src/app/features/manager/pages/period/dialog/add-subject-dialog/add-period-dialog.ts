@@ -57,7 +57,6 @@ export class AddPeriodDialog {
     public matSnackBar:MatSnackBar,
     public periodEndpoints:PeriodEndpoints
   ){
-    console.log(this.data.period);
     this.form = this.fb.group(
       {
         lessonNumber: [ this.isUpdate()?this.data.period.lessonNumber:'', [Validators.required, Validators.min(0),Validators.max(12)]],

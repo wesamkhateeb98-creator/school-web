@@ -1,0 +1,68 @@
+<form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
+  <h2 mat-dialog-title>{{language.transform('shift_period')}}</h2>
+  <mat-dialog-content>    
+    @if(this.form.hasError('timeRangeInvalid')){
+      <app-error-title-component [message]="language.transform('end_time_must_less_than_from_time')"/>
+      <br />
+    }
+    <mat-grid-list [cols]="1" rowHeight="70px" gutterSize="10px">
+      @if(loading()){
+        <mat-grid-tile>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-grid-tile>
+      }
+      @else{
+        <mat-grid-tile >
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label >{{language.transform("time_title")}}</mat-label>
+            <input matInput 
+                  formControlName="time" 
+                  [ngxMatTimepicker]="time" 
+                  placeholder="00:00" 
+                  readonly>
+            
+            <ngx-mat-timepicker-toggle 
+              matSuffix 
+              [for]="time"/>
+            
+            <ngx-mat-timepicker 
+              #time color="primary" 
+              [cancelBtnTmpl]="cancelBtn"
+              [confirmBtnTmpl]="okBtn"/>
+            
+            <ng-template #cancelBtn>
+              <button mat-button>{{language.transform('cancel')}}</button>
+            </ng-template>
+
+            <ng-template #okBtn>
+              <button mat-button>{{language.transform('confirm')}}</button>
+            </ng-template>
+
+            @if(this.form.get('fromTime')?.hasError('required')){
+              <mat-error>
+                {{language.transform('field_required')}}
+              </mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+      }      
+    </mat-grid-list>
+
+    <mat-radio-group
+      aria-labelledby="example-radio-group-label"
+      formControlName="signPositive">
+        <mat-radio-button class="example-radio-button" [value]="true" >
+          <div style="font-size: 26px; font-weight: bold;">+</div>
+        </mat-radio-button>
+
+        <mat-radio-button class="example-radio-button" style="margin-left: 10px;" [value]="false" >
+          <div style="font-size: 26px; font-weight: bold;">-</div>
+        </mat-radio-button>
+    </mat-radio-group>
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button matButton (click)="onNoClick()" type="button" [disabled]="loading()">{{language.transform('cancel')}}</button>
+    <button matButton="filled" cdkFocusInitial [disabled]="loading()">{{language.transform('shift')}}</button>
+  </mat-dialog-actions>
+</form>

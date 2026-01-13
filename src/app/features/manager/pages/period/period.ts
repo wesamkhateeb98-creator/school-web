@@ -21,6 +21,7 @@ import { AddPeriodDialog } from './dialog/add-subject-dialog/add-period-dialog';
 import { AddSubjectDialog } from '../subject/dialog/add-subject-dialog/add-subject-dialog';
 import { MatProgressBar } from "@angular/material/progress-bar";
 import { PeriodViewModel } from './model/period-view-model';
+import { ShiftPeriodDialog } from './dialog/shift-period-dialog/shift-period-dialog';
 
 @Component({
   selector: 'app-semester-component',
@@ -135,7 +136,7 @@ export class PeriodPage {
       DeleteDialog, 
       {
         data:{
-          title:this.language.transform('delete_subject'),
+          title:this.language.transform('delete_period'),
           action: ()=>{
             this.period.delete(id)
               .subscribe({
@@ -175,5 +176,20 @@ export class PeriodPage {
         'pageSize': this.filter().pageSize,
         'pageNumber': this.filter().pageNumber
       });
+  }
+
+  
+  openShiftDialog(){
+    const dialogRef = this.dialog.open(
+      ShiftPeriodDialog, 
+      {
+        minWidth: "40%"
+      }
+    );
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+        this.onLoading();
+    });
   }
 }

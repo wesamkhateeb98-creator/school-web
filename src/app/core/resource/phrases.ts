@@ -119,7 +119,13 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         "to_time_title": "إلى الساعة",
         'lesson_number_title': 'رقم الحصة',
         'end_time_must_less_than_from_time':'وقت النهاية يجب أن يكون أصغر من وقت البداية',
-        'confirm':'تأكيد'
+        'confirm':'تأكيد',
+        'time_title':'الوقت',
+        'add_period':'إضافة فترة زمنية',
+        'update_period':'تعديل فترة زمنية',
+        'shift_period':'إزاحة الفترات الزمنية',
+        'delete_period':'حذف فترة زمنية',
+        'shift': 'إزاحة'
     },
     en:{
         'name':"Name",
@@ -241,7 +247,13 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         "to_time_title": "To time",
         'lesson_number_title': 'Lesson number',
         'end_time_must_less_than_from_time':'End time must be less than from time',
-        'confirm':'Confirm'
+        'confirm':'Confirm',
+        'time_title':'Time',
+        'add_period':'Add period',
+        'update_period':'Update period',
+        'shift_period':'Shift period',
+        'delete_period':'Delete period',
+        'shift': 'Shift'
     }
 }
 
@@ -277,7 +289,12 @@ export type PeriodPhrases = 'periods_title'|
 'from_time_title'|
 'to_time_title'|
 'lesson_number_title'|
-'end_time_must_less_than_from_time'
+'end_time_must_less_than_from_time'|
+'time_title'|
+'add_period'|
+'update_period'|
+'shift_period'|
+'delete_period';
 
 export type PersonPhrases = 
 'user_title'|
@@ -385,7 +402,8 @@ export type ButtonPhrases =
 'click_here_to_login_screen'|
 'copy'|
 'generate-code'|
-'confirm';
+'confirm'|
+'shift';
 
 export type SemesterPhrases = 
 'semester_title'|
@@ -427,5 +445,3 @@ export type Denied =
     'denied_header'|
     'denied_content'
 ;
-
-
