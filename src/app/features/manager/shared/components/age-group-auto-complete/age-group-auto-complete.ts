@@ -1,11 +1,10 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, Signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, Signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Language } from '../../../../../core/services/language';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { debounceTime, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { debounceTime, map, startWith, switchMap, takeWhile, tap } from 'rxjs';
 import { AgeGroupEndpoints } from '../../endpoints/age-group-endpoint';
 import { AgeGroupModel } from '../../endpoints/models/age-group/age-group-model';
 import { MatIconModule } from "@angular/material/icon";
@@ -17,7 +16,6 @@ import { ParamsService } from '../../../../../core/services/params-service';
   imports: [
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatAutocompleteModule,
-    AsyncPipe,
     MatIconModule,
     MatIconButton
 ],
@@ -27,7 +25,6 @@ export class AgeGroupAutoComplete implements OnInit {
   @Input() form!: FormGroup;
   @Input() ageGroup!: AgeGroupModel|null;
   @Input() loading!: WritableSignal<boolean>;
-  @Output() onAction = new EventEmitter<AgeGroupModel|null>();
 
   
   fb = inject(FormBuilder);
@@ -39,37 +36,40 @@ export class AgeGroupAutoComplete implements OnInit {
     this.form.addControl('ageGroup', this.fb.control(this.ageGroup));
     this.form.addControl('ageGroupId', this.fb.control(this.ageGroup?.id??""));
     this.setupAutocompletes();
+    this.loadDataFromUrl()
   }
 
-  ageGroup$ = of<AgeGroupModel[]>([]);
-  ageGroupName: string|undefined;
+  loadDataFromUrl(){
+    const paramsItem = this.parmas.loadGenericFromUrl();
+    if(paramsItem['ageGroupName'])
+      this.ageGroupEndpoints.get(paramsItem['ageGroupName'],1, 20)
+        .subscribe(x=>{
+          this.form.get('ageGroup')?.setValue(x.content[0]??'',{emitEvent:false});
+        })
+  }
+
+  ageGroupItems= signal<AgeGroupModel[]>([]);
   
   setupAutocompletes() {
-
     const paramsItem = this.parmas.loadGenericFromUrl();
-    this.ageGroupName = paramsItem['ageGroupName'];   
+    let ageGroupName = paramsItem['ageGroupName'];
 
-    this.ageGroup$ = this.form.get('ageGroup')!.valueChanges.pipe(
+    this.form.get('ageGroup')!.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
+      takeWhile(x=> {
+        return ageGroupName == null}),
       switchMap(value => {
-        this.loading.set(true);
-        return this.ageGroupEndpoints.get(this.ageGroupName??value,1, 20);
+        return this.ageGroupEndpoints.get(value,1, 20);
       }),
       map(response => response.content),
-      tap(_=>{
+      tap(x=>{
         this.loading.set(false)
       })
-    );
-
-    this.ageGroupName = undefined;
-    
-    this.ageGroup$.subscribe(x=>{
-      this.onAction.emit(x[0]);
-      if(this.ageGroup)
-        this.form.get('ageGroup')?.setValue(x[0]??'',{emitEvent:false});
-    })
-    
+    ).subscribe(x=>{
+      this.ageGroupItems.set(x);
+    });
+    ageGroupName = null;
   }
   
 
@@ -79,11 +79,12 @@ export class AgeGroupAutoComplete implements OnInit {
 
   onAgeGroupSelected(event: any) {
     this.form.patchValue({ AgeGroupId: event.option.value.id });
-    this.onAction.emit(event.option.value);
+    this.parmas.setToUrl(({...this.parmas.loadGenericFromUrl(),ageGroupName:event.option.value.name}))
   }
 
   clear(){
     this.form.patchValue({ AgeGroupId: null , ageGroup: null});
-    this.onAction.emit(null);
+    const { ageGroupName, ...r } = this.parmas.loadGenericFromUrl();
+    this.parmas.setToUrl(({...r}))
   }
 }

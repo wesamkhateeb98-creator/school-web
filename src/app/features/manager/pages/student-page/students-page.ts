@@ -17,7 +17,7 @@ import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } fr
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { debounceTime } from 'rxjs';
+import { debounceTime, take, takeWhile } from 'rxjs';
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AddStudentDialog } from './components/add-student-dialog/add-student-dialog';
@@ -27,6 +27,7 @@ import { StudentEndpoints } from '../../shared/endpoints/student-endpoint';
 import { AssignStudentDialog } from './components/assign-student-dialog/assign-student-dialog';
 import { AgeGroupAutoComplete } from "../../shared/components/age-group-auto-complete/age-group-auto-complete";
 import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
+import { AgeGroupViewModel } from '../age-group/model/age-group-view-model';
 
 @Component({
   selector: 'app-student-page',
@@ -87,6 +88,7 @@ export class StudentsPage {
     this.initiateForm();
   }
 
+  
   setFilterFromUrl(){
     this.studentFilter.update(x=>{
         const param = this.parmas.loadGenericFromUrl();
@@ -98,15 +100,6 @@ export class StudentsPage {
         
         return x;
       });
-    effect(()=>{
-      this.parmas.setToUrl({
-        'pageSize':this.studentFilter().pageSize,
-        'pageNumber':this.studentFilter().pageNumber,
-        'fullName':this.studentFilter().name,
-        'phonenumber':this.studentFilter().phonenumber,
-        'ageGroupName':this.studentFilter().ageGroup?.name,
-      });
-    })
   }
 
   initiateForm(){
@@ -127,15 +120,16 @@ export class StudentsPage {
             phonenumber: value.phonenumber??'',
             ageGroup: value.ageGroup
           }));
+        this.loadStudentViewModel();
     })
 
   }
 
-  loadStudentViewModel(ageGroup:AgeGroupModel| null = null){
-    
+  loadStudentViewModel(){
+    console.log(this.form.value)
     this.loading.set(true);
     
-    this.studentFilter.update(x=>({...x,ageGroup:ageGroup??undefined }))
+    this.studentFilter.update(x=>({...x,ageGroup:this.form.value.ageGroup??undefined }))
   
     const result = this.studentEndpoints.get(this.studentFilter())
 
@@ -259,8 +253,14 @@ export class StudentsPage {
           return x;
         });
       this.loading();
-      this.parmas.setToUrl(this.studentFilter())
-      this.loadStudentViewModel();
+
+      this.parmas.setToUrl({
+        'pageSize':this.studentFilter().pageSize,
+        'pageNumber':this.studentFilter().pageNumber,
+        'fullName':this.studentFilter().name,
+        'phonenumber':this.studentFilter().phonenumber,
+        'ageGroupName':this.studentFilter().ageGroup?.name,
+      });
   }  
 
   displayFn = (option?: AgeGroupModel): string =>  {

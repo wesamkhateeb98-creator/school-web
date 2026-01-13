@@ -10,7 +10,7 @@
         }
         
         <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onAgeGroupSelected($event)">
-            @for (item of ageGroup$ | async; track item.id) {
+            @for (item of ageGroupItems(); track item.id) {
                 <mat-option [value]="item">{{ displayFn(item) }}</mat-option>
             }
         </mat-autocomplete>
