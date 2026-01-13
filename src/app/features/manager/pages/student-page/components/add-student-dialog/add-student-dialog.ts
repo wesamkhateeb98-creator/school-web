@@ -18,6 +18,7 @@ import { StudentEndpoints } from '../../../../shared/endpoints/student-endpoint'
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
 import { StudentViewModel } from '../../view-model/student-view-model';
 import { AgeGroupModel } from '../../../../shared/endpoints/models/age-group/age-group-model';
+import { AgeGroupAutoComplete } from "../../../../shared/components/age-group-auto-complete/age-group-auto-complete";
 
 @Component({
   selector: 'app-add-student-dialog',
@@ -32,7 +33,8 @@ import { AgeGroupModel } from '../../../../shared/endpoints/models/age-group/age
     MatAutocompleteModule,
     MatDatepickerInput,
     MatDatepickerModule,
-    MatButtonModule
+    MatButtonModule,
+    AgeGroupAutoComplete
 ],
   templateUrl: './add-student-dialog.html',
   providers:[
@@ -197,6 +199,15 @@ export class AddStudentDialog{
 
   isUpdate () : boolean{
     return this.data && this.data.student && this.data.student != null ;
+  }
+
+  ageGroupModel(){
+    if(this.isUpdate())
+      return {
+        id: this.data.id,
+        name: this.data.name,
+      } as AgeGroupModel
+    return null;
   }
 
   displayFn = (option?: AgeGroupModel): string =>  {

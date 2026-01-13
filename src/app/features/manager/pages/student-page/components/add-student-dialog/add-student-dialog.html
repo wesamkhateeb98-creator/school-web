@@ -121,23 +121,9 @@
         </mat-grid-tile>
 
         <mat-grid-tile >
-          <mat-form-field style="width: 100%;">
-                <mat-label>{{language.transform('age_group_title')}}</mat-label>
-                <input type="text"
-                    aria-label="Number"
-                    matInput
-                    formControlName="ageGroup"
-                    [matAutocomplete]="auto"
-                    [readonly]="loading()">
-                <mat-autocomplete 
-                    autoActiveFirstOption 
-                    [displayWith]="displayFn"
-                    #auto="matAutocomplete">
-                    @for (option of ageGroups(); track option) {
-                        <mat-option [value]="option">{{option.name}}</mat-option>
-                    }
-                </mat-autocomplete>
-            </mat-form-field>
+          <div style="width: 100%;">
+            <app-age-group-auto-complete [form]="form" [ageGroup]="ageGroupModel()" [loading]="loading" [checkUrl]="false"/>
+          </div>
         </mat-grid-tile>
 
         <mat-grid-tile colspan="2">

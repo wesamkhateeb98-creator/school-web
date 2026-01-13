@@ -25,6 +25,8 @@ export class AgeGroupAutoComplete implements OnInit {
   @Input() form!: FormGroup;
   @Input() ageGroup!: AgeGroupModel|null;
   @Input() loading!: WritableSignal<boolean>;
+  @Input() checkUrl!: boolean;
+
 
   
   fb = inject(FormBuilder);
@@ -36,7 +38,8 @@ export class AgeGroupAutoComplete implements OnInit {
     this.form.addControl('ageGroup', this.fb.control(this.ageGroup));
     this.form.addControl('ageGroupId', this.fb.control(this.ageGroup?.id??""));
     this.setupAutocompletes();
-    this.loadDataFromUrl()
+    if(this.checkUrl)
+      this.loadDataFromUrl()
   }
 
   loadDataFromUrl(){
