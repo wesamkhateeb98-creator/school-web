@@ -4,7 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Language } from '../../../../../core/services/language';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { debounceTime, map, startWith, switchMap, takeWhile, tap } from 'rxjs';
+import { debounceTime, map, skip, startWith, switchMap, takeWhile, tap } from 'rxjs';
 import { AgeGroupEndpoints } from '../../endpoints/age-group-endpoint';
 import { AgeGroupModel } from '../../endpoints/models/age-group/age-group-model';
 import { MatIconModule } from "@angular/material/icon";
@@ -52,24 +52,24 @@ export class AgeGroupAutoComplete implements OnInit {
   
   setupAutocompletes() {
     const paramsItem = this.parmas.loadGenericFromUrl();
-    let ageGroupName = paramsItem['ageGroupName'];
+    
+    const hasParam = !!paramsItem['ageGroupName'];
 
-    this.form.get('ageGroup')!.valueChanges.pipe(
-      startWith(''),
+    let source$ = this.form.get('ageGroup')!.valueChanges;
+
+    if (!hasParam) {
+      source$ = source$.pipe(startWith(null));
+    }
+
+    source$.pipe(
       debounceTime(300),
-      takeWhile(x=> {
-        return ageGroupName == null}),
-      switchMap(value => {
-        return this.ageGroupEndpoints.get(value,1, 20);
-      }),
+      switchMap(value => this.ageGroupEndpoints.get(value, 1, 20)),
       map(response => response.content),
-      tap(x=>{
-        this.loading.set(false)
-      })
-    ).subscribe(x=>{
+      tap(() => this.loading.set(false))
+    ).subscribe(x => {
       this.ageGroupItems.set(x);
     });
-    ageGroupName = null;
+    
   }
   
 
