@@ -31,7 +31,7 @@ export class PeriodEndpoints {
   }
 
   shift(time:string, sign:boolean): Observable<MutateResponse>{
-    return this.http.put<MutateResponse>(`web/period/shift`,{
+    return this.http.patch<MutateResponse>(`web/period/shift`,{
       "shiftTime": time,
       "sign": sign
     })

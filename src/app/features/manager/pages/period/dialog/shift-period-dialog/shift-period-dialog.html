@@ -1,10 +1,20 @@
 <form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
   <h2 mat-dialog-title>{{language.transform('shift_period')}}</h2>
   <mat-dialog-content>    
-    @if(this.form.hasError('timeRangeInvalid')){
-      <app-error-title-component [message]="language.transform('end_time_must_less_than_from_time')"/>
+    @if(this.form.hasError('invalidHours')){
+      <app-error-title-component [message]="language.transform('hours_must_be_between_0_and_23')"/>
       <br />
     }
+    @else if(this.form.hasError('invalidMinutes')){
+      <app-error-title-component [message]="language.transform('minutes_must_be_between_0_and_59')"/>
+      <br />
+    }
+    @else if(this.form.hasError('timeCannotBeZero')){
+      <app-error-title-component [message]="language.transform('time_cannot_be_zero')"/>
+      <br />
+    }
+
+
     <mat-grid-list [cols]="1" rowHeight="70px" gutterSize="10px">
       @if(loading()){
         <mat-grid-tile>
@@ -14,31 +24,26 @@
       @else{
         <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("time_title")}}</mat-label>
+            <mat-label >{{language.transform("hours")}}</mat-label>
             <input matInput 
-                  formControlName="time" 
-                  [ngxMatTimepicker]="time" 
-                  placeholder="00:00" 
-                  readonly>
-            
-            <ngx-mat-timepicker-toggle 
-              matSuffix 
-              [for]="time"/>
-            
-            <ngx-mat-timepicker 
-              #time color="primary" 
-              [cancelBtnTmpl]="cancelBtn"
-              [confirmBtnTmpl]="okBtn"/>
-            
-            <ng-template #cancelBtn>
-              <button mat-button>{{language.transform('cancel')}}</button>
-            </ng-template>
-
-            <ng-template #okBtn>
-              <button mat-button>{{language.transform('confirm')}}</button>
-            </ng-template>
-
-            @if(this.form.get('fromTime')?.hasError('required')){
+                type="number"
+                formControlName="hours" 
+                placeholder="0">
+            @if(this.form.get('hours')?.hasError('required')){
+              <mat-error>
+                {{language.transform('field_required')}}
+              </mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile >
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label >{{language.transform("minutes")}}</mat-label>
+            <input matInput 
+                type="number"
+                formControlName="minutes" 
+                placeholder="0">
+            @if(this.form.get('minutes')?.hasError('required')){
               <mat-error>
                 {{language.transform('field_required')}}
               </mat-error>

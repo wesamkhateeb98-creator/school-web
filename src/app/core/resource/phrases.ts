@@ -125,7 +125,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'update_period':'تعديل فترة زمنية',
         'shift_period':'إزاحة الفترات الزمنية',
         'delete_period':'حذف فترة زمنية',
-        'shift': 'إزاحة'
+        'shift': 'إزاحة',
+        'hours_must_be_between_0_and_23':'الساعات يجب أن تكون بين 0 و 23',
+        'minutes_must_be_between_0_and_59':'الدقائق يجب أن تكون بين 0 و 59',
+        'time_cannot_be_zero':'الوقت لا يمكن أن يكون صفراً',
+        'hours':'الساعات',
+        'minutes':'الدقائق'
     },
     en:{
         'name':"Name",
@@ -253,7 +258,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'update_period':'Update period',
         'shift_period':'Shift period',
         'delete_period':'Delete period',
-        'shift': 'Shift'
+        'shift': 'Shift',
+        'hours_must_be_between_0_and_23':'Hours must be between 0 and 23',
+        'minutes_must_be_between_0_and_59':'Minutes must be between 0 and 59',
+        'time_cannot_be_zero':'Time cannot be zero',
+        'hours':'Hours',
+        'minutes':'Minutes'
     }
 }
 
@@ -294,7 +304,12 @@ export type PeriodPhrases = 'periods_title'|
 'add_period'|
 'update_period'|
 'shift_period'|
-'delete_period';
+'delete_period'|
+'hours_must_be_between_0_and_23'|
+'minutes_must_be_between_0_and_59'|
+'time_cannot_be_zero'|
+'hours'|
+'minutes';
 
 export type PersonPhrases = 
 'user_title'|

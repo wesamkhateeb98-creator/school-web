@@ -19,6 +19,7 @@ import { MatTimepickerModule } from "@angular/material/timepicker";
 import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatIconModule } from "@angular/material/icon";
+import { MinutesAndHoursTimeValidator } from "../../../../../../core/validator/validator";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -75,8 +76,12 @@ export class ShiftPeriodDialog {
   ){
     this.form = this.fb.group(
       {
-        time: [ '', [Validators.required]],
+        hours: [ '1', ],
+        minutes: [ '0', ],
         signPositive: [true]
+      },
+      {
+          validators:[MinutesAndHoursTimeValidator]
       }
     );
   }
@@ -86,23 +91,24 @@ export class ShiftPeriodDialog {
   }
   
   submit(){
+    console.log(this.form.errors)
     if(!this.form.valid)
       return;
     
     this.loading.set(true);
 
     this.periodEndpoints.shift(
-        time12hTo24(this.form.value.time),
+        `${this.form.value.hours}:${this.form.value.minutes}:00`,
         this.form.value.signPositive
     )
-        .subscribe({
-        next: (success) => {
-            this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-            
-        },
-        error: (error) => {
-            this.matSnackBar.open(error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-        }
+    .subscribe({
+    next: (success) => {
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        this.dialogRef.close(true);
+    },
+    error: (error) => {
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+    }
     });
     
     this.loading.set(false);

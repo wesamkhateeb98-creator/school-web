@@ -59,6 +59,7 @@ export function fromTimeMustLessThanToTimeValidator(
 
   return null;
 }
+
 function convert12HourTimeToMinutes(time: string): number {
   // Example: "12:00 AM", "01:30 PM"
   const [timePart, modifier] = time.trim().split(' ');
@@ -71,4 +72,27 @@ function convert12HourTimeToMinutes(time: string): number {
   }
 
   return hours * 60 + minutes;
+}
+
+
+export function MinutesAndHoursTimeValidator(
+  control: AbstractControl
+): ValidationErrors | null {
+
+  const hours = control.get('hours')?.value ?? 0 as number;
+  const minutes   = control.get('minutes')?.value ?? 0 as number;
+
+  if (hours < 0 || hours > 23) {
+    return { invalidHours: true };
+  }
+  
+  if (minutes < 0 || minutes > 59) {
+    return { invalidMinutes: true };
+  }
+
+  if (hours == 0 && minutes == 0) {
+    return { timeCannotBeZero: true };
+  }
+
+  return null;
 }
