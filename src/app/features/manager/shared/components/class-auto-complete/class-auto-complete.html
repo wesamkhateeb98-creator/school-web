@@ -1,10 +1,14 @@
+<div [formGroup]="form">
 
-<mat-form-field style="width: 100%;">
-    <mat-label>{{ language.transform("class_title") }}</mat-label>
-    <input type="text" matInput formControlName="class" [matAutocomplete]="autoAge">
-    <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayClass" (optionSelected)="onClassSelected($event)">
-        @for (item of class$ | async; track item.id) {
-            <mat-option [value]="item">{{ `${item.ageGroupName} ${item.section}` }}</mat-option>
-        }
-    </mat-autocomplete>
-</mat-form-field>
+    <mat-form-field style="width: 100%;">
+        <mat-label>{{ language.transform("class_title") }}</mat-label>
+        <input type="text" matInput formControlName="class" [matAutocomplete]="autoAge">
+        <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayClass" (optionSelected)="onClassSelected($event)">
+            @for (item of class$ | async; track item.id) {
+                <mat-option [value]="item">{{ `${item.ageGroupName} ${item.section}` }}</mat-option>
+            }
+        </mat-autocomplete>
+    </mat-form-field>
+</div>
+
+1234 => {{ageGroupId}}

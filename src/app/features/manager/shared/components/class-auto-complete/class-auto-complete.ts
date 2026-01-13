@@ -1,5 +1,5 @@
-import { Component, inject, Input } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, Inject, inject, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Language } from '../../../../../core/services/language';
@@ -18,18 +18,33 @@ import { AsyncPipe } from '@angular/common';
   ],
   templateUrl: './class-auto-complete.html',
 })
-export class ClassAutoComplete {
-
+export class ClassAutoComplete implements OnInit,OnChanges {
   @Input() form!: FormGroup;
   @Input() ageGroupId!: number | undefined;
-
+  
+  fb = inject(FormBuilder);
   language = inject(Language);
 
   classEndpoints = inject(ClassEndpoints);
 
-  constructor(){
+  ngOnInit(): void {
+    this.form.addControl('class', this.fb.control(''));
+    this.form.addControl('classId', this.fb.control(''));
     this.setupAutocompletes();
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['ageGroupId']) {
+      const prev = changes['ageGroupId'].previousValue;
+      const curr = changes['ageGroupId'].currentValue;
+
+      if (curr !== prev && curr != null) {
+        this.form.patchValue({ class: '' });
+      }
+    }
+  }
+
+
 
   class$ = of<ClassModel[]>([]);
 

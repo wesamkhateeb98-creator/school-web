@@ -42,7 +42,7 @@ import { AssignStudentDialog } from './components/assign-student-dialog/assign-s
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatGridList,
     MatGridTile,
-    MatAutocompleteModule    
+    MatAutocompleteModule
 ],
   templateUrl: './students-page.html',
 })
@@ -93,7 +93,7 @@ export class StudentsPage {
       .subscribe(x=>{
         this.ageGroups.set(x.content)
       });
-
+      
   }
 
   setFilterFromUrl(){
@@ -136,28 +136,49 @@ export class StudentsPage {
       } 
     );
 
-    this.form.valueChanges.pipe(debounceTime(500)).subscribe(value=>{
-      this.studentFilter.update(prev => 
-        ({
-          ...prev, 
-          name: value.fullName?? '',
-          phonenumber: value.phonenumber??'',
-          ageGroup: value.ageGroup
-        }));
+    this.form.get('fullName')
+      ?.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(value=>{
+        this.studentFilter.update(prev => 
+          ({
+            ...prev, 
+            name: value.fullName?? '',
+            phonenumber: value.phonenumber??'',
+            ageGroup: value.ageGroup
+          }));
 
-      this.loadStudentViewModel();
+        this.loadStudentViewModel();
+    })
+
+    this.form.get('phonenumber')
+      ?.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(value=>{
+        this.studentFilter.update(prev => 
+          ({
+            ...prev, 
+            name: value.fullName?? '',
+            phonenumber: value.phonenumber??'',
+            ageGroup: value.ageGroup
+          }));
+
+        this.loadStudentViewModel();
     })
 
     this.form.get('ageGroup')?.valueChanges.pipe(debounceTime(500)).subscribe(value=>{
       if(value.length > 0) 
+      {
         this.loadAgeGroup(value);
+        this.loadStudentViewModel();
+      }  
     })
 
     this.loadStudentViewModel()
   }
 
   loadStudentViewModel(){
-    
+    console.log(this.form.value)
     this.loading.set(true);
     
     const result = this.studentEndpoints.get(this.studentFilter())
