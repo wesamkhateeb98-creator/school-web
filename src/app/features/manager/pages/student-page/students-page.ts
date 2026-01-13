@@ -24,8 +24,9 @@ import { AddStudentDialog } from './components/add-student-dialog/add-student-di
 import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
 import { AgeGroupModel } from '../../shared/endpoints/models/age-group/age-group-model';
 import { StudentEndpoints } from '../../shared/endpoints/student-endpoint';
-import { AgeGroupEndpoints } from '../../shared/endpoints/age-group-endpoint';
 import { AssignStudentDialog } from './components/assign-student-dialog/assign-student-dialog';
+import { AgeGroupAutoComplete } from "../../shared/components/age-group-auto-complete/age-group-auto-complete";
+import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
 
 @Component({
   selector: 'app-student-page',
@@ -42,13 +43,13 @@ import { AssignStudentDialog } from './components/assign-student-dialog/assign-s
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatGridList,
     MatGridTile,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    AgeGroupAutoComplete
 ],
   templateUrl: './students-page.html',
 })
 export class StudentsPage {
   students = signal<StudentViewModel[]>([]);
-  ageGroups = signal<AgeGroupModel[]>([]);
   studentFilter = signal<StudentFilterViewModel>(
     {
       pageNumber:1,
@@ -79,36 +80,17 @@ export class StudentsPage {
     public parmas:ParamsService,
     public matSnackBar:MatSnackBar,
     public studentEndpoints:StudentEndpoints,
-    public ageGroupEndpoint:AgeGroupEndpoints,
     public fb: FormBuilder,
+    public responsive:ResponsiveScreen
   ){
-    this.loadAgeGroup();
     this.setFilterFromUrl()
     this.initiateForm();
-    this.loadStudentViewModel();
-  }
-
-  loadAgeGroup(name?:string){
-    this.ageGroupEndpoint.get(name??'',1,5)
-      .subscribe(x=>{
-        this.ageGroups.set(x.content)
-      });
-      
   }
 
   setFilterFromUrl(){
     this.studentFilter.update(x=>{
         const param = this.parmas.loadGenericFromUrl();
-        if(param['ageGroupName']?.length??0 > 0){
-          this.ageGroupEndpoint.get(param['ageGroupName']??'',1,1).subscribe(
-            s=>{
-              this.ageGroups.set(s.content);
-              this.form.get('ageGroup')?.setValue(s.content[0]);
-              x.ageGroup = s.content[0];
-            }
-          );
-        }
-
+        
         x.pageSize = param['pageSize']?  param['pageSize']: 10;
         x.pageNumber = param['pageNumber']? param['pageNumber']: 1;
         x.name = param['fullName']
@@ -132,12 +114,10 @@ export class StudentsPage {
       {
         fullName: [this.studentFilter().name??''],
         phonenumber: [this.studentFilter().phonenumber??''],
-        ageGroup: [null],
       } 
     );
 
-    this.form.get('fullName')
-      ?.valueChanges
+    this.form.valueChanges
       .pipe(debounceTime(500))
       .subscribe(value=>{
         this.studentFilter.update(prev => 
@@ -147,40 +127,16 @@ export class StudentsPage {
             phonenumber: value.phonenumber??'',
             ageGroup: value.ageGroup
           }));
-
-        this.loadStudentViewModel();
     })
 
-    this.form.get('phonenumber')
-      ?.valueChanges
-      .pipe(debounceTime(500))
-      .subscribe(value=>{
-        this.studentFilter.update(prev => 
-          ({
-            ...prev, 
-            name: value.fullName?? '',
-            phonenumber: value.phonenumber??'',
-            ageGroup: value.ageGroup
-          }));
-
-        this.loadStudentViewModel();
-    })
-
-    this.form.get('ageGroup')?.valueChanges.pipe(debounceTime(500)).subscribe(value=>{
-      if(value.length > 0) 
-      {
-        this.loadAgeGroup(value);
-        this.loadStudentViewModel();
-      }  
-    })
-
-    this.loadStudentViewModel()
   }
 
-  loadStudentViewModel(){
-    console.log(this.form.value)
+  loadStudentViewModel(ageGroup:AgeGroupModel| null = null){
+    
     this.loading.set(true);
     
+    this.studentFilter.update(x=>({...x,ageGroup:ageGroup??undefined }))
+  
     const result = this.studentEndpoints.get(this.studentFilter())
 
     result.subscribe({

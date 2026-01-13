@@ -13,7 +13,7 @@
     </mat-expansion-panel-header>
 
     <form class="example-form" [formGroup]="form">
-        <mat-grid-list [cols]="2" rowHeight="70px" gutterSize="10px">
+        <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
             
             <mat-grid-tile>
                 <mat-form-field  class="example-full-width" style="width: 100%;">
@@ -30,23 +30,11 @@
             </mat-grid-tile>
 
             <mat-grid-tile>
-                <mat-form-field style="width: 100%;">
-                    <mat-label>{{language.transform('age_group_title')}}</mat-label>
-                    <input type="text"
-                        aria-label="Number"
-                        matInput
-                        formControlName="ageGroup"
-                        [matAutocomplete]="auto"
-                        [readonly]="loading()">
-                    <mat-autocomplete 
-                        autoActiveFirstOption 
-                        [displayWith]="displayFn"
-                        #auto="matAutocomplete">
-                        @for (option of ageGroups(); track option) {
-                            <mat-option [value]="option">{{option.name}}</mat-option>
-                        }
-                    </mat-autocomplete>
-                </mat-form-field>
+                <app-age-group-auto-complete 
+                    [form]="form" 
+                    (onAction)="loadStudentViewModel($event)" 
+                    [loading]="loading"
+                    style="width: 100%;" />
             </mat-grid-tile>
             
             

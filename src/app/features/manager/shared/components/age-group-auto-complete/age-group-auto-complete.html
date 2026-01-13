@@ -1,0 +1,18 @@
+<div [formGroup]="form">
+    <mat-form-field  class="example-form-field" style="width: 100%;">
+        <mat-label>{{ language.transform("age_group_title") }}</mat-label>
+        <input type="text" matInput formControlName="ageGroup" [matAutocomplete]="autoAge">
+  
+         @if (form.value.ageGroup) {
+            <button matSuffix matIconButton aria-label="Clear" (click)="clear()" >
+                <mat-icon>close</mat-icon>
+            </button>
+        }
+        
+        <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onAgeGroupSelected($event)">
+            @for (item of ageGroup$ | async; track item.id) {
+                <mat-option [value]="item">{{ displayFn(item) }}</mat-option>
+            }
+        </mat-autocomplete>
+    </mat-form-field>
+</div>
