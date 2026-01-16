@@ -10,6 +10,7 @@ import { TeacherPage } from "./pages/teacher-page/teacher-page";
 import { ManagerialPage } from "./pages/administrative-staff-page/administrative-staff-page";
 import { ClassPage } from "./pages/class-page/class-page";
 import { PeriodPage } from "./pages/period/period";
+import { ClassSchedulePage } from "./pages/class-schedule/class-schedule";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -30,11 +31,11 @@ export const DASHBOARD_ROUTES: Routes = [
         path: 'age-group', 
         children:[
           { path:'', component: AgeGroup, title: messageTitle('age_group_title')},
-          { 
-            path:':id/subject', 
-            component: SubjectPage, 
-            title: messageTitle('subject_title')
-          },
+          // { 
+          //   path:':id/subject', 
+          //   component: SubjectPage, 
+          //   title: messageTitle('subject_title')
+          // },
         ],
       },
       { 
@@ -55,11 +56,14 @@ export const DASHBOARD_ROUTES: Routes = [
         children:[
           { path:'', component: ClassPage, title: messageTitle('classes_title')},
           { 
-            path:'class-schedules',
-            children:[
-              { path:'', component: ClassPage, title: messageTitle('class_schedules_title')},
-              { path:'periods', component: PeriodPage, title: messageTitle('periods_title')},
-            ] 
+            path:':id/class-schedules',
+            component: ClassSchedulePage,
+            title:messageTitle('class_schedules_title') 
+          },
+          { 
+            path:'periods',
+            component: PeriodPage,
+            title:messageTitle('periods_title')
           }
         ]
       },

@@ -56,14 +56,15 @@ export function time12hTo24(time: string): string {
   return `${hours}:${minutes}:00`;
 }
 
-export function time24hTo12(time: string): string {
+export function time24hTo12(time: string, language:Language): string {
+  
   const [hours, minutes] = time.split(':').map(Number);
   
-  let period = 'AM';
+  let period = language.transform('am');
   let displayHours = hours;
   
   if (hours >= 12) {
-    period = 'PM';
+    period = language.transform('pm');
     if (hours > 12) {
       displayHours = hours - 12;
     }

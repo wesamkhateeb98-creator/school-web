@@ -79,8 +79,8 @@ export class PeriodPage {
           this.periods.set(success.content.map(item=> new PeriodViewModel(
             item.id,
             item.lessonNumber,
-            time24hTo12(item.fromTime),
-            time24hTo12(item.toTime),
+            time24hTo12(item.fromTime,this.language),
+            time24hTo12(item.toTime,this.language),
             item.createdAt
           )))
 

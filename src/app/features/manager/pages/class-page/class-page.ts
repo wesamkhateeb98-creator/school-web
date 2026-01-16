@@ -28,6 +28,7 @@ import { AgeGroupEndpoints } from '../../shared/endpoints/age-group-endpoint';
 import { AcademicYearEndpoints } from '../../shared/endpoints/academic-year-endpoints';
 import { ClassEndpoints } from '../../shared/endpoints/class-endpoint';
 import { AgeGroupModel } from '../../shared/endpoints/models/age-group/age-group-model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-class-page',
@@ -49,7 +50,6 @@ import { AgeGroupModel } from '../../shared/endpoints/models/age-group/age-group
     AsyncPipe
   ],
   templateUrl: './class-page.html',
-  styleUrl: './class-page.scss',
 })
 export class ClassPage implements OnInit{
   // [x: string]: any;
@@ -67,6 +67,7 @@ export class ClassPage implements OnInit{
   private params = inject(ParamsService);
   private matSnackBar = inject(MatSnackBar);
   private fb = inject(FormBuilder);
+  private router = inject(Router);
 
   totalPages = signal<number>(1);
   loading = signal<boolean>(false);
@@ -281,6 +282,10 @@ export class ClassPage implements OnInit{
         }
       }
     });
+  }
+
+  openClassSchedulePage(id: number) {
+    this.router.navigate(['manager','classes',id,'class-schedules'])
   }
 
   changeInPage(pageEvent: PageEvent) {

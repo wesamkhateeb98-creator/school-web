@@ -130,7 +130,17 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'minutes_must_be_between_0_and_59':'الدقائق يجب أن تكون بين 0 و 59',
         'time_cannot_be_zero':'الوقت لا يمكن أن يكون صفراً',
         'hours':'الساعات',
-        'minutes':'الدقائق'
+        'minutes':'الدقائق',
+        'saturday_title': 'السبت',
+        'sunday_title': 'الأحد',
+        'monday_title': 'الاثنين',
+        'tuesday_title': 'الثلاثاء',
+        'wednesday_title': 'الأربعاء',
+        'thursday_title': 'الخميس',
+        'friday_title': 'الجمعة',
+        class_period: 'الحصة',
+        pm:'ص',
+        am:'م'
     },
     en:{
         'name':"Name",
@@ -263,7 +273,17 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'minutes_must_be_between_0_and_59':'Minutes must be between 0 and 59',
         'time_cannot_be_zero':'Time cannot be zero',
         'hours':'Hours',
-        'minutes':'Minutes'
+        'minutes':'Minutes',
+        saturday_title: 'Saturday',
+        sunday_title: 'Sunday',
+        monday_title: 'Monday',
+        tuesday_title: 'Tuesday',
+        wednesday_title: 'Wednesday',
+        thursday_title: 'Thursday',
+        friday_title: 'Friday',
+        class_period: 'Period',
+        pm:'AM',
+        am:'PM'
     }
 }
 
@@ -293,7 +313,15 @@ ClassSchedulePhrases|
 PeriodPhrases
 ;
 
-export type ClassSchedulePhrases = 'class_schedules_title'
+export type ClassSchedulePhrases = 
+'class_schedules_title'|
+'saturday_title'|
+'sunday_title'|
+'monday_title'|
+'tuesday_title'|
+'wednesday_title'|
+'thursday_title'|
+'friday_title';
 
 export type PeriodPhrases = 'periods_title'|
 'from_time_title'|
@@ -309,7 +337,10 @@ export type PeriodPhrases = 'periods_title'|
 'minutes_must_be_between_0_and_59'|
 'time_cannot_be_zero'|
 'hours'|
-'minutes';
+'minutes'|
+'class_period'|
+'pm'|
+'am';
 
 export type PersonPhrases = 
 'user_title'|

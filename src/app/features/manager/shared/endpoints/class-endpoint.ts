@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { AddClassViewModel } from '../../pages/class-page/view-model/add-class-view-model';
 import { ClassModel } from './models/class/class-model';
 import { ClassFilterViewModel } from '../../pages/class-page/view-model/class-filter-view-model';
+import { ClassScheduleDayModel } from './models/schedule-class/add-schedule-class-model';
+import { ScheduleClassModel } from './models/schedule-class/schedule-class-model';
 
 @Injectable({
     providedIn: 'root',
@@ -60,5 +62,50 @@ export class ClassEndpoints {
 
     delete(id: number): Observable<MutateResponse> {
         return this.http.delete<MutateResponse>(`${this.baseUrl}/${id}`);
-}
+    }
+
+    addScheduleClass(key: string, classId: number,subjectId: number, subjectsInSchedule: ClassScheduleDayModel): Observable<MutateResponse> {
+        return this.http.post<MutateResponse>(`${this.baseUrl}/${classId}/class-schedule`, {
+            key: key,
+            subjectId: subjectId,
+            classScheduleDay: subjectsInSchedule
+        });
+    }
+
+    updateScheduleClass(
+        classId: number,
+        classScheduleId: number,
+        subjectId: number,
+        day: number,
+        periodId: number,
+        teacherId: number,
+    ): Observable<MutateResponse> {
+        return this.http.put<MutateResponse>(`${this.baseUrl}/${classId}/class-schedule/${classScheduleId}`, {
+            subjectId: subjectId,
+            day: day,
+            periodId: subjectId,
+            teacherId: subjectId
+        });
+    }
+
+    getScheduleClass(
+        id : number,
+        day: number|undefined = undefined,
+        subjectId: number|undefined = undefined,
+        periodId: number|undefined = undefined,
+        teacherId: number|undefined = undefined
+    ): Observable<Page<ScheduleClassModel>> {
+        return this.http.get<Page<ScheduleClassModel>>(`${this.baseUrl}/management/${id}/class-schedule`, {
+            day: day,
+            subjectId: subjectId,
+            periodId: periodId,
+            teacherId: teacherId
+        });
+    }
+
+    deleteScheduleClass(
+        classId: number,
+        classScheduleId: number,): Observable<MutateResponse> {
+        return this.http.delete<MutateResponse>(`${this.baseUrl}/${classId}/class-schedule/${classScheduleId}`);
+    }
 }
