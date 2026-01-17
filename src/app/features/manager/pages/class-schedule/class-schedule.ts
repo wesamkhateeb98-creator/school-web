@@ -19,6 +19,10 @@ import { ClassScheduleTableSchema } from './model/class-schedule-table-schema';
 import { forkJoin } from 'rxjs';
 import { ScheduleClassViewModel } from './model/class-schedule-view-model';
 import { ScheduleClassDailyModel, ScheduleClassModel } from "../../shared/endpoints/models/schedule-class/schedule-class-model";
+import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from "@angular/material/expansion";
+import { MatGridList, MatGridTile } from "@angular/material/grid-list";
+import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatAutocomplete } from "@angular/material/autocomplete";
 
 @Component({
   selector: 'app-class-schedule-component',
@@ -27,13 +31,21 @@ import { ScheduleClassDailyModel, ScheduleClassModel } from "../../shared/endpoi
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
-    MatCardModule
-  ],
+    MatCardModule,
+    MatExpansionPanel,
+    MatExpansionPanelHeader,
+    MatExpansionPanelTitle,
+    MatGridList,
+    MatGridTile,
+    MatFormField,
+    MatLabel,
+    MatAutocomplete
+],
   templateUrl: './class-schedule.html'
 })
 export class ClassSchedulePage implements OnInit {
 
-  // injection
+  // ======================================== INJECTION ========================================
   language = inject(Language);
   dialog = inject(MatDialog);
   route = inject(ActivatedRoute);
@@ -45,16 +57,15 @@ export class ClassSchedulePage implements OnInit {
   periodEndpoints = inject(PeriodEndpoints);
   dayService = inject(DayService);
 
-  // Input parameters
+  // ======================================== INPUT PARAMETERS ========================================
   classId :number;
 
-  // table
+  // ======================================== TABLE VIEW MODEL ========================================
   columns = signal<ClassScheduleTableSchema[]>([]);
   displayedColumns= signal<string[]>([]);
   dataSource = signal<ScheduleClassViewModel[]>([]);
 
   dialyModel:ScheduleClassDailyModel[] = [];
-  // show
   loading:boolean =false;
 
   constructor(
@@ -66,9 +77,11 @@ export class ClassSchedulePage implements OnInit {
   }
   
   ngOnInit(): void {
-    this.addColumn('day','Day\\Period',0,true);
+    this.addColumn('day', this.language.transform('day_period_class_schedule_table'),0,true);
     this.onLoading();
   }
+
+  // ======================================== Table LOGIC ( LOAD PERIOD + CLASS_SCHEDULE ) THEN PRESENT IT IN TABLE ========================================
 
   addColumn(key: string, label: string, id:number ,sticky:boolean = false, stickyEnd:boolean = false) {
     this.columns.update(cols => [
@@ -88,15 +101,15 @@ export class ClassSchedulePage implements OnInit {
         next: x=>{
           // period success
           x.period.content.forEach(x=> {
-            this.addColumn(`key-${x.id}`, ` ${this.language.transform('class_period')}-${x.lessonNumber} ${time24hTo12(x.fromTime,this.language)} \n ${time24hTo12(x.toTime,this.language)}`,x.id);
+            this.addColumn(`key-${x.id}`, ` ${this.language.transform('class_period')}-${x.lessonNumber} ( ${time24hTo12(x.fromTime,this.language)} => ${time24hTo12(x.toTime,this.language)} )`,x.id);
           })
           this.columns.update(x=>{
             x[x.length-1].stickyEnd = true;
             return x;
           })
-          this.dialyModel = x.classSchedule.classSchedules.sort((a,b)=>a.day - b.day);
+
           // class schedule success
-          //  new ScheduleClassViewModel()
+          this.dialyModel = x.classSchedule.classSchedules.sort((a,b)=>a.day - b.day);
           this.prepareTable();
         },
         error: error=>{
@@ -108,136 +121,37 @@ export class ClassSchedulePage implements OnInit {
   }
 
   prepareTable(){
-    /*
-      day: number;
-      items: ScheduleClassDailyItemModel[];
-      */
     const periodIds = this.columns().map(x=>x.id); 
     
-
     this.dataSource.update(arr => {
       this.dialyModel.forEach(x=>{
         arr.push(new ScheduleClassViewModel(periodIds,x))
       })
       return arr;
     })
-    
-    
   }
-  // subjectViewModels = signal<SubjectViewModel[]>([]);
-  // headerTable:string[] = ['subject','description','createdAt','action'];
-  // ageGroupId!:number;
 
-  // filter = signal<SubjectFilterViewModel>( {
-  //     pageSize:10,
-  //     pageNumber:1
-  //   });
+  getSubjectName(element: ScheduleClassViewModel, periodId: number): string | null {
+    if(periodId == 0){
+      return this.dayService.getDaysById(element.day)?.name??null;
+    }
+    return element.items.find(x => x?.periodId === periodId)?.subjectName ?? null;
+  }
 
-  // totalPages= signal<number>(10);
+  getTeacherName(element: ScheduleClassViewModel, periodId: number): string | null {
+    if(periodId == 0){
+      return null;
+    }
+    return element.items.find(x => x?.periodId === periodId)?.teacherName ?? null;
+  }
 
-  
+  // ======================================== Navigation ========================================
 
-  //   openAcademicYearPage(){
-  //     this.router.navigate(['manager/age-group']);
-  //   }
+  openPeriodPage(){
+    this.router.navigate(['manager','classes','periods'])
+  }
 
-  // onLoading(){
-  //   this.subjectEndpoints.get(this.filter().pageNumber,this.filter().pageNumber,"")
-  //     .subscribe({
-  //       next:(success)=>{
-  //         this.filter.update(x=>
-  //         {
-  //           x.pageSize = success.pageSize;
-  //           x.pageNumber = success.pageNumber;  
-  //           return x;
-  //         });
-  //         this.totalPages.set(success.countPages)
-  //         this.subjectViewModels.set(success.content)
-  //       },
-  //       error:(error)=>{
-  //         this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
-  //       }
-  //     })
-  // }
-
-  // openAddDialog(){
-  //   const dialogRef = this.dialog.open(
-  //     AddClassScheduleDialog, 
-  //     {
-  //       width: "80%",
-  //       data:{     
-  //         ageGroupId: this.ageGroupId
-  //       }
-  //     }
-  //   );
-    
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if(result)
-  //       this.subjectViewModels.update(arr => [result.data, ...arr]);
-  //   });
-  // }
+  // ======================================== ADD CLASS SCHEDULE ========================================
 
   
-  // openUpdateDialog(subjectViewModel: SubjectViewModel){
-  //   const dialogRef = this.dialog.open(
-  //     AddClassScheduleDialog, 
-  //     {
-  //       width: "80%",
-  //       data:{     
-  //         ageGroupId: this.ageGroupId,
-  //         subject: subjectViewModel
-  //       }
-  //     }
-  //   );
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     if (result) {
-  //       this.subjectViewModels.update(arr => 
-  //         {
-  //           arr = arr.map(x => x.id === result.data.id ? result.data : x);
-  //           return arr;
-  //         }
-  //       );
-        
-  //     }
-  //   });
-  // }
-
-  // openDeleteDialog(id:number){
-  //   const dialogRef = this.dialog.open(
-  //     DeleteDialog, 
-  //     {
-  //       data:{
-  //         title:this.language.transform('delete_subject'),
-  //         action: ()=>{
-  //           this.subjectEndpoints.delete(id)
-  //             .subscribe({
-  //               next:success=>{
-  //                 dialogRef.close();
-  //                 this.subjectViewModels.update(x=>{
-  //                   return x.filter(item => item.id !== id);
-  //                 })
-  //                 this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
-  //               },
-  //               error: error=>{
-  //                 this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-  //               }
-  //             });
-  //           }  
-  //       },
-  //       width: "80%"
-  //     }
-  //   );
-    
-  // }
-
-  // changeInPage(pageEvent:PageEvent){
-  //   this.filter.update(x=>
-  //       {
-  //         x.pageSize = pageEvent.pageSize;
-  //         x.pageNumber = pageEvent.pageIndex + 1;  
-  //         return x;
-  //       });
-  //     this.onLoading();
-  //     this.parmas.setToUrl(this.filter())
-  // }  
 }

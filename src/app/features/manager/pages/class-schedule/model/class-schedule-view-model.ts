@@ -9,6 +9,7 @@ export class ScheduleClassViewModel {
     periodsId.forEach(id=>{
       this.items.push(daily.items.find(x=>x.periodId == id))
     })
+    console.log(this.items);
   }
 }  
 

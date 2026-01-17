@@ -1,18 +1,34 @@
-<!-- <div style="display: flex; justify-content: space-between;">
-    <div style="display: flex;">
-        <h2 >{{language.transform('subject_title')}}</h2>
-        <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
-            <mat-icon>add</mat-icon>
-        </button>
-    </div>
+<div style="display: flex; justify-content: space-between;">
+    <h2 >{{language.transform('class_schedule_title')}}</h2> 
     
-    
-    <button matFab (click)="openAcademicYearPage()" style="margin: 0 20px ">
-            <mat-icon>arrow_back</mat-icon>
+    <button matFab (click)="openPeriodPage()" style="margin: 0 20px ">
+            <mat-icon>timeline</mat-icon>
         </button>
     
 </div>
--->
+
+
+<!-- <mat-expansion-panel>
+
+    subjectId
+    day
+    period
+    teacher ? 
+
+    <mat-expansion-panel-header>
+        <mat-panel-title> {{ language.transform('filter') }}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="form">
+        <mat-grid-list [cols]="2" rowHeight="70px" gutterSize="10px">
+            <mat-grid-tile>
+                
+        </mat-grid-list>
+    </form>
+</mat-expansion-panel> -->
+
+
+
 <br/>
 <mat-card>
     <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8">
@@ -20,12 +36,13 @@
         @for (column of columns(); track column.key) {
             <ng-container [matColumnDef]="column.key" [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">
 
-                <th mat-header-cell *matHeaderCellDef style="font-weight: bold;">
-                {{ column.label }}
+                <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background-color: var(--mat-sys-primary); color: var(--mat-sys-primary-fixed);   white-space: nowrap;">
+                    {{column.label}}
                 </th>
 
                 <td mat-cell *matCellDef="let element">
-                {{ element[column.key] }}
+                    {{ getSubjectName(element, column.id) }}
+                    {{ getTeacherName(element, column.id) }}
                 </td>
 
             </ng-container>
