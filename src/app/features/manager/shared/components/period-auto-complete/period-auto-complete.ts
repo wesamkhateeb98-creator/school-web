@@ -76,7 +76,7 @@ export class PeriodAutoComplete implements OnInit {
     ).subscribe(x => {
       this.periodItems.set(x);
     });
-    this.form.patchValue({ periodId: undefined });
+    
   }
   
 

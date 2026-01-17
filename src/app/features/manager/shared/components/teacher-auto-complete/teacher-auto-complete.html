@@ -1,15 +1,16 @@
 <div [formGroup]="form">
     <mat-form-field  class="example-form-field" style="width: 100%;">
-        <mat-label>{{ language.transform("class_period") }}</mat-label>
-        <input type="text" matInput formControlName="period" [matAutocomplete]="autoAge">
+        <mat-label>{{ language.transform("subject_title") }}</mat-label>
+        <input type="text" matInput formControlName="subject" [matAutocomplete]="autoAge">
   
          @if (form.value.ageGroup) {
             <button matSuffix matIconButton aria-label="Clear" (click)="clear()" >
                 <mat-icon>close</mat-icon>
             </button>
         }
-        <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onPeriodSelected($event)">
-            @for (item of periodItems(); track item.id) {
+        
+        <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event)">
+            @for (item of teacherItems(); track item.id) {
                 <mat-option [value]="item">{{ displayFn(item) }}</mat-option>
             }
         </mat-autocomplete>

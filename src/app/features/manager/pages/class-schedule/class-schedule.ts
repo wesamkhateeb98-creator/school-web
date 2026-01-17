@@ -29,6 +29,7 @@ import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
 import { PeriodAutoComplete } from "../../shared/components/period-auto-complete/period-auto-complete";
 import { SubjectAutoComplete } from "../../shared/components/subject-auto-complete/subject-auto-complete";
 import { MatInputModule } from '@angular/material/input';
+import { TeacherAutoComplete } from "../../shared/components/teacher-auto-complete/teacher-auto-complete";
 
 @Component({
   selector: 'app-class-schedule-component',
@@ -49,7 +50,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     DayDropDown,
     PeriodAutoComplete,
-    SubjectAutoComplete
+    SubjectAutoComplete,
+    TeacherAutoComplete
 ],
   templateUrl: './class-schedule.html'
 })
@@ -78,7 +80,8 @@ export class ClassSchedulePage implements OnInit {
 
   onExpended(selected:boolean){
     this.expended.set(selected); 
-    this.form.patchValue({periodId:undefined, subjectId: undefined})
+    if(selected)
+      this.form.patchValue({period:undefined, subject: undefined, teacher: undefined})
   }
 
   // ======================================== TABLE VIEW MODEL ========================================

@@ -73,7 +73,6 @@ export class SubjectAutoComplete implements OnInit {
     ).subscribe(x => {
       this.subjectItems.set(x);
     });
-    this.form.patchValue({ subjectId: undefined });
   }
   
 

@@ -28,12 +28,17 @@
                 </mat-grid-tile>
                 <mat-grid-tile >
                     <div style="width: 100%;">
-                        <app-subject-auto-complete [form]="form" [loading]="loading"/>
+                        <app-subject-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
                     </div>
                 </mat-grid-tile>
                 <mat-grid-tile >
                     <div style="width: 100%;">
-                        <app-period-auto-complete [form]="form" [loading]="loading"/>
+                        <app-period-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
+                    </div>
+                </mat-grid-tile>
+                <mat-grid-tile >
+                    <div style="width: 100%;">
+                        <app-teacher-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
                     </div>
                 </mat-grid-tile>
             </mat-grid-list>
@@ -46,10 +51,10 @@
 
 <mat-card>
     <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8">
-
         @for (column of columns(); track column.key) {
             <ng-container [matColumnDef]="column.key" [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">
 
+                
                 <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background-color: var(--mat-sys-primary); color: var(--mat-sys-primary-fixed);   white-space: nowrap;">
                     {{column.label}}
                 </th>
