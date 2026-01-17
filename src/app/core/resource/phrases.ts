@@ -142,7 +142,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         pm:'ص',
         am:'م',
         day_period_class_schedule_table:'الأيام/الفترات',
-        class_schedule_title: 'الجدول الاسبوعي'
+        class_schedule_title: 'الجدول الاسبوعي',
+        add_class_period_title: 'إضافة حصص',
+        update_class_period_title: 'تعديل حصة',
+        day_title: 'اليوم'
     },
     en:{
         'name':"Name",
@@ -287,7 +290,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         pm:'AM',
         am:'PM',
         day_period_class_schedule_table:'Days\\Periods',
-        class_schedule_title: 'Class schedule'
+        class_schedule_title: 'Class schedule',
+        add_class_period_title: 'Add class period',
+        update_class_period_title: 'Update class period',
+        day_title:'Day'
     }
 }
 
@@ -327,7 +333,9 @@ export type ClassSchedulePhrases =
 'wednesday_title'|
 'thursday_title'|
 'friday_title'|
-'day_period_class_schedule_table';
+'day_period_class_schedule_table'|
+'add_class_period_title'|
+'update_class_period_title';
 
 export type PeriodPhrases = 'periods_title'|
 'from_time_title'|
@@ -346,7 +354,8 @@ export type PeriodPhrases = 'periods_title'|
 'minutes'|
 'class_period'|
 'pm'|
-'am';
+'am'|
+'day_title';
 
 export type PersonPhrases = 
 'user_title'|

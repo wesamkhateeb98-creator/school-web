@@ -8,28 +8,37 @@
 </div>
 
 
-<!-- <mat-expansion-panel>
+<mat-expansion-panel expanded="true">
 
-    subjectId
-    day
+    <!-- subjectId
     period
-    teacher ? 
+    teacher?
+    
+    [formGroup]="form"-->
 
     <mat-expansion-panel-header>
-        <mat-panel-title> {{ language.transform('filter') }}</mat-panel-title>
+        <mat-panel-title> {{ language.transform('add_class_period_title') }}</mat-panel-title>
     </mat-expansion-panel-header>
 
-    <form [formGroup]="form">
-        <mat-grid-list [cols]="2" rowHeight="70px" gutterSize="10px">
-            <mat-grid-tile>
-                
+    <form >
+        <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
+            <mat-grid-tile >
+                <div style="width: 100%;">
+                    <app-day-drop-down [form]="form" [checkUrl]="true" />
+                </div>
+            </mat-grid-tile>
+            <mat-grid-tile >
+                <div style="width: 100%;">
+                    <app-period-auto-complete [form]="form" [loading]="loading"/>
+                </div>
+            </mat-grid-tile>
         </mat-grid-list>
     </form>
-</mat-expansion-panel> -->
-
-
+    
+</mat-expansion-panel>
 
 <br/>
+
 <mat-card>
     <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8">
 

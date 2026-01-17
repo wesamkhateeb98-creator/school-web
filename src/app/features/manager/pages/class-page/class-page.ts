@@ -85,7 +85,6 @@ export class ClassPage implements OnInit{
   academicYears$ = of<AcademicYearModel[]>([]);
   ageGroups$ = of<AgeGroupModel[]>([]);
  
-  
   async ngOnInit(): Promise<void> {
     this.initiateForm();
     this.setupAutocompletes();

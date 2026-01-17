@@ -23,6 +23,10 @@ import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } fr
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 import { MatFormField, MatLabel } from "@angular/material/form-field";
 import { MatAutocomplete } from "@angular/material/autocomplete";
+import { DayDropDown } from "../../shared/components/day-drop-down/day-drop-down";
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
+import { PeriodAutoComplete } from "../../shared/components/period-auto-complete/period-auto-complete";
 
 @Component({
   selector: 'app-class-schedule-component',
@@ -37,9 +41,11 @@ import { MatAutocomplete } from "@angular/material/autocomplete";
     MatExpansionPanelTitle,
     MatGridList,
     MatGridTile,
-    MatFormField,
-    MatLabel,
-    MatAutocomplete
+    // MatFormField,
+    // MatLabel,
+    // MatAutocomplete,
+    DayDropDown,
+    PeriodAutoComplete
 ],
   templateUrl: './class-schedule.html'
 })
@@ -56,6 +62,8 @@ export class ClassSchedulePage implements OnInit {
   classEndpoints = inject(ClassEndpoints);
   periodEndpoints = inject(PeriodEndpoints);
   dayService = inject(DayService);
+  responsive = inject(ResponsiveScreen);
+  fb = inject(FormBuilder);
 
   // ======================================== INPUT PARAMETERS ========================================
   classId :number;
@@ -66,10 +74,14 @@ export class ClassSchedulePage implements OnInit {
   dataSource = signal<ScheduleClassViewModel[]>([]);
 
   dialyModel:ScheduleClassDailyModel[] = [];
-  loading:boolean =false;
+  loading = signal<boolean>(false);
 
-  constructor(
-  ){
+  // ======================================== TABLE VIEW MODEL ========================================
+  
+  form!: FormGroup;
+
+  constructor(){
+    this.form = this.fb.group({});
     this.classId = +(this.route.snapshot.paramMap.get('id')??'0');
     effect(x=>{
       this.displayedColumns.set(this.columns().map(x=>x.key))

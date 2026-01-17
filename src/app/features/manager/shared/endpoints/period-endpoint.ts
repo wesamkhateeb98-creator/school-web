@@ -14,7 +14,7 @@ export class PeriodEndpoints {
   ){}
 
   add(key:string, lessonNumber:number ,startTime:string, endTime:string): Observable<MutateResponse>{
-    return this.http.post<MutateResponse>("web/period",{
+    return this.http.post<MutateResponse>("period",{
       "key": key,
       "lessonNumber": lessonNumber,
       "fromTime": startTime,
@@ -23,7 +23,7 @@ export class PeriodEndpoints {
   }
 
   update(id:number, lessonNumber:number ,startTime:string, endTime:string): Observable<MutateResponse>{
-    return this.http.put<MutateResponse>(`web/period/${id}`,{
+    return this.http.put<MutateResponse>(`period/${id}`,{
       "lessonNumber": lessonNumber,
       "fromTime": startTime,
       "toTime": endTime
@@ -31,22 +31,28 @@ export class PeriodEndpoints {
   }
 
   shift(time:string, sign:boolean): Observable<MutateResponse>{
-    return this.http.patch<MutateResponse>(`web/period/shift`,{
+    return this.http.patch<MutateResponse>(`period/shift`,{
       "shiftTime": time,
       "sign": sign
     })
   }
 
   get(pageNumber:number, pageSize:number):Observable<Page<PeriodModel>>{
-    return this.http.get('web/period',{
+    return this.http.get('period',{
         pageNumber: pageNumber,
         pageSize: pageSize,
         name: name
       })
   }
 
+  getById(id:number):Observable<PeriodModel>{
+    return this.http.get('period',{
+        id:id
+      })
+  }
+
   delete(id:number): Observable<MutateResponse>{
-    return this.http.delete<MutateResponse>(`web/period/${id}`);
+    return this.http.delete<MutateResponse>(`period/${id}`);
   }
   
 }

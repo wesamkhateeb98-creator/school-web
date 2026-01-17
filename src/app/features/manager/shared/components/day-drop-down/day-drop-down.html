@@ -1,0 +1,10 @@
+<div [formGroup]='form'>
+  <mat-form-field style="width: 100%;">
+    <mat-label>{{language.transform('day_title')}}</mat-label>
+    <mat-select formControlName="day" (selectionChange)="onSelect($event.value)">
+      @for (day of dayService.days; track day) {
+        <mat-option [value]="day.id">{{day.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</div>
