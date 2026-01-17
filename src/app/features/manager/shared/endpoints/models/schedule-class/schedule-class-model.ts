@@ -1,7 +1,16 @@
 
-export interface ScheduleClassItem {
+export interface ScheduleClassModel {
+  classId: number;
+  classSchedules: ScheduleClassDailyModel[];
+}
+
+export interface ScheduleClassDailyModel {
+  day: number;
+  items: ScheduleClassDailyItemModel[];
+}  
+
+export interface ScheduleClassDailyItemModel {
   classScheduleId: number;
-  day: number;          
   subjectId: number;
   subjectName: string;
   teacherId: number;
@@ -10,9 +19,5 @@ export interface ScheduleClassItem {
   lessonNumber: number; 
   fromTime: string;      
   toTime: string;        
-}
+}  
 
-export interface ScheduleClassModel {
-  classId: number;
-  classSchedules: ScheduleClassItem[];
-}

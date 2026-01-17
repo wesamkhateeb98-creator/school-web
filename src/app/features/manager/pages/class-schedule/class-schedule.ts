@@ -15,7 +15,10 @@ import { ClassEndpoints } from '../../shared/endpoints/class-endpoint';
 import { PeriodEndpoints } from '../../shared/endpoints/period-endpoint';
 import { DayService } from '../../../../core/enums/service/day-service';
 import { time24hTo12 } from '../../../../core/consts';
-import { X } from '@angular/cdk/keycodes';
+import { ClassScheduleTableSchema } from './model/class-schedule-table-schema';
+import { forkJoin } from 'rxjs';
+import { ScheduleClassViewModel } from './model/class-schedule-view-model';
+import { ScheduleClassDailyModel, ScheduleClassModel } from "../../shared/endpoints/models/schedule-class/schedule-class-model";
 
 @Component({
   selector: 'app-class-schedule-component',
@@ -46,10 +49,14 @@ export class ClassSchedulePage implements OnInit {
   classId :number;
 
   // table
-  columns = signal<{key:string, label:string, sticky:boolean, stickyEnd:boolean}[]>([]);
+  columns = signal<ClassScheduleTableSchema[]>([]);
   displayedColumns= signal<string[]>([]);
-  dataSource: any[] = [];
-  
+  dataSource = signal<ScheduleClassViewModel[]>([]);
+
+  dialyModel:ScheduleClassDailyModel[] = [];
+  // show
+  loading:boolean =false;
+
   constructor(
   ){
     this.classId = +(this.route.snapshot.paramMap.get('id')??'0');
@@ -59,14 +66,14 @@ export class ClassSchedulePage implements OnInit {
   }
   
   ngOnInit(): void {
-    this.addColumn('day','Day\\Period',true);
+    this.addColumn('day','Day\\Period',0,true);
     this.onLoading();
   }
 
-  addColumn(key: string, label: string, sticky:boolean = false, stickyEnd:boolean = false) {
+  addColumn(key: string, label: string, id:number ,sticky:boolean = false, stickyEnd:boolean = false) {
     this.columns.update(cols => [
       ...cols,
-      { key, label ,sticky:sticky,stickyEnd:stickyEnd}
+      { key, label ,id:id,sticky:sticky,stickyEnd:stickyEnd}
     ]);
   }
 
@@ -74,29 +81,49 @@ export class ClassSchedulePage implements OnInit {
   onLoading(){
     if(this.classId > 0)
     {
-      this.periodEndpoints.get(1,10000).subscribe(x=>{
-        x.content.forEach(x=> {
-          this.addColumn(`key-${x.id}`, ` ${this.language.transform('class_period')}-${x.lessonNumber} ${time24hTo12(x.fromTime,this.language)} \n ${time24hTo12(x.toTime,this.language)}`);
-        })
-        this.columns.update(x=>{
-          x[x.length-1].stickyEnd = true;
-          return x;
-        })
-        console.log(this.columns())
+      forkJoin({
+        period: this.periodEndpoints.get(1,10000),
+        classSchedule: this.classEndpoints.getScheduleClass(this.classId)
+      }).subscribe({
+        next: x=>{
+          // period success
+          x.period.content.forEach(x=> {
+            this.addColumn(`key-${x.id}`, ` ${this.language.transform('class_period')}-${x.lessonNumber} ${time24hTo12(x.fromTime,this.language)} \n ${time24hTo12(x.toTime,this.language)}`,x.id);
+          })
+          this.columns.update(x=>{
+            x[x.length-1].stickyEnd = true;
+            return x;
+          })
+          this.dialyModel = x.classSchedule.classSchedules.sort((a,b)=>a.day - b.day);
+          // class schedule success
+          //  new ScheduleClassViewModel()
+          this.prepareTable();
+        },
+        error: error=>{
+
+        }
       });
       
     }  
   }
 
+  prepareTable(){
+    /*
+      day: number;
+      items: ScheduleClassDailyItemModel[];
+      */
+    const periodIds = this.columns().map(x=>x.id); 
+    
 
-  getDayName(day: number): string {
-    const dayNames: any = {
-      1: 'Saturday', 2: 'Sunday', 3: 'Monday', 
-      4: 'Tuesday', 5: 'Wednesday', 6: 'Thursday', 7: 'Friday'
-    };
-    return dayNames[day];
+    this.dataSource.update(arr => {
+      this.dialyModel.forEach(x=>{
+        arr.push(new ScheduleClassViewModel(periodIds,x))
+      })
+      return arr;
+    })
+    
+    
   }
-
   // subjectViewModels = signal<SubjectViewModel[]>([]);
   // headerTable:string[] = ['subject','description','createdAt','action'];
   // ageGroupId!:number;

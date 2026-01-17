@@ -15,7 +15,7 @@
 -->
 <br/>
 <mat-card>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8">
 
         @for (column of columns(); track column.key) {
             <ng-container [matColumnDef]="column.key" [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">

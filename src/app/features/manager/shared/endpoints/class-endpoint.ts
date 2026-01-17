@@ -94,8 +94,8 @@ export class ClassEndpoints {
         subjectId: number|undefined = undefined,
         periodId: number|undefined = undefined,
         teacherId: number|undefined = undefined
-    ): Observable<Page<ScheduleClassModel>> {
-        return this.http.get<Page<ScheduleClassModel>>(`${this.baseUrl}/management/${id}/class-schedule`, {
+    ): Observable<ScheduleClassModel> {
+        return this.http.get<ScheduleClassModel>(`${this.baseUrl}/management/${id}/class-schedule`, {
             day: day,
             subjectId: subjectId,
             periodId: periodId,
