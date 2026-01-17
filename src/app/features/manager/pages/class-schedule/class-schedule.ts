@@ -16,17 +16,19 @@ import { PeriodEndpoints } from '../../shared/endpoints/period-endpoint';
 import { DayService } from '../../../../core/enums/service/day-service';
 import { time24hTo12 } from '../../../../core/consts';
 import { ClassScheduleTableSchema } from './model/class-schedule-table-schema';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { ScheduleClassViewModel } from './model/class-schedule-view-model';
 import { ScheduleClassDailyModel, ScheduleClassModel } from "../../shared/endpoints/models/schedule-class/schedule-class-model";
 import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from "@angular/material/expansion";
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
-import { MatFormField, MatLabel } from "@angular/material/form-field";
+import { MatFormField, MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { MatAutocomplete } from "@angular/material/autocomplete";
 import { DayDropDown } from "../../shared/components/day-drop-down/day-drop-down";
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
 import { PeriodAutoComplete } from "../../shared/components/period-auto-complete/period-auto-complete";
+import { SubjectAutoComplete } from "../../shared/components/subject-auto-complete/subject-auto-complete";
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-class-schedule-component',
@@ -44,8 +46,10 @@ import { PeriodAutoComplete } from "../../shared/components/period-auto-complete
     // MatFormField,
     // MatLabel,
     // MatAutocomplete,
+    MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     DayDropDown,
-    PeriodAutoComplete
+    PeriodAutoComplete,
+    SubjectAutoComplete
 ],
   templateUrl: './class-schedule.html'
 })
@@ -67,6 +71,15 @@ export class ClassSchedulePage implements OnInit {
 
   // ======================================== INPUT PARAMETERS ========================================
   classId :number;
+
+  // ======================================== EXPENDED ========================================
+
+  expended = signal<boolean>(false)
+
+  onExpended(selected:boolean){
+    this.expended.set(selected); 
+    this.form.patchValue({periodId:undefined, subjectId: undefined})
+  }
 
   // ======================================== TABLE VIEW MODEL ========================================
   columns = signal<ClassScheduleTableSchema[]>([]);
@@ -162,6 +175,11 @@ export class ClassSchedulePage implements OnInit {
   openPeriodPage(){
     this.router.navigate(['manager','classes','periods'])
   }
+
+  operClassPage(){
+    this.router.navigate(['manager','classes'])
+  }
+  
 
   // ======================================== ADD CLASS SCHEDULE ========================================
 

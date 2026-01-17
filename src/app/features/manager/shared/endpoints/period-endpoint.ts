@@ -46,9 +46,7 @@ export class PeriodEndpoints {
   }
 
   getById(id:number):Observable<PeriodModel>{
-    return this.http.get('period',{
-        id:id
-      })
+    return this.http.get(`period/${id}`)
   }
 
   delete(id:number): Observable<MutateResponse>{

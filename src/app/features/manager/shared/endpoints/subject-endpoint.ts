@@ -30,7 +30,7 @@ export class SubjectEndpoints {
     })
   }
 
-  get(pageNumber:number, pageSize:number , name:string):Observable<Page<SubjectViewModel>>{
+  get(pageNumber:number, pageSize:number , name:string|undefined = undefined):Observable<Page<SubjectViewModel>>{
     return this.http.get('subject',{
         pageNumber: pageNumber,
         pageSize: pageSize,

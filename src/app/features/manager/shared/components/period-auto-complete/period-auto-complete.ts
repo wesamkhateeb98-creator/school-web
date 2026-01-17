@@ -46,11 +46,12 @@ export class PeriodAutoComplete implements OnInit {
 
   loadDataFromUrl(){
     const paramsItem = this.parmas.loadGenericFromUrl();
-    console.log(paramsItem)
+    console.log(paramsItem['periodId']);
     if(paramsItem['periodId'])
       this.periodEndpoints.getById(paramsItem['periodId'])
         .subscribe(x=>{
           this.form.get('period')?.setValue(x??'',{emitEvent:false});
+          this.form.get('periodId')?.setValue(x?.id??'',{emitEvent:false});
         })
   }
 
@@ -61,10 +62,10 @@ export class PeriodAutoComplete implements OnInit {
     
     const hasParam = !!paramsItem['periodId'];
 
-    let source$ = this.form.get('periodId')!.valueChanges;
-
+    let source$ = this.form.get('period')!.valueChanges;
+    
     if (!hasParam) {
-      source$ = source$.pipe(startWith(null));
+      source$ = source$.pipe(startWith(''));
     }
 
     source$.pipe(
@@ -75,16 +76,17 @@ export class PeriodAutoComplete implements OnInit {
     ).subscribe(x => {
       this.periodItems.set(x);
     });
-    
+    this.form.patchValue({ periodId: undefined });
   }
   
 
   displayFn = (option?: PeriodViewModel): string =>  {
-    return option ? `${this.language.transform('class_period')} - ${option.lessonNumber} ${option.fromTime} => ${option.toTime}` : '';
+    return option ? `${this.language.transform('class_period')} ${option.lessonNumber} ( ${option.fromTime} => ${option.toTime} )` : '';
   }
 
   onPeriodSelected(event: any) {
-    this.form.patchValue({ periodId: event.option.value.id });
+    if(this.checkUrl)
+      this.form.patchValue({ periodId: event.option.value.id });
     this.parmas.setToUrl(({...this.parmas.loadGenericFromUrl(),periodId:event.option.value.id}))
   }
 

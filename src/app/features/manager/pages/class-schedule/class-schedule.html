@@ -1,40 +1,45 @@
 <div style="display: flex; justify-content: space-between;">
     <h2 >{{language.transform('class_schedule_title')}}</h2> 
     
-    <button matFab (click)="openPeriodPage()" style="margin: 0 20px ">
+    <div>
+        <button matFab (click)="openPeriodPage()" style="margin: 0 20px ">
             <mat-icon>timeline</mat-icon>
         </button>
-    
+
+        <button matFab (click)="operClassPage()" style="margin: 0 20px ">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+    </div>
+
 </div>
 
 
-<mat-expansion-panel expanded="true">
-
-    <!-- subjectId
-    period
-    teacher?
-    
-    [formGroup]="form"-->
-
+<mat-expansion-panel (expandedChange)="onExpended($event)">
     <mat-expansion-panel-header>
         <mat-panel-title> {{ language.transform('add_class_period_title') }}</mat-panel-title>
     </mat-expansion-panel-header>
-
-    <form >
-        <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
-            <mat-grid-tile >
-                <div style="width: 100%;">
-                    <app-day-drop-down [form]="form" [checkUrl]="true" />
-                </div>
-            </mat-grid-tile>
-            <mat-grid-tile >
-                <div style="width: 100%;">
-                    <app-period-auto-complete [form]="form" [loading]="loading"/>
-                </div>
-            </mat-grid-tile>
-        </mat-grid-list>
-    </form>
-    
+    @if(expended()){
+        <form [formGroup]="form">
+            <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
+                <mat-grid-tile >
+                    <div style="width: 100%;">
+                        <app-day-drop-down [form]="form" [checkUrl]="false" />
+                    </div>
+                </mat-grid-tile>
+                <mat-grid-tile >
+                    <div style="width: 100%;">
+                        <app-subject-auto-complete [form]="form" [loading]="loading"/>
+                    </div>
+                </mat-grid-tile>
+                <mat-grid-tile >
+                    <div style="width: 100%;">
+                        <app-period-auto-complete [form]="form" [loading]="loading"/>
+                    </div>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </form>
+        
+    }
 </mat-expansion-panel>
 
 <br/>
