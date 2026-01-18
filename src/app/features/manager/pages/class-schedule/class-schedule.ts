@@ -264,12 +264,11 @@ export class ClassSchedulePage implements OnInit {
   }
 
   addClassSchedule(){
-    console.log(this.form.value);
     this.loading.set(true);
     this.classEndpoints.addScheduleClass(
       this.key,
       this.classId,
-      this.day,
+      this.form.getRawValue().day,
       this.addViewModel().map(x=>({
         subjectId:x.subject.id,
         periodId:x.period.id,
@@ -295,6 +294,8 @@ export class ClassSchedulePage implements OnInit {
         this.onLoading()
 
         this.disableField()
+
+        this.expanded.set(false);
       },
       error:(error) => {
         this.loading.set(false);
@@ -334,5 +335,4 @@ export class ClassSchedulePage implements OnInit {
         });
   }
 }
-// Extra info for class
-// assign teacher by update class sc
+// Day column
