@@ -76,14 +76,6 @@ export class ClassSchedulePage implements OnInit {
 
   // ======================================== EXPENDED ========================================
 
-  expended = signal<boolean>(false)
-
-  onExpended(selected:boolean){
-    this.expended.set(selected); 
-    if(selected)
-      this.form.patchValue({period:undefined, subject: undefined, teacher: undefined})
-  }
-
   // ======================================== TABLE VIEW MODEL ========================================
   columns = signal<ClassScheduleTableSchema[]>([]);
   displayedColumns= signal<string[]>([]);

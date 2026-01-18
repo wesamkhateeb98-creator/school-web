@@ -14,11 +14,11 @@
 </div>
 
 
-<mat-expansion-panel (expandedChange)="onExpended($event)">
+<mat-expansion-panel>
     <mat-expansion-panel-header>
         <mat-panel-title> {{ language.transform('add_class_period_title') }}</mat-panel-title>
     </mat-expansion-panel-header>
-    @if(expended()){
+    
         <form [formGroup]="form">
             <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
                 <mat-grid-tile >
@@ -43,8 +43,6 @@
                 </mat-grid-tile>
             </mat-grid-list>
         </form>
-        
-    }
 </mat-expansion-panel>
 
 <br/>
