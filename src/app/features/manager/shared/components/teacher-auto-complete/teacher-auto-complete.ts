@@ -93,9 +93,9 @@ export class TeacherAutoComplete implements OnInit {
   }
 
   onTeacherSelected(event: any) {
+    this.form.patchValue({ teacherId: event.option.value.id });
     if(this.checkUrl)
-      this.form.patchValue({ teacherId: event.option.value.id });
-    this.parmas.setToUrl(({...this.parmas.loadGenericFromUrl(),teacherId:event.option.value.id}))
+      this.parmas.setToUrl(({...this.parmas.loadGenericFromUrl(),teacherId:event.option.value.id}))
   }
 
   clear(){

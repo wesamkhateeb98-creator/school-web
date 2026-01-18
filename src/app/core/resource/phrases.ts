@@ -139,13 +139,18 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'thursday_title': 'الخميس',
         'friday_title': 'الجمعة',
         class_period: 'الحصة',
-        pm:'ص',
-        am:'م',
+        pm:'م',
+        am:'ص',
         day_period_class_schedule_table:'الأيام/الفترات',
         class_schedule_title: 'الجدول الاسبوعي',
         add_class_period_title: 'إضافة حصص',
         update_class_period_title: 'تعديل حصة',
-        day_title: 'اليوم'
+        day_title: 'اليوم',
+        teacher_title: 'المدرس',
+        class_period_exists_in_table:'الحصة مسجلة في الجدول الصفي',
+        class_period_exists_in_added_table:'الحصة موجودة في جدول الإضافة',
+        period_title:'الفترة',
+        insert: 'إدراج'
     },
     en:{
         'name':"Name",
@@ -293,7 +298,13 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         class_schedule_title: 'Class schedule',
         add_class_period_title: 'Add class period',
         update_class_period_title: 'Update class period',
-        day_title:'Day'
+        day_title:'Day',
+        teacher_title:'Teacher',
+        class_period_exists_in_table: 'The period is already registered in the class timetable',
+        class_period_exists_in_added_table: 'The period already exists in the added list',
+        period_title:'Period',
+        insert: 'Insert'
+
     }
 }
 
@@ -335,7 +346,9 @@ export type ClassSchedulePhrases =
 'friday_title'|
 'day_period_class_schedule_table'|
 'add_class_period_title'|
-'update_class_period_title';
+'update_class_period_title'|
+'class_period_exists_in_table'|
+'class_period_exists_in_added_table';
 
 export type PeriodPhrases = 'periods_title'|
 'from_time_title'|
@@ -355,7 +368,8 @@ export type PeriodPhrases = 'periods_title'|
 'class_period'|
 'pm'|
 'am'|
-'day_title';
+'day_title'|
+'period_title';
 
 export type PersonPhrases = 
 'user_title'|
@@ -389,7 +403,8 @@ export type TeacherPhrases =
 'teachers_title'|
 'update_teacher'|
 'add_teacher'|
-'assign_subject_to_teacher';
+'assign_subject_to_teacher'|
+'teacher_title';
 
 export type ManagerialPhrases = 'managerial_title';
 
@@ -464,7 +479,8 @@ export type ButtonPhrases =
 'copy'|
 'generate-code'|
 'confirm'|
-'shift';
+'shift'|
+'insert';
 
 export type SemesterPhrases = 
 'semester_title'|

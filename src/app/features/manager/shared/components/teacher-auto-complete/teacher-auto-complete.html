@@ -1,14 +1,20 @@
 <div [formGroup]="form">
     <mat-form-field  class="example-form-field" style="width: 100%;">
-        <mat-label>{{ language.transform("subject_title") }}</mat-label>
-        <input type="text" matInput formControlName="subject" [matAutocomplete]="autoAge">
+        <mat-label>{{ language.transform("teacher_title") }}</mat-label>
+        <input type="text" matInput formControlName="teacher" [matAutocomplete]="autoAge">
   
-         @if (form.value.ageGroup) {
+         @if (form.value.teacher) {
             <button matSuffix matIconButton aria-label="Clear" (click)="clear()" >
                 <mat-icon>close</mat-icon>
             </button>
         }
         
+        @if(form.get('teacher')?.hasError('required')){
+            <mat-error >
+                {{ language.transform('field_required') }}
+            </mat-error>
+        }
+
         <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onTeacherSelected($event)">
             @for (item of teacherItems(); track item.id) {
                 <mat-option [value]="item">{{ displayFn(item) }}</mat-option>

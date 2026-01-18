@@ -231,7 +231,7 @@ export class ClassPage implements OnInit{
         this.loading.set(false);
       },
       error: (error) => {
-        this.matSnackBar.open(error.error?.Title || "Error", this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        this.matSnackBar.open(error.message || "Error", this.language.transform('close'), errorMatSnackbarConfig(this.language));
         this.loading.set(false);
       }
     });
@@ -294,5 +294,9 @@ export class ClassPage implements OnInit{
       pageNumber: pageEvent.pageIndex + 1
     }));
     this.loadClassViewModel();
+  }
+
+  openPeriodPage(){
+    this.router.navigate(['manager','classes','periods'])
   }
 }

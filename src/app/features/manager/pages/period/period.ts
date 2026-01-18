@@ -192,4 +192,8 @@ export class PeriodPage {
         this.onLoading();
     });
   }
+
+  operClassPage(){
+    this.router.navigate(['manager','classes'])
+  }
 }

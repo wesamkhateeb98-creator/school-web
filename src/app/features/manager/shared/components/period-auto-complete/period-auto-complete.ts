@@ -46,7 +46,6 @@ export class PeriodAutoComplete implements OnInit {
 
   loadDataFromUrl(){
     const paramsItem = this.parmas.loadGenericFromUrl();
-    console.log(paramsItem['periodId']);
     if(paramsItem['periodId'])
       this.periodEndpoints.getById(paramsItem['periodId'])
         .subscribe(x=>{
@@ -85,9 +84,9 @@ export class PeriodAutoComplete implements OnInit {
   }
 
   onPeriodSelected(event: any) {
+    this.form.patchValue({ periodId: event.option.value.id });
     if(this.checkUrl)
-      this.form.patchValue({ periodId: event.option.value.id });
-    this.parmas.setToUrl(({...this.parmas.loadGenericFromUrl(),periodId:event.option.value.id}))
+      this.parmas.setToUrl(({...this.parmas.loadGenericFromUrl(),periodId:event.option.value.id}))
   }
 
   clear(){

@@ -64,8 +64,8 @@ export class ClassEndpoints {
         return this.http.delete<MutateResponse>(`${this.baseUrl}/${id}`);
     }
 
-    addScheduleClass(key: string, classId: number,subjectId: number, subjectsInSchedule: ClassScheduleDayModel): Observable<MutateResponse> {
-        return this.http.post<MutateResponse>(`${this.baseUrl}/${classId}/class-schedule`, {
+    addScheduleClass(key: string, classId: number,subjectId: number, subjectsInSchedule: ClassScheduleDayModel[]): Observable<void> {
+        return this.http.post(`${this.baseUrl}/${classId}/class-schedule`, {
             key: key,
             subjectId: subjectId,
             classScheduleDay: subjectsInSchedule

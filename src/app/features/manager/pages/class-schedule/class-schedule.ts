@@ -14,8 +14,8 @@ import { ParamsService } from '../../../../core/services/params-service';
 import { ClassEndpoints } from '../../shared/endpoints/class-endpoint';
 import { PeriodEndpoints } from '../../shared/endpoints/period-endpoint';
 import { DayService } from '../../../../core/enums/service/day-service';
-import { time24hTo12 } from '../../../../core/consts';
-import { ClassScheduleTableSchema } from './model/class-schedule-table-schema';
+import { errorMatSnackbarConfig, successMatSnackbarConfig, time24hTo12 } from '../../../../core/consts';
+import { AddClassScheduleTableSchema, ClassScheduleTableSchema } from './model/class-schedule-table-schema';
 import { forkJoin, Subject } from 'rxjs';
 import { ScheduleClassViewModel } from './model/class-schedule-view-model';
 import { ScheduleClassDailyModel, ScheduleClassModel } from "../../shared/endpoints/models/schedule-class/schedule-class-model";
@@ -24,12 +24,17 @@ import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 import { MatFormField, MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { MatAutocomplete } from "@angular/material/autocomplete";
 import { DayDropDown } from "../../shared/components/day-drop-down/day-drop-down";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
 import { PeriodAutoComplete } from "../../shared/components/period-auto-complete/period-auto-complete";
 import { SubjectAutoComplete } from "../../shared/components/subject-auto-complete/subject-auto-complete";
 import { MatInputModule } from '@angular/material/input';
 import { TeacherAutoComplete } from "../../shared/components/teacher-auto-complete/teacher-auto-complete";
+import { CdkColumnDef } from "@angular/cdk/table";
+import { AddClassViewModel } from '../class-page/view-model/add-class-view-model';
+import { AddClassScheduleViewModel } from './model/add-class-schedule.view.model';
+import { PeriodViewModel } from '../period/model/period-view-model';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-class-schedule-component',
@@ -44,14 +49,13 @@ import { TeacherAutoComplete } from "../../shared/components/teacher-auto-comple
     MatExpansionPanelTitle,
     MatGridList,
     MatGridTile,
-    // MatFormField,
-    // MatLabel,
-    // MatAutocomplete,
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     DayDropDown,
-    PeriodAutoComplete,
     SubjectAutoComplete,
-    TeacherAutoComplete
+    TeacherAutoComplete,
+    MatButtonModule,
+    PeriodAutoComplete,
+    MatSlideToggleModule
 ],
   templateUrl: './class-schedule.html'
 })
@@ -74,8 +78,6 @@ export class ClassSchedulePage implements OnInit {
   // ======================================== INPUT PARAMETERS ========================================
   classId :number;
 
-  // ======================================== EXPENDED ========================================
-
   // ======================================== TABLE VIEW MODEL ========================================
   columns = signal<ClassScheduleTableSchema[]>([]);
   displayedColumns= signal<string[]>([]);
@@ -89,7 +91,11 @@ export class ClassSchedulePage implements OnInit {
   form!: FormGroup;
 
   constructor(){
-    this.form = this.fb.group({});
+    this.form = this.fb.group({
+      'teacher':[''],
+      'period':['',Validators.required],
+      'subject':['',Validators.required],
+    });
     this.classId = +(this.route.snapshot.paramMap.get('id')??'0');
     effect(x=>{
       this.displayedColumns.set(this.columns().map(x=>x.key))
@@ -112,6 +118,9 @@ export class ClassSchedulePage implements OnInit {
 
 
   onLoading(){
+    this.loading.set(true);
+    this.dialyModel =[];
+    this.columns.set([]);
     if(this.classId > 0)
     {
       forkJoin({
@@ -131,9 +140,11 @@ export class ClassSchedulePage implements OnInit {
           // class schedule success
           this.dialyModel = x.classSchedule.classSchedules.sort((a,b)=>a.day - b.day);
           this.prepareTable();
+          this.loading.set(false);
         },
         error: error=>{
-
+          this.matSnackBar.open(error.message || "Error", this.language.transform('close'), errorMatSnackbarConfig(this.language));
+          this.loading.set(false);
         }
       });
       
@@ -141,6 +152,8 @@ export class ClassSchedulePage implements OnInit {
   }
 
   prepareTable(){
+
+    this.dataSource.set([])
     const periodIds = this.columns().map(x=>x.id); 
     
     this.dataSource.update(arr => {
@@ -155,28 +168,153 @@ export class ClassSchedulePage implements OnInit {
     if(periodId == 0){
       return this.dayService.getDaysById(element.day)?.name??null;
     }
-    return element.items.find(x => x?.periodId === periodId)?.subjectName ?? null;
+    let classPeriod = element.items.find(x => x?.periodId === periodId);
+    return classPeriod != null? classPeriod.subjectName : "";
   }
 
   getTeacherName(element: ScheduleClassViewModel, periodId: number): string | null {
     if(periodId == 0){
       return null;
     }
-    return element.items.find(x => x?.periodId === periodId)?.teacherName ?? null;
+    let classPeriod = element.items.find(x => x?.periodId === periodId);
+    return classPeriod != null && classPeriod.teacherName? `( ${classPeriod.teacherName} )` : "";
   }
 
   // ======================================== Navigation ========================================
 
-  openPeriodPage(){
-    this.router.navigate(['manager','classes','periods'])
-  }
-
   operClassPage(){
     this.router.navigate(['manager','classes'])
   }
-  
+
+  // ======================================== Expanded ========================================
+
+  expanded = signal<boolean>(false);
+  onExpandedChange(value: boolean) {
+    this.expanded.set(value);
+  }
 
   // ======================================== ADD CLASS SCHEDULE ========================================
-
   
+  displayedAddColumns= ['day','period','teacher','action'];
+  addViewModel = signal<AddClassScheduleViewModel[]>([]) ;
+
+  key: string = crypto.randomUUID();
+
+  addToTable(){
+    if (this.form.invalid){
+      this.form.markAllAsTouched();
+       return;
+    }
+
+    let teacherId:(number | undefined) = this.form.value.teacherId;
+    let periodId:(number) = this.form.value.periodId;
+    let subjectId:(number) = this.form.value.subjectId;
+    let day:(number) = this.form.value.day;
+
+    let existDay = this.dialyModel.find(x=>x.day == day)
+    
+    if(existDay){
+      let classPeriod = existDay.items.find(x=>x.periodId == periodId)
+      if(classPeriod)
+      {
+        this.matSnackBar.open(this.language.transform('class_period_exists_in_table'), this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        return;
+      }
+    }
+
+    if(this.addViewModel().find(x=>x.day == day && x.period.id == periodId)){
+      this.matSnackBar.open(this.language.transform('class_period_exists_in_added_table'), this.language.transform('close'), errorMatSnackbarConfig(this.language));
+      return;
+    }
+
+    //add
+    this.addViewModel.update(x=>[
+      {
+        day:day,
+        period: this.form.value.period,
+        teacher: this.form.value.teacher,
+      },
+      ...x,
+    ]) 
+    this.disableField()
+  }
+
+  disableField(){
+    if(this.addViewModel().length > 0){
+      this.form.get('subject')?.disable();
+    }else{
+      this.form.get('subject')?.enable();
+    }
+  }
+
+  deleteFromAddClassSchedule(item:AddClassScheduleViewModel){
+    this.addViewModel.update(x=>x.filter(x=>
+    !(x.day == item.day &&
+      x.period.id == item.period.id &&
+      x.teacher.id == item.teacher.id)
+    ));
+    this.disableField()
+  }
+  
+  show(period:PeriodViewModel)
+  {
+    return `${this.language.transform('class_period')}-${period.lessonNumber} ( ${time24hTo12(period.fromTime,this.language)} => ${time24hTo12(period.toTime,this.language)} )`
+  }
+
+  addClassSchedule(){
+    this.loading.set(true);
+    let subjectId:number = this.form.value.subjectId;
+
+    this.classEndpoints.addScheduleClass(
+      this.key,
+      this.classId,
+      subjectId,
+      this.addViewModel().map(x=>({
+        day:x.day,
+        periodId:x.period.id,
+        teacherId:x.teacher.id
+      }))
+    ).subscribe({
+      next:()=>{
+        this.matSnackBar.open(this.language.transform("success"), "OK", successMatSnackbarConfig(this.language));
+        
+        this.addViewModel.set([]);
+        
+        this.key = crypto.randomUUID();
+
+        this.form.patchValue({
+          period:undefined,
+          periodId:undefined,
+          teacher:undefined,
+          teacherId:undefined,
+          subject:undefined,
+          subjectId:undefined,
+        })
+
+        this.onLoading()
+      },
+      error:(error) => {
+        this.loading.set(false);
+        this.matSnackBar.open(error.message || "Error", this.language.transform('close'), errorMatSnackbarConfig(this.language));
+      }
+    })
+  }
+
+  // ======================================== UPDATE CLASS SCHEDULE ========================================
+  updateMode = signal<boolean>(false);
+
+  changeUpdateMode(mode:boolean)
+  {
+    this.updateMode.set(mode);
+  }
+
+   enableUpdateButtonInTable(element: ScheduleClassViewModel, periodId: number): boolean {
+    let classPeriod = element.items.find(x => x?.periodId === periodId);
+    return classPeriod != null && this.updateMode();
+  }
+
 }
+// Extra info for class
+// assign teacher by update class sc
+// add by day not subject
+// enable update mode

@@ -5,3 +5,10 @@ export interface ClassScheduleTableSchema{
     sticky:boolean;
     stickyEnd:boolean;
 }
+
+export interface AddClassScheduleTableSchema{
+    key:string;
+    label:string; 
+    sticky:boolean;
+    stickyEnd:boolean;
+}

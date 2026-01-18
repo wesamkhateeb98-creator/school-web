@@ -3,11 +3,18 @@
         <mat-label>{{ language.transform("class_period") }}</mat-label>
         <input type="text" matInput formControlName="period" [matAutocomplete]="autoAge">
   
-         @if (form.value.ageGroup) {
+         @if (form.value.period) {
             <button matSuffix matIconButton aria-label="Clear" (click)="clear()" >
                 <mat-icon>close</mat-icon>
             </button>
         }
+
+        @if(form.get('period')?.hasError('required')){
+            <mat-error >
+                {{ language.transform('field_required') }}
+            </mat-error>
+        }
+
         <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onPeriodSelected($event)">
             @for (item of periodItems(); track item.id) {
                 <mat-option [value]="item">{{ displayFn(item) }}</mat-option>

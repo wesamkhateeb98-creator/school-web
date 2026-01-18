@@ -1,9 +1,17 @@
-<div style="display: flex; justify-content: start; align-items: center;">
-    <h2>{{ language.transform('classes_title') }}</h2>
-    <button mat-fab (click)="openAddDialog()" style="margin: 0 20px">
-        <mat-icon>add</mat-icon>
+<div style="display: flex; justify-content: space-between;">
+    <div style="display: flex; justify-content: start; align-items: center;">
+        <h2>{{ language.transform('classes_title') }}</h2>
+        <button mat-fab (click)="openAddDialog()" style="margin: 0 20px">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+
+    <button matFab (click)="openPeriodPage()" style="margin: 0 20px ">
+        <mat-icon>timeline</mat-icon>
     </button>
+
 </div>
+
 
 <mat-expansion-panel>
     <mat-expansion-panel-header>

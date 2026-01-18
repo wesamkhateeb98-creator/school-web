@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output, signal, Signal, WritableSignal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Language } from '../../../../../core/services/language';
@@ -81,9 +81,8 @@ export class SubjectAutoComplete implements OnInit {
   }
 
   onsubjectSelected(event: any) {
-    console.log("asd");
+    this.form.patchValue({ subjectId: event.option.value.id });
     if(this.checkUrl)
-      this.form.patchValue({ subjectId: event.option.value.id });
     this.parmas.setToUrl(({...this.parmas.loadGenericFromUrl(),subjectId:event.option.value.id}))
   }
 

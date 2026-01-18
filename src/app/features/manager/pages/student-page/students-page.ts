@@ -126,7 +126,6 @@ export class StudentsPage {
   }
 
   loadStudentViewModel(){
-    console.log(this.form.value)
     this.loading.set(true);
     
     this.studentFilter.update(x=>({...x,ageGroup:this.form.value.ageGroup??undefined }))

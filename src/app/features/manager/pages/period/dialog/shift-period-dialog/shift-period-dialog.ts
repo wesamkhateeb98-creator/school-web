@@ -91,7 +91,6 @@ export class ShiftPeriodDialog {
   }
   
   submit(){
-    console.log(this.form.errors)
     if(!this.form.valid)
       return;
     

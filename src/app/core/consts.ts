@@ -56,24 +56,23 @@ export function time12hTo24(time: string): string {
   return `${hours}:${minutes}:00`;
 }
 
-export function time24hTo12(time: string, language:Language): string {
-  
-  const [hours, minutes] = time.split(':').map(Number);
-  
-  let period = language.transform('am');
-  let displayHours = hours;
-  
-  if (hours >= 12) {
-    period = language.transform('pm');
-    if (hours > 12) {
-      displayHours = hours - 12;
-    }
-  }
-  
-  if (hours === 0) {
+export function time24hTo12(time: string, language: Language): string {
+  if (!time) return '';
+
+  const parts = time.split(':');
+  const hours = parseInt(parts[0], 10);
+  const minutes = parseInt(parts[1], 10);
+
+  const isPM = hours >= 12;
+  const period = isPM
+    ? language.transform('pm')
+    : language.transform('am');
+
+  let displayHours = hours % 12;
+  if (displayHours === 0) {
     displayHours = 12;
   }
-  
+
   const paddedMinutes = minutes.toString().padStart(2, '0');
 
   return `${displayHours}:${paddedMinutes} ${period}`;

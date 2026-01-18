@@ -2,64 +2,134 @@
     <h2 >{{language.transform('class_schedule_title')}}</h2> 
     
     <div>
-        <button matFab (click)="openPeriodPage()" style="margin: 0 20px ">
-            <mat-icon>timeline</mat-icon>
-        </button>
-
         <button matFab (click)="operClassPage()" style="margin: 0 20px ">
             <mat-icon>arrow_back</mat-icon>
         </button>
     </div>
-
 </div>
 
-
-<mat-expansion-panel>
-    <mat-expansion-panel-header>
-        <mat-panel-title> {{ language.transform('add_class_period_title') }}</mat-panel-title>
-    </mat-expansion-panel-header>
+@if(!updateMode()){
     
-        <form [formGroup]="form">
-            <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
-                <mat-grid-tile >
-                    <div style="width: 100%;">
-                        <app-day-drop-down [form]="form" [checkUrl]="false" />
-                    </div>
-                </mat-grid-tile>
-                <mat-grid-tile >
-                    <div style="width: 100%;">
-                        <app-subject-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
-                    </div>
-                </mat-grid-tile>
-                <mat-grid-tile >
-                    <div style="width: 100%;">
-                        <app-period-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
-                    </div>
-                </mat-grid-tile>
-                <mat-grid-tile >
-                    <div style="width: 100%;">
-                        <app-teacher-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
-                    </div>
-                </mat-grid-tile>
-            </mat-grid-list>
-        </form>
-</mat-expansion-panel>
+    <mat-expansion-panel [expanded]="expanded()"(expandedChange)="expanded.set($event)">
+        <mat-expansion-panel-header>
+            <mat-panel-title style="font-weight: bold;"> {{ language.transform('add_class_period_title') }}</mat-panel-title>
+        </mat-expansion-panel-header>
+        
+            <form [formGroup]="form" (ngSubmit)="addToTable()">
+                <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
+                    <mat-grid-tile >
+                        <div style="width: 100%;">
+                            <app-subject-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile >
+                        <div style="width: 100%;">
+                            <app-day-drop-down [form]="form" [checkUrl]="false" />
+                        </div>
+                    </mat-grid-tile>
+                    <mat-grid-tile >
+                        <div style="width: 100%;">
+                            <app-teacher-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
+                        </div>
+                    </mat-grid-tile>
 
-<br/>
+                    <mat-grid-tile >
+                        <div style="width: 100%;">
+                            <app-period-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+                <button mat-flat-button color="primary" type="submit">
+                    {{ language.transform('insert') }}
+                </button>
+            </form>
+        <br/>
+        @if(addViewModel().length > 0){
+            <mat-card>
+                <table mat-table [dataSource]="addViewModel()" class="mat-elevation-z8">
+                    
+                    <ng-container [matColumnDef]="displayedAddColumns[0]" sticky>
+                        <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background-color: var(--mat-sys-primary); color: var(--mat-sys-primary-fixed);   white-space: nowrap;">
+                            {{language.transform('day_title')}}
+                        </th>
 
+                        <td mat-cell *matCellDef="let element">
+                            {{ dayService.getDaysById(element.day)?.name }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container [matColumnDef]="displayedAddColumns[1]">
+                        <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background-color: var(--mat-sys-primary); color: var(--mat-sys-primary-fixed);   white-space: nowrap;">
+                            {{language.transform('period_title')}}
+                        </th>
+
+                        <td mat-cell *matCellDef="let element">
+                            {{ show(element.period) }}
+                        </td>
+                    </ng-container>
+                
+                    <ng-container [matColumnDef]="displayedAddColumns[2]">
+                        <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background-color: var(--mat-sys-primary); color: var(--mat-sys-primary-fixed);   white-space: nowrap;">
+                            {{language.transform('teacher_title')}}
+                        </th>
+
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.teacher.fullName }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container [matColumnDef]="displayedAddColumns[3]">
+                        <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background-color: var(--mat-sys-primary); color: var(--mat-sys-primary-fixed);   white-space: nowrap;">
+                            {{language.transform('action')}}
+                        </th>
+
+                        <td mat-cell *matCellDef="let element">
+                            <div style="display: flex; justify-content: space-between;">
+                                <button mat-icon-button (click)="deleteFromAddClassSchedule(element)">
+                                    <mat-icon class="icon-error">delete</mat-icon>
+                                </button>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedAddColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedAddColumns"></tr>
+                </table>
+            </mat-card>
+            <br/>
+            <div style="display: flex; justify-content: end;">
+                <button mat-flat-button color="primary" (click)="addClassSchedule()">
+                    {{ language.transform('add') }}
+                </button>
+            </div>
+        }
+
+
+    </mat-expansion-panel>
+
+    <br/>
+
+}
 <mat-card>
     <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8">
         @for (column of columns(); track column.key) {
             <ng-container [matColumnDef]="column.key" [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">
 
                 
-                <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background-color: var(--mat-sys-primary); color: var(--mat-sys-primary-fixed);   white-space: nowrap;">
+                <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background-color: var(--mat-sys-primary); color: var(--mat-sys-primary-fixed); white-space: nowrap;">
                     {{column.label}}
                 </th>
 
                 <td mat-cell *matCellDef="let element">
-                    {{ getSubjectName(element, column.id) }}
-                    {{ getTeacherName(element, column.id) }}
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        {{ `${getSubjectName(element, column.id)} ${getTeacherName(element, column.id)}` }}
+                        {{element.name}}
+                        @if(enableUpdateButtonInTable(element, column.id)){
+                            <button matIconButton  (click)="operClassPage()" style="margin: 0 20px ">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        }
+                    </div>
+                    
                 </td>
 
             </ng-container>
@@ -70,3 +140,11 @@
 
     </table>
 </mat-card>
+
+
+
+@if(!expanded()){
+    <br/>
+
+    <mat-slide-toggle (change)="changeUpdateMode($event.checked)">Update Mode</mat-slide-toggle>
+}
