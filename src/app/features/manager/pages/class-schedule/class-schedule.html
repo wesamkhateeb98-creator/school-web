@@ -120,15 +120,23 @@
                 </th>
 
                 <td mat-cell *matCellDef="let element">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        {{ `${getSubjectName(element, column.id)} ${getTeacherName(element, column.id)}` }}
-                        {{element.name}}
-                        @if(enableUpdateButtonInTable(element, column.id)){
-                            <button matIconButton  (click)="update(element, column.id)" style="margin: 0 20px ">
-                                <mat-icon>edit</mat-icon>
-                            </button>
+                    @if(column.id == 0){
+                        <strong>
+                            {{dayService.getDaysById(element.day)?.name}}
+                        </strong>
+                    }@else{
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            {{ getSubjectName(element, column.id) }} {{ getTeacherName(element, column.id) }}
+
+                            {{element.name}}
+                            @if(enableUpdateButtonInTable(element, column.id)){
+                                <button matIconButton  (click)="update(element, column.id)" style="margin: 0 20px ">
+                                    <mat-icon class="icon-update">edit</mat-icon>
+                                </button>
+                            }
+                        </div>
+                            
                         }
-                    </div>
                     
                 </td>
 

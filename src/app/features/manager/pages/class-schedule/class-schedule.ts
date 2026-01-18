@@ -103,7 +103,6 @@ export class ClassSchedulePage implements OnInit {
   }
   
   ngOnInit(): void {
-    this.addColumn('day', this.language.transform('day_period_class_schedule_table'),0,true);
     this.onLoading();
   }
 
@@ -121,6 +120,7 @@ export class ClassSchedulePage implements OnInit {
     this.loading.set(true);
     this.dialyModel =[];
     this.columns.set([]);
+    this.addColumn('day', this.language.transform('day_period_class_schedule_table'),0,true);
     if(this.classId > 0)
     {
       forkJoin({

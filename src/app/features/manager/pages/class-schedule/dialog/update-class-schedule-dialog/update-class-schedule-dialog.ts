@@ -103,7 +103,6 @@ export class UpdateClassScheduleDialog implements OnInit {
     this.classPeriod = this.data.classPeriod;
     
     this.day = this.data.day;
-    
     forkJoin({
       subject: this.subjectEndpoints.get(1,1,this.classPeriod.subjectName),
       period: this.periodEndpoints.getById(this.classPeriod.periodId),
@@ -121,10 +120,11 @@ export class UpdateClassScheduleDialog implements OnInit {
           period: x.period,
           periodId: x.period.id??undefined,
           teacher: x.teacher?.content[0]??undefined,
-          teacherId: x.teacher?.content[0].fullName??undefined,
+          teacherId: x.teacher?.content[0].id??undefined,
           subject: x.subject.content[0],
           subjectId: x.subject.content[0]?.id??undefined,
         })
+        console.log(this.form.value);
       }
     })
   }
@@ -191,10 +191,10 @@ export class UpdateClassScheduleDialog implements OnInit {
       .subscribe({
         next: (success) => {
           this.dialogRef.close({ data: success });
-          this.matSnackBar.open(this.language.transform("success"), "OK", successMatSnackbarConfig(this.language));
+          this.matSnackBar.open(this.language.transform("success"), this.language.transform("ok"), successMatSnackbarConfig(this.language));
         },
         error: (err) => {
-          this.matSnackBar.open(err.message || err.message, "OK", errorMatSnackbarConfig(this.language));
+          this.matSnackBar.open(err.message || err.message, this.language.transform("ok"), errorMatSnackbarConfig(this.language));
           this.loading.set(false);
         }
       });
