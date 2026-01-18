@@ -1,8 +1,16 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
     <mat-dialog-content>
         <h2 mat-dialog-title>
-            {{ language.transform(isUpdate() ? 'update_class' : 'add_class') }}
+            {{ language.transform('update_class_schedule_title') }}
+            {{form.hasError('teacherAssigned')}}
         </h2>
+
+        @if (!teacherValidation()) {
+     
+            <app-error-title-component [message]="language.transform('hours_must_be_between_0_and_23')"/>
+            <br />
+     
+        }
 
         <mat-grid-list [cols]="2" rowHeight="90px" gutterSize="15px">
             @if(loading()){
@@ -11,40 +19,33 @@
                 </mat-grid-tile>
             } @else {
                 <mat-grid-tile>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>{{ language.transform("age_group_title") }}</mat-label>
-                        <input type="text" matInput formControlName="ageGroupName" [matAutocomplete]="autoAge">
-                        <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayAgeGroup" (optionSelected)="onAgeGroupSelected($event)">
-                            @for (item of ageGroups$ | async; track item.id) {
-                                <mat-option [value]="item">{{ item.name }}</mat-option>
-                            }
-                        </mat-autocomplete>
-                    </mat-form-field>
+                    <div style="width: 100%;">
+                        <app-day-drop-down [form]="form"/>
+                    </div>
                 </mat-grid-tile>
 
                 <mat-grid-tile>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>{{ language.transform("academic_year_title") }}</mat-label>
-                        <input type="text" matInput formControlName="academicYear" [matAutocomplete]="autoYear">
-                        <mat-autocomplete #autoYear="matAutocomplete" [displayWith]="displayAcademicYear" (optionSelected)="onAcademicYearSelected($event)">
-                            @for (year of academicYears$ | async; track year.id) {
-                                <mat-option [value]="year">{{ `${year.year}/${year.year + 1}` }}</mat-option>
-                            }
-                        </mat-autocomplete>
-                    </mat-form-field>
+                    <div style="width: 100%;">
+                        <app-subject-auto-complete [form]="form" [loading]="loading"/>
+                    </div>
                 </mat-grid-tile>
 
                 <mat-grid-tile>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>{{ language.transform("section_title") }}</mat-label>
-                        <input type="number" matInput formControlName="section">
-                        @if(form.get('section')?.hasError('required')){
-                            <mat-error>{{ language.transform('field_required') }}</mat-error>
-                        }
-                        @else if(form.get('section')?.hasError('min')){
-                            <mat-error>{{ language.transform('min_number_1') }}</mat-error>
-                        }
-                    </mat-form-field>
+                    <div style="width: 100%;">
+                        <app-period-auto-complete [form]="form" [loading]="loading"/>
+                    </div>
+                </mat-grid-tile>
+
+                <mat-grid-tile>
+                    <div style="width: 100%;">
+                        <app-teacher-auto-complete [form]="form" [loading]="loading"/>
+                    </div>
+                </mat-grid-tile>
+
+                <mat-grid-tile>
+                    <section class="example-section">
+                        <mat-checkbox class="example-margin" formControlName="assignAll">{{language.transform('assign_teacher_to_this_subject')}}</mat-checkbox>
+                    </section>
                 </mat-grid-tile>
             }
         </mat-grid-list>
@@ -54,8 +55,13 @@
         <button mat-button (click)="onNoClick()" type="button" [disabled]="loading()">
             {{ language.transform('cancel') }}
         </button>
+        
+        <button mat-button (click)="removeClassPeriod()" type="button" [disabled]="loading()">
+            {{ language.transform('remove_class_period') }}
+        </button>
+
         <button mat-flat-button color="primary" type="submit" [disabled]="loading() || form.invalid">
-            {{ language.transform(isUpdate() ? 'update' : 'add') }}
+            {{ language.transform('update') }}
         </button>
     </mat-dialog-actions>
 </form>

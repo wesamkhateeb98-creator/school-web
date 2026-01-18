@@ -64,10 +64,10 @@ export class ClassEndpoints {
         return this.http.delete<MutateResponse>(`${this.baseUrl}/${id}`);
     }
 
-    addScheduleClass(key: string, classId: number,subjectId: number, subjectsInSchedule: ClassScheduleDayModel[]): Observable<void> {
+    addScheduleClass(key: string, classId: number,day: number, subjectsInSchedule: ClassScheduleDayModel[]): Observable<void> {
         return this.http.post(`${this.baseUrl}/${classId}/class-schedule`, {
             key: key,
-            subjectId: subjectId,
+            day: day,
             classScheduleDay: subjectsInSchedule
         });
     }
@@ -78,13 +78,15 @@ export class ClassEndpoints {
         subjectId: number,
         day: number,
         periodId: number,
-        teacherId: number,
+        assignAll:boolean,
+        teacherId: (number| undefined),
     ): Observable<MutateResponse> {
         return this.http.put<MutateResponse>(`${this.baseUrl}/${classId}/class-schedule/${classScheduleId}`, {
             subjectId: subjectId,
             day: day,
-            periodId: subjectId,
-            teacherId: subjectId
+            periodId: periodId,
+            teacherId: teacherId,
+            assignAll: assignAll
         });
     }
 

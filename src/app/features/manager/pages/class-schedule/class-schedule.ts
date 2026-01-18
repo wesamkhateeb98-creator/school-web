@@ -17,7 +17,7 @@ import { DayService } from '../../../../core/enums/service/day-service';
 import { errorMatSnackbarConfig, successMatSnackbarConfig, time24hTo12 } from '../../../../core/consts';
 import { AddClassScheduleTableSchema, ClassScheduleTableSchema } from './model/class-schedule-table-schema';
 import { forkJoin, Subject } from 'rxjs';
-import { ScheduleClassViewModel } from './model/class-schedule-view-model';
+import { ScheduleClassDailyViewModel, ScheduleClassViewModel } from './model/class-schedule-view-model';
 import { ScheduleClassDailyModel, ScheduleClassModel } from "../../shared/endpoints/models/schedule-class/schedule-class-model";
 import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from "@angular/material/expansion";
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
@@ -30,11 +30,10 @@ import { PeriodAutoComplete } from "../../shared/components/period-auto-complete
 import { SubjectAutoComplete } from "../../shared/components/subject-auto-complete/subject-auto-complete";
 import { MatInputModule } from '@angular/material/input';
 import { TeacherAutoComplete } from "../../shared/components/teacher-auto-complete/teacher-auto-complete";
-import { CdkColumnDef } from "@angular/cdk/table";
-import { AddClassViewModel } from '../class-page/view-model/add-class-view-model';
 import { AddClassScheduleViewModel } from './model/add-class-schedule.view.model';
 import { PeriodViewModel } from '../period/model/period-view-model';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { UpdateClassScheduleDialog } from './dialog/update-class-schedule-dialog/update-class-schedule-dialog';
 
 @Component({
   selector: 'app-class-schedule-component',
@@ -95,6 +94,7 @@ export class ClassSchedulePage implements OnInit {
       'teacher':[''],
       'period':['',Validators.required],
       'subject':['',Validators.required],
+      'day':['1']
     });
     this.classId = +(this.route.snapshot.paramMap.get('id')??'0');
     effect(x=>{
@@ -195,9 +195,9 @@ export class ClassSchedulePage implements OnInit {
 
   // ======================================== ADD CLASS SCHEDULE ========================================
   
-  displayedAddColumns= ['day','period','teacher','action'];
+  displayedAddColumns= ['subject','period','teacher','action'];
   addViewModel = signal<AddClassScheduleViewModel[]>([]) ;
-
+  day: number = 0;
   key: string = crypto.randomUUID();
 
   addToTable(){
@@ -222,7 +222,7 @@ export class ClassSchedulePage implements OnInit {
       }
     }
 
-    if(this.addViewModel().find(x=>x.day == day && x.period.id == periodId)){
+    if(this.addViewModel().find(x=>x.period.id == periodId)){
       this.matSnackBar.open(this.language.transform('class_period_exists_in_added_table'), this.language.transform('close'), errorMatSnackbarConfig(this.language));
       return;
     }
@@ -230,7 +230,7 @@ export class ClassSchedulePage implements OnInit {
     //add
     this.addViewModel.update(x=>[
       {
-        day:day,
+        subject:this.form.value.subject,
         period: this.form.value.period,
         teacher: this.form.value.teacher,
       },
@@ -241,15 +241,17 @@ export class ClassSchedulePage implements OnInit {
 
   disableField(){
     if(this.addViewModel().length > 0){
-      this.form.get('subject')?.disable();
+
+      this.form.get('day')?.disable();
+
     }else{
-      this.form.get('subject')?.enable();
+      this.form.get('day')?.enable();
     }
   }
 
   deleteFromAddClassSchedule(item:AddClassScheduleViewModel){
     this.addViewModel.update(x=>x.filter(x=>
-    !(x.day == item.day &&
+    !(x.subject.id == item.subject.id &&
       x.period.id == item.period.id &&
       x.teacher.id == item.teacher.id)
     ));
@@ -262,15 +264,14 @@ export class ClassSchedulePage implements OnInit {
   }
 
   addClassSchedule(){
+    console.log(this.form.value);
     this.loading.set(true);
-    let subjectId:number = this.form.value.subjectId;
-
     this.classEndpoints.addScheduleClass(
       this.key,
       this.classId,
-      subjectId,
+      this.day,
       this.addViewModel().map(x=>({
-        day:x.day,
+        subjectId:x.subject.id,
         periodId:x.period.id,
         teacherId:x.teacher.id
       }))
@@ -292,6 +293,8 @@ export class ClassSchedulePage implements OnInit {
         })
 
         this.onLoading()
+
+        this.disableField()
       },
       error:(error) => {
         this.loading.set(false);
@@ -313,8 +316,23 @@ export class ClassSchedulePage implements OnInit {
     return classPeriod != null && this.updateMode();
   }
 
+  update(element: ScheduleClassViewModel, periodId: number){
+    let classPeriod = element.items.find(x => x?.periodId === periodId);
+    const dialogRef = this.dialog.open(UpdateClassScheduleDialog, {
+          width: "80vw",
+          maxWidth: "80vw",
+          autoFocus:false,
+          data: { 
+            classId: this.classId,
+            classPeriod: classPeriod,
+            day: element.day
+          }
+        });
+    
+        dialogRef.afterClosed().subscribe((result) => {
+          if (result) this.onLoading();
+        });
+  }
 }
 // Extra info for class
 // assign teacher by update class sc
-// add by day not subject
-// enable update mode

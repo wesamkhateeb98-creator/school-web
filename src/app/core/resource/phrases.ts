@@ -150,7 +150,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         class_period_exists_in_table:'الحصة مسجلة في الجدول الصفي',
         class_period_exists_in_added_table:'الحصة موجودة في جدول الإضافة',
         period_title:'الفترة',
-        insert: 'إدراج'
+        insert: 'إدراج',
+        update_class_schedule_title:"تعديل معلومات الحصة",
+        remove_class_period:"إزالة الحصة",
+        assign_teacher_to_this_subject: 'تعيين المدرس لهذه المادة',
+        update_mode: 'وضع التعديل'
     },
     en:{
         'name':"Name",
@@ -303,8 +307,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         class_period_exists_in_table: 'The period is already registered in the class timetable',
         class_period_exists_in_added_table: 'The period already exists in the added list',
         period_title:'Period',
-        insert: 'Insert'
-
+        insert: 'Insert',
+        update_class_schedule_title:"Update schedule class",
+        remove_class_period:"remove class period",
+        assign_teacher_to_this_subject: 'Assign teacher to this subject',
+        update_mode: 'Update mode'
     }
 }
 
@@ -348,7 +355,10 @@ export type ClassSchedulePhrases =
 'add_class_period_title'|
 'update_class_period_title'|
 'class_period_exists_in_table'|
-'class_period_exists_in_added_table';
+'class_period_exists_in_added_table'|
+'update_class_schedule_title'|
+'remove_class_period'|
+'assign_teacher_to_this_subject';
 
 export type PeriodPhrases = 'periods_title'|
 'from_time_title'|
@@ -480,7 +490,8 @@ export type ButtonPhrases =
 'generate-code'|
 'confirm'|
 'shift'|
-'insert';
+'insert'|
+'update_mode';
 
 export type SemesterPhrases = 
 'semester_title'|

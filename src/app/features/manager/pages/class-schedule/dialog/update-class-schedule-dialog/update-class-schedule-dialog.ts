@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogContent, MatDialogActions, MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
@@ -17,8 +17,21 @@ import { AcademicYearEndpoints } from '../../../../shared/endpoints/academic-yea
 import { Language } from '../../../../../../core/services/language';
 import { AgeGroupModel } from '../../../../shared/endpoints/models/age-group/age-group-model';
 import { AcademicYearModel } from '../../../academic-year/model/academic-year-model';
-import { debounceTime, map, of, startWith, switchMap, tap } from 'rxjs';
+import { combineLatest, debounceTime, EMPTY, forkJoin, from, map, Observable, of, single, startWith, switchMap, tap } from 'rxjs';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
+import { DayDropDown } from "../../../../shared/components/day-drop-down/day-drop-down";
+import { ScheduleClassDailyViewModel } from '../../model/class-schedule-view-model';
+import { SubjectEndpoints } from '../../../../shared/endpoints/subject-endpoint';
+import { PeriodEndpoints } from '../../../../shared/endpoints/period-endpoint';
+import { TeacherEndpoints } from '../../../../shared/endpoints/teacher-endpoint';
+import { Page } from '../../../../../shared/model/page';
+import { TeacherModel } from '../../../../shared/endpoints/models/teacher/teacher-model';
+import { SubjectAutoComplete } from "../../../../shared/components/subject-auto-complete/subject-auto-complete";
+import { PeriodAutoComplete } from "../../../../shared/components/period-auto-complete/period-auto-complete";
+import { TeacherAutoComplete } from "../../../../shared/components/teacher-auto-complete/teacher-auto-complete";
+import { MatCheckbox, MatCheckboxModule } from '@angular/material/checkbox';
+import { ThumbPosition } from '@angular/material/slider/testing';
+import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
 
 @Component({
   selector: 'app-add-student-dialog',
@@ -32,127 +45,102 @@ import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../..
     MatAutocompleteModule,
     MatDatepickerModule,
     MatButtonModule,
-    AsyncPipe
+    DayDropDown,
+    SubjectAutoComplete,
+    PeriodAutoComplete,
+    TeacherAutoComplete,
+    FormsModule,
+    MatCheckboxModule,
+    ErrorTitleComponent
 ],
   templateUrl: './update-class-schedule-dialog.html',
   providers:[
     provideNativeDateAdapter()
   ]
 })
-export class AddClassDialog implements OnInit {
-  private fb = inject(FormBuilder);
-  private classEndpoint = inject(ClassEndpoints);
-  private ageGroupEndpoint = inject(AgeGroupEndpoints);
-  private academicYearEndpoint = inject(AcademicYearEndpoints);
-  private dialogRef = inject(MatDialogRef<AddClassDialog>);
-  private data = inject(MAT_DIALOG_DATA);
+export class UpdateClassScheduleDialog implements OnInit {
   
+  // ======================================== INJECTION ========================================
+  private fb = inject(FormBuilder);
+  private dialogRef = inject(MatDialogRef<UpdateClassScheduleDialog>);
+  private data = inject(MAT_DIALOG_DATA);
   public language = inject(Language);
   public matSnackBar = inject(MatSnackBar);
+  public classEndpoints = inject(ClassEndpoints);
+  public subjectEndpoints = inject(SubjectEndpoints);
+  public periodEndpoints = inject(PeriodEndpoints);
+  public teacherEndpoints = inject(TeacherEndpoints);
 
-  loading = signal<boolean>(false);
+  // ======================================== PREPARE DATA ========================================
+  loading = signal<boolean>(true);
   form!: FormGroup;
   key: string = crypto.randomUUID();
+  assignAll:boolean = false;
+  // ======================================== Input Data ========================================
 
-  ageGroups$ = of<AgeGroupModel[]>([]);
-  academicYears$ = of<AcademicYearModel[]>([]);
+  classId:number = 0;
+  classPeriod!:ScheduleClassDailyViewModel
+  day:number = 0;
 
   ngOnInit() {
-    this.initiateForm();
-    this.setupAutocompletes();
-  }
-
-  initiateForm() {
-    const classData = this.data?.classData;
-
     this.form = this.fb.group({
-      academicYearId: [classData?.academicYearId || '', [Validators.required]],
-      academicYear: [classData?.academicYear || ''],
-      section: [classData?.section || '', [Validators.required, Validators.min(1),Validators.max(100)]],
-      ageGroupId: [classData?.ageGroupId || '', [Validators.required]],
-      ageGroupName: [classData?.ageGroupName || ''],
+      'day':['1'],
+      'period':['',Validators.required],
+      'periodId':[],
+      'teacher':[],
+      'teacherId':[],
+      'subject':['',Validators.required],
+      'subjectId':[],
+      'assignAll':[false]
     });
-  }
-  setupAutocompletes() {
-    // Age Group Logic
-    this.ageGroups$ = this.form.get('ageGroupName')!.valueChanges.pipe(
-      startWith(this.data?.classData?.ageGroupName || ''), // Start with existing name if updating
-      debounceTime(300),
-      switchMap(value => {
-        // If value is an object (selected from autocomplete), use its name, otherwise use string
-        const search = typeof value === 'object' ? value.name : value;
-        return this.ageGroupEndpoint.get(search, 1, 20);
-      }),
-      map(response => response.content),
-      tap(items => {
-        // Auto-select first item if we are in "Update" mode and form is currently empty
-        if (this.isUpdate() && items.length > 0 && !this.form.get('ageGroupId')?.value) {
-          this.patchAgeGroup(items[0]);
-        }
-      })
-    );
 
-    // Academic Year Logic
-    this.academicYears$ = this.form.get('academicYear')!.valueChanges.pipe(
-      startWith(this.data?.classData?.academicYear || ''),
-      debounceTime(300),
-      switchMap(value => {
-        const search = typeof value === 'object' ? value.year : value;
-        return this.academicYearEndpoint.get(1, 20, search);
-      }),
-      map(response => response.content),
-      tap(items => {
-        if (this.isUpdate() && items.length > 0 && !this.form.get('academicYearId')?.value) {
-          this.patchAcademicYear(items[0]);
-        }
-      })
-    );
-  }
+    this.form.get('assignAll')!.valueChanges.subscribe({next: x=> this.assignAllWithTeacherValidatorLogic()})
 
-  private patchAgeGroup(item: AgeGroupModel) {
-    this.form.patchValue({
-      ageGroupId: item.id,
-      ageGroupName: item 
-    }, { emitEvent: false });
-  }
+    this.form.get('teacherId')!.valueChanges.subscribe({next: x=> this.assignAllWithTeacherValidatorLogic()})
 
-  private patchAcademicYear(item: AcademicYearModel) {
-    this.form.patchValue({
-      academicYearId: item.id,
-      academicYear: item 
-    }, { emitEvent: false });
-  }
-
-  displayAgeGroup(item: AgeGroupModel): string {
-    return item?.name || '';
-  }
-
-  displayAcademicYear = (item: any): string => {
-    if (!item) return "";
+    this.classId = this.data.classId;
     
-    if (item && typeof item === 'object' && item.year) {
-      const year = Number(item.year);
-      return `${year}/${year + 1}`;
-    }
-
-    return item.toString();
+    this.classPeriod = this.data.classPeriod;
+    
+    this.day = this.data.day;
+    
+    forkJoin({
+      subject: this.subjectEndpoints.get(1,1,this.classPeriod.subjectName),
+      period: this.periodEndpoints.getById(this.classPeriod.periodId),
+      teacher: this.classPeriod.teacherName? 
+        this.teacherEndpoints.get({
+          pageNumber:1,
+          pageSize:1,
+          name: this.classPeriod.teacherName
+        }):of(null),
+    }).subscribe({
+      next:x=>{
+        this.loading.set(false);
+        this.form.patchValue({
+          day: this.day,
+          period: x.period,
+          periodId: x.period.id??undefined,
+          teacher: x.teacher?.content[0]??undefined,
+          teacherId: x.teacher?.content[0].fullName??undefined,
+          subject: x.subject.content[0],
+          subjectId: x.subject.content[0]?.id??undefined,
+        })
+      }
+    })
   }
 
-  onAgeGroupSelected(event: any) {
-    this.form.patchValue({ ageGroupId: event.option.value.id });
+  // ======================================== Validation ========================================
+  teacherValidation = signal<boolean>(true);
+
+  assignAllWithTeacherValidatorLogic(){
+    let assignAll:boolean = this.form.get('assignAll')?.value;
+    let teacherId:boolean = this.form.get('teacherId')?.value;
+    this.teacherValidation.set(!(assignAll && !teacherId))
   }
 
-  onAcademicYearSelected(event: any) {
-    this.form.patchValue({ academicYearId: event.option.value.id });
-  }
+  // ======================================== Remove ========================================
 
-  isUpdate(): boolean {
-    return !!(this.data && this.data.classData);
-  }
-
-  submit() {
-    if (this.form.invalid) return;
-
+  removeClassPeriod(){
     this.loading.set(true);
     const payload = {
       ageGroupId: this.form.value.ageGroupId,
@@ -160,21 +148,56 @@ export class AddClassDialog implements OnInit {
       section: this.form.value.section
     };
 
-    const obs = this.isUpdate() 
-      ? this.classEndpoint.update(this.data.classData.id, payload)
-      : this.classEndpoint.add(this.key, payload);
+    this.classEndpoints.deleteScheduleClass(this.classId,this.classPeriod.classScheduleId)
+      .subscribe({
+        next: (success) => {
+          this.dialogRef.close({ data: success });
+          this.matSnackBar.open(this.language.transform("success"), "OK", successMatSnackbarConfig(this.language));
+        },
+        error: (err) => {
+          this.matSnackBar.open(err.error?.Title || err.message, "OK", errorMatSnackbarConfig(this.language));
+          this.loading.set(false);
+        }
+      });
+  }
 
-    obs.subscribe({
-      next: (success) => {
-        this.matSnackBar.open(this.language.transform("success"), "OK", successMatSnackbarConfig(this.language));
-        this.dialogRef.close({ data: success });
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.matSnackBar.open(err.error?.Title || err.message, "OK", errorMatSnackbarConfig(this.language));
-        this.loading.set(false);
-      }
-    });
+  // ======================================== Update ========================================
+
+  submit() {
+    this.assignAllWithTeacherValidatorLogic()
+    if (this.form.invalid || !this.teacherValidation()) return;
+    this.loading.set(true);
+    const payload = {
+      ageGroupId: this.form.value.ageGroupId,
+      academicYearId: this.form.value.academicYearId,
+      section: this.form.value.section
+    };
+
+    let teacherId:(number | undefined) = this.form.value.teacherId;
+    let periodId:(number) = this.form.value.periodId;
+    let subjectId:(number) = this.form.value.subjectId;
+    let day:(number) = this.form.value.day;
+    let assignAll:boolean = this.form.value.assignAll;
+
+    this.classEndpoints.updateScheduleClass(
+      this.classId,
+      this.classPeriod.classScheduleId,
+      subjectId,
+      day,
+      periodId,
+      assignAll,
+      teacherId
+    )
+      .subscribe({
+        next: (success) => {
+          this.dialogRef.close({ data: success });
+          this.matSnackBar.open(this.language.transform("success"), "OK", successMatSnackbarConfig(this.language));
+        },
+        error: (err) => {
+          this.matSnackBar.open(err.message || err.message, "OK", errorMatSnackbarConfig(this.language));
+          this.loading.set(false);
+        }
+      });
   }
 
   onNoClick() { this.dialogRef.close(); }

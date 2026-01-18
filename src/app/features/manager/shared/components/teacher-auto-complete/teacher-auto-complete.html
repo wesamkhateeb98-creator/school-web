@@ -4,7 +4,12 @@
         <input type="text" matInput formControlName="teacher" [matAutocomplete]="autoAge">
   
          @if (form.value.teacher) {
-            <button matSuffix matIconButton aria-label="Clear" (click)="clear()" >
+            <button 
+                matSuffix 
+                matIconButton 
+                type="button"
+                aria-label="Clear" 
+                (click)="clear()" >
                 <mat-icon>close</mat-icon>
             </button>
         }

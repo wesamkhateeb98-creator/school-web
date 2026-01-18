@@ -1,6 +1,6 @@
 
 export interface ClassScheduleDayModel {
-  day: number;
+  subjectId: number;
   periodId: number;
   teacherId: number;
 }
