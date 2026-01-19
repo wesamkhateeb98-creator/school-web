@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { StudentModel } from './models/student/student-model';
 import { SubjectFilterViewModel } from '../../pages/subject/model/subject-filter-view-model';
 import { SubjectViewModel } from '../../pages/subject/model/subject-view-model';
+import { StudyPlanWeekModel } from './models/subject/study-plan-week-model';
+import { Semester } from '../../pages/semester/semester';
 
 @Injectable({
   providedIn: 'root',
@@ -41,5 +43,33 @@ export class SubjectEndpoints {
   delete(id:number): Observable<MutateResponse>{
     return this.http.delete<MutateResponse>(`subject/${id}`);
   }
+ 
+  // ######################### study plan #########################
+
   
+  addStudyPlane(key:string, subjectId:number, semesterId:number, weeks:StudyPlanWeekModel[]): Observable<MutateResponse>{
+    return this.http.post<MutateResponse>(`subject/${subjectId}/study-plan`,{
+      "key": key,
+      "semesterId": semesterId,
+      "weeks": weeks
+    })
+  }
+
+  updateStudyPlane(studyPlanId:number ,subjectId:number, title:string): Observable<MutateResponse>{
+    return this.http.put<MutateResponse>(`/Subject/${subjectId}/study-plan/${studyPlanId}`,{
+      "title": title
+    })
+  }
+
+  getStudyPlane(subjectId:number, semesterId:number):Observable<WeekModel[]>{
+    return this.http.get(`Subject/${subjectId}/study-plan`,{
+        semesterId:semesterId
+      })
+  }
+
+  deleteStudyPlane(studyPlanId:number ,subjectId:number): Observable<MutateResponse>{
+    return this.http.delete<MutateResponse>(`/Subject/${subjectId}/study-plan/${studyPlanId}`);
+  }
+ 
+
 }
