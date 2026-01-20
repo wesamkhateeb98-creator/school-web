@@ -12,11 +12,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpHelper } from '../../../../core/services/http-helper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../core/services/params-service';
-import { Page } from '../../../shared/model/page';
 import { SubjectFilterViewModel } from './model/subject-filter-view-model';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
-import { MutateResponse } from '../../../shared/model/mutate-response';
 import { AddSubjectDialog } from './dialog/add-subject-dialog/add-subject-dialog';
 import { SubjectEndpoints } from '../../shared/endpoints/subject-endpoint';
 
@@ -58,12 +56,10 @@ export class SubjectPage {
 
     this.filter.update(x=>{
       const param = parmas.loadFromUrl<SubjectFilterViewModel>(this.filter());
-
+      console.log(param)
       x.pageSize = param.pageSize? param.pageSize: 10;
       x.pageNumber = param.pageNumber? param.pageNumber: 1
       
-      parmas.setToUrl(x);
-
       return x;
     });
     this.onLoading();
@@ -74,15 +70,15 @@ export class SubjectPage {
     }
 
   onLoading(){
-    this.subjectEndpoints.get(this.filter().pageNumber,this.filter().pageNumber,"")
+    this.subjectEndpoints.get(this.filter().pageNumber,this.filter().pageSize,"")
       .subscribe({
         next:(success)=>{
-          this.filter.update(x=>
-          {
-            x.pageSize = success.pageSize;
-            x.pageNumber = success.pageNumber;  
-            return x;
-          });
+          // this.filter.update(x=>
+          // {
+          //   x.pageSize = success.pageSize;
+          //   x.pageNumber = success.pageNumber;  
+          //   return x;
+          // });
           this.totalPages.set(success.countPages)
           this.subjectViewModels.set(success.content)
         },
@@ -169,7 +165,11 @@ export class SubjectPage {
           x.pageNumber = pageEvent.pageIndex + 1;  
           return x;
         });
+        console.log(pageEvent)
       this.onLoading();
-      this.parmas.setToUrl(this.filter())
+      this.parmas.setToUrl({
+        'pageSize': this.filter().pageSize,
+        'pageNumber': this.filter().pageNumber
+      });
   }  
 }
