@@ -154,7 +154,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         update_class_schedule_title:"تعديل معلومات الحصة",
         remove_class_period:"إزالة الحصة",
         assign_teacher_to_this_subject: 'تعيين المدرس لهذه المادة',
-        update_mode: 'وضع التعديل'
+        update_mode: 'وضع التعديل',
+        study_plan_title: 'الخطة الدراسية',
+        add_study_plan: 'إضافة خطة دراسية',
+        update_study_plan: 'تعديل الخطة الدراسية',
+        delete_study_plan: 'حذف الخطة الدراسية',
     },
     en:{
         'name':"Name",
@@ -311,7 +315,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         update_class_schedule_title:"Update schedule class",
         remove_class_period:"remove class period",
         assign_teacher_to_this_subject: 'Assign teacher to this subject',
-        update_mode: 'Update mode'
+        update_mode: 'Update mode',
+        study_plan_title: 'Study Plan',
+        add_study_plan: 'Add Study Plan',
+        update_study_plan: 'Update Study Plan',
+        delete_study_plan: 'Delete Study Plan',
+        
     }
 }
 
@@ -515,8 +524,11 @@ export type SubjectPhrases =
 'add_subject'|
 'update_subject'|
 'delete_subject'|
-'description_title'
-;
+'description_title'|
+'study_plan_title'|
+'add_study_plan'|
+'update_study_plan'|
+'delete_study_plan';
 
 export type HttpErrors = 
 'http_401'|

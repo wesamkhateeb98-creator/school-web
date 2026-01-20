@@ -11,6 +11,7 @@ import { ManagerialPage } from "./pages/administrative-staff-page/administrative
 import { ClassPage } from "./pages/class-page/class-page";
 import { PeriodPage } from "./pages/period/period";
 import { ClassSchedulePage } from "./pages/class-schedule/class-schedule";
+import { StudyPlan } from "./pages/study-plan/study-plan";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -31,11 +32,11 @@ export const DASHBOARD_ROUTES: Routes = [
         path: 'age-group', 
         children:[
           { path:'', component: AgeGroup, title: messageTitle('age_group_title')},
-          // { 
-          //   path:':id/subject', 
-          //   component: SubjectPage, 
-          //   title: messageTitle('subject_title')
-          // },
+          {
+            path:':ageGroup/subject/:subject/study-plan', 
+            component: StudyPlan, 
+            title: messageTitle('study_plan_title')
+          }
         ],
       },
       { 

@@ -7,16 +7,9 @@ import { MatGridListModule } from "@angular/material/grid-list";
 import { MatInputModule } from "@angular/material/input";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { Language } from "../../../../../../core/services/language";
-import { ResponsiveScreen } from "../../../../../../core/services/responsive-screen";
 import { provideNativeDateAdapter } from "@angular/material/core";
-import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { HttpHelper } from "../../../../../../core/services/http-helper";
-import { MutateResponse } from "../../../../../shared/model/mutate-response";
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
-import { yearMonthDay } from "../../../../../../core/formats/date-format";
-import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
-import { AgeGroupViewModel } from "../../model/age-group-view-model";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AsyncPipe, DatePipe } from "@angular/common";
@@ -31,6 +24,7 @@ import { debounceTime, map, of, startWith, switchMap } from "rxjs";
 import { SubjectForAgeGroupFilterViewModel } from "../../model/subject-filter-view-model";
 import { AgeGroupEndpoints } from "../../../../shared/endpoints/age-group-endpoint";
 import { SubjectForAgeGroupModel } from "../../../../shared/endpoints/models/age-group/subject-for-age-group-model";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -64,6 +58,7 @@ export class SubjectInAgeGroupDialog {
   language = inject(Language);
   fb = inject(FormBuilder);
   matSnackBar = inject(MatSnackBar);
+  router = inject(Router);
 
   existingCode = signal<boolean>(true);
 
@@ -194,5 +189,10 @@ export class SubjectInAgeGroupDialog {
     
       this.loadSubjects()
   }  
+
+  OpenStudyPlanPage(ageGroupSubjectId:number){
+    this.router.navigate(['manager/age-group',this.data.ageGroupId,'subject',ageGroupSubjectId,'study-plan'])
+    this.dialogRef.close()
+  }
 }
 
