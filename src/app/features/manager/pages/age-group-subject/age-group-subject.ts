@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormField, MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatInputModule } from "@angular/material/input";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { Language } from "../../../../../../core/services/language";
+import { Language } from "../../../../core/services/language";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../../../core/consts";
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from "../../../../core/consts";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { AsyncPipe, DatePipe } from "@angular/common";
@@ -18,18 +17,18 @@ import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 import { MatExpansionPanel, MatExpansionPanelHeader } from "@angular/material/expansion";
-import { SubjectEndpoints } from "../../../../shared/endpoints/subject-endpoint";
-import { SubjectViewModel } from "../../../subject/model/subject-view-model";
+import { SubjectEndpoints } from "../../shared/endpoints/subject-endpoint";
+import { SubjectViewModel } from "../subject/model/subject-view-model";
 import { debounceTime, map, of, startWith, switchMap } from "rxjs";
-import { SubjectForAgeGroupFilterViewModel } from "../../model/subject-filter-view-model";
-import { AgeGroupEndpoints } from "../../../../shared/endpoints/age-group-endpoint";
-import { SubjectForAgeGroupModel } from "../../../../shared/endpoints/models/age-group/subject-for-age-group-model";
-import { Router } from "@angular/router";
+import { SubjectForAgeGroupFilterViewModel } from "../age-group/model/subject-filter-view-model";
+import { AgeGroupEndpoints } from "../../shared/endpoints/age-group-endpoint";
+import { SubjectForAgeGroupModel } from "../../shared/endpoints/models/age-group/subject-for-age-group-model";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
   imports: [
-    MatDialogContent, MatFormField, MatLabel, MatDialogActions,
+    MatFormField, MatLabel,
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatAutocompleteModule,
     MatButtonModule,
@@ -46,37 +45,39 @@ import { Router } from "@angular/router";
 ],
   providers:[provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './subject-in-age-group-dialog.html',
+  templateUrl: './age-group-subject.html',
 })
-export class SubjectInAgeGroupDialog {
+export class AgeGroupSubject {
+  // #################################### Injection ####################################
   loading = signal<boolean>(false);
   form!: FormGroup;
-  data = inject(MAT_DIALOG_DATA); // AgeGroupId
   subjectEndpoints = inject(SubjectEndpoints);
   ageGroupEndpoints = inject(AgeGroupEndpoints);
-  dialogRef = inject(MatDialogRef<SubjectInAgeGroupDialog>);
   language = inject(Language);
   fb = inject(FormBuilder);
   matSnackBar = inject(MatSnackBar);
   router = inject(Router);
+  route = inject(ActivatedRoute);
+
+  // #################################### Data ####################################
 
   existingCode = signal<boolean>(true);
-
   subjects$ = of<SubjectViewModel[]>([]);
   key:string = crypto.randomUUID();
-  
   headerTable:string[] = ['subject','description','createdAt','action'];
-  
   filter = signal<SubjectForAgeGroupFilterViewModel>({
     pageSize: 10,
     pageNumber: 1
   });
-
   totalPages = signal<number>(1);
-
   assignedSubjects = signal<SubjectForAgeGroupModel[]>([]);
 
+  ageGroupId:number = 0;
+
   ngOnInit() {
+    this.ageGroupId = +(this.route.snapshot.paramMap.get('ageGroupId')??'0');
+
+
     this.loadSubjects();
 
     this.initiateForm();
@@ -86,7 +87,7 @@ export class SubjectInAgeGroupDialog {
 
   loadSubjects(){
     this.loading.set(true);
-    const result = this.ageGroupEndpoints.getSubjects(this.data.ageGroupId,this.filter().pageNumber,this.filter().pageSize);
+    const result = this.ageGroupEndpoints.getSubjects(this.ageGroupId,this.filter().pageNumber,this.filter().pageSize);
 
     result.subscribe({
       next:(success)=>{
@@ -124,7 +125,7 @@ export class SubjectInAgeGroupDialog {
   addSubject(){
     this.loading.set(true);
 
-    this.ageGroupEndpoints.addSubject(this.data.ageGroupId,this.form.value.subjectId)
+    this.ageGroupEndpoints.addSubject(this.ageGroupId,this.form.value.subjectId)
       .subscribe({
         next: success => {
            this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
@@ -153,7 +154,7 @@ export class SubjectInAgeGroupDialog {
   removeSubject(id:number){
     this.loading.set(true);
     
-    const result = this.ageGroupEndpoints.deleteSubject(this.data.ageGroupId,id)
+    const result = this.ageGroupEndpoints.deleteSubject(this.ageGroupId,id)
 
     result.subscribe({
       next:(success)=>{
@@ -191,8 +192,12 @@ export class SubjectInAgeGroupDialog {
   }  
 
   OpenStudyPlanPage(ageGroupSubjectId:number){
-    this.router.navigate(['manager/age-group',this.data.ageGroupId,'subject',ageGroupSubjectId,'study-plan'])
-    this.dialogRef.close()
+    this.router.navigate(['manager/age-group',this.ageGroupId,'subject',ageGroupSubjectId,'study-plan'])
+    // this.dialogRef.close()
+  }
+
+  operAgeGroupPage(){
+    this.router.navigate(['manager/age-group'])
   }
 }
 

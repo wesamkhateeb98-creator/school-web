@@ -18,7 +18,6 @@ import { AgeGroupFilterViewModel } from './model/age-group-filter-view-model';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { MutateResponse } from '../../../shared/model/mutate-response';
-import { SubjectInAgeGroupDialog } from './dialog/subject-in-age-group-dialog/subject-in-age-group-dialog';
 
 @Component({
   selector: 'app-semester-component',
@@ -164,14 +163,6 @@ export class AgeGroup {
   }  
 
   openSubjectPage(id:number){
-    this.dialog.open(
-      SubjectInAgeGroupDialog, 
-      {
-        data:{
-          ageGroupId: id
-        },
-        width: "80%"
-      }
-    );
+    this.router.navigate(['manager/age-group',id,'subject'])
   }
 }

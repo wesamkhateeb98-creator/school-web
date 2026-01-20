@@ -109,7 +109,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'class_title':"الصف",
         'assign_student':'تكليف طالب',
         'select_from_here':'أختر من هنا',
-        'add_subject_to_age_group':'إضافة مادة لسنة دراسية',
+        'add_subject_to_age_group':'إضافة مادة لفئة عمرية',
         'assign_subject_to_teacher': 'تكليف مادة للمدرس',
         'class_schedules_title': 'جدول صفي',
         'periods_title': 'فترة زمنية',
@@ -159,6 +159,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_study_plan: 'إضافة خطة دراسية',
         update_study_plan: 'تعديل الخطة الدراسية',
         delete_study_plan: 'حذف الخطة الدراسية',
+        subjects_age_group: 'مواد السنة الدراسية'
     },
     en:{
         'name':"Name",
@@ -320,6 +321,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_study_plan: 'Add Study Plan',
         update_study_plan: 'Update Study Plan',
         delete_study_plan: 'Delete Study Plan',
+        subjects_age_group: 'Age group subjects'
         
     }
 }
@@ -516,7 +518,8 @@ export type AgeGroupPhrases =
 'add_age_group'|
 'update_age_group'|
 'delete_age_group'|
-'add_subject_to_age_group'
+'add_subject_to_age_group'|
+'subjects_age_group'
 ;
 
 export type SubjectPhrases = 
