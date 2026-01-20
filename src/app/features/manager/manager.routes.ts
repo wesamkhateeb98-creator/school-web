@@ -74,8 +74,8 @@ export const DASHBOARD_ROUTES: Routes = [
           }
         ]
       },
-      { path: '', redirectTo: 'academic_year', pathMatch: 'full' },
-      { path: '**', redirectTo: 'academic_year', pathMatch: 'full' },
+      { path: '', redirectTo: 'classes', pathMatch: 'full' },
+      { path: '**', redirectTo: 'classes', pathMatch: 'full' },
     ],
   },
   { path: '**', redirectTo: '', pathMatch: 'full' },
