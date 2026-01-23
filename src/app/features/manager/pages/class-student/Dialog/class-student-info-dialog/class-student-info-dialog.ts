@@ -28,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChip, MatChipSet } from '@angular/material/chips';
 import { ResponsiveScreen } from '../../../../../../core/services/responsive-screen';
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { FormatService } from '../../../../../../core/services/format-service';
 
 @Component({
   selector: 'app-class-student-info-dialog',
@@ -67,6 +68,7 @@ export class ClassStudentInfoDialog implements OnInit {
   public matSnackBar = inject(MatSnackBar);
   public studentEndpoints = inject(StudentEndpoints);
   public response = inject(ResponsiveScreen);
+  public formatService = inject(FormatService);
   
   // ======================================== PREPARE DATA ========================================
   

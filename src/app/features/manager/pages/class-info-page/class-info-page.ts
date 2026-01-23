@@ -20,6 +20,7 @@ import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { FormatService } from '../../../../core/services/format-service';
 
 @Component({
   selector: 'app-class-page',
@@ -47,6 +48,7 @@ export class ClassInfoPage implements OnInit{
   classEndpoints = inject(ClassEndpoints);
   fb = inject(FormBuilder);
   response = inject(ResponsiveScreen);
+  formatService = inject(FormatService);
 
   // ======================================== INPUT PARAMETERS ========================================
   classId!:number;

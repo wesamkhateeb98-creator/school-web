@@ -31,17 +31,17 @@
         <div class="flex grid-full-line-item">
             <h4>{{language.transform('address_title')}}:</h4>
             <div class="row-box-10"></div>
-            <p>{{studentModel.motherName}}</p>
+            <p>{{studentModel.address}}</p>
         </div>
         <div class="flex">
             <h4>{{language.transform('birthday_title')}}:</h4>
             <div class="row-box-10"></div>
-            <p>{{studentModel.birthday}}</p>
+            <p>{{formatService.ToDateOnly(studentModel.birthday)}}</p>
         </div>
         <div class="flex">
             <h4>{{language.transform('created_at_title')}}:</h4>
             <div class="row-box-10"></div>
-            <p>{{studentModel.createdAt}}</p>
+            <p>{{formatService.ToDateOnly(studentModel.createdAt)}}</p>
         </div>
     </div>
   </mat-card>
