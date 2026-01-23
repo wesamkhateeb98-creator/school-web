@@ -96,3 +96,19 @@ export function MinutesAndHoursTimeValidator(
 
   return null;
 }
+
+export function lengthIfNotNullValidation(min:number, max:number, key:string):ValidatorFn{
+  return (control: AbstractControl): ValidationErrors | null=>{
+    let name = control.value;
+    if(name == undefined || name == null || name == '')
+      return null
+
+    if(name.length < min)
+      return { minLength:true}
+    if(name.length > max)
+      return { maxLength:true}
+
+    return null;
+  }
+
+}

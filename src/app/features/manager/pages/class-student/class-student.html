@@ -1,0 +1,73 @@
+<div style="display: flex; justify-content: space-between;">
+    <div style="display: flex; justify-content: start; align-items: center;">
+        <h2>{{ language.transform('class_title') }}</h2>
+        
+        <div style="margin: 0 10px;"></div>
+    </div>
+
+    
+    <button matFab (click)="openClassInfoPage()" style="margin: 0 20px ">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+
+</div>
+
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title> {{language.transform('filter')}}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form class="example-form" [formGroup]="form">
+        <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
+            
+            <mat-grid-tile>
+                <mat-form-field  class="example-full-width" style="width: 100%;">
+                    <mat-label>{{ language.transform("name") }}</mat-label>
+                    <input type="text" matInput formControlName="name">
+                </mat-form-field>
+            </mat-grid-tile>            
+        </mat-grid-list>
+    </form>
+    
+</mat-expansion-panel>
+
+<br/>
+
+<mat-card style="overflow-x: auto;">
+    @if(this.loading())
+    {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+    <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8" style="width: 80%;">
+
+        <ng-container matColumnDef="{{headerTable[0]}}" sticky>
+            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('name')}} </th>
+            <td mat-cell *matCellDef="let element"> {{ element.fullName }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="{{headerTable[1]}}" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
+            <td mat-cell *matCellDef="let element"> 
+                <div style="display: flex; justify-content: space-between;">
+                    <button mat-icon-button (click)="openStudentExtraInfoDialog(element.id)">
+                        <mat-icon>person</mat-icon>
+                    </button>
+                </div>
+            </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
+        <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
+
+    </table>
+    <mat-paginator 
+        [length]="totalPages() * filter().pageSize" 
+        [pageSize]="filter().pageSize"
+        [pageIndex]="filter().pageNumber - 1"
+        
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        showFirstLastButtons="false"
+        (page)="changeInPage($event)"
+    />
+</mat-card>

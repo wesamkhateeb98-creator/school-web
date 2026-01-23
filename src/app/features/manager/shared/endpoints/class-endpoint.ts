@@ -3,11 +3,12 @@ import { HttpHelper } from '../../../../core/services/http-helper';
 import { MutateResponse } from '../../../shared/model/mutate-response';
 import { Page } from '../../../shared/model/page';
 import { Observable } from 'rxjs';
-import { AddClassViewModel } from '../../pages/class-page/view-model/add-class-view-model';
 import { ClassModel } from './models/class/class-model';
-import { ClassFilterViewModel } from '../../pages/class-page/view-model/class-filter-view-model';
 import { ClassScheduleDayModel } from './models/schedule-class/add-schedule-class-model';
 import { ScheduleClassModel } from './models/schedule-class/schedule-class-model';
+import { AddClassViewModel } from '../../pages/classes-page/view-model/add-class-view-model';
+import { ClassFilterViewModel } from '../../pages/classes-page/view-model/class-filter-view-model';
+import { ClassByIdModel } from './models/class/class-by-id-model';
 
 @Injectable({
     providedIn: 'root',
@@ -109,5 +110,11 @@ export class ClassEndpoints {
         classId: number,
         classScheduleId: number,): Observable<MutateResponse> {
         return this.http.delete<MutateResponse>(`${this.baseUrl}/${classId}/class-schedule/${classScheduleId}`);
+    }
+
+    getByIdClassForAdmin(
+        id : number
+    ): Observable<ClassByIdModel> {
+        return this.http.get<ClassByIdModel>(`${this.baseUrl}/${id}/admin`);
     }
 }

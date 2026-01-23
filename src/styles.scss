@@ -4,6 +4,7 @@
 @use './app/theme/blueTheme.scss' as blueTheme;
 
 html{
+  
   @include mat.form-field-overrides((
     disabled-input-text-placeholder-color: orange,
       filled-active-indicator-color: var(--mat-sys-primary)
@@ -88,4 +89,52 @@ html{
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.3);
   background-clip: content-box;
+}
+
+.flex{
+  display: flex;
+  align-items: center;
+}
+
+.flex-start{
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.flex-between{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.m-t-10-percent{
+  margin-top: 10%;
+}
+
+.row-box-10{
+  margin: 0 5px;
+}
+
+.grid {
+  display: grid;
+  column-gap: 10px;
+}
+
+.grid-one-column{
+  grid-template-columns: repeat(1, 1fr);;
+}
+
+.grid-two-column{
+  grid-template-columns: repeat(2, 1fr);;
+}
+
+.grid-full-line-item {
+  grid-column: 1 / -1;
 }

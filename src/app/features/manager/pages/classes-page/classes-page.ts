@@ -49,9 +49,9 @@ import { Router } from '@angular/router';
     DatePipe,
     AsyncPipe
   ],
-  templateUrl: './class-page.html',
+  templateUrl: './classes-page.html',
 })
-export class ClassPage implements OnInit{
+export class ClassesPage implements OnInit{
   // [x: string]: any;
   classes = signal<ClassModel[]>([]);
   classFilter = signal<ClassFilterViewModel>({
@@ -283,10 +283,6 @@ export class ClassPage implements OnInit{
     });
   }
 
-  openClassSchedulePage(id: number) {
-    this.router.navigate(['manager','classes',id,'class-schedules'])
-  }
-
   changeInPage(pageEvent: PageEvent) {
     this.classFilter.update(x => ({
       ...x,
@@ -296,7 +292,13 @@ export class ClassPage implements OnInit{
     this.loadClassViewModel();
   }
 
+  
+  // #################### Navigation ##################
   openPeriodPage(){
-    this.router.navigate(['manager','classes','periods'])
+    this.router.navigate(['manager','class','periods'])
+  }
+  
+  openClassPage(id: number) {
+    this.router.navigate(['manager','class',id,'info'])
   }
 }

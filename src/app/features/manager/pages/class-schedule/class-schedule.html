@@ -110,6 +110,10 @@
 
 }
 <mat-card>
+    @if(this.loading())
+    {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
     <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8">
         @for (column of columns(); track column.key) {
             <ng-container [matColumnDef]="column.key" [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">

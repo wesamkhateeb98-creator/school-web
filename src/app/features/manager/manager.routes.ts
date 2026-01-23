@@ -8,11 +8,13 @@ import { SubjectPage } from "./pages/subject/subject";
 import { StudentsPage } from "./pages/student-page/students-page";
 import { TeacherPage } from "./pages/teacher-page/teacher-page";
 import { ManagerialPage } from "./pages/administrative-staff-page/administrative-staff-page";
-import { ClassPage } from "./pages/class-page/class-page";
 import { PeriodPage } from "./pages/period/period";
 import { ClassSchedulePage } from "./pages/class-schedule/class-schedule";
 import { StudyPlan } from "./pages/study-plan/study-plan";
 import { AgeGroupSubject } from "./pages/age-group-subject/age-group-subject";
+import { ClassStudent } from "./pages/class-student/class-student";
+import { ClassesPage } from "./pages/classes-page/classes-page";
+import { ClassInfoPage } from "./pages/class-info-page/class-info-page";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -61,7 +63,28 @@ export const DASHBOARD_ROUTES: Routes = [
       { 
         path:'classes', 
         children:[
-          { path:'', component: ClassPage, title: messageTitle('classes_title')},
+          { path:'', component: ClassesPage, title: messageTitle('classes_title')},
+          { 
+            path:':id/students',
+            component: ClassStudent,
+            title:messageTitle('students_title')
+          }
+        ]
+      },
+
+      { 
+        path:'class',
+        children:[
+          {
+            path:':id/info',
+            component: ClassInfoPage,
+            title:messageTitle('class_title') 
+          },
+          {
+            path:':id/students',
+            component: ClassStudent,
+            title:messageTitle('class_title') 
+          },
           { 
             path:':id/class-schedules',
             component: ClassSchedulePage,
@@ -71,7 +94,7 @@ export const DASHBOARD_ROUTES: Routes = [
             path:'periods',
             component: PeriodPage,
             title:messageTitle('periods_title')
-          }
+          },
         ]
       },
       { path: '', redirectTo: 'classes', pathMatch: 'full' },

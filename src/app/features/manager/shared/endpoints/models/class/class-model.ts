@@ -5,3 +5,5 @@ export interface ClassModel {
   section: number;
   createdAt: string;
 }
+
+

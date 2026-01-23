@@ -159,7 +159,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_study_plan: 'إضافة خطة دراسية',
         update_study_plan: 'تعديل الخطة الدراسية',
         delete_study_plan: 'حذف الخطة الدراسية',
-        subjects_age_group: 'مواد السنة الدراسية'
+        subjects_age_group: 'مواد السنة الدراسية',
+        number_of_students: 'عدد الطلاب'
     },
     en:{
         'name':"Name",
@@ -321,8 +322,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_study_plan: 'Add Study Plan',
         update_study_plan: 'Update Study Plan',
         delete_study_plan: 'Delete Study Plan',
-        subjects_age_group: 'Age group subjects'
-        
+        subjects_age_group: 'Age group subjects',
+        number_of_students: 'Number of students'
     }
 }
 
@@ -348,6 +349,7 @@ export type ClassPhrases =
 'update_class'|
 'classes_title'|
 'class_title'|
+'number_of_students'|
 ClassSchedulePhrases|
 PeriodPhrases
 ;

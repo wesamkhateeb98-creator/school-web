@@ -8,7 +8,6 @@ import { MatTableModule } from '@angular/material/table';
 import { Language } from '../../../../core/services/language';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpHelper } from '../../../../core/services/http-helper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../core/services/params-service';
 import { ClassEndpoints } from '../../shared/endpoints/class-endpoint';
@@ -34,6 +33,7 @@ import { AddClassScheduleViewModel } from './model/add-class-schedule.view.model
 import { PeriodViewModel } from '../period/model/period-view-model';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { UpdateClassScheduleDialog } from './dialog/update-class-schedule-dialog/update-class-schedule-dialog';
+import { MatProgressBar } from "@angular/material/progress-bar";
 
 @Component({
   selector: 'app-class-schedule-component',
@@ -54,7 +54,8 @@ import { UpdateClassScheduleDialog } from './dialog/update-class-schedule-dialog
     TeacherAutoComplete,
     MatButtonModule,
     PeriodAutoComplete,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatProgressBar
 ],
   templateUrl: './class-schedule.html'
 })
@@ -65,7 +66,6 @@ export class ClassSchedulePage implements OnInit {
   dialog = inject(MatDialog);
   route = inject(ActivatedRoute);
   router = inject(Router);
-  httpHelper = inject(HttpHelper);
   matSnackBar = inject(MatSnackBar);
   parmas = inject(ParamsService);
   classEndpoints = inject(ClassEndpoints);
@@ -183,7 +183,7 @@ export class ClassSchedulePage implements OnInit {
   // ======================================== Navigation ========================================
 
   operClassPage(){
-    this.router.navigate(['manager','classes'])
+    this.router.navigate(['manager','class',this.classId,'info'])
   }
 
   // ======================================== Expanded ========================================

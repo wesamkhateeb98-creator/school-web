@@ -1,4 +1,5 @@
-export interface StudentModel {
+
+export interface StudentByIdModel {
     id: number;
     ageGroupId: number;
     ageGroupName: string;
@@ -8,6 +9,7 @@ export interface StudentModel {
     address: string;
     birthday: Date;
     phoneNumber: string;
+    createdAt: Date;
 }
 
 

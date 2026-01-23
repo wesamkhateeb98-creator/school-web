@@ -1,0 +1,69 @@
+
+@if(this.loading()) {
+    <div class="flex-center m-t-10-percent">
+        <mat-spinner></mat-spinner>
+    </div>
+}
+@else{
+    <div style="display: flex; justify-content: space-between;">
+        <div style="display: flex; justify-content: start; align-items: center;">
+            <h2>{{ language.transform('class_title') }}</h2>
+            
+            <div style="margin: 0 10px;"></div>
+        </div>
+
+        
+        <button matFab (click)="openClassesPage()" style="margin: 0 20px ">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+    
+    </div>
+
+    <br>
+
+    <mat-card style="overflow-x: auto; padding: 0 20px;">
+        <div [className]="response.isMobile()? 'grid grid-one-column':'grid grid-two-column'">
+            <div class="flex">
+                <h4>{{language.transform('age_group_title')}}:</h4>
+                <div class="row-box-10"></div>
+                <p>{{classInfo.ageGroupName}}</p>
+            </div>
+            <div class="flex">
+                <h4>{{language.transform('section_title')}}:</h4>
+                <div class="row-box-10"></div>
+                <p>{{classInfo.section}}</p>
+            </div>
+            <div class="flex">
+                <h4>{{language.transform('number_of_students')}}:</h4>
+                <div class="row-box-10"></div>
+                <p>{{classInfo.numberOfStudent}}</p>
+            </div>
+            <div class="flex">
+                <h4>{{language.transform('created_at_title')}}:</h4>
+                <div class="row-box-10"></div>
+                <p>{{classInfo.createdAt}}</p>
+            </div>
+        </div>
+
+    </mat-card>
+
+    <br>
+
+
+    <h4>{{language.transform('action')}}</h4>
+    <div class="flex"> 
+        <button mat-fab extended (click)="openClassSchedulePage()">
+            {{language.transform('class_schedule_title')}}
+            <mat-icon>event_note</mat-icon>
+        </button>  
+
+        <div class="row-box-10"></div>
+        
+        <button mat-fab extended (click)="operClassStudentPage()">
+            {{language.transform('students_title')}}
+            <mat-icon>groups</mat-icon>
+        </button>    
+    </div>
+
+}
+

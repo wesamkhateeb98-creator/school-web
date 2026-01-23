@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { AddStudentViewModel } from '../../pages/student-page/view-model/add-student-view-model';
 import { StudentModel } from './models/student/student-model';
 import { StudentFilterViewModel } from '../../pages/student-page/view-model/student-filter-view-model';
+import { ClassStudentModel } from './models/student/class-student-model';
+import { StudentByIdModel } from './models/student/student-by-id-model';
 
 @Injectable({
   providedIn: 'root',
@@ -54,4 +56,17 @@ export class StudentEndpoints {
     return this.http.delete<MutateResponse>(`student/${id}`);
   }
   
+
+  getStudentsClass(classId:number, name:string, pageNumber:number, pageSize:number)
+    :Observable<Page<ClassStudentModel>>{
+    return this.http.get<Page<ClassStudentModel>>(`student/class/${classId}/admin`,{
+        name: name,
+        pageNumber: pageNumber,
+        pageSize: pageSize
+      })
+  }
+
+  getStudentById(studentId:number):Observable<StudentByIdModel>{
+    return this.http.get<StudentByIdModel>(`student/${studentId}`,)
+  }
 }

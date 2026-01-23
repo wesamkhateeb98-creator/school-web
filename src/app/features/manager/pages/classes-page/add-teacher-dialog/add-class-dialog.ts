@@ -36,7 +36,6 @@ import { AgeGroupModel } from '../../../shared/endpoints/models/age-group/age-gr
     AsyncPipe
 ],
   templateUrl: './add-class-dialog.html',
-  styleUrl: './add-class-dialog.scss',
   providers:[
     provideNativeDateAdapter()
   ]
