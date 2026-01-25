@@ -99,7 +99,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'no-code-available':'لا يوجد رمز متاح.',
         "validation_phonenumber_pattern": "يجب أن يكون رقم الهاتف بطول 10 أرقام ويبدأ بـ 09",
         "validation_password_pattern": "يجب أن تحتوي كلمة المرور على أحرف كبيرة وصغيرة، أرقام، ورموز، وألا يقل طولها عن 8 محارف",
-        'year_must_equal_currenct_year_or_less_than_one': 'السنة الدراسية يجب أن تكون مطابقة لسنة الحالية أو السابقة',
+        'year_must_equal_currenct_year_or_greater_than_one': 'السنة الدراسية يجب أن تكون مطابقة لسنة الحالية أو التالية',
         'end_academic_year':'إنهاء السنة الدراسية.',
         'started':'بدأ',
         'ended':'منتهي',
@@ -262,7 +262,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'no-code-available':'No code available.',
         "validation_phonenumber_pattern": "Phone number must be 10 digits long and start with 09",
         "validation_password_pattern": "Password must be at least 8 characters long and contain uppercase and lowercase letters, numbers, and symbols",
-        'year_must_equal_currenct_year_or_less_than_one': 'The academic year must match the current year or the previous year.',
+        'year_must_equal_currenct_year_or_greater_than_one': 'The academic year must match the current year or the following year.',
         'end_academic_year':'End academic year',
         'started':'Started',
         'ended':'Closed',
@@ -484,7 +484,7 @@ export type ValidationMessagePhrases =
 'year_less_than_current_year'|
 'number_digit_between_7_10'|
 'min_number_1'|
-'year_must_equal_currenct_year_or_less_than_one'|
+'year_must_equal_currenct_year_or_greater_than_one'|
 'min_number_0'|
 'invalid_time_pattern';
 

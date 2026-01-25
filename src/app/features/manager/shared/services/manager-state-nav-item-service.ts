@@ -19,7 +19,7 @@ export class ManagerNavItemStateService {
       icon:"app_registration",
       subItem:[
         {
-          url:"/manager/members",
+          url:"/manager/academic-year",
           name:"academic_year_title",
           icon:"date_range",
           isExpended:false

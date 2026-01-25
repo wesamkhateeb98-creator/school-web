@@ -51,7 +51,7 @@ export class AddAcademicYearDialog {
 this.form = this.fb.group({
       academicYear:[
         this.isUpdate()?this.item().year : "",
-        [Validators.required,Validators.min(year - 1), Validators.max(year)]
+        [Validators.required,Validators.min(year), Validators.max(year + 1)]
       ]
     });
 

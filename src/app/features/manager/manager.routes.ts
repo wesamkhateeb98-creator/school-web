@@ -22,7 +22,7 @@ export const DASHBOARD_ROUTES: Routes = [
     component: DashboardLayout, 
     children: [
       { 
-        path:'academic_year', 
+        path:'academic-year', 
         component: AcademicYear, 
         title: messageTitle('academic_year_title')
       },
