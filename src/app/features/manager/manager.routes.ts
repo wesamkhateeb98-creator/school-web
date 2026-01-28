@@ -15,6 +15,7 @@ import { AgeGroupSubject } from "./pages/age-group-subject/age-group-subject";
 import { ClassStudent } from "./pages/class-student/class-student";
 import { ClassesPage } from "./pages/classes-page/classes-page";
 import { ClassInfoPage } from "./pages/class-info-page/class-info-page";
+import { StudentNotesPage } from "./pages/student-notes/student-notes";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -50,16 +51,28 @@ export const DASHBOARD_ROUTES: Routes = [
       { 
         path:'subjects', 
         component: SubjectPage, 
-        title: messageTitle('subject_title')
+        title: messageTitle('subject_title'),
       },
+      
       { 
-        path: 'users', 
+        path:'students',
         children:[
-          { path:'students', component: StudentsPage, title: messageTitle('students_title')},
-          { path:'teachers', component: TeacherPage, title: messageTitle('teachers_title')},
-          { path:'managerial', component: ManagerialPage, title: messageTitle('managerial_title')},
-        ],
+          {
+            path:'', 
+            component: StudentsPage, 
+            title: messageTitle('students_title')
+          },
+          {
+            path:':id/student-notes', 
+            component: StudentNotesPage, 
+            title: messageTitle('notes')
+          }
+        ]
       },
+      { path:'teachers', component: TeacherPage, title: messageTitle('teachers_title')},
+      { path:'managerial', component: ManagerialPage, title: messageTitle('managerial_title')},
+    
+      
       { 
         path:'classes', 
         children:[

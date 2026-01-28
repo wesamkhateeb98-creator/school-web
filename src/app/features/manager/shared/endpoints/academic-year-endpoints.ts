@@ -6,6 +6,7 @@ import { Page } from "../../../shared/model/page";
 import { AcademicYearModel } from "../../pages/academic-year/model/academic-year-model";
 import { SemesterForAcademicYearModel } from "../../pages/academic-year/model/semester-for-academic-year-view-model";
 import { ToDateOnly } from "../../../../core/consts";
+import { SemesterInOpenAcademicYear } from "./models/semester/semester-in-open-academic-year";
 
 @Injectable({
   providedIn: 'root',
@@ -72,6 +73,10 @@ export class AcademicYearEndpoints {
       startDate: ToDateOnly(startDate),
       endDate: ToDateOnly(endDate)
     })
+  }
+
+  getSemesterForOpenAcademicYear(academicYear:number):Observable<SemesterInOpenAcademicYear>{
+    return this.http.get<SemesterInOpenAcademicYear>('academic-year/' + academicYear + '/semester-in-open-academic-year',{})
   }
 }
 

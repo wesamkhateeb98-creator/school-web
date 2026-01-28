@@ -48,24 +48,23 @@ export class ManagerNavItemStateService {
           isExpended:false,
           subItem:[
             {
-              url:"/manager/users/students",
+              url:"/manager/students",
               name:"students_title",
               icon:"escalator_warning",
               isExpended:false
             },
             {
-              url:"/manager/users/teachers",
+              url:"/manager/teachers",
               name:"teachers_title",
               icon:"contacts_product",
               isExpended:false
             },
             {
-              url:"/manager/users/managerial",
+              url:"/manager/managerial",
               name:"managerial_title",
               icon:"manage_accounts",
               isExpended:false
             },
-            
           ]
         },
         

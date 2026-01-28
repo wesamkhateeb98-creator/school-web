@@ -1,49 +1,75 @@
-<!-- <div style="display: flex; justify-content: space-between;">
+<div style="display: flex; justify-content: space-between;">
     <div style="display: flex;">
-        <h2 >{{language.transform('periods_title')}}</h2>
+        <h2 >{{language.transform('notes')}}</h2>
         <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
             <mat-icon>add</mat-icon>
         </button>
     </div>
     <div>
-        <button matFab (click)="openShiftDialog()" style="margin: 0 20px ">
-            <mat-icon>double_arrow</mat-icon>
-        </button>
-
-        <button matFab (click)="operClassPage()" style="margin: 0 20px ">
+        <button matFab (click)="backPage()" style="margin: 0 20px ">
             <mat-icon>arrow_back</mat-icon>
         </button>
     </div>
 
 </div>
 <br/>
+
+<div class="flex-between">
+    <div class="flex-start">
+        <h4>{{language.transform('behavioral_title')}}</h4>
+        <p>{{studentNotesStatistics().behavioralCount}}</p>
+    </div>
+    <div class="flex-start">
+        <h4>{{language.transform('academic_title')}}</h4>
+        <p>{{studentNotesStatistics().academicCount}}</p>
+    </div>
+</div>
+
+<br/>
+
 @if(this.loading()) {
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 }
+
 <mat-card>
-    <table mat-table [dataSource]="periods()" class="mat-elevation-z8">
+    <table mat-table [dataSource]="studentNotes()" class="mat-elevation-z8">
 
     <ng-container matColumnDef="{{headerTable[0]}}" sticky>
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('lesson_number_title')}} </th>
-        <td mat-cell *matCellDef="let element"> {{ element.lessonNumber }} </td>
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('type')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.type }} </td>
     </ng-container>
 
     <ng-container matColumnDef="{{headerTable[1]}}">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('from_time_title')}} </th>
-        <td mat-cell *matCellDef="let element"> {{ element.fromTime }} </td>
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('description_title')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
     </ng-container>
 
     <ng-container matColumnDef="{{headerTable[2]}}">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('to_time_title')}} </th>
-        <td mat-cell *matCellDef="let element"> {{ element.toTime }} </td>
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('recordedAt')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.recordedAt | date: 'dd/MM/yyyy'}} </td>
     </ng-container>
 
     <ng-container matColumnDef="{{headerTable[3]}}">
-        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('created_at_title')}} </th>
-        <td mat-cell *matCellDef="let element"> {{ element.createdAt|date:'yyyy-MM-dd HH:mm' }} </td>
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('isReleased')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.isReleased }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="{{headerTable[4]}}" stickyEnd>
+    <ng-container matColumnDef="{{headerTable[4]}}">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('releasedAt')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.releasedAt | date: 'dd/MM/yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{headerTable[5]}}">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('isSolved')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.isSolved }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{headerTable[6]}}">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('solvedAt')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.solvedAt | date: 'dd/MM/yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{headerTable[7]}}" stickyEnd>
         <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
         <td mat-cell *matCellDef="let element"> 
             <div style="display: flex; justify-content: space-between;">
@@ -72,4 +98,4 @@
         showFirstLastButtons="false"
         (page)="changeInPage($event)"
     />
-</mat-card> -->
+</mat-card>

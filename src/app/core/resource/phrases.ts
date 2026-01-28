@@ -160,7 +160,16 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         update_study_plan: 'تعديل الخطة الدراسية',
         delete_study_plan: 'حذف الخطة الدراسية',
         subjects_age_group: 'مواد السنة الدراسية',
-        number_of_students: 'عدد الطلاب'
+        number_of_students: 'عدد الطلاب',
+        behavioral_title: 'سلوكي',
+        academic_title: 'علمي',
+        type: 'النوع',
+        recordedAt: 'تاريخ التسجيل',
+        releasedAt: 'تاريخ تبليغ الأهل',
+        isReleased: 'تبليغ الأهل',
+        isSolved: 'تم الحل',
+        solvedAt: 'تاريخ الحل',
+        notes: 'ملاحظات'
     },
     en:{
         'name':"Name",
@@ -323,7 +332,16 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         update_study_plan: 'Update Study Plan',
         delete_study_plan: 'Delete Study Plan',
         subjects_age_group: 'Age group subjects',
-        number_of_students: 'Number of students'
+        number_of_students: 'Number of students',
+        behavioral_title: 'Behavioral',
+        academic_title: 'Academic',
+        type: 'Type',
+        recordedAt: 'Recorded At',
+        releasedAt: 'Released At',
+        isReleased: 'Is Released',
+        isSolved: 'Is Solved',
+        solvedAt: 'Solved At',
+        notes: 'Notes'
     }
 }
 
@@ -340,7 +358,20 @@ AgeGroupPhrases|
 SubjectPhrases|
 GlobalType|
 PersonPhrases |
-ClassPhrases;
+ClassPhrases|
+StudentNotePhrases;
+
+export type StudentNotePhrases =
+'behavioral_title'|
+'academic_title'|
+'type'|
+'recordedAt'|
+'releasedAt'|
+'isReleased'|
+'isSolved'|
+'solvedAt'|
+'notes'
+;
 
 export type ClassPhrases = 
 'delete_class_confirm'|

@@ -19,6 +19,7 @@
 // import { MatTimepickerModule } from "@angular/material/timepicker";
 // import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 // import { fromTimeMustLessThanToTimeValidator } from "../../../../../../core/validator/validator";
+// import { StudentNoteEndpoints } from "../../../../shared/endpoints/student-note-endpoint";
 
 // @Component({
 //   selector: 'app-add-academic-year-dialog',
@@ -36,30 +37,32 @@
 //     ErrorTitleComponent,
 //     MatTimepickerModule,
 //     NgxMatTimepickerModule
-// ],
+//     ],
 //   providers:[provideNativeDateAdapter()],
 //   changeDetection: ChangeDetectionStrategy.OnPush,
 //   templateUrl: './student-notes-dialog.html',
 // })
+// // StudentNoteEndpoints
 
 // export class StudentNotesDialog {
-//   loading = signal<boolean>(false);
-//   form!: FormGroup;
-//   key:string = crypto.randomUUID();
+//     // ##################### Injections #####################
+//     dialogRef = inject(MatDialogRef<StudentNotesDialog>);
+//     language = inject(Language);
+//     responsiveScreen = inject(ResponsiveScreen);
+//     fb = inject(FormBuilder);
+//     http = inject(HttpHelper);
+//     matSnackBar = inject(MatSnackBar);
+//     studentNoteEndpoints = inject(StudentNoteEndpoints);
+    
+//     // ##################### data #####################
+//     loading = signal<boolean>(false);
+//     form!: FormGroup;
+//     key:string = crypto.randomUUID();
+//     data = inject(MAT_DIALOG_DATA);
 
-//   data = inject(MAT_DIALOG_DATA);
-
-//   constructor(
-//     public dialogRef:MatDialogRef<StudentNotesDialog>,
-//     public language:Language,
-//     public responsiveScreen:ResponsiveScreen,
-//     public fb: FormBuilder,
-//     public http:HttpHelper,
-//     public matSnackBar:MatSnackBar,
-//     public periodEndpoints:PeriodEndpoints
-//   ){
-//     this.form = this.fb.group(
-//       {
+//     constructor(){
+//         this.form = this.fb.group(
+//             {
 //         lessonNumber: [ this.isUpdate()?this.data.period.lessonNumber:'', [Validators.required, Validators.min(0),Validators.max(12)]],
 //         fromTime: [ this.isUpdate()?this.data.period.fromTime:'', [Validators.required]],
 //         toTime: [ this.isUpdate()?this.data.period.toTime:'', [Validators.required]],
