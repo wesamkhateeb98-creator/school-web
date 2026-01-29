@@ -4,6 +4,7 @@ import { MutateResponse } from '../../../shared/model/mutate-response';
 import { SemesterViewModel } from '../../pages/semester/model/semester-view-model';
 import { Page } from '../../../shared/model/page';
 import { Observable } from 'rxjs';
+import { SemesterInOpenAcademicYear } from './models/semester/semester-in-open-academic-year';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,10 @@ export class SemesterEndpoints {
 
   delete(id:number): Observable<MutateResponse>{
     return this.http.delete<MutateResponse>("semester/"+id);
-    
   }  
+
+  
+  getSemesterForOpenAcademicYear():Observable<SemesterInOpenAcademicYear>{
+    return this.http.get<SemesterInOpenAcademicYear>('semester/academic-year/started',{})
+  }
 }

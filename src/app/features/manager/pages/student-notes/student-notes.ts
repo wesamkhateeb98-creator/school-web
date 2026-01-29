@@ -27,6 +27,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelect, MatOption } from "@angular/material/select";
 import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { StudentNotesDialog } from './dialog/add-subject-dialog/student-notes-dialog';
+import { ApiWhenLoading } from '../../shared/endpoints/service/api-when-loading';
 
 @Component({
   selector: 'app-semester-component',
@@ -135,41 +137,45 @@ export class StudentNotesPage {
   // ############# dialogs #############
 
   openAddDialog(){
-    // const dialogRef = this.dialog.open(
-    //   StudentNotesDialog, 
-    //   {
-    //     width: "80%"
-    //   }
-    // );
+    const dialogRef = this.dialog.open(
+      StudentNotesDialog, 
+      {
+        width: "80%",
+        data:{
+          studentId: this.studentId
+        }
+      }
+    );
     
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if(result)
-    //     this.studentNotes.update(arr => [...arr, result.data]);
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+        this.studentNotes.update(arr => [...arr, result.data]);
+    });
   }
 
   
   openUpdateDialog(studentNote: NoteItem){
-    // const dialogRef = this.dialog.open(
-    //   StudentNotesDialog, 
-    //   {
-    //     width: "80%",
-    //     data:{     
-    //       studentNote: studentNote
-    //     }
-    //   }
-    // );
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   if (result) {
-    //     this.studentNotes.update(arr => 
-    //       {
-    //         arr = arr.map(x => x.id === result.data.id ? result.data : x);
-    //         return arr;
-    //       }
-    //     );
+    const dialogRef = this.dialog.open(
+      StudentNotesDialog, 
+      {
+        width: "80%",
+        data:{     
+          studentId: this.studentId,
+          studentNote: studentNote
+        }
+      }
+    );
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.studentNotes.update(arr => 
+          {
+            arr = arr.map(x => x.id === result.data.id ? result.data : x);
+            return arr;
+          }
+        );
         
-    //   }
-    // });
+      }
+    });
   }
 
   openDeleteDialog(id:number){

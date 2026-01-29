@@ -174,7 +174,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         release_to_parent: 'تبليغ الأهل',
         solve_note: 'حل الملاحظة',
         do_you_want_release_to_parent_question: 'هل تريد تبليغ الأهل؟',
-        do_you_want_solve_question: 'هل تريد حل الملاحظة؟'
+        do_you_want_solve_question: 'هل تريد حل الملاحظة؟',
+        max_length_1000: 'النص يجب ألا يتجاوز 1000 محرف.',
+        problem_in_get_semester_for_currenct_year: 'هناك مشكلة في جلب الفصل للسنة الدراسية الحالية.',
+        out_of_range_date: 'التاريخ المدخل يجب أن يكون بين {first} و {second}',
+        failed_to_load_semester: 'خطأ في تحميل معلومات الفصل الدراسي.'
     },
     en:{
         'name':"Name",
@@ -351,7 +355,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         release_to_parent: 'Release to Parent',
         solve_note: 'Solve Note',
         do_you_want_release_to_parent_question: 'Do you want to release to parent?',
-        do_you_want_solve_question: 'Do you want to solve the note?'
+        do_you_want_solve_question: 'Do you want to solve the note?',
+        max_length_1000: 'The text should not exceed 1000 characters in length.',
+        problem_in_get_semester_for_currenct_year: 'There is a problem in getting the semester for the current academic year.',
+        out_of_range_date: 'The date is out of range, between {first} , {second}',
+        failed_to_load_semester: 'Failed to load semester information.',
     }
 }
 
@@ -385,7 +393,10 @@ export type StudentNotePhrases =
 'release_to_parent'|
 'solve_note'|
 'do_you_want_release_to_parent_question'|
-'do_you_want_solve_question'
+'do_you_want_solve_question'|
+'problem_in_get_semester_for_currenct_year'|
+'out_of_range_date'|
+'failed_to_load_semester'
 ;
 
 export type ClassPhrases = 
@@ -526,6 +537,7 @@ export type ValidationMessagePhrases =
 'max_length_30'|
 'max_length_50'|
 'max_length_100'|
+'max_length_1000'|
 'start_date_must_less_than_end_date'|
 'year_less_than_current_year'|
 'number_digit_between_7_10'|

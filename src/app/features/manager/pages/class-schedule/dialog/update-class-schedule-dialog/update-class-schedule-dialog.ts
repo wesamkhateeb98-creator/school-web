@@ -124,7 +124,6 @@ export class UpdateClassScheduleDialog implements OnInit {
           subject: x.subject.content[0],
           subjectId: x.subject.content[0]?.id??undefined,
         })
-        console.log(this.form.value);
       }
     })
   }

@@ -56,7 +56,6 @@ export class SubjectPage {
 
     this.filter.update(x=>{
       const param = parmas.loadFromUrl<SubjectFilterViewModel>(this.filter());
-      console.log(param)
       x.pageSize = param.pageSize? param.pageSize: 10;
       x.pageNumber = param.pageNumber? param.pageNumber: 1
       
@@ -165,7 +164,6 @@ export class SubjectPage {
           x.pageNumber = pageEvent.pageIndex + 1;  
           return x;
         });
-        console.log(pageEvent)
       this.onLoading();
       this.parmas.setToUrl({
         'pageSize': this.filter().pageSize,

@@ -1,152 +1,208 @@
-// import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
-// import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-// import { MatButtonModule } from "@angular/material/button";
-// import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
-// import { MatFormFieldModule } from "@angular/material/form-field";
-// import { MatGridListModule } from "@angular/material/grid-list";
-// import { MatInputModule } from "@angular/material/input";
-// import { MatProgressBarModule } from "@angular/material/progress-bar";
-// import { Language } from "../../../../../../core/services/language";
-// import { ResponsiveScreen } from "../../../../../../core/services/responsive-screen";
-// import { provideNativeDateAdapter } from "@angular/material/core";
-// import { MatDatepickerModule } from "@angular/material/datepicker";
-// import { MatSnackBar } from "@angular/material/snack-bar";
-// import { HttpHelper } from "../../../../../../core/services/http-helper";
-// import { errorMatSnackbarConfig, successMatSnackbarConfig, time12hTo24, time24hTo12 } from "../../../../../../core/consts";
-// import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
-// import { PeriodEndpoints } from "../../../../shared/endpoints/period-endpoint";
-// import { PeriodModel } from "../../../../shared/endpoints/models/Period/period-model";
-// import { MatTimepickerModule } from "@angular/material/timepicker";
-// import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
-// import { fromTimeMustLessThanToTimeValidator } from "../../../../../../core/validator/validator";
-// import { StudentNoteEndpoints } from "../../../../shared/endpoints/student-note-endpoint";
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { MatButtonModule } from "@angular/material/button";
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatGridListModule } from "@angular/material/grid-list";
+import { MatInputModule } from "@angular/material/input";
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { Language } from "../../../../../../core/services/language";
+import { ResponsiveScreen } from "../../../../../../core/services/responsive-screen";
+import { provideNativeDateAdapter, MatOption } from "@angular/material/core";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { HttpHelper } from "../../../../../../core/services/http-helper";
+import { errorMatSnackbarConfig, successMatSnackbarConfig, time12hTo24, time24hTo12 } from "../../../../../../core/consts";
+import { MatTimepickerModule } from "@angular/material/timepicker";
+import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
+import { StudentNoteEndpoints } from "../../../../shared/endpoints/student-note-endpoint";
+import { ApiWhenLoading } from "../../../../shared/endpoints/service/api-when-loading";
+import { NoteItem } from "../../../../shared/endpoints/models/semester/student-notes-response";
+import { AuthService } from "../../../../../../core/services/auth-service";
+import { StudentNoteTypeService } from "../../../../../../core/enums/service/student-note-type-service";
+import { MatSelectModule } from "@angular/material/select";
+import { FormatService } from "../../../../../../core/services/format-service";
+import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
+import { MatCard } from "@angular/material/card";
+import { DatePipe, formatDate } from "@angular/common";
 
-// @Component({
-//   selector: 'app-add-academic-year-dialog',
-//   imports: [
-//     MatButtonModule,
-//     MatDialogTitle,
-//     MatDialogContent,
-//     MatDialogActions,
-//     MatGridListModule,
-//     MatFormFieldModule,
-//     MatInputModule,
-//     ReactiveFormsModule,
-//     MatProgressBarModule,
-//     MatDatepickerModule,
-//     ErrorTitleComponent,
-//     MatTimepickerModule,
-//     NgxMatTimepickerModule
-//     ],
-//   providers:[provideNativeDateAdapter()],
-//   changeDetection: ChangeDetectionStrategy.OnPush,
-//   templateUrl: './student-notes-dialog.html',
-// })
-// // StudentNoteEndpoints
+@Component({
+  selector: 'app-add-academic-year-dialog',
+  imports: [
+    MatButtonModule,
+    MatDialogTitle,
+    MatDialogContent,
+    MatDialogActions,
+    MatGridListModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatProgressBarModule,
+    MatDatepickerModule,
+    MatTimepickerModule,
+    NgxMatTimepickerModule,
+    MatOption,
+    MatSelectModule,
+    ErrorTitleComponent,
+    DatePipe
+],
+  providers:[provideNativeDateAdapter()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './student-notes-dialog.html',
+})
+// StudentNoteEndpoints
 
-// export class StudentNotesDialog {
-//     // ##################### Injections #####################
-//     dialogRef = inject(MatDialogRef<StudentNotesDialog>);
-//     language = inject(Language);
-//     responsiveScreen = inject(ResponsiveScreen);
-//     fb = inject(FormBuilder);
-//     http = inject(HttpHelper);
-//     matSnackBar = inject(MatSnackBar);
-//     studentNoteEndpoints = inject(StudentNoteEndpoints);
+export class StudentNotesDialog implements OnInit{
+  // ##################### Injections #####################
+  dialogRef = inject(MatDialogRef<StudentNotesDialog>);
+    language = inject(Language);
+    responsiveScreen = inject(ResponsiveScreen);
+    fb = inject(FormBuilder);
+    http = inject(HttpHelper);
+    matSnackBar = inject(MatSnackBar);
+    studentNoteEndpoints = inject(StudentNoteEndpoints);
+    apiWhenLoading = inject(ApiWhenLoading);
+    authService = inject(AuthService);
+    studentNoteType = inject(StudentNoteTypeService)
+    formatService = inject(FormatService);
+    // ##################### data #####################
+    loading = signal<boolean>(true);
+    form!: FormGroup;
+    key:string = crypto.randomUUID();
+    data = inject(MAT_DIALOG_DATA);
+
+  async ngOnInit() {
     
-//     // ##################### data #####################
-//     loading = signal<boolean>(false);
-//     form!: FormGroup;
-//     key:string = crypto.randomUUID();
-//     data = inject(MAT_DIALOG_DATA);
+    this.form = this.fb.group(
+      {
+          type: [ this.isUpdate()?this.data.studentNote.type:'1'],
+          description: [ this.isUpdate()?this.data.studentNote.description:'', [Validators.required, Validators.maxLength(1000)]],
+          recordedAt: [ this.isUpdate()?this.data.studentNote.recordedAt:'',[Validators.required]],
+      }
+    );
 
-//     constructor(){
-//         this.form = this.fb.group(
-//             {
-//         lessonNumber: [ this.isUpdate()?this.data.period.lessonNumber:'', [Validators.required, Validators.min(0),Validators.max(12)]],
-//         fromTime: [ this.isUpdate()?this.data.period.fromTime:'', [Validators.required]],
-//         toTime: [ this.isUpdate()?this.data.period.toTime:'', [Validators.required]],
-//       },
-//       {
-//         validators:fromTimeMustLessThanToTimeValidator
-//       }
-//     );
-//   }
+    await this.apiWhenLoading.semesterLoading();
+    
+    this.form.get('recordedAt')?.setValidators(
+      this.dateBetweenValidator(
+        this.apiWhenLoading.semesterInOpenAcademicYear()?.startDate,
+        this.apiWhenLoading.semesterInOpenAcademicYear()?.endDate
+      )
+    );
 
-//   onNoClick(): void {
-//     this.dialogRef.close();
-//   }
+    this.loading.set(false);
+  }
   
-//   submit(){
-//     if(!this.form.valid)
-//       return;
+  // ##################### Validations #####################
+  dateBetweenValidator(minDate: any, maxDate: any): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      
+      if (!value) return null; 
+
+      if (!minDate || !maxDate) {
+        return { failedSemesterLoading: true };
+      }
+
+      const inputTime = new Date(this.formatService.ToDateOnly(value));
+      const minTime = new Date(minDate);
+      const maxTime = new Date(maxDate);
+      ({inputTime, minTime, maxTime});
+      if (inputTime >= minTime && inputTime <= maxTime) {
+        return null;
+      }
+      
+      return { outRange: true };
+    };
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  
+  submit(){
+    if(!this.form.valid)
+      return;
     
-//     this.loading.set(true);
+    this.loading.set(true);
 
-//     if(this.isUpdate()){
-//       this.updatePeriod();
-//     }else{
-//       this.addPeriod();    
-//     }
+    if(this.isUpdate()){
+      this.updateStudentNote();
+    }else{
+      this.addPeriod();    
+    }
     
-//     this.loading.set(false);
-//   }
+    this.loading.set(false);
+  }
 
-// addPeriod(){
-//   this.periodEndpoints.add(
-//     this.key,
-//     this.form.value.lessonNumber,
-//     time12hTo24(this.form.value.fromTime as string),
-//     time12hTo24(this.form.value.toTime as string)
-//   )
-//     .subscribe({
-//       next: (success) => {
-//         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-//         const data = new PeriodModel(
-//           success.id,
-//           this.form.value.lessonNumber,
-//           this.form.value.fromTime,
-//           this.form.value.toTime,
-//           new Date());
-//         this.dialogRef.close({
-//           data
-//         });
-//       },
-//       error: (error) => {
-//         this.matSnackBar.open(error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-//       }
-//     });
-//   }
+addPeriod(){
+  
+  this.studentNoteEndpoints.add(
+    this.key,
+    this.form.value.type,
+    this.form.value.description,
+    this.formatService.ToDateOnly(this.form.value.recordedAt),
+    this.apiWhenLoading.semesterInOpenAcademicYear()?.academicYearSemesterId??0,
+    this.data.studentId
+  )
+    .subscribe({
+      next: (success) => {
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        const data = {
+          id:success.id,
+          description: this.form.value.description,
+          isReleased: false,
+          recordedAt: this.form.value.recordedAt,
+          type: this.form.value.type,
+          isSolved: false,
+          recordedBy: this.authService.getAuth()?.id, // Fixed,
+          releasedAt: null,
+          solvedAt: null
+        } as NoteItem;
+        this.dialogRef.close({
+          data
+        });
+      },
+      error: (error) => {
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+      }
+    });
+  }
 
 
-//   updatePeriod(){
-//     this.periodEndpoints.update(
-//       this.data.period.id,
-//       this.form.value.lessonNumber,
-//       time12hTo24(this.form.value.fromTime as string),
-//       time12hTo24(this.form.value.toTime as string))
-//       .subscribe({
-//         next: success=>{
-//           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-//           const data = new PeriodModel(
-//             success.id,
-//             this.form.value.lessonNumber,
-//             this.form.value.fromTime,
-//             this.form.value.toTime,
-//             this.data.period.createdAt);
-//           this.dialogRef.close({
-//             data
-//           });
-//         },
-//         error: error=>{
+  updateStudentNote(){
+    this.studentNoteEndpoints.update(
+      this.data.studentNote.id,
+      this.form.value.type,
+      this.form.value.description,
+      this.form.value.recordedAt)
+      .subscribe({
+        next: success=>{
+          this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+          const data = {
+            id:success.id,
+            description: this.form.value.description,
+            isReleased: this.data.studentNote.isReleased,
+            recordedAt: this.form.value.recordedAt,
+            type: this.form.value.type,
+            isSolved: this.data.studentNote.isSolved,
+            recordedBy: this.data.studentNote.recordedBy,
+            releasedAt: this.data.studentNote.releasedAt,
+            solvedAt: this.data.studentNote.solvedAt
+            } as NoteItem;
+          this.dialogRef.close({
+            data
+          });
+        },
+        error: error=>{
           
-//           this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-//         }
-//       });
-//   }
+          this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        }
+      });
+  }
 
-//   isUpdate () : boolean{
-//     return this.data && this.data.period && this.data.period != null ;
-//   }
-// }
+  isUpdate () : boolean{
+    return this.data && this.data.studentNote && this.data.studentNote != null ;
+  }
+}
 

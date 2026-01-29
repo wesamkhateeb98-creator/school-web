@@ -16,7 +16,7 @@ export class StudentNoteEndpoints {
     key:string, 
     type:number,
     description:string,
-    recordedAt:Date,
+    recordedAt:string,
     academicYearSemesterId:number,
     studentId:number
    ): Observable<MutateResponse>{
@@ -33,7 +33,7 @@ export class StudentNoteEndpoints {
     studentNoteId:number,
     type:number,
     description:string,
-    recordedAt:Date): Observable<MutateResponse>{
+    recordedAt:string): Observable<MutateResponse>{
     return  this.http.post<MutateResponse>(`student-note/${studentNoteId}`,{
       "type": type,
       "description": description,

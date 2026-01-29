@@ -1,63 +1,42 @@
-<!-- <form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
+<form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
   <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_period':'add_period')}}</h2>
   <mat-dialog-content>    
-    @if(this.form.hasError('timeRangeInvalid')){
-      <app-error-title-component [message]="language.transform('end_time_must_less_than_from_time')"/>
-      <br />
-    }
-    <mat-grid-list [cols]="loading()?1:2" rowHeight="70px" gutterSize="10px">
+
+    <mat-grid-list [cols]="1" rowHeight="70px" gutterSize="10px">
       @if(loading()){
         <mat-grid-tile>
           <mat-progress-bar mode="indeterminate"></mat-progress-bar>
         </mat-grid-tile>
       }
       @else{
+        @if(!isUpdate() && apiWhenLoading.semesterInOpenAcademicYear() == undefined){
+          <app-error-title-component [message]="language.transform('problem_in_get_semester_for_currenct_year')"/>
+          <br />
+        }
+
         <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("lesson_number_title")}}</mat-label>
-            <input type="number" matInput formControlName="lessonNumber">
-            @if(this.form.get('lessonNumber')?.hasError('required')){
-              <mat-error>
-                {{language.transform('field_required')}}
-              </mat-error>
-            }
-            @else if(this.form.get('lessonNumber')?.hasError('min')){
-              <mat-error>
-                {{language.transform('min_number_0')}}
-              </mat-error>
-            }
+            <mat-label>{{language.transform("type")}}</mat-label>
+            <mat-select formControlName="type">
+                @for (item of studentNoteType.notes; track $index) {
+                    <mat-option [value]="item.id">{{ item.name }}</mat-option> 
+                }
+            </mat-select>
           </mat-form-field>
         </mat-grid-tile>
         
         <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("from_time_title")}}</mat-label>
-            <input matInput 
-                  formControlName="fromTime" 
-                  [ngxMatTimepicker]="fromTime" 
-                  placeholder="00:00" 
-                  readonly>
-            
-            <ngx-mat-timepicker-toggle 
-              matSuffix 
-              [for]="fromTime"/>
-            
-            <ngx-mat-timepicker 
-              #fromTime color="primary" 
-              [cancelBtnTmpl]="cancelBtn"
-              [confirmBtnTmpl]="okBtn"/>
-            
-            <ng-template #cancelBtn>
-              <button mat-button>{{language.transform('cancel')}}</button>
-            </ng-template>
-
-            <ng-template #okBtn>
-              <button mat-button>{{language.transform('confirm')}}</button>
-            </ng-template>
-
-            @if(this.form.get('fromTime')?.hasError('required')){
+            <mat-label >{{language.transform("description_title")}}</mat-label>
+            <input type="text" matInput formControlName="description">
+            @if(this.form.get('description')?.hasError('required')){
               <mat-error>
                 {{language.transform('field_required')}}
+              </mat-error>
+            }
+            @else if(this.form.get('description')?.hasError('maxlength')){
+              <mat-error>
+                {{language.transform('max_length_1000')}}
               </mat-error>
             }
           </mat-form-field>
@@ -65,35 +44,33 @@
 
         <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("to_time_title")}}</mat-label>
-            <input matInput 
-                  formControlName="toTime" 
-                  [ngxMatTimepicker]="toTime" 
-                  placeholder="00:00" 
-                  readonly>
-                  
-            <ngx-mat-timepicker-toggle 
-              matSuffix 
-              [for]="toTime"/>
-            
-            <ngx-mat-timepicker 
-              #toTime color="primary" 
-              [cancelBtnTmpl]="cancelBtn"
-              [confirmBtnTmpl]="okBtn"/>
-            
-            <ng-template #cancelBtn>
-              <button mat-button>{{language.transform('cancel')}}</button>
-            </ng-template>
+            <mat-label >{{language.transform("recordedAt")}}</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="recordedAt" [readonly]="loading()">
+              <mat-hint>MM/DD/YYYY</mat-hint>
+              <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="loading()"/>
+              <mat-datepicker #picker></mat-datepicker>
+              @if(this.form.get('recordedAt')?.hasError('required')){
+                <mat-error>
+                    {{language.transform('field_required')}}
+                </mat-error>
+              }
+              @else if(this.form.get('recordedAt')?.hasError('outRange')){
+                <mat-error>
+                    {{
 
-            <ng-template #okBtn>
-              <button mat-button>{{language.transform('confirm')}}</button>
-            </ng-template>
-
-            @if(this.form.get('toTime')?.hasError('required')){
-              <mat-error>
-                {{language.transform('field_required')}}
-              </mat-error>
-            }
+                      
+                        language.transform('out_of_range_date')
+                          .replace('{first}', (apiWhenLoading.semesterInOpenAcademicYear()?.startDate | date:'yyyy-MM-dd') ?? '')
+                          .replace('{second}', (apiWhenLoading.semesterInOpenAcademicYear()?.endDate | date:'yyyy-MM-dd') ?? '')
+                      
+                    }}
+                </mat-error>
+              }
+              @else if(this.form.get('recordedAt')?.hasError('failedSemesterLoading')){
+                <mat-error>
+                    {{language.transform('failed_to_load_semester')}}
+                </mat-error>
+              }
           </mat-form-field>
         </mat-grid-tile>
       }
@@ -102,6 +79,6 @@
   </mat-dialog-content>
   <mat-dialog-actions>
     <button matButton (click)="onNoClick()" type="button" [disabled]="loading()">{{language.transform('cancel')}}</button>
-    <button matButton="filled" cdkFocusInitial [disabled]="loading()">{{language.transform(isUpdate() ? 'update':'add')}}</button>
+    <button matButton="filled" cdkFocusInitial [disabled]="loading() || !apiWhenLoading.semesterInOpenAcademicYear()">{{language.transform(isUpdate() ? 'update':'add')}}</button>
   </mat-dialog-actions>
-</form> -->
+</form>
