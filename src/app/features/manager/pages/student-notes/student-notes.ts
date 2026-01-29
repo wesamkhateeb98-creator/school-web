@@ -66,6 +66,8 @@ export class StudentNotesPage {
   
   studentId!:number;
   
+  classId!:number;
+  
   loading= signal<boolean>(true);
   
   totalPages= signal<number>(0);
@@ -77,6 +79,8 @@ export class StudentNotesPage {
       'type':[''],
     });
     this.studentId = +(this.activatedRoute.snapshot.paramMap.get('id')??'0');
+    this.classId = +(this.activatedRoute.snapshot.paramMap.get('classId')??'0');
+    
     this.onLoading();
   }
 
@@ -196,6 +200,8 @@ export class StudentNotesPage {
   }
 
   backPage(){
-    this.router.navigate(['/manager/students']);
+    this.router.navigate(
+      this.classId > 0 ? ['/manager/class',this.classId,'students']:['/manager/students']
+    );
   }
 }

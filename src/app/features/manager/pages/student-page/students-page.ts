@@ -28,6 +28,7 @@ import { AssignStudentDialog } from './components/assign-student-dialog/assign-s
 import { AgeGroupAutoComplete } from "../../shared/components/age-group-auto-complete/age-group-auto-complete";
 import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
 import { AgeGroupViewModel } from '../age-group/model/age-group-view-model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-page',
@@ -82,7 +83,8 @@ export class StudentsPage {
     public matSnackBar:MatSnackBar,
     public studentEndpoints:StudentEndpoints,
     public fb: FormBuilder,
-    public responsive:ResponsiveScreen
+    public responsive:ResponsiveScreen,
+    public router: Router
   ){
     this.setFilterFromUrl()
     this.initiateForm();
@@ -266,10 +268,15 @@ export class StudentsPage {
     return option ? option.name : '';
   }
 
+  // ########################## Navigation
   openAccountCodeDialog(id: number, phone: string) {
     this.dialog.open(AccountCodeDialog, {
       width: '50%',
       data: { id: id, phoneNumber: phone }
     });
+  }
+
+  openStudentNotesPage(studentId:number){
+    this.router.navigate(["manager/student",studentId,"student-notes"])
   }
 }

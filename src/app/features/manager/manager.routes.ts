@@ -61,7 +61,12 @@ export const DASHBOARD_ROUTES: Routes = [
             path:'', 
             component: StudentsPage, 
             title: messageTitle('students_title')
-          },
+          }
+        ]
+      },
+      { 
+        path:'student',
+        children:[
           {
             path:':id/student-notes', 
             component: StudentNotesPage, 
@@ -102,6 +107,11 @@ export const DASHBOARD_ROUTES: Routes = [
             path:':id/class-schedules',
             component: ClassSchedulePage,
             title:messageTitle('class_schedules_title') 
+          },
+          {
+            path:':classId/student/:id/student-notes', 
+            component: StudentNotesPage, 
+            title: messageTitle('notes')
           },
           { 
             path:'periods',
