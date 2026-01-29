@@ -169,7 +169,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         isReleased: 'تبليغ الأهل',
         isSolved: 'تم الحل',
         solvedAt: 'تاريخ الحل',
-        notes: 'ملاحظات'
+        notes: 'ملاحظات',
+        solve: 'حل الملاحظة',
+        release_to_parent: 'تبليغ الأهل',
+        solve_note: 'حل الملاحظة',
+        do_you_want_release_to_parent_question: 'هل تريد تبليغ الأهل؟',
+        do_you_want_solve_question: 'هل تريد حل الملاحظة؟'
     },
     en:{
         'name':"Name",
@@ -341,7 +346,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         isReleased: 'Is Released',
         isSolved: 'Is Solved',
         solvedAt: 'Solved At',
-        notes: 'Notes'
+        notes: 'Notes',
+        solve: 'Solve Note',
+        release_to_parent: 'Release to Parent',
+        solve_note: 'Solve Note',
+        do_you_want_release_to_parent_question: 'Do you want to release to parent?',
+        do_you_want_solve_question: 'Do you want to solve the note?'
     }
 }
 
@@ -370,7 +380,12 @@ export type StudentNotePhrases =
 'isReleased'|
 'isSolved'|
 'solvedAt'|
-'notes'
+'notes'|
+'solve'|
+'release_to_parent'|
+'solve_note'|
+'do_you_want_release_to_parent_question'|
+'do_you_want_solve_question'
 ;
 
 export type ClassPhrases = 

@@ -164,7 +164,6 @@ export class ClassStudent implements OnInit{
   }
 
   openStudentNotesPage(studentId:number){
-    //http://localhost:4200/manager/class/1/student/2/student-notes
     this.router.navigate(["manager/class",this.classId,"student",studentId,"student-notes"])
   }
 

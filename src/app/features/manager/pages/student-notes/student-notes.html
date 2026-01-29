@@ -14,17 +14,40 @@
 </div>
 <br/>
 
-<div class="flex-between">
-    <div class="flex-start">
-        <h4>{{language.transform('behavioral_title')}}</h4>
-        <p>{{studentNotesStatistics().behavioralCount}}</p>
+<mat-card style="padding: 0 20px;">
+    <div class="grid grid-two-column">
+        <div class="flex-start">
+            <h4>{{language.transform('behavioral_title')}}:</h4>
+            <div class="row-box-10"></div>
+            <p>{{studentNotesStatistics().behavioralCount}}</p>
+        </div>
+        <div class="flex-start">
+            <h4>{{language.transform('academic_title')}}</h4>
+            <div class="row-box-10"></div>
+            <p>{{studentNotesStatistics().academicCount}}</p>
+        </div>
     </div>
-    <div class="flex-start">
-        <h4>{{language.transform('academic_title')}}</h4>
-        <p>{{studentNotesStatistics().academicCount}}</p>
-    </div>
-</div>
+</mat-card>
 
+<br/>
+
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title> {{language.transform('filter')}}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form class="example-form" [formGroup]="form">
+        <mat-form-field  class="example-full-width" style="width: 100%;">
+            <mat-label>{{ language.transform("type") }}</mat-label>
+            <mat-select formControlName="type">
+                @for (item of studentNoteFilterType.notes; track $index) {
+                    <mat-option [value]="item.id">{{ item.name }}</mat-option> 
+                }
+            </mat-select>
+        </mat-form-field>
+    </form>
+    
+</mat-expansion-panel>
 <br/>
 
 @if(this.loading()) {
@@ -36,7 +59,7 @@
 
     <ng-container matColumnDef="{{headerTable[0]}}" sticky>
         <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('type')}} </th>
-        <td mat-cell *matCellDef="let element"> {{ element.type }} </td>
+        <td mat-cell *matCellDef="let element"> {{ studentNoteType.getNotesById(element.type)?.name }} </td>
     </ng-container>
 
     <ng-container matColumnDef="{{headerTable[1]}}">
@@ -73,12 +96,20 @@
         <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
         <td mat-cell *matCellDef="let element"> 
             <div style="display: flex; justify-content: space-between;">
-                <button mat-icon-button (click)="openUpdateDialog(element)">
+                <button mat-icon-button (click)="openUpdateDialog(element)" [disabled]="loading()">
                     <mat-icon class="icon-update">edit</mat-icon>
                 </button>
                 
-                <button mat-icon-button (click)="openDeleteDialog(element.id)">
+                <button mat-icon-button (click)="openDeleteDialog(element.id)" [disabled]="loading()">
                     <mat-icon class="icon-error">delete</mat-icon>
+                </button>
+
+                <button mat-icon-button [matTooltip]="language.transform('release_to_parent')" (click)="openReleaseToParentDialog(element.id)" [disabled]="loading() || element.isReleased">
+                    <mat-icon class="icon-success">publish</mat-icon>
+                </button>
+
+                <button mat-icon-button [matTooltip]="language.transform('solve')" (click)="openSolveeDialog(element.id)" [disabled]="loading() || element.isSolved">
+                    <mat-icon class="icon-success">check</mat-icon>
                 </button>
             </div>
         </td>

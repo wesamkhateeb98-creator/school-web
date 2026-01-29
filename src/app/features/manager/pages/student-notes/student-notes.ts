@@ -17,9 +17,16 @@ import { MatProgressBar } from "@angular/material/progress-bar";
 import { StudentNoteEndpoints } from '../../shared/endpoints/student-note-endpoint';
 import { NoteItem, NotesStatistics, StudentNotesResponse } from '../../shared/endpoints/models/semester/student-notes-response';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { StudentNoteTypeService } from '../../../../core/enums/service/student-note-type-service';
 import { StudentNoteFilterTypeService } from '../../../../core/enums/service/student-note-filter-type-service copy';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { GenericDialog } from '../../../shared/components/dialogs/generic-dialog/generic-dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelect, MatOption } from "@angular/material/select";
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-semester-component',
@@ -30,7 +37,12 @@ import { StudentNoteFilterTypeService } from '../../../../core/enums/service/stu
     MatCard,
     MatIconModule,
     MatButtonModule,
-    MatProgressBar
+    MatProgressBar,
+    MatTooltipModule,
+    MatExpansionModule,
+    MatFormFieldModule, MatInputModule, ReactiveFormsModule,
+    MatSelect,
+    MatOption
 ],
   templateUrl: './student-notes.html',
 })
@@ -80,7 +92,14 @@ export class StudentNotesPage {
     });
     this.studentId = +(this.activatedRoute.snapshot.paramMap.get('id')??'0');
     this.classId = +(this.activatedRoute.snapshot.paramMap.get('classId')??'0');
-    
+
+    this.form.get('type')?.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+      ).subscribe(x=>{
+        this.onLoading()
+      })
+
     this.onLoading();
   }
 
@@ -112,6 +131,8 @@ export class StudentNotesPage {
           }
         })
   }
+
+  // ############# dialogs #############
 
   openAddDialog(){
     // const dialogRef = this.dialog.open(
@@ -162,9 +183,10 @@ export class StudentNotesPage {
               .subscribe({
                 next:success=>{
                   dialogRef.close();
-                  this.studentNotes.update(x=>{
-                    return x.filter(item => item.id !== id);
+                  this.studentNotes.update(x=> {
+                    return x.filter(y=> y.id != success.id)
                   })
+
                   this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
                 },
                 error: error=>{
@@ -178,6 +200,77 @@ export class StudentNotesPage {
     );
     
   }
+
+  openReleaseToParentDialog(id:number){
+    const dialogRef = this.dialog.open(
+      GenericDialog, 
+      {
+        data:{
+          title: this.language.transform('release_to_parent'),
+          message: this.language.transform('do_you_want_release_to_parent_question'),
+          actionTitle: this.language.transform('release_to_parent'),
+          style: "background-color :var(--mat-sys-success)",
+          action: ()=>{
+            this.studentNotesEndpoints.releaseToParent(id)
+              .subscribe({
+                next:success=>{
+                  dialogRef.close();
+
+                  this.studentNotes.update(arr =>
+                      {
+                        arr = arr.map(x => x.id === id ? {...x, isReleased: true} : x);
+                        return arr;
+                      }
+                    );
+
+                  this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
+                },
+                error: error=>{
+                  this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+                }
+              });
+            }  
+        },
+        width: "80%"
+      }
+    );
+    
+  }
+
+  openSolveeDialog(id:number){
+    const dialogRef = this.dialog.open(
+      GenericDialog, 
+      {
+        data:{
+          title:this.language.transform('solve_note'),
+          message: this.language.transform('do_you_want_solve_question'),
+          actionTitle: this.language.transform('solve_note'),
+          style: "background-color :var(--mat-sys-success)",
+          action: ()=>{
+            this.studentNotesEndpoints.solve(id)
+              .subscribe({
+                next:success=>{
+                  dialogRef.close();
+                 this.studentNotes.update(arr =>
+                      {
+                        arr = arr.map(x => x.id === id ? {...x, isSolved: true} : x);
+                        return arr;
+                      }
+                    );
+                  this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
+                },
+                error: error=>{
+                  this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+                }
+              });
+            }  
+        },
+        width: "80%"
+      }
+    );
+    
+  }
+  // ################ Pagination ################
 
   changeInPage(pageEvent:PageEvent){
     this.filter.update(x=>

@@ -38,7 +38,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatProgressBarModule 
 ],
   templateUrl: './semester.html',
-  styleUrl: './semester.scss',
 })
 export class Semester {
   semesterViewModels = signal<SemesterViewModel[]>([]);

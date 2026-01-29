@@ -54,10 +54,10 @@ export class StudentNoteEndpoints {
   }
   
   releaseToParent(id:number): Observable<MutateResponse>{
-    return this.http.delete<MutateResponse>(`student-note/${id}/release-to-parent`);
+    return this.http.patch<MutateResponse>(`student-note/${id}/release-to-parent`,{});
   }
 
   solve(id:number): Observable<MutateResponse>{
-    return this.http.delete<MutateResponse>(`student-note/${id}/solve`);
+    return this.http.patch<MutateResponse>(`student-note/${id}/solve`,{});
   }
 }
