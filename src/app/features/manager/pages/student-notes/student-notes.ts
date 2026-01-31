@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,9 +26,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelect, MatOption } from "@angular/material/select";
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 import { StudentNotesDialog } from './dialog/add-subject-dialog/student-notes-dialog';
-import { ApiWhenLoading } from '../../shared/endpoints/service/api-when-loading';
+import { AcademicYearSemesterAutoComplete } from "../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete";
 
 @Component({
   selector: 'app-semester-component',
@@ -44,12 +44,13 @@ import { ApiWhenLoading } from '../../shared/endpoints/service/api-when-loading'
     MatExpansionModule,
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatSelect,
-    MatOption
+    MatOption,
+    AcademicYearSemesterAutoComplete
 ],
   templateUrl: './student-notes.html',
 })
 
-export class StudentNotesPage {
+export class StudentNotesPage implements OnInit{
   // ############# injections #############
   language = inject(Language);
   dialog = inject(MatDialog);
@@ -91,24 +92,35 @@ export class StudentNotesPage {
   constructor(){
     this.form = this.fb.group({
       'type':[''],
+      'semester':[null],
+      'semesterId':[null]
     });
     this.studentId = +(this.activatedRoute.snapshot.paramMap.get('id')??'0');
     this.classId = +(this.activatedRoute.snapshot.paramMap.get('classId')??'0');
 
-    this.form.get('type')?.valueChanges.pipe(
+    
+  }
+  ngOnInit(): void {
+    this.form.get('type')!.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
       ).subscribe(x=>{
         this.onLoading()
-      })
+      });
 
-    this.onLoading();
+    this.form.get('semesterId')!.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+      ).subscribe(x=>{
+        this.onLoading()
+      });
   }
 
   onLoading(){
     this.loading.set(true);
     this.studentNotesEndpoints.get(
       this.studentId,
+      this.form.value.semester?.academicYearSemesterId,
       this.form.value.type,
       this.filter().pageNumber,
       this.filter().pageSize)

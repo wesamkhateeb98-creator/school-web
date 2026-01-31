@@ -9,10 +9,16 @@
         </mat-grid-tile>
       }
       @else{
-        @if(!isUpdate() && apiWhenLoading.semesterInOpenAcademicYear() == undefined){
+        @if(!isUpdate() && !form.get('semester')?.value){
           <app-error-title-component [message]="language.transform('problem_in_get_semester_for_currenct_year')"/>
           <br />
         }
+        <mat-grid-tile>
+          <app-academic-year-semester-auto-complete 
+              [form]="form" 
+              [loading]="loading"
+              />
+        </mat-grid-tile>
 
         <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
@@ -60,8 +66,8 @@
 
                       
                         language.transform('out_of_range_date')
-                          .replace('{first}', (apiWhenLoading.semesterInOpenAcademicYear()?.startDate | date:'yyyy-MM-dd') ?? '')
-                          .replace('{second}', (apiWhenLoading.semesterInOpenAcademicYear()?.endDate | date:'yyyy-MM-dd') ?? '')
+                          .replace('{first}', (this.form.get("semester")?.value.startDate | date:'yyyy-MM-dd') ?? '')
+                          .replace('{second}', (this.form.get("semester")?.value.endDate | date:'yyyy-MM-dd') ?? '')
                       
                     }}
                 </mat-error>
@@ -79,6 +85,6 @@
   </mat-dialog-content>
   <mat-dialog-actions>
     <button matButton (click)="onNoClick()" type="button" [disabled]="loading()">{{language.transform('cancel')}}</button>
-    <button matButton="filled" cdkFocusInitial [disabled]="loading() || !apiWhenLoading.semesterInOpenAcademicYear()">{{language.transform(isUpdate() ? 'update':'add')}}</button>
+    <button matButton="filled" cdkFocusInitial [disabled]="loading() || !form.get('semester')?.value">{{language.transform(isUpdate() ? 'update':'add')}}</button>
   </mat-dialog-actions>
 </form>

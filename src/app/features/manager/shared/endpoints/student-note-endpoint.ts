@@ -41,8 +41,9 @@ export class StudentNoteEndpoints {
     })
   }
 
-  get(studentId:number, type:number, pageNumber:number, pageSize:number):Observable<StudentNotesResponse>{
+  get(studentId:number, academicYearSemesterId: number ,type:number, pageNumber:number, pageSize:number):Observable<StudentNotesResponse>{
     return this.http.get<StudentNotesResponse>(`student-note/student/${studentId}`,{
+        academicYearSemesterId: academicYearSemesterId,
         type: type,
         pageNumber: pageNumber,
         pageSize: pageSize

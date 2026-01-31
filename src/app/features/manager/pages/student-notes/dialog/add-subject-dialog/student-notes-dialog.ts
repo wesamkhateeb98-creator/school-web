@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators, ValueChangeEvent } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -16,7 +16,6 @@ import { errorMatSnackbarConfig, successMatSnackbarConfig, time12hTo24, time24hT
 import { MatTimepickerModule } from "@angular/material/timepicker";
 import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 import { StudentNoteEndpoints } from "../../../../shared/endpoints/student-note-endpoint";
-import { ApiWhenLoading } from "../../../../shared/endpoints/service/api-when-loading";
 import { NoteItem } from "../../../../shared/endpoints/models/semester/student-notes-response";
 import { AuthService } from "../../../../../../core/services/auth-service";
 import { StudentNoteTypeService } from "../../../../../../core/enums/service/student-note-type-service";
@@ -25,6 +24,7 @@ import { FormatService } from "../../../../../../core/services/format-service";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
 import { MatCard } from "@angular/material/card";
 import { DatePipe, formatDate } from "@angular/common";
+import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -44,7 +44,8 @@ import { DatePipe, formatDate } from "@angular/common";
     MatOption,
     MatSelectModule,
     ErrorTitleComponent,
-    DatePipe
+    DatePipe,
+    AcademicYearSemesterAutoComplete
 ],
   providers:[provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,7 +62,6 @@ export class StudentNotesDialog implements OnInit{
     http = inject(HttpHelper);
     matSnackBar = inject(MatSnackBar);
     studentNoteEndpoints = inject(StudentNoteEndpoints);
-    apiWhenLoading = inject(ApiWhenLoading);
     authService = inject(AuthService);
     studentNoteType = inject(StudentNoteTypeService)
     formatService = inject(FormatService);
@@ -78,17 +78,19 @@ export class StudentNotesDialog implements OnInit{
           type: [ this.isUpdate()?this.data.studentNote.type:'1'],
           description: [ this.isUpdate()?this.data.studentNote.description:'', [Validators.required, Validators.maxLength(1000)]],
           recordedAt: [ this.isUpdate()?this.data.studentNote.recordedAt:'',[Validators.required]],
+          semesterId:[]
       }
     );
 
-    await this.apiWhenLoading.semesterLoading();
-    
-    this.form.get('recordedAt')?.setValidators(
-      this.dateBetweenValidator(
-        this.apiWhenLoading.semesterInOpenAcademicYear()?.startDate,
-        this.apiWhenLoading.semesterInOpenAcademicYear()?.endDate
-      )
-    );
+    // this.form.get('semesterId')?.valueChanges.subscribe(value => {
+    //   this.form.get('recordedAt')?.setValidators(
+    //     this.dateBetweenValidator(
+          
+    //       this.form.get("semester")?.value.startDate,
+    //       this.form.get("semester")?.value.endDate
+    //     )
+    //   );
+    // })
 
     this.loading.set(false);
   }
@@ -142,7 +144,7 @@ addPeriod(){
     this.form.value.type,
     this.form.value.description,
     this.formatService.ToDateOnly(this.form.value.recordedAt),
-    this.apiWhenLoading.semesterInOpenAcademicYear()?.academicYearSemesterId??0,
+    this.form.value.semesterId??0,
     this.data.studentId
   )
     .subscribe({

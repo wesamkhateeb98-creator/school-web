@@ -5,6 +5,7 @@ import { SemesterViewModel } from '../../pages/semester/model/semester-view-mode
 import { Page } from '../../../shared/model/page';
 import { Observable } from 'rxjs';
 import { SemesterInOpenAcademicYear } from './models/semester/semester-in-open-academic-year';
+import { GetSemesterByAcademicYearModel } from './models/semester/getSemesterByAcademicYearModel';
 
 @Injectable({
   providedIn: 'root',
@@ -39,8 +40,17 @@ export class SemesterEndpoints {
     return this.http.delete<MutateResponse>("semester/"+id);
   }  
 
-  
   getSemesterForOpenAcademicYear():Observable<SemesterInOpenAcademicYear>{
     return this.http.get<SemesterInOpenAcademicYear>('semester/academic-year/started',{})
+  }
+
+  getSemesterByAcademicYear(input:{year:number| undefined, justStarted:boolean ,PageNumber:number, pageSize:number}):
+    Observable<Page<GetSemesterByAcademicYearModel>>{
+    return this.http.get<Page<GetSemesterByAcademicYearModel>>('semester/academic-year',{
+      year: input.year,
+      justStarted: input.justStarted,
+      pageNumber: input.PageNumber,
+      pageSize: input.pageSize
+    })
   }
 }
