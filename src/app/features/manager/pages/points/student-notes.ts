@@ -27,7 +27,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelect, MatOption } from "@angular/material/select";
 import { debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
-import { StudentNotesDialog } from './dialog/student-notes-dialog/student-notes-dialog';
+import { StudentNotesDialog } from './dialog/add-subject-dialog/student-notes-dialog';
 import { AcademicYearSemesterAutoComplete } from '../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete';
 
 @Component({

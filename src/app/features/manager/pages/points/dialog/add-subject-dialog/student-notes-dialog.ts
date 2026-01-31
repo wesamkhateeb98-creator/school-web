@@ -16,7 +16,7 @@ import { errorMatSnackbarConfig, successMatSnackbarConfig, time12hTo24, time24hT
 import { MatTimepickerModule } from "@angular/material/timepicker";
 import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 import { StudentNoteEndpoints } from "../../../../shared/endpoints/student-note-endpoint";
-import { NoteItem } from "../../../../shared/endpoints/models/semester/student-notes-response";
+import { NoteItem } from "../../../../shared/endpoints/models/student-note/student-notes-response";
 import { AuthService } from "../../../../../../core/services/auth-service";
 import { StudentNoteTypeService } from "../../../../../../core/enums/service/student-note-type-service";
 import { MatSelectModule } from "@angular/material/select";

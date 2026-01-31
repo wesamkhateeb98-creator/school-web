@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpHelper } from '../../../../core/services/http-helper';
 import { MutateResponse } from '../../../shared/model/mutate-response';
 import { Observable } from 'rxjs';
-import { StudentNotesResponse } from './models/semester/student-notes-response';
+import { StudentNotesResponse } from './models/student-note/student-notes-response';
 
 @Injectable({
   providedIn: 'root',
