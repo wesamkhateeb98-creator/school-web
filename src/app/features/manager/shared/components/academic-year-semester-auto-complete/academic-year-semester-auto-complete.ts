@@ -24,7 +24,7 @@ import { GetSemesterByAcademicYearModel } from '../../endpoints/models/semester/
 })
 export class AcademicYearSemesterAutoComplete implements OnInit {
   @Input() form!: FormGroup;
-  @Input() semester!: SemesterViewModel|null;
+  @Input() semester!: GetSemesterByAcademicYearModel|null;
   @Input() loading!: WritableSignal<boolean>;
   @Input() checkUrl!: boolean;
 
@@ -35,8 +35,8 @@ export class AcademicYearSemesterAutoComplete implements OnInit {
 
   ngOnInit(): void {
     this.form.addControl('semester', this.fb.control(this.semester));
-    this.form.addControl('semesterId', this.fb.control(this.semester?.id??""));
-    this.form.addControl('year', this.fb.control(""));
+    this.form.addControl('semesterId', this.fb.control(this.semester?.academicYearSemesterId??""));
+    this.form.addControl('semesterFirstTime', this.fb.control(false));
     this.setupAutocompletes();
     if(this.checkUrl)
       this.loadDataFromUrl()
@@ -64,16 +64,16 @@ export class AcademicYearSemesterAutoComplete implements OnInit {
     
     const hasParam = !!paramsItem['semesterName'];
 
-    let source$ = this.form.get('year')!.valueChanges;
-    
-    if (!hasParam) {
+    let source$ = this.form.get('semester')!.valueChanges;
+
+    if (!hasParam || this.form.get('semesterLoadFirst')?.valid) {
       source$ = source$.pipe(startWith(''));
     }
 
     source$.pipe(
       debounceTime(300),
       switchMap(value => this.semesterEndpoints.getSemesterByAcademicYear({
-        year: value??undefined,
+        year: (typeof(value) == "number" ?+value : undefined) ??undefined,
         justStarted:false,
         PageNumber:1,
         pageSize:20
@@ -82,26 +82,34 @@ export class AcademicYearSemesterAutoComplete implements OnInit {
       tap(() => this.loading.set(false))
     ).subscribe(x => {
       this.semesterItems.set(x);
-      if(!this.form.get('semester')?.value ){
-        const item = x.find(x=>x.isActive);
-        this.form.patchValue({ semester: item ?? null, semesterId: item?.academicYearSemesterId ?? null });
+      console.log(this.semester);
+      if(!this.form.get('semesterFirstTime')?.value ){
+        let item;
+        if(this.semester){
+          item = x.find(x=>x.academicYearSemesterId == this.semester?.academicYearSemesterId);
+          
+        }else{
+          item = x.find(x=>x.isActive);
+        }
+        this.form.patchValue({  semesterId: item?.academicYearSemesterId ?? null });
+        this.form.patchValue({ semester: item ?? null ,semesterFirstTime:true},{emitEvent:false});
       }
     });
   }
   
 
   displayFn = (option?: GetSemesterByAcademicYearModel): string =>  {
-    return option ? `${option.year - 1}/${option.year} - ${option.semesterName}` : '';
+    return option ? `${option.year - 1}/${option.year} - ${option.semesterName} ${option.startDate} ${this.language.transform('to')} ${option.endDate}` : '';
   }
 
   onSemesterSelected(event: any) {
-    this.form.patchValue({ semesterId: event.option.value.academicYearSemesterId });
+    this.form.patchValue({ semesterId: event.option.value.academicYearSemesterId, semester: event.option.value });
     if(this.checkUrl)
       this.parmas.setToUrl(({...this.parmas.loadGenericFromUrl(),semesterId:event.option.value.id}))
   }
 
   clear(){
-    this.form.patchValue({ semester: null , semesterId: null});
+    this.form.patchValue({ semester: null , semesterId: null},{emitEvent:true});
     const { semesterId, ...r } = this.parmas.loadGenericFromUrl();
     this.parmas.setToUrl(({...r}))
   }

@@ -14,10 +14,13 @@
           <br />
         }
         <mat-grid-tile>
-          <app-academic-year-semester-auto-complete
+          <div style="width: 100%;">
+            <app-academic-year-semester-auto-complete
               [form]="form" 
-              [loading]="loading"
+              [loading]="loading",
+              [semester]="data.semester"
               />
+          </div>
         </mat-grid-tile>
 
         <mat-grid-tile >

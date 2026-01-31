@@ -178,7 +178,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         max_length_1000: 'النص يجب ألا يتجاوز 1000 محرف.',
         problem_in_get_semester_for_currenct_year: 'هناك مشكلة في جلب الفصل للسنة الدراسية الحالية.',
         out_of_range_date: 'التاريخ المدخل يجب أن يكون بين {first} و {second}',
-        failed_to_load_semester: 'خطأ في تحميل معلومات الفصل الدراسي.'
+        failed_to_load_semester: 'خطأ في تحميل معلومات الفصل الدراسي.',
+        to:'إلى'
     },
     en:{
         'name':"Name",
@@ -360,6 +361,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         problem_in_get_semester_for_currenct_year: 'There is a problem in getting the semester for the current academic year.',
         out_of_range_date: 'The date is out of range, between {first} , {second}',
         failed_to_load_semester: 'Failed to load semester information.',
+        to:'to'
     }
 }
 
@@ -396,7 +398,8 @@ export type StudentNotePhrases =
 'do_you_want_solve_question'|
 'problem_in_get_semester_for_currenct_year'|
 'out_of_range_date'|
-'failed_to_load_semester'
+'failed_to_load_semester'|
+'to'
 ;
 
 export type ClassPhrases = 

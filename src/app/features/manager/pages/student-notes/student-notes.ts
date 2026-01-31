@@ -91,14 +91,18 @@ export class StudentNotesPage implements OnInit{
 
   constructor(){
     this.form = this.fb.group({
-      'type':[''],
+      'type':['0'],
       'semester':[null],
-      'semesterId':[null]
+      'semesterId':[null],
+      "semesterLoadFirst":[true]
     });
     this.studentId = +(this.activatedRoute.snapshot.paramMap.get('id')??'0');
     this.classId = +(this.activatedRoute.snapshot.paramMap.get('classId')??'0');
-
-    
+    this.form.patchValue({type: this.parmas.loadGenericFromUrl()['type'] ?? '0'});
+    this.filter.set({
+      pageSize: +(this.parmas.loadGenericFromUrl()['pageSize'] ?? this.filter().pageSize),
+      pageNumber: +(this.parmas.loadGenericFromUrl()['pageNumber'] ?? this.filter().pageNumber)
+    });
   }
   ngOnInit(): void {
     this.form.get('type')!.valueChanges.pipe(
@@ -113,7 +117,6 @@ export class StudentNotesPage implements OnInit{
         distinctUntilChanged(),
       ).subscribe(x=>{
         this.onLoading()
-        console.log(this.form.value);
       });
   }
 
@@ -163,6 +166,13 @@ export class StudentNotesPage implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       if(result)
         this.studentNotes.update(arr => [...arr, result.data]);
+        this.studentNotesStatistics.update(x=>{
+            if(result.data.type === 1){
+              return {...x, behavioralCount: x.behavioralCount + 1}
+            }else{
+              return {...x, academicCount: x.academicCount + 1}
+            }
+          })
     });
   }
 
@@ -174,7 +184,8 @@ export class StudentNotesPage implements OnInit{
         width: "80%",
         data:{     
           studentId: this.studentId,
-          studentNote: studentNote
+          studentNote: studentNote,
+          semester: this.form.get('semester')?.value
         }
       }
     );
@@ -186,27 +197,46 @@ export class StudentNotesPage implements OnInit{
             return arr;
           }
         );
+        this.studentNotesStatistics.update(x=>{
+          if(result.data.type !== studentNote.type){
+            if(studentNote.type === 1){
+              return {...x, behavioralCount: x.behavioralCount - 1 , academicCount: x.academicCount + 1}
+            }else{
+              return {...x, academicCount: x.academicCount - 1, behavioralCount: x.behavioralCount + 1}
+            }
+          }else{
+            return x;
+          }
+        })
         
       }
     });
   }
 
-  openDeleteDialog(id:number){
+  openDeleteDialog(note:NoteItem){
     const dialogRef = this.dialog.open(
       DeleteDialog, 
       {
         data:{
           title:this.language.transform('delete_period'),
           action: ()=>{
-            this.studentNotesEndpoints.delete(id)
+            this.studentNotesEndpoints.delete(note.id)
               .subscribe({
                 next:success=>{
                   dialogRef.close();
                   this.studentNotes.update(x=> {
                     return x.filter(y=> y.id != success.id)
                   })
-
                   this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
+
+                  this.studentNotesStatistics.update(x=>{
+                    if(note.type === 1){
+                      return {...x, behavioralCount: x.behavioralCount - 1}
+                    }else{
+                      return {...x, academicCount: x.academicCount - 1}
+                    }
+                  })
+
                 },
                 error: error=>{
                   this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));

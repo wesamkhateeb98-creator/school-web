@@ -77,19 +77,29 @@ export class StudentNotesDialog implements OnInit{
           type: [ this.isUpdate()?this.data.studentNote.type:'1'],
           description: [ this.isUpdate()?this.data.studentNote.description:'', [Validators.required, Validators.maxLength(1000)]],
           recordedAt: [ this.isUpdate()?this.data.studentNote.recordedAt:'',[Validators.required]],
-          semesterId:[]
+          semesterId:[],
+          semester:[]
       }
     );
-
-    // this.form.get('semesterId')?.valueChanges.subscribe(value => {
-    //   this.form.get('recordedAt')?.setValidators(
-    //     this.dateBetweenValidator(
-          
-    //       this.form.get("semester")?.value.startDate,
-    //       this.form.get("semester")?.value.endDate
-    //     )
-    //   );
-    // })
+    this.form.patchValue({
+      type:this.isUpdate()?this.data.studentNote.type:'1',
+      description:this.isUpdate()?this.data.studentNote.description:'', 
+      recordedAt:this.isUpdate()?this.data.studentNote.recordedAt:''});
+    this.form.get('semester')?.valueChanges.subscribe(value => {
+      
+      if(this.form.get("semester")?.value){
+        this.form.get('recordedAt')?.enable();
+        this.form.get('recordedAt')?.setValidators(
+          this.dateBetweenValidator(
+              this.form.get("semester")?.value.startDate,
+            this.form.get("semester")?.value.endDate
+            
+          )
+        );
+      }else{
+        this.form.get('recordedAt')?.disable();
+      }
+    })
 
     this.loading.set(false);
   }
@@ -176,7 +186,7 @@ addPeriod(){
       this.data.studentNote.id,
       this.form.value.type,
       this.form.value.description,
-      this.form.value.recordedAt)
+      this.formatService.ToDateOnly(this.form.value.recordedAt))
       .subscribe({
         next: success=>{
           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
