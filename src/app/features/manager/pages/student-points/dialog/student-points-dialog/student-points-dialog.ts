@@ -83,8 +83,8 @@ export class StudentPointsDialog implements OnInit{
       description:this.isUpdate()?this.data.studentPoint.description:'', 
       createdAt:this.isUpdate()?this.data.studentPoint.createdAt:''});
       
-      this.form.get('semester')?.valueChanges.subscribe(value => {
-      
+    this.form.get('semester')?.valueChanges.subscribe(value => {  
+      console.log(value)
       if(this.form.get("semester")?.value){
         this.form.get('createdAt')?.enable();
         this.form.get('createdAt')?.setValidators(
@@ -118,7 +118,9 @@ export class StudentPointsDialog implements OnInit{
       const maxTime = new Date(maxDate);
       ({inputTime, minTime, maxTime});
       if (inputTime >= minTime && inputTime <= maxTime) {
-        return null;
+        let a = new Date();
+        console.log({inputTime,a})
+        return inputTime> new Date()? { greaterThanDate:true } : null;
       }
       
       return { outRange: true };

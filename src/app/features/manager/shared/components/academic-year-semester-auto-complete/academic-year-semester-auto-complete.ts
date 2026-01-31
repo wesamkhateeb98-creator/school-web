@@ -82,7 +82,6 @@ export class AcademicYearSemesterAutoComplete implements OnInit {
       tap(() => this.loading.set(false))
     ).subscribe(x => {
       this.semesterItems.set(x);
-      console.log(this.semester);
       if(!this.form.get('semesterFirstTime')?.value ){
         let item;
         if(this.semester){
