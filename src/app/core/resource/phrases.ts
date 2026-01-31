@@ -184,7 +184,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_student_note:'إضافة ملاحظة للطالب',
         update_student_note:'تعديل ملاحظة الطالب',
         add_student_point:'إضافة نقاط للطالب',
-        update_student_point:'تعديل نقاط الطالب'
+        update_student_point:'تعديل نقاط الطالب',
+        points_title:'النقاط',
+        max_value_1000:'القيمة يجب أن تكون أقل من أو تساوي 1000.',
+        min_value_1:'القيمة يجب أن تكون أكبر من أو تساوي 1.'
     },
     en:{
         'name':"Name",
@@ -371,7 +374,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_student_note:'Add student note',
         update_student_note:'Update student note',
         add_student_point:'Add student point',
-        update_student_point:'Update student point'
+        update_student_point:'Update student point',
+        points_title:'Points Title',
+        max_value_1000:'The value must be less than or equal to 1000.',
+        min_value_1:'The value must be greater than or equal to 1.'
     }
 }
 
@@ -395,7 +401,8 @@ StundentPointPhrases;
 export type StundentPointPhrases = 
 'points'|
 'add_student_point'|
-'update_student_point'
+'update_student_point'|
+'points_title'
 
 
 export type StudentNotePhrases =
@@ -566,7 +573,9 @@ export type ValidationMessagePhrases =
 'min_number_1'|
 'year_must_equal_currenct_year_or_greater_than_one'|
 'min_number_0'|
-'invalid_time_pattern';
+'invalid_time_pattern'|
+'max_value_1000'|
+'min_value_1';
 
 export type ButtonPhrases = 
 'add' | 

@@ -15,15 +15,14 @@ import { HttpHelper } from "../../../../../../core/services/http-helper";
 import { errorMatSnackbarConfig, successMatSnackbarConfig, time12hTo24, time24hTo12 } from "../../../../../../core/consts";
 import { MatTimepickerModule } from "@angular/material/timepicker";
 import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
-import { StudentNoteEndpoints } from "../../../../shared/endpoints/student-note-endpoint";
-import { NoteItem } from "../../../../shared/endpoints/models/student-note/student-notes-response";
 import { AuthService } from "../../../../../../core/services/auth-service";
-import { StudentNoteTypeService } from "../../../../../../core/enums/service/student-note-type-service";
 import { MatSelectModule } from "@angular/material/select";
 import { FormatService } from "../../../../../../core/services/format-service";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
-import { DatePipe, formatDate } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete";
+import { StudentPointEndpoints } from "../../../../shared/endpoints/student-point-endpoint";
+import { PointItem } from "../../../../shared/endpoints/models/student-point/student-points-response";
 
 @Component({
   selector: 'app-student-points-dialog',
@@ -40,7 +39,6 @@ import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/
     MatDatepickerModule,
     MatTimepickerModule,
     NgxMatTimepickerModule,
-    MatOption,
     MatSelectModule,
     ErrorTitleComponent,
     DatePipe,
@@ -50,7 +48,7 @@ import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './student-points-dialog.html',
 })
-// StudentNoteEndpoints
+// StudentpointsEndpoints
 
 export class StudentPointsDialog implements OnInit{
   // ##################### Injections #####################
@@ -60,9 +58,8 @@ export class StudentPointsDialog implements OnInit{
     fb = inject(FormBuilder);
     http = inject(HttpHelper);
     matSnackBar = inject(MatSnackBar);
-    studentNoteEndpoints = inject(StudentNoteEndpoints);
+    studentPointEndpoints = inject(StudentPointEndpoints);
     authService = inject(AuthService);
-    studentNoteType = inject(StudentNoteTypeService)
     formatService = inject(FormatService);
     // ##################### data #####################
     loading = signal<boolean>(true);
@@ -74,22 +71,23 @@ export class StudentPointsDialog implements OnInit{
     
     this.form = this.fb.group(
       {
-          type: [ this.isUpdate()?this.data.studentNote.type:'1'],
-          description: [ this.isUpdate()?this.data.studentNote.description:'', [Validators.required, Validators.maxLength(1000)]],
-          recordedAt: [ this.isUpdate()?this.data.studentNote.recordedAt:'',[Validators.required]],
+          points:['0',[Validators.required, Validators.min(1), Validators.max(1000)]],
+          description: [ this.isUpdate()?this.data.studentPoint.description:'', [Validators.required, Validators.maxLength(1000)]],
+          createdAt: [ this.isUpdate()?this.data.studentPoint.createdAt:'',[Validators.required]],
           semesterId:[],
           semester:[]
       }
     );
     this.form.patchValue({
-      type:this.isUpdate()?this.data.studentNote.type:'1',
-      description:this.isUpdate()?this.data.studentNote.description:'', 
-      recordedAt:this.isUpdate()?this.data.studentNote.recordedAt:''});
-    this.form.get('semester')?.valueChanges.subscribe(value => {
+      points:this.isUpdate()?this.data.studentPoint.points:0,
+      description:this.isUpdate()?this.data.studentPoint.description:'', 
+      createdAt:this.isUpdate()?this.data.studentPoint.createdAt:''});
+      
+      this.form.get('semester')?.valueChanges.subscribe(value => {
       
       if(this.form.get("semester")?.value){
-        this.form.get('recordedAt')?.enable();
-        this.form.get('recordedAt')?.setValidators(
+        this.form.get('createdAt')?.enable();
+        this.form.get('createdAt')?.setValidators(
           this.dateBetweenValidator(
               this.form.get("semester")?.value.startDate,
             this.form.get("semester")?.value.endDate
@@ -97,7 +95,7 @@ export class StudentPointsDialog implements OnInit{
           )
         );
       }else{
-        this.form.get('recordedAt')?.disable();
+        this.form.get('createdAt')?.disable();
       }
     })
 
@@ -138,7 +136,7 @@ export class StudentPointsDialog implements OnInit{
     this.loading.set(true);
 
     if(this.isUpdate()){
-      this.updateStudentNote();
+      this.updateStudentpoints();
     }else{
       this.addPeriod();    
     }
@@ -148,28 +146,25 @@ export class StudentPointsDialog implements OnInit{
 
 addPeriod(){
   
-  this.studentNoteEndpoints.add(
+  this.studentPointEndpoints.add(
     this.key,
-    this.form.value.type,
+    this.form.value.points,
     this.form.value.description,
-    this.formatService.ToDateOnly(this.form.value.recordedAt),
+    this.data.studentId,
     this.form.value.semesterId??0,
-    this.data.studentId
+    this.formatService.ToDateOnly(this.form.value.createdAt),
   )
     .subscribe({
       next: (success) => {
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
         const data = {
           id:success.id,
+          points: this.form.value.points,
           description: this.form.value.description,
-          isReleased: false,
-          recordedAt: this.form.value.recordedAt,
-          type: this.form.value.type,
-          isSolved: false,
-          recordedBy: this.authService.getAuth()?.id, // Fixed,
-          releasedAt: null,
-          solvedAt: null
-        } as NoteItem;
+          studentId: this.data.studentId,
+          academicYearSemesterId: this.form.value.semesterId,
+          createdAt: this.form.value.createdAt
+        } as PointItem;
         this.dialogRef.close({
           data
         });
@@ -181,26 +176,23 @@ addPeriod(){
   }
 
 
-  updateStudentNote(){
-    this.studentNoteEndpoints.update(
-      this.data.studentNote.id,
-      this.form.value.type,
+  updateStudentpoints(){
+    this.studentPointEndpoints.update(
+      this.data.studentPoint.id,
+      this.form.value.points,
       this.form.value.description,
-      this.formatService.ToDateOnly(this.form.value.recordedAt))
+      this.formatService.ToDateOnly(this.form.value.createdAt))
       .subscribe({
         next: success=>{
           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
           const data = {
             id:success.id,
+            points: this.form.value.points,
             description: this.form.value.description,
-            isReleased: this.data.studentNote.isReleased,
-            recordedAt: this.form.value.recordedAt,
-            type: this.form.value.type,
-            isSolved: this.data.studentNote.isSolved,
-            recordedBy: this.data.studentNote.recordedBy,
-            releasedAt: this.data.studentNote.releasedAt,
-            solvedAt: this.data.studentNote.solvedAt
-            } as NoteItem;
+            studentId: this.data.studentId,
+            academicYearSemesterId: this.form.value.semesterId,
+            createdAt: this.form.value.createdAt
+            } as PointItem;
           this.dialogRef.close({
             data
           });
@@ -213,7 +205,7 @@ addPeriod(){
   }
 
   isUpdate () : boolean{
-    return this.data && this.data.studentNote && this.data.studentNote != null ;
+    return this.data && this.data.studentPoint && this.data.studentPoint != null ;
   }
 }
 

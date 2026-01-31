@@ -13,16 +13,7 @@
           <app-error-title-component [message]="language.transform('problem_in_get_semester_for_currenct_year')"/>
           <br />
         }
-        <mat-grid-tile>
-          <div style="width: 100%;">
-            <app-academic-year-semester-auto-complete
-              [form]="form" 
-              [loading]="loading",
-              [semester]="data.semester"
-              />
-          </div>
-        </mat-grid-tile>
-
+        
         <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
             <mat-label>{{language.transform("type")}}</mat-label>
@@ -49,6 +40,16 @@
               </mat-error>
             }
           </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+          <div style="width: 100%;">
+            <app-academic-year-semester-auto-complete
+              [form]="form" 
+              [loading]="loading",
+              [semester]="data.semester"
+              />
+          </div>
         </mat-grid-tile>
 
         <mat-grid-tile >

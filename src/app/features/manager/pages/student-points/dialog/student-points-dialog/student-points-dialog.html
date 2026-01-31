@@ -1,5 +1,5 @@
 <form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
-  <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_period':'add_period')}}</h2>
+  <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_student_point':'add_student_point')}}</h2>
   <mat-dialog-content>    
 
     <mat-grid-list [cols]="1" rowHeight="70px" gutterSize="10px">
@@ -13,24 +13,26 @@
           <app-error-title-component [message]="language.transform('problem_in_get_semester_for_currenct_year')"/>
           <br />
         }
-        <mat-grid-tile>
-          <div style="width: 100%;">
-            <app-academic-year-semester-auto-complete
-              [form]="form" 
-              [loading]="loading",
-              [semester]="data.semester"
-              />
-          </div>
-        </mat-grid-tile>
-
+        
         <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label>{{language.transform("type")}}</mat-label>
-            <mat-select formControlName="type">
-                @for (item of studentNoteType.notes; track $index) {
-                    <mat-option [value]="item.id">{{ item.name }}</mat-option> 
-                }
-            </mat-select>
+            <mat-label >{{language.transform("points_title")}}</mat-label>
+            <input type="number" matInput formControlName="points">
+            @if(this.form.get('points')?.hasError('required')){
+              <mat-error>
+                {{language.transform('field_required')}}
+              </mat-error>
+            }
+            @else if(this.form.get('points')?.hasError('min')){
+              <mat-error>
+                {{language.transform('min_value_1')}}
+              </mat-error>
+            }
+            @else if(this.form.get('points')?.hasError('max')){
+              <mat-error>
+                {{language.transform('max_value_1000')}}
+              </mat-error>
+            }
           </mat-form-field>
         </mat-grid-tile>
         
@@ -51,19 +53,30 @@
           </mat-form-field>
         </mat-grid-tile>
 
+        <mat-grid-tile>
+          <div style="width: 100%;">
+            <app-academic-year-semester-auto-complete
+              [form]="form" 
+              [loading]="loading",
+              [semester]="data.semester"
+              />
+          </div>
+        </mat-grid-tile>
+
+
         <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("recordedAt")}}</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="recordedAt" [readonly]="loading()">
+            <mat-label >{{language.transform("created_at_title")}}</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="createdAt" [readonly]="loading()">
               <mat-hint>MM/DD/YYYY</mat-hint>
               <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="loading()"/>
               <mat-datepicker #picker></mat-datepicker>
-              @if(this.form.get('recordedAt')?.hasError('required')){
+              @if(this.form.get('createdAt')?.hasError('required')){
                 <mat-error>
                     {{language.transform('field_required')}}
                 </mat-error>
               }
-              @else if(this.form.get('recordedAt')?.hasError('outRange')){
+              @else if(this.form.get('createdAt')?.hasError('outRange')){
                 <mat-error>
                     {{
 
@@ -75,7 +88,7 @@
                     }}
                 </mat-error>
               }
-              @else if(this.form.get('recordedAt')?.hasError('failedSemesterLoading')){
+              @else if(this.form.get('craetedAt')?.hasError('failedSemesterLoading')){
                 <mat-error>
                     {{language.transform('failed_to_load_semester')}}
                 </mat-error>
