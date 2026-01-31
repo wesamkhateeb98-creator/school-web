@@ -179,7 +179,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         problem_in_get_semester_for_currenct_year: 'هناك مشكلة في جلب الفصل للسنة الدراسية الحالية.',
         out_of_range_date: 'التاريخ المدخل يجب أن يكون بين {first} و {second}',
         failed_to_load_semester: 'خطأ في تحميل معلومات الفصل الدراسي.',
-        to:'إلى'
+        to:'إلى',
+        points:'النقاط',
+        add_student_note:'إضافة ملاحظة للطالب',
+        update_student_note:'تعديل ملاحظة الطالب',
+        add_student_point:'إضافة نقاط للطالب',
+        update_student_point:'تعديل نقاط الطالب'
     },
     en:{
         'name':"Name",
@@ -361,7 +366,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         problem_in_get_semester_for_currenct_year: 'There is a problem in getting the semester for the current academic year.',
         out_of_range_date: 'The date is out of range, between {first} , {second}',
         failed_to_load_semester: 'Failed to load semester information.',
-        to:'to'
+        to:'to',
+        points:'Points',
+        add_student_note:'Add student note',
+        update_student_note:'Update student note',
+        add_student_point:'Add student point',
+        update_student_point:'Update student point'
     }
 }
 
@@ -379,7 +389,14 @@ SubjectPhrases|
 GlobalType|
 PersonPhrases |
 ClassPhrases|
-StudentNotePhrases;
+StudentNotePhrases|
+StundentPointPhrases;
+
+export type StundentPointPhrases = 
+'points'|
+'add_student_point'|
+'update_student_point'
+
 
 export type StudentNotePhrases =
 'behavioral_title'|
@@ -399,7 +416,9 @@ export type StudentNotePhrases =
 'problem_in_get_semester_for_currenct_year'|
 'out_of_range_date'|
 'failed_to_load_semester'|
-'to'
+'to'|
+'add_student_note'|
+'update_student_note'
 ;
 
 export type ClassPhrases = 

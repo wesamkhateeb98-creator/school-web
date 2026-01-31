@@ -26,7 +26,7 @@ import { DatePipe, formatDate } from "@angular/common";
 import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete";
 
 @Component({
-  selector: 'app-add-academic-year-dialog',
+  selector: 'app-student-points-dialog',
   imports: [
     MatButtonModule,
     MatDialogTitle,
@@ -48,13 +48,13 @@ import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/
 ],
   providers:[provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './student-notes-dialog.html',
+  templateUrl: './student-points-dialog.html',
 })
 // StudentNoteEndpoints
 
-export class StudentNotesDialog implements OnInit{
+export class StudentPointsDialog implements OnInit{
   // ##################### Injections #####################
-  dialogRef = inject(MatDialogRef<StudentNotesDialog>);
+  dialogRef = inject(MatDialogRef<StudentPointsDialog>);
     language = inject(Language);
     responsiveScreen = inject(ResponsiveScreen);
     fb = inject(FormBuilder);

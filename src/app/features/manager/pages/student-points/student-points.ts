@@ -16,15 +16,14 @@ import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/d
 import { MatProgressBar } from "@angular/material/progress-bar";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { GenericDialog } from '../../../shared/components/dialogs/generic-dialog/generic-dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelect, MatOption } from "@angular/material/select";
 import { debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 import { AcademicYearSemesterAutoComplete } from '../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete';
 import { StudentPointEndpoints } from '../../shared/endpoints/student-point-endpoint';
 import { PointItem } from '../../shared/endpoints/models/student-point/student-points-response';
+import { StudentPointsDialog } from './dialog/student-points-dialog/student-points-dialog';
 
 @Component({
   selector: 'app-student-points',
@@ -39,8 +38,6 @@ import { PointItem } from '../../shared/endpoints/models/student-point/student-p
     MatTooltipModule,
     MatExpansionModule,
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
-    MatSelect,
-    MatOption,
     AcademicYearSemesterAutoComplete
 ],
   templateUrl: './student-points.html',
@@ -136,7 +133,7 @@ export class StudentPointsPage implements OnInit{
 
   openAddDialog(){
     const dialogRef = this.dialog.open(
-      StudentpointsDialog, 
+      StudentPointsDialog, 
       {
         width: "80%",
         data:{
@@ -148,25 +145,22 @@ export class StudentPointsPage implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       if(result)
         this.studentpoints.update(arr => [...arr, result.data]);
-        this.studentpointsStatistics.update(x=>{
-            if(result.data.type === 1){
-              return {...x, behavioralCount: x.behavioralCount + 1}
-            }else{
-              return {...x, academicCount: x.academicCount + 1}
-            }
+        this.totalPages.update(x=>{
+            x += result.data.totalPages;
+            return x; 
           })
     });
   }
 
   
-  openUpdateDialog(studentNote: NoteItem){
+  openUpdateDialog(studentPoint: PointItem){
     const dialogRef = this.dialog.open(
-      StudentpointsDialog, 
+      StudentPointsDialog, 
       {
         width: "80%",
         data:{     
           studentId: this.studentId,
-          studentNote: studentNote,
+          studentPoint: studentPoint,
           semester: this.form.get('semester')?.value
         }
       }
@@ -179,30 +173,24 @@ export class StudentPointsPage implements OnInit{
             return arr;
           }
         );
-        this.studentpointsStatistics.update(x=>{
-          if(result.data.type !== studentNote.type){
-            if(studentNote.type === 1){
-              return {...x, behavioralCount: x.behavioralCount - 1 , academicCount: x.academicCount + 1}
-            }else{
-              return {...x, academicCount: x.academicCount - 1, behavioralCount: x.behavioralCount + 1}
-            }
-          }else{
-            return x;
-          }
+        this.totalPages.update(x=>{
+          x-= studentPoint.points;
+          x+= result.data.points;
+          return x;
         })
         
       }
     });
   }
 
-  openDeleteDialog(note:NoteItem){
+  openDeleteDialog(point:PointItem){
     const dialogRef = this.dialog.open(
       DeleteDialog, 
       {
         data:{
           title:this.language.transform('delete_period'),
           action: ()=>{
-            this.studentpointsEndpoints.delete(note.id)
+            this.studentPointEndpoints.delete(point.id)
               .subscribe({
                 next:success=>{
                   dialogRef.close();
@@ -211,14 +199,9 @@ export class StudentPointsPage implements OnInit{
                   })
                   this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
 
-                  this.studentpointsStatistics.update(x=>{
-                    if(note.type === 1){
-                      return {...x, behavioralCount: x.behavioralCount - 1}
-                    }else{
-                      return {...x, academicCount: x.academicCount - 1}
-                    }
+                  this.totalPages.update(x=>{
+                    return x - point.points;
                   })
-
                 },
                 error: error=>{
                   this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
@@ -232,75 +215,6 @@ export class StudentPointsPage implements OnInit{
     
   }
 
-  openReleaseToParentDialog(id:number){
-    const dialogRef = this.dialog.open(
-      GenericDialog, 
-      {
-        data:{
-          title: this.language.transform('release_to_parent'),
-          message: this.language.transform('do_you_want_release_to_parent_question'),
-          actionTitle: this.language.transform('release_to_parent'),
-          style: "background-color :var(--mat-sys-success)",
-          action: ()=>{
-            this.studentpointsEndpoints.releaseToParent(id)
-              .subscribe({
-                next:success=>{
-                  dialogRef.close();
-
-                  this.studentpoints.update(arr =>
-                      {
-                        arr = arr.map(x => x.id === id ? {...x, isReleased: true} : x);
-                        return arr;
-                      }
-                    );
-
-                  this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
-                },
-                error: error=>{
-                  this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-                }
-              });
-            }  
-        },
-        width: "80%"
-      }
-    );
-    
-  }
-
-  openSolveeDialog(id:number){
-    const dialogRef = this.dialog.open(
-      GenericDialog, 
-      {
-        data:{
-          title:this.language.transform('solve_note'),
-          message: this.language.transform('do_you_want_solve_question'),
-          actionTitle: this.language.transform('solve_note'),
-          style: "background-color :var(--mat-sys-success)",
-          action: ()=>{
-            this.studentpointsEndpoints.solve(id)
-              .subscribe({
-                next:success=>{
-                  dialogRef.close();
-                 this.studentpoints.update(arr =>
-                      {
-                        arr = arr.map(x => x.id === id ? {...x, isSolved: true} : x);
-                        return arr;
-                      }
-                    );
-                  this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
-                },
-                error: error=>{
-                  this.matSnackBar.open(error.error.Title, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-                }
-              });
-            }  
-        },
-        width: "80%"
-      }
-    );
-    
-  }
   // ################ Pagination ################
 
   changeInPage(pageEvent:PageEvent){
