@@ -1,0 +1,22 @@
+<div [formGroup]="form">
+    <mat-form-field  class="example-form-field" style="width: 100%;">
+        <mat-label>{{ language.transform("semester_title") }}</mat-label>
+        <input type="text" matInput formControlName="year" [matAutocomplete]="autoAge">
+  
+         @if (form.value.semester) {
+            <button matSuffix matIconButton aria-label="Clear" (click)="clear()" >
+                <mat-icon>close</mat-icon>
+            </button>
+        }
+        @if(form.get('semester')?.hasError('required')){
+            <mat-error >
+                {{ language.transform('field_required') }}
+            </mat-error>
+        }
+        <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onSemesterSelected($event)">
+            @for (item of semesterItems(); track item.academicYearSemesterId) {
+                <mat-option [value]="item">{{ displayFn(item) }}</mat-option>
+            }
+        </mat-autocomplete>
+    </mat-form-field>
+</div>

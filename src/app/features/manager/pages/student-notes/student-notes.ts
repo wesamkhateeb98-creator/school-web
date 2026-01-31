@@ -28,7 +28,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelect, MatOption } from "@angular/material/select";
 import { debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 import { StudentNotesDialog } from './dialog/add-subject-dialog/student-notes-dialog';
-import { AcademicYearSemesterAutoComplete } from "../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete";
+import { AcademicYearSemesterAutoComplete } from '../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete';
 
 @Component({
   selector: 'app-semester-component',
@@ -113,6 +113,7 @@ export class StudentNotesPage implements OnInit{
         distinctUntilChanged(),
       ).subscribe(x=>{
         this.onLoading()
+        console.log(this.form.value);
       });
   }
 
@@ -120,7 +121,7 @@ export class StudentNotesPage implements OnInit{
     this.loading.set(true);
     this.studentNotesEndpoints.get(
       this.studentId,
-      this.form.value.semester?.academicYearSemesterId,
+      this.form.value.semesterId,
       this.form.value.type,
       this.filter().pageNumber,
       this.filter().pageSize)

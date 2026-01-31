@@ -22,7 +22,6 @@ import { StudentNoteTypeService } from "../../../../../../core/enums/service/stu
 import { MatSelectModule } from "@angular/material/select";
 import { FormatService } from "../../../../../../core/services/format-service";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
-import { MatCard } from "@angular/material/card";
 import { DatePipe, formatDate } from "@angular/common";
 import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete";
 
