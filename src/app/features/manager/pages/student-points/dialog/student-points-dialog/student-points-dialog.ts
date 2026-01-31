@@ -23,6 +23,7 @@ import { DatePipe } from "@angular/common";
 import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete";
 import { StudentPointEndpoints } from "../../../../shared/endpoints/student-point-endpoint";
 import { PointItem } from "../../../../shared/endpoints/models/student-point/student-points-response";
+import { max } from "rxjs";
 
 @Component({
   selector: 'app-student-points-dialog',
@@ -73,7 +74,7 @@ export class StudentPointsDialog implements OnInit{
       {
           points:['0',[Validators.required, Validators.min(1), Validators.max(1000)]],
           description: [ this.isUpdate()?this.data.studentPoint.description:'', [Validators.required, Validators.maxLength(1000)]],
-          createdAt: [ this.isUpdate()?this.data.studentPoint.createdAt:'',[Validators.required]],
+          createdAt: [ this.isUpdate()?this.data.studentPoint.createdAt:'',[Validators.required, this.dateBetweenValidator()]],
           semesterId:[],
           semester:[]
       }
@@ -84,16 +85,8 @@ export class StudentPointsDialog implements OnInit{
       createdAt:this.isUpdate()?this.data.studentPoint.createdAt:''});
       
     this.form.get('semester')?.valueChanges.subscribe(value => {  
-      console.log(value)
       if(this.form.get("semester")?.value){
         this.form.get('createdAt')?.enable();
-        this.form.get('createdAt')?.setValidators(
-          this.dateBetweenValidator(
-              this.form.get("semester")?.value.startDate,
-            this.form.get("semester")?.value.endDate
-            
-          )
-        );
       }else{
         this.form.get('createdAt')?.disable();
       }
@@ -103,23 +96,30 @@ export class StudentPointsDialog implements OnInit{
   }
   
   // ##################### Validations #####################
-  dateBetweenValidator(minDate: any, maxDate: any): ValidatorFn {
+  dateBetweenValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       
       if (!value) return null; 
+
+      let minDate = this.form.get("semester")?.value.startDate
+      let maxDate = this.form.get("semester")?.value.endDate
 
       if (!minDate || !maxDate) {
         return { failedSemesterLoading: true };
       }
 
       const inputTime = new Date(this.formatService.ToDateOnly(value));
+      inputTime.setHours(0, 0, 0, 0);
       const minTime = new Date(minDate);
+      minTime.setHours(0, 0, 0, 0);
       const maxTime = new Date(maxDate);
-      ({inputTime, minTime, maxTime});
+      maxTime.setHours(0, 0, 0, 0);
+      
       if (inputTime >= minTime && inputTime <= maxTime) {
-        let a = new Date();
-        console.log({inputTime,a})
+        let a = new Date()
+        console.log({inputTime})
+        console.log({a})
         return inputTime> new Date()? { greaterThanDate:true } : null;
       }
       
@@ -132,6 +132,7 @@ export class StudentPointsDialog implements OnInit{
   }
   
   submit(){
+    console.log(this.form.errors)
     if(!this.form.valid)
       return;
     
@@ -147,7 +148,6 @@ export class StudentPointsDialog implements OnInit{
   }
 
 addPeriod(){
-  
   this.studentPointEndpoints.add(
     this.key,
     this.form.value.points,

@@ -79,18 +79,20 @@
               @else if(this.form.get('createdAt')?.hasError('outRange')){
                 <mat-error>
                     {{
-
-                      
                         language.transform('out_of_range_date')
                           .replace('{first}', (this.form.get("semester")?.value.startDate | date:'yyyy-MM-dd') ?? '')
                           .replace('{second}', (this.form.get("semester")?.value.endDate | date:'yyyy-MM-dd') ?? '')
-                      
                     }}
                 </mat-error>
               }
               @else if(this.form.get('craetedAt')?.hasError('failedSemesterLoading')){
                 <mat-error>
                     {{language.transform('failed_to_load_semester')}}
+                </mat-error>
+              }
+              @else if(this.form.get('craetedAt')?.hasError('greaterThanDate')){
+                <mat-error>
+                    {{language.transform('input_date_must_be_less_than_Date')}}
                 </mat-error>
               }
           </mat-form-field>

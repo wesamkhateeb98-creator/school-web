@@ -1,6 +1,6 @@
 <div style="display: flex; justify-content: space-between;">
     <div style="display: flex;">
-        <h2 >{{language.transform('notes')}}</h2>
+        <h2 >{{language.transform('points')}}</h2>
         <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
             <mat-icon>add</mat-icon>
         </button>
@@ -17,7 +17,7 @@
 <mat-card style="padding: 0 20px;">
     <div class="grid grid-two-column">
         <div class="flex-start">
-            <h4>{{language.transform('academic_title')}}</h4>
+            <h4>{{language.transform('points_title')}}</h4>
             <div class="row-box-10"></div>
             <p>{{totalPoints()}}</p>
         </div>

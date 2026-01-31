@@ -24,6 +24,7 @@ import { FormatService } from "../../../../../../core/services/format-service";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
 import { DatePipe, formatDate } from "@angular/common";
 import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete";
+import { min } from "rxjs";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -76,7 +77,7 @@ export class StudentNotesDialog implements OnInit{
       {
           type: [ this.isUpdate()?this.data.studentNote.type:'1'],
           description: [ this.isUpdate()?this.data.studentNote.description:'', [Validators.required, Validators.maxLength(1000)]],
-          recordedAt: [ this.isUpdate()?this.data.studentNote.recordedAt:'',[Validators.required]],
+          recordedAt: [ this.isUpdate()?this.data.studentNote.recordedAt:'',[Validators.required,this.dateBetweenValidator()]],
           semesterId:[],
           semester:[]
       }
@@ -86,16 +87,9 @@ export class StudentNotesDialog implements OnInit{
       description:this.isUpdate()?this.data.studentNote.description:'', 
       recordedAt:this.isUpdate()?this.data.studentNote.recordedAt:''});
     this.form.get('semester')?.valueChanges.subscribe(value => {
-      
       if(this.form.get("semester")?.value){
         this.form.get('recordedAt')?.enable();
-        this.form.get('recordedAt')?.setValidators(
-          this.dateBetweenValidator(
-              this.form.get("semester")?.value.startDate,
-            this.form.get("semester")?.value.endDate
-            
-          )
-        );
+        
       }else{
         this.form.get('recordedAt')?.disable();
       }
@@ -105,22 +99,29 @@ export class StudentNotesDialog implements OnInit{
   }
   
   // ##################### Validations #####################
-  dateBetweenValidator(minDate: any, maxDate: any): ValidatorFn {
+  dateBetweenValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       
       if (!value) return null; 
+
+      let minDate = this.form.get("semester")?.value.startDate
+      let maxDate = this.form.get("semester")?.value.endDate
+      
 
       if (!minDate || !maxDate) {
         return { failedSemesterLoading: true };
       }
 
       const inputTime = new Date(this.formatService.ToDateOnly(value));
+      inputTime.setHours(0, 0, 0, 0);
       const minTime = new Date(minDate);
+      minTime.setHours(0, 0, 0, 0);
       const maxTime = new Date(maxDate);
+      maxTime.setHours(0, 0, 0, 0);
       ({inputTime, minTime, maxTime});
       if (inputTime >= minTime && inputTime <= maxTime) {
-        return null;
+        return inputTime> new Date()? { greaterThanDate:true } : null;
       }
       
       return { outRange: true };

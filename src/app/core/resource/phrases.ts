@@ -187,7 +187,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         update_student_point:'تعديل نقاط الطالب',
         points_title:'النقاط',
         max_value_1000:'القيمة يجب أن تكون أقل من أو تساوي 1000.',
-        min_value_1:'القيمة يجب أن تكون أكبر من أو تساوي 1.'
+        min_value_1:'القيمة يجب أن تكون أكبر من أو تساوي 1.',
+        input_date_must_be_less_than_Date: 'يجب أن يكون التاريخ المُدخل اليوم أو تاريخًا في الماضي.'
     },
     en:{
         'name':"Name",
@@ -377,7 +378,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         update_student_point:'Update student point',
         points_title:'Points Title',
         max_value_1000:'The value must be less than or equal to 1000.',
-        min_value_1:'The value must be greater than or equal to 1.'
+        min_value_1:'The value must be greater than or equal to 1.',
+        input_date_must_be_less_than_Date: 'The date entered must be today or a date in the past.'
     }
 }
 
@@ -575,7 +577,8 @@ export type ValidationMessagePhrases =
 'min_number_0'|
 'invalid_time_pattern'|
 'max_value_1000'|
-'min_value_1';
+'min_value_1'|
+'input_date_must_be_less_than_Date';
 
 export type ButtonPhrases = 
 'add' | 

@@ -109,8 +109,10 @@ export class StudentPointsPage implements OnInit{
       this.filter().pageSize)
         .subscribe({
           next:(success)=>{
-            this.totalPages.set(success.totalPoints);
+            this.totalPoints.set(success.totalPoints);
+
             this.studentpoints.set(success.points.content);
+
             this.filter.set({
               pageSize: success.points.pageSize,
               pageNumber: success.points.pageNumber
@@ -199,8 +201,9 @@ export class StudentPointsPage implements OnInit{
                   })
                   this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
 
-                  this.totalPages.update(x=>{
-                    return x - point.points;
+                  this.totalPoints.update(x=>{
+                    x -= point.points
+                    return x;
                   })
                 },
                 error: error=>{
