@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard } from '@angular/material/card';
@@ -29,6 +29,7 @@ import { MatSelect, MatOption } from "@angular/material/select";
 import { debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
 import { StudentNotesDialog } from './dialog/student-notes-dialog/student-notes-dialog';
 import { AcademicYearSemesterAutoComplete } from '../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete';
+import { FormatService } from '../../../../core/services/format-service';
 
 @Component({
   selector: 'app-semester-component',
@@ -63,6 +64,7 @@ export class StudentNotesPage implements OnInit{
   fb = inject(FormBuilder);
   studentNoteType = inject(StudentNoteTypeService);
   studentNoteFilterType = inject(StudentNoteFilterTypeService);
+  formatService = inject(FormatService);
 
   // ############# data #############
   filter = signal<{pageSize:number, pageNumber:number}>({
@@ -267,7 +269,7 @@ export class StudentNotesPage implements OnInit{
 
                   this.studentNotes.update(arr =>
                       {
-                        arr = arr.map(x => x.id === id ? {...x, isReleased: true} : x);
+                        arr = arr.map(x => x.id === id ? {...x, isReleased: true , releasedAt: new Date() } : x);
                         return arr;
                       }
                     );
@@ -302,7 +304,7 @@ export class StudentNotesPage implements OnInit{
                   dialogRef.close();
                  this.studentNotes.update(arr =>
                       {
-                        arr = arr.map(x => x.id === id ? {...x, isSolved: true} : x);
+                        arr = arr.map(x => x.id === id ? {...x, isSolved: true , solvedAt: new Date()} : x);
                         return arr;
                       }
                     );
