@@ -51,7 +51,7 @@ import { max } from "rxjs";
 })
 // StudentpointsEndpoints
 
-export class StudentPointsDialog implements OnInit{
+export class StudentPointsDialog{
   // ##################### Injections #####################
   dialogRef = inject(MatDialogRef<StudentPointsDialog>);
     language = inject(Language);
@@ -68,7 +68,7 @@ export class StudentPointsDialog implements OnInit{
     key:string = crypto.randomUUID();
     data = inject(MAT_DIALOG_DATA);
 
-  async ngOnInit() {
+  constructor() {
     
     this.form = this.fb.group(
       {
@@ -100,32 +100,40 @@ export class StudentPointsDialog implements OnInit{
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       
-      if (!value) return null; 
+      if (!value || !this.form || !this.form.get("semester")?.value) return null; 
+      console.log(this.form.value)
 
       let minDate = this.form.get("semester")?.value.startDate
       let maxDate = this.form.get("semester")?.value.endDate
+      
 
       if (!minDate || !maxDate) {
         return { failedSemesterLoading: true };
       }
 
-      const inputTime = new Date(this.formatService.ToDateOnly(value));
+      const inputTime = new Date(value);
       inputTime.setHours(0, 0, 0, 0);
       const minTime = new Date(minDate);
       minTime.setHours(0, 0, 0, 0);
       const maxTime = new Date(maxDate);
       maxTime.setHours(0, 0, 0, 0);
       
+      const today = new Date();
+      maxTime.setHours(0, 0, 0, 0);
+console.log(this.form.value)
+      if(inputTime > today)
+        return {
+          greaterThanDate:true
+        }
+console.log(this.form.value)
       if (inputTime >= minTime && inputTime <= maxTime) {
-        let a = new Date()
-        console.log({inputTime})
-        console.log({a})
-        return inputTime> new Date()? { greaterThanDate:true } : null;
+        return  null;
       }
       
       return { outRange: true };
     };
   }
+
 
   onNoClick(): void {
     this.dialogRef.close();

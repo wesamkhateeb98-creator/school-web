@@ -77,11 +77,13 @@ export class StudentNotesDialog {
       {
           type: [ 1],
           description: [ '', [Validators.required, Validators.maxLength(1000)]],
-          recordedAt: [ '',[Validators.required,this.dateBetweenValidator()]],
+          recordedAt: [ '',[Validators.required]],
           semesterId:[],
           semester:[]
       }
     );
+
+    this.form.get("recordedAt")?.setValidators([this.dateBetweenValidator()]);
 
     this.form.patchValue({
       type:this.isUpdate()?this.data.studentNote.type:1,
@@ -105,7 +107,7 @@ export class StudentNotesDialog {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       
-      if (!value || !this.form.get("semester")?.value) return null; 
+      if (!value || !this.form || !this.form.get("semester")?.value) return null; 
 
       let minDate = this.form.get("semester")?.value.startDate
       let maxDate = this.form.get("semester")?.value.endDate

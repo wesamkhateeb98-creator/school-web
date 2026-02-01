@@ -90,11 +90,13 @@
                     {{language.transform('failed_to_load_semester')}}
                 </mat-error>
               }
-              @else if(this.form.get('craetedAt')?.hasError('greaterThanDate')){
+              @else if(this.form.get('createdAt')?.hasError('greaterThanDate')){
                 <mat-error>
-                    {{language.transform('input_date_must_be_less_than_Date')}}
+                    {{language.transform('today_or_before')}}
                 </mat-error>
               }
+              {{this.form.get('craetedAt')?.hasError('failedSemesterLoading')}}
+              {{this.form.get('craetedAt')?.hasError('greaterThanDate')}}
           </mat-form-field>
         </mat-grid-tile>
       }
