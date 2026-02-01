@@ -91,14 +91,13 @@ export class StudentNotesPage implements OnInit{
 
   constructor(){
     this.form = this.fb.group({
-      'type':['0'],
+      'type':[this.parmas.loadGenericFromUrl()['type']??0],
       'semester':[null],
       'semesterId':[null],
       "semesterLoadFirst":[true]
     });
     this.studentId = +(this.activatedRoute.snapshot.paramMap.get('id')??'0');
     this.classId = +(this.activatedRoute.snapshot.paramMap.get('classId')??'0');
-    this.form.patchValue({type: this.parmas.loadGenericFromUrl()['type'] ?? '0'});
     this.filter.set({
       pageSize: +(this.parmas.loadGenericFromUrl()['pageSize'] ?? this.filter().pageSize),
       pageNumber: +(this.parmas.loadGenericFromUrl()['pageNumber'] ?? this.filter().pageNumber)
