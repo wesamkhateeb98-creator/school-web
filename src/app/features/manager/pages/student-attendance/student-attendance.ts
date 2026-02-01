@@ -14,12 +14,7 @@ import { ParamsService } from '../../../../core/services/params-service';
 import { errorMatSnackbarConfig, successMatSnackbarConfig, time24hTo12 } from '../../../../core/consts';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { MatProgressBar } from "@angular/material/progress-bar";
-import { StudentNoteEndpoints } from '../../shared/endpoints/student-note-endpoint';
-import { NoteItem, NotesStatistics, StudentNotesResponse } from '../../shared/endpoints/models/student-note/student-notes-response';
-
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { StudentNoteTypeService } from '../../../../core/enums/service/student-note-type-service';
-import { StudentNoteFilterTypeService } from '../../../../core/enums/service/student-note-filter-type-service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { GenericDialog } from '../../../shared/components/dialogs/generic-dialog/generic-dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -27,11 +22,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelect, MatOption } from "@angular/material/select";
 import { debounceTime, distinctUntilChanged, forkJoin } from 'rxjs';
-import { StudentNotesDialog } from './dialog/student-notes-dialog/student-notes-dialog';
 import { AcademicYearSemesterAutoComplete } from '../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete';
+import { AttendanceItem, AttendanceStatistics } from '../../shared/endpoints/models/student-Attendance/student-Attendances-response';
+import { StudentAttendanceEndpoints } from '../../shared/endpoints/student-attendance-endpoint';
+import { StudentAttendanceDialog } from './dialog/student-attendance-dialog/student-attendance-dialog';
+import { StudentAttendanceTypeService } from '../../../../core/enums/service/student-attendance-type-service';
+import { StudentAttendanceFilterTypeService } from '../../../../core/enums/service/student-attendance-filter-type-service';
 
 @Component({
-  selector: 'app-semester-component',
+  selector: 'app-student-attendance-component',
   imports: [
     MatTableModule,
     DatePipe,
@@ -47,10 +46,10 @@ import { AcademicYearSemesterAutoComplete } from '../../shared/components/academ
     MatOption,
     AcademicYearSemesterAutoComplete
 ],
-  templateUrl: './student-notes.html',
+  templateUrl: './student-attendance.html',
 })
 
-export class StudentNotesPage implements OnInit{
+export class StudentattendancePage implements OnInit{
   // ############# injections #############
   language = inject(Language);
   dialog = inject(MatDialog);
@@ -59,10 +58,10 @@ export class StudentNotesPage implements OnInit{
   httpHelper = inject(HttpHelper);
   matSnackBar = inject(MatSnackBar);
   parmas = inject(ParamsService);
-  studentNotesEndpoints = inject(StudentNoteEndpoints)
+  studentAttendanceEndpoints = inject(StudentAttendanceEndpoints)
   fb = inject(FormBuilder);
-  studentNoteType = inject(StudentNoteTypeService);
-  studentNoteFilterType = inject(StudentNoteFilterTypeService);
+  studentAttendanceType = inject(StudentAttendanceTypeService);
+  studentAttendanceFilterType = inject(StudentAttendanceFilterTypeService);
 
   // ############# data #############
   filter = signal<{pageSize:number, pageNumber:number}>({
@@ -70,12 +69,16 @@ export class StudentNotesPage implements OnInit{
     pageNumber: +(this.activatedRoute.snapshot.paramMap.get('pageNumber') ?? 1)
   });
   
-  studentNotesStatistics = signal<NotesStatistics>({
-    academicCount:0,
-    behavioralCount:0
+  studentAttendanceStatistics = signal<AttendanceStatistics>({
+    absenceCount: 0,
+    escapedCount: 0,
+    excusedCount: 0,
+    latenessCount: 0,
+    presenceCount: 0,
+    expelledCount: 0
   });
   
-  studentNotes = signal<NoteItem[]>([]);
+  studentAttendance = signal<AttendanceItem[]>([]);
   
   headerTable:string[] = ['type','description','recordedAt','isReleased','releasedAt','isSolved','solvedAt','actions'];
   
@@ -98,7 +101,9 @@ export class StudentNotesPage implements OnInit{
     });
     this.studentId = +(this.activatedRoute.snapshot.paramMap.get('id')??'0');
     this.classId = +(this.activatedRoute.snapshot.paramMap.get('classId')??'0');
+
     this.form.patchValue({type: this.parmas.loadGenericFromUrl()['type'] ?? '0'});
+    console.log(this.form.value)
     this.filter.set({
       pageSize: +(this.parmas.loadGenericFromUrl()['pageSize'] ?? this.filter().pageSize),
       pageNumber: +(this.parmas.loadGenericFromUrl()['pageNumber'] ?? this.filter().pageNumber)
@@ -122,7 +127,7 @@ export class StudentNotesPage implements OnInit{
 
   onLoading(){
     this.loading.set(true);
-    this.studentNotesEndpoints.get(
+    this.studentAttendanceEndpoints.get(
       this.studentId,
       this.form.value.semesterId,
       this.form.value.type,
@@ -131,14 +136,14 @@ export class StudentNotesPage implements OnInit{
         .subscribe({
           next:(success)=>{
             if(success.statistics)
-              this.studentNotesStatistics.set(success.statistics);
-            this.studentNotes.set(success.notes.content);
+              this.studentAttendanceStatistics.set(success.statistics);
+            this.studentAttendance.set(success.attendances.content);
             this.filter.set({
-              pageSize: success.notes.pageSize,
-              pageNumber: success.notes.pageNumber
+              pageSize: success.attendances.pageSize,
+              pageNumber: success.attendances.pageNumber
             });
 
-            this.totalPages.set(success.notes.countPages) 
+            this.totalPages.set(success.attendances.countPages) 
 
             this.setFilterToUrl();
 
@@ -155,7 +160,7 @@ export class StudentNotesPage implements OnInit{
 
   openAddDialog(){
     const dialogRef = this.dialog.open(
-      StudentNotesDialog, 
+      StudentAttendanceDialog, 
       {
         width: "80%",
         data:{
@@ -166,77 +171,78 @@ export class StudentNotesPage implements OnInit{
     
     dialogRef.afterClosed().subscribe(result => {
       if(result)
-        this.studentNotes.update(arr => [...arr, result.data]);
-        this.studentNotesStatistics.update(x=>{
-            if(result.data.type === 1){
-              return {...x, behavioralCount: x.behavioralCount + 1}
-            }else{
-              return {...x, academicCount: x.academicCount + 1}
-            }
-          })
+        this.studentAttendance.update(arr => [...arr, result.data]);
+        this.changeStatistic(result.data.type,1);
     });
   }
 
+  changeStatistic(type: number , count:number){
+    this.studentAttendanceStatistics.update(x=>{
+          if(type === 1){
+            return {...x, presenceCount: x.presenceCount + count}
+          }else if(type === 2){
+            return {...x, latenessCount: x.latenessCount + count}
+          }else if(type === 3){
+            return {...x, absenceCount: x.absenceCount + count}
+          }else if(type === 4){
+            return {...x, escapedCount: x.escapedCount + count}
+          }else if(type === 5){
+            return {...x, excusedCount: x.excusedCount + count}
+          }else if(type === 6){
+            return {...x, expelledCount: x.expelledCount + count}
+          }
+          return x;
+        })
+  }
+
   
-  openUpdateDialog(studentNote: NoteItem){
+  openUpdateDialog(studentAttendance: AttendanceItem){
     const dialogRef = this.dialog.open(
-      StudentNotesDialog, 
+      StudentAttendanceDialog, 
       {
         width: "80%",
         data:{     
           studentId: this.studentId,
-          studentNote: studentNote,
+          studentAttendance: studentAttendance,
           semester: this.form.get('semester')?.value
         }
       }
     );
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.studentNotes.update(arr => 
+        this.studentAttendance.update(arr => 
           {
             arr = arr.map(x => x.id === result.data.id ? result.data : x);
             return arr;
           }
         );
-        this.studentNotesStatistics.update(x=>{
-          if(result.data.type !== studentNote.type){
-            if(studentNote.type === 1){
-              return {...x, behavioralCount: x.behavioralCount - 1 , academicCount: x.academicCount + 1}
-            }else{
-              return {...x, academicCount: x.academicCount - 1, behavioralCount: x.behavioralCount + 1}
-            }
-          }else{
-            return x;
-          }
+        this.studentAttendanceStatistics.update(x=>{
+          this.changeStatistic(result.data.type,+1);
+          this.changeStatistic(studentAttendance.type,-1);
+          return x;
         })
         
       }
     });
   }
 
-  openDeleteDialog(note:NoteItem){
+  openDeleteDialog(attendance:AttendanceItem){
     const dialogRef = this.dialog.open(
       DeleteDialog, 
       {
         data:{
           title:this.language.transform('delete_period'),
           action: ()=>{
-            this.studentNotesEndpoints.delete(note.id)
+            this.studentAttendanceEndpoints.delete(attendance.id)
               .subscribe({
                 next:success=>{
                   dialogRef.close();
-                  this.studentNotes.update(x=> {
+                  this.studentAttendance.update(x=> {
                     return x.filter(y=> y.id != success.id)
                   })
                   this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
 
-                  this.studentNotesStatistics.update(x=>{
-                    if(note.type === 1){
-                      return {...x, behavioralCount: x.behavioralCount - 1}
-                    }else{
-                      return {...x, academicCount: x.academicCount - 1}
-                    }
-                  })
+                  this.changeStatistic(attendance.type,-1);
 
                 },
                 error: error=>{
@@ -261,12 +267,12 @@ export class StudentNotesPage implements OnInit{
           actionTitle: this.language.transform('release_to_parent'),
           style: "background-color :var(--mat-sys-success)",
           action: ()=>{
-            this.studentNotesEndpoints.releaseToParent(id)
+            this.studentAttendanceEndpoints.releaseToParent(id)
               .subscribe({
                 next:success=>{
                   dialogRef.close();
 
-                  this.studentNotes.update(arr =>
+                  this.studentAttendance.update(arr =>
                       {
                         arr = arr.map(x => x.id === id ? {...x, isReleased: true} : x);
                         return arr;
@@ -292,16 +298,16 @@ export class StudentNotesPage implements OnInit{
       GenericDialog, 
       {
         data:{
-          title:this.language.transform('solve_note'),
+          title:this.language.transform('solve_attendance'),
           message: this.language.transform('do_you_want_solve_question'),
-          actionTitle: this.language.transform('solve_note'),
+          actionTitle: this.language.transform('solve_attendance'),
           style: "background-color :var(--mat-sys-success)",
           action: ()=>{
-            this.studentNotesEndpoints.solve(id)
+            this.studentAttendanceEndpoints.solve(id)
               .subscribe({
                 next:success=>{
                   dialogRef.close();
-                 this.studentNotes.update(arr =>
+                 this.studentAttendance.update(arr =>
                       {
                         arr = arr.map(x => x.id === id ? {...x, isSolved: true} : x);
                         return arr;

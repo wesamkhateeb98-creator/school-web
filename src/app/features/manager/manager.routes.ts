@@ -17,6 +17,7 @@ import { ClassesPage } from "./pages/classes-page/classes-page";
 import { ClassInfoPage } from "./pages/class-info-page/class-info-page";
 import { StudentNotesPage } from "./pages/student-notes/student-notes";
 import { StudentPointsPage } from "./pages/student-points/student-points";
+import { StudentattendancePage } from "./pages/student-attendance/student-attendance";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -78,6 +79,11 @@ export const DASHBOARD_ROUTES: Routes = [
             component: StudentPointsPage, 
             title: messageTitle('points')
           },
+          {
+            path:':id/student-attendance', 
+            component: StudentattendancePage, 
+            title: messageTitle('attendances')
+          },
         ]
       },
       { path:'teachers', component: TeacherPage, title: messageTitle('teachers_title')},
@@ -123,6 +129,11 @@ export const DASHBOARD_ROUTES: Routes = [
             path:':classId/student/:id/student-points', 
             component: StudentPointsPage, 
             title: messageTitle('points')
+          },
+          {
+            path:'classId/student/:id/student-attendance', 
+            component: StudentattendancePage, 
+            title: messageTitle('attendances')
           },
           { 
             path:'periods',

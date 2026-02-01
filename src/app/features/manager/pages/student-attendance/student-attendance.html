@@ -1,0 +1,170 @@
+<div style="display: flex; justify-content: space-between;">
+    <div style="display: flex;">
+        <h2 >{{language.transform('attendances')}}</h2>
+        <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <div>
+        <button matFab (click)="backPage()" style="margin: 0 20px ">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+    </div>
+
+</div>
+<br/>
+
+<mat-card style="padding: 0 20px;">
+    <div class="grid grid-two-column">
+        <div class="flex-start">
+            <h4>{{language.transform('presence_title')}}:</h4>
+            <div class="row-box-10"></div>
+            <p>{{studentAttendanceStatistics().presenceCount}}</p>
+        </div>
+
+        <div class="flex-start">
+            <h4>{{language.transform('absence_title')}}:</h4>
+            <div class="row-box-10"></div>
+            <p>{{studentAttendanceStatistics().absenceCount}}</p>
+        </div>
+
+        <div class="flex-start">
+            <h4>{{language.transform('late_title')}}:</h4>
+            <div class="row-box-10"></div>
+            <p>{{studentAttendanceStatistics().latenessCount}}</p>
+        </div>
+
+        <div class="flex-start">
+            <h4>{{language.transform('escaped_title')}}:</h4>
+            <div class="row-box-10"></div>
+            <p>{{studentAttendanceStatistics().escapedCount}}</p>
+        </div>
+
+        <div class="flex-start">
+            <h4>{{language.transform('excused_title')}}:</h4>
+            <div class="row-box-10"></div>
+            <p>{{studentAttendanceStatistics().excusedCount}}</p>
+        </div>
+
+        <div class="flex-start">
+            <h4>{{language.transform('excused_title')}}:</h4>
+            <div class="row-box-10"></div>
+            <p>{{studentAttendanceStatistics().expelledCount}}</p>
+        </div>
+    </div>
+</mat-card>
+
+<br/>
+
+<mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title> {{language.transform('filter')}}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form class="example-form" [formGroup]="form">
+        <mat-form-field  class="example-full-width" style="width: 100%;">
+            <mat-label>{{ language.transform("type") }}</mat-label>
+            <mat-select formControlName="type">
+                @for (item of studentAttendanceFilterType.attendances; track $index) {
+                    <mat-option [value]="item.id">{{ item.name }}</mat-option> 
+                }
+            </mat-select>
+        </mat-form-field>
+        
+        <app-academic-year-semester-auto-complete 
+        [form]="form" 
+        [loading]="loading"
+        />
+    </form>
+    
+</mat-expansion-panel>
+<br/>
+
+@if(this.loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+
+<mat-card>
+    <table mat-table [dataSource]="studentAttendance()" class="mat-elevation-z8">
+
+    <ng-container matColumnDef="{{headerTable[0]}}" sticky>
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('type')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ studentAttendanceType.getAttendanceById(element.type)?.name }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{headerTable[1]}}">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('description_title')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{headerTable[2]}}">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('recordedAt')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.recordedAt | date: 'dd/MM/yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{headerTable[3]}}">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('isReleased')}} </th>
+        <td mat-cell *matCellDef="let element"> 
+            <mat-icon [class]="element.isReleased ? 'icon-success' : 'icon-error'">
+                {{ element.isReleased ? 'check_circle' : 'cancel' }}
+            </mat-icon>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{headerTable[4]}}">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('releasedAt')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.releasedAt | date: 'dd/MM/yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{headerTable[5]}}">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('isSolved')}} </th>
+        <td mat-cell *matCellDef="let element"> 
+            <mat-icon [class]="element.isSolved ? 'icon-success' : 'icon-error'">
+                {{ element.isSolved ? 'check_circle' : 'cancel' }}
+            </mat-icon>    
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{headerTable[6]}}">
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('solvedAt')}} </th>
+        <td mat-cell *matCellDef="let element"> {{ element.solvedAt | date: 'dd/MM/yyyy'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="{{headerTable[7]}}" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
+        <td mat-cell *matCellDef="let element"> 
+            <div style="display: flex; justify-content: space-between;">
+                <button mat-icon-button (click)="openUpdateDialog(element)" [disabled]="loading()">
+                    <mat-icon class="icon-update">edit</mat-icon>
+                </button>
+                
+                <button mat-icon-button (click)="openDeleteDialog(element)" [disabled]="loading()">
+                    <mat-icon class="icon-error">delete</mat-icon>
+                </button>
+
+                <button mat-icon-button [matTooltip]="language.transform('release_to_parent')" (click)="openReleaseToParentDialog(element.id)" [disabled]="loading() || element.isReleased">
+                    <mat-icon class="icon-success">publish</mat-icon>
+                </button>
+
+                <button mat-icon-button [matTooltip]="language.transform('solve')" (click)="openSolveeDialog(element.id)" [disabled]="loading() || element.isSolved">
+                    <mat-icon class="icon-success">check</mat-icon>
+                </button>
+            </div>
+        </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
+    <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
+
+    </table>
+    <mat-paginator 
+        [length]="totalPages() * filter().pageSize" 
+        [pageSize]="filter().pageSize"
+        [pageIndex]="filter().pageNumber - 1"
+        
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        showFirstLastButtons="false"
+        (page)="changeInPage($event)"
+    />
+</mat-card>

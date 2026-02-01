@@ -188,7 +188,19 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         points_title:'النقاط',
         max_value_1000:'القيمة يجب أن تكون أقل من أو تساوي 1000.',
         min_value_1:'القيمة يجب أن تكون أكبر من أو تساوي 1.',
-        input_date_must_be_less_than_Date: 'يجب أن يكون التاريخ المُدخل اليوم أو تاريخًا في الماضي.'
+        input_date_must_be_less_than_Date: 'يجب أن يكون التاريخ المُدخل اليوم أو تاريخًا في الماضي.',
+        
+        presence_title: "حضور",
+        late_title: "تأخير",
+        absence_title: "غياب",
+        escaped_title: "هروب",
+        excused_title: "طلب إذن",
+        expelled_title: "فصل",
+        solve_attendance: 'حل الحضور',
+        attendances: 'الحضور',
+        add_attendance:  'إضافة حضور',
+        update_attendance: 'تعديل حصور' ,
+        today_or_before:"يجب أن يكون التاريخ اليوم أو قبل اليوم"
     },
     en:{
         'name':"Name",
@@ -379,7 +391,19 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         points_title:'Points Title',
         max_value_1000:'The value must be less than or equal to 1000.',
         min_value_1:'The value must be greater than or equal to 1.',
-        input_date_must_be_less_than_Date: 'The date entered must be today or a date in the past.'
+        input_date_must_be_less_than_Date: 'The date entered must be today or a date in the past.',
+        
+        presence_title: "Present",
+        late_title: "Late",
+        absence_title: "Absent",
+        escaped_title: "Escaped",
+        excused_title: "Excused",
+        expelled_title: "Expelled",
+        solve_attendance:"Solve attendance",
+        attendances: 'Attendances',
+        add_attendance:  'Add attendance',
+        update_attendance: 'update attendance' ,
+        today_or_before: 'Date must be today or earlie'
     }
 }
 
@@ -398,9 +422,23 @@ GlobalType|
 PersonPhrases |
 ClassPhrases|
 StudentNotePhrases|
-StundentPointPhrases;
+StudentPointPhrases|
+StudentAttendancePhrases;
 
-export type StundentPointPhrases = 
+export type StudentAttendancePhrases =
+'presence_title'|
+'late_title'|
+'absence_title'|
+'escaped_title'|
+'excused_title'|
+'expelled_title'|
+'solve_attendance'|
+'attendances'|
+'add_attendance'|
+'update_attendance';
+
+
+export type StudentPointPhrases = 
 'points'|
 'add_student_point'|
 'update_student_point'|
@@ -578,7 +616,8 @@ export type ValidationMessagePhrases =
 'invalid_time_pattern'|
 'max_value_1000'|
 'min_value_1'|
-'input_date_must_be_less_than_Date';
+'input_date_must_be_less_than_Date'|
+'today_or_before';
 
 export type ButtonPhrases = 
 'add' | 

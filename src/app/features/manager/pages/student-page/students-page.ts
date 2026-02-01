@@ -283,4 +283,8 @@ export class StudentsPage {
   openStudentPointsPage(studentId:number){
     this.router.navigate(["manager/student",studentId,"student-points"])
   }
+
+  openStudentAttendancesPage(studentId:number){
+    this.router.navigate(["manager/student",studentId,"student-attendance"])
+  }
 }
