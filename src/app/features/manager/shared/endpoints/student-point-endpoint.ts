@@ -35,6 +35,7 @@ export class StudentPointEndpoints {
     points:number,
     description:string,
     createdAt:string): Observable<MutateResponse>{
+      console.log(createdAt);
     return  this.http.put<MutateResponse>(`points/${studentNoteId}`,{
       "points": points,
       "description": description,

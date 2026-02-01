@@ -147,15 +147,15 @@ console.log(this.form.value)
     this.loading.set(true);
 
     if(this.isUpdate()){
-      this.updateStudentpoints();
+      this.updatepoints();
     }else{
-      this.addPeriod();    
+      this.addPoints();    
     }
     
     this.loading.set(false);
   }
 
-addPeriod(){
+addPoints(){
   this.studentPointEndpoints.add(
     this.key,
     this.form.value.points,
@@ -186,12 +186,12 @@ addPeriod(){
   }
 
 
-  updateStudentpoints(){
+  updatepoints(){
     this.studentPointEndpoints.update(
       this.data.studentPoint.id,
       this.form.value.points,
       this.form.value.description,
-      this.formatService.ToDateOnly(this.form.value.createdAt))
+      this.formatService.ToDateOnly(this.form.value.createdAt,0))
       .subscribe({
         next: success=>{
           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));

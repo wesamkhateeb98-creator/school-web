@@ -147,8 +147,8 @@ export class StudentPointsPage implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       if(result)
         this.studentpoints.update(arr => [...arr, result.data]);
-        this.totalPages.update(x=>{
-            x += result.data.totalPages;
+        this.totalPoints.update(x=>{
+            x += result.data.points;
             return x; 
           })
     });
@@ -175,7 +175,8 @@ export class StudentPointsPage implements OnInit{
             return arr;
           }
         );
-        this.totalPages.update(x=>{
+        console.log(result.data)
+        this.totalPoints.update(x=>{
           x-= studentPoint.points;
           x+= result.data.points;
           return x;
