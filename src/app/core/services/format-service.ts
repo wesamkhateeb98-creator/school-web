@@ -3,13 +3,12 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class FormatService {
-  ToDateOnly(date:Date)
+  ToDateOnly(date:Date,plusDay:number = 1)
   {
-    console.log(date);
     if(date.toString().match("^(0[1-9]|[12][0-9]|3[01])[\/-](0[1-9]|1[0-2])[\/-]\d{4}$"))
       return date.toString();
     const d = new Date(date);
-    d.setDate(d.getDate() + 1);
+    d.setDate(d.getDate() + plusDay);
     return d.toISOString().substring(0, 10);
   }
 

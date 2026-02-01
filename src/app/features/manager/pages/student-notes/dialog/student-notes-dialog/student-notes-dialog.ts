@@ -105,7 +105,7 @@ export class StudentNotesDialog {
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       
-      if (!value) return null; 
+      if (!value || !this.form.get("semester")?.value) return null; 
 
       let minDate = this.form.get("semester")?.value.startDate
       let maxDate = this.form.get("semester")?.value.endDate
@@ -114,8 +114,7 @@ export class StudentNotesDialog {
       if (!minDate || !maxDate) {
         return { failedSemesterLoading: true };
       }
-      console.log("*****")
-      console.log(value);
+
       const inputTime = new Date(value);
       inputTime.setHours(0, 0, 0, 0);
       const minTime = new Date(minDate);
@@ -199,7 +198,7 @@ addPeriod(){
       this.data.studentNote.id,
       +this.form.value.type,
       this.form.value.description,
-      this.formatService.ToDateOnly(this.form.value.recordedAt))
+      this.formatService.ToDateOnly(this.form.value.recordedAt,0))
       .subscribe({
         next: success=>{
           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
