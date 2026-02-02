@@ -88,8 +88,6 @@ export const DASHBOARD_ROUTES: Routes = [
       },
       { path:'teachers', component: TeacherPage, title: messageTitle('teachers_title')},
       { path:'managerial', component: ManagerialPage, title: messageTitle('managerial_title')},
-    
-      
       { 
         path:'classes', 
         children:[
@@ -131,7 +129,7 @@ export const DASHBOARD_ROUTES: Routes = [
             title: messageTitle('points')
           },
           {
-            path:'classId/student/:id/student-attendance', 
+            path:':classId/student/:id/student-attendances', 
             component: StudentattendancePage, 
             title: messageTitle('attendances')
           },

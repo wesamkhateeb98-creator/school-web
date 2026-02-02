@@ -98,7 +98,7 @@ export class AcademicYearSemesterAutoComplete implements OnInit {
   
 
   displayFn = (option?: GetSemesterByAcademicYearModel): string =>  {
-    return option ? `${option.year - 1}/${option.year} - ${option.semesterName} ${option.startDate} ${this.language.transform('to')} ${option.endDate}` : '';
+    return option ? `${option.year - 1}/${option.year} - ${option.startDate} ${this.language.transform('to')} ${option.endDate} - ${option.semesterName}` : '';
   }
 
   onSemesterSelected(event: any) {

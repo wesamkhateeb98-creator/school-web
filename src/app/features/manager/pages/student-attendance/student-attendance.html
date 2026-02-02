@@ -66,7 +66,7 @@
             <mat-label>{{ language.transform("type") }}</mat-label>
             <mat-select formControlName="type">
                 @for (item of studentAttendanceFilterType.attendances; track $index) {
-                    <mat-option [value]="item.id">{{ item.name }}</mat-option> 
+                    <mat-option [value]="item.id.toString()">{{ item.name }}</mat-option> 
                 }
             </mat-select>
         </mat-form-field>
