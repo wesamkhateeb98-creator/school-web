@@ -18,7 +18,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { debounceTime, take, takeWhile } from 'rxjs';
-import { MatGridList, MatGridTile } from "@angular/material/grid-list";
+import { MatGridList, MatGridListModule, MatGridTile } from "@angular/material/grid-list";
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AddStudentDialog } from './components/add-student-dialog/add-student-dialog';
 import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
@@ -29,6 +29,7 @@ import { AgeGroupAutoComplete } from "../../shared/components/age-group-auto-com
 import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
 import { AgeGroupViewModel } from '../age-group/model/age-group-view-model';
 import { Router } from '@angular/router';
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-student-page',
@@ -43,10 +44,11 @@ import { Router } from '@angular/router';
     MatExpansionPanelHeader,
     MatExpansionPanelTitle,
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
-    MatGridList,
+    MatGridListModule,
     MatGridTile,
     MatAutocompleteModule,
-    AgeGroupAutoComplete
+    AgeGroupAutoComplete,
+    MatTooltip
 ],
   templateUrl: './students-page.html',
 })
