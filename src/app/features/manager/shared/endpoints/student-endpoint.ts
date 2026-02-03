@@ -59,7 +59,7 @@ export class StudentEndpoints {
 
   getStudentsClass(classId:number, name:string, pageNumber:number, pageSize:number)
     :Observable<Page<ClassStudentModel>>{
-    return this.http.get<Page<ClassStudentModel>>(`student/class/${classId}/admin`,{
+    return this.http.get<Page<ClassStudentModel>>(`student/class/${classId}`,{
         name: name,
         pageNumber: pageNumber,
         pageSize: pageSize

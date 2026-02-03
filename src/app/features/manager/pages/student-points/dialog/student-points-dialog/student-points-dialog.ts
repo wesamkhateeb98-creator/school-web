@@ -120,12 +120,10 @@ export class StudentPointsDialog{
       
       const today = new Date();
       maxTime.setHours(0, 0, 0, 0);
-console.log(this.form.value)
       if(inputTime > today)
         return {
           greaterThanDate:true
         }
-console.log(this.form.value)
       if (inputTime >= minTime && inputTime <= maxTime) {
         return  null;
       }

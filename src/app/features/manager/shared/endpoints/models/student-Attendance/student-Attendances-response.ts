@@ -18,10 +18,12 @@ export interface AttendanceItem {
 }
 
 export interface AttendanceStatistics {
-  presenceCount: number;
-  absenceCount: number;
-  latenessCount: number;
-  escapedCount: number;
-  excusedCount: number;
+  presentCount: number;
+  excusedAbsenceCount: number;
+  unexcusedAbsenceCount: number;
+  excusedLateCount: number;
+  unexcusedLateCount: number;
+  excusedEarlyLeaveCount: number;
+  unexcusedEarlyLeaveCount: number;
   expelledCount: number;
 }

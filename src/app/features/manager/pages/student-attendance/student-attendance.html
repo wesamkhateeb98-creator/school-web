@@ -17,37 +17,49 @@
 <mat-card style="padding: 0 20px;">
     <div class="grid grid-two-column">
         <div class="flex-start">
-            <h4>{{language.transform('presence_title')}}:</h4>
+            <h4>{{language.transform('present_title')}}:</h4>
             <div class="row-box-10"></div>
-            <p>{{studentAttendanceStatistics().presenceCount}}</p>
+            <p>{{studentAttendanceStatistics().presentCount}}</p>
         </div>
 
         <div class="flex-start">
-            <h4>{{language.transform('absence_title')}}:</h4>
+            <h4>{{language.transform('excused_absence_title')}}:</h4>
             <div class="row-box-10"></div>
-            <p>{{studentAttendanceStatistics().absenceCount}}</p>
+            <p>{{studentAttendanceStatistics().excusedAbsenceCount}}</p>
         </div>
 
         <div class="flex-start">
-            <h4>{{language.transform('late_title')}}:</h4>
+            <h4>{{language.transform('unexcused_absence_title')}}:</h4>
             <div class="row-box-10"></div>
-            <p>{{studentAttendanceStatistics().latenessCount}}</p>
+            <p>{{studentAttendanceStatistics().unexcusedAbsenceCount}}</p>
         </div>
 
         <div class="flex-start">
-            <h4>{{language.transform('escaped_title')}}:</h4>
+            <h4>{{language.transform('excused_late_title')}}:</h4>
             <div class="row-box-10"></div>
-            <p>{{studentAttendanceStatistics().escapedCount}}</p>
+            <p>{{studentAttendanceStatistics().excusedLateCount}}</p>
         </div>
 
         <div class="flex-start">
-            <h4>{{language.transform('excused_title')}}:</h4>
+            <h4>{{language.transform('unexcused_late_title')}}:</h4>
             <div class="row-box-10"></div>
-            <p>{{studentAttendanceStatistics().excusedCount}}</p>
+            <p>{{studentAttendanceStatistics().unexcusedLateCount}}</p>
         </div>
 
         <div class="flex-start">
-            <h4>{{language.transform('excused_title')}}:</h4>
+            <h4>{{language.transform('excused_leave_title')}}:</h4>
+            <div class="row-box-10"></div>
+            <p>{{studentAttendanceStatistics().excusedEarlyLeaveCount}}</p>
+        </div>
+
+        <div class="flex-start">
+            <h4>{{language.transform('unexcused_leave_title')}}:</h4>
+            <div class="row-box-10"></div>
+            <p>{{studentAttendanceStatistics().unexcusedEarlyLeaveCount}}</p>
+        </div>
+
+        <div class="flex-start">
+            <h4>{{language.transform('expelled_title')}}:</h4>
             <div class="row-box-10"></div>
             <p>{{studentAttendanceStatistics().expelledCount}}</p>
         </div>

@@ -190,12 +190,14 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         min_value_1:'القيمة يجب أن تكون أكبر من أو تساوي 1.',
         input_date_must_be_less_than_Date: 'يجب أن يكون التاريخ المُدخل اليوم أو تاريخًا في الماضي.',
         
-        presence_title: "حضور",
-        late_title: "تأخير",
-        absence_title: "غياب",
-        escaped_title: "هروب",
-        excused_title: "طلب إذن",
-        expelled_title: "فصل",
+        present_title: "Present",
+        excused_absence_title: "Excused Absence",
+        unexcused_absence_title: "Unexcused Absence",
+        excused_late_title: "Excused Late",
+        unexcused_late_title: "Unexcused Late",
+        excused_leave_title: "Excused Early Leave",
+        unexcused_leave_title: "Unexcused Early Leave",
+        expelled_title: "Expelled",
         solve_attendance: 'حل الحضور',
         attendances: 'الحضور',
         add_attendance:  'إضافة حضور',
@@ -393,12 +395,15 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         min_value_1:'The value must be greater than or equal to 1.',
         input_date_must_be_less_than_Date: 'The date entered must be today or a date in the past.',
         
-        presence_title: "Present",
-        late_title: "Late",
-        absence_title: "Absent",
-        escaped_title: "Escaped",
-        excused_title: "Excused",
+        present_title: "Present",
+        excused_absence_title: "Excused Absence",
+        unexcused_absence_title: "Unexcused Absence",
+        excused_late_title: "Excused Late",
+        unexcused_late_title: "Unexcused Late",
+        excused_leave_title: "Excused Early Leave",
+        unexcused_leave_title: "Unexcused Early Leave",
         expelled_title: "Expelled",
+        
         solve_attendance:"Solve attendance",
         attendances: 'Attendances',
         add_attendance:  'Add attendance',
@@ -426,12 +431,15 @@ StudentPointPhrases|
 StudentAttendancePhrases;
 
 export type StudentAttendancePhrases =
-'presence_title'|
-'late_title'|
-'absence_title'|
-'escaped_title'|
-'excused_title'|
+'present_title'|
+'excused_absence_title'|
+'unexcused_absence_title'|
+'excused_late_title'|
+'unexcused_late_title'|
+'excused_leave_title'|
+'unexcused_leave_title'|
 'expelled_title'|
+
 'solve_attendance'|
 'attendances'|
 'add_attendance'|

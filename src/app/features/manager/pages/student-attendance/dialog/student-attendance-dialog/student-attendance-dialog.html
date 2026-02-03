@@ -18,8 +18,8 @@
           <mat-form-field class="example-full-width" style="width: 100%;">
             <mat-label>{{language.transform("type")}}</mat-label>
             <mat-select formControlName="type">
-                @for (item of studentAttendanceTypeFilter.attendances; track $index) {
-                    <mat-option [value]="item.id">{{ item.name }}</mat-option> 
+                @for (item of studentAttendanceType.attendances; track $index) {
+                    <mat-option [value]="item.id.toString()">{{ item.name }}</mat-option> 
                 }
             </mat-select>
           </mat-form-field>
@@ -55,7 +55,7 @@
         <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
             <mat-label >{{language.transform("recordedAt")}}</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="recordedAt" [readonly]="loading()">
+            <input matInput [matDatepicker]="picker" formControlName="recordedAt" [readonly]="true">
               <mat-hint>MM/DD/YYYY</mat-hint>
               <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="loading()"/>
               <mat-datepicker #picker></mat-datepicker>
@@ -79,6 +79,10 @@
               @else if(this.form.get('recordedAt')?.hasError('failedSemesterLoading')){
                 <mat-error>
                     {{language.transform('failed_to_load_semester')}}
+                </mat-error>
+              }@else if(this.form.get('recordedAt')?.hasError('greaterThanDate')){
+                <mat-error>
+                    {{language.transform('today_or_before')}}
                 </mat-error>
               }
           </mat-form-field>

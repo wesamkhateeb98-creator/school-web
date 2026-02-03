@@ -63,7 +63,7 @@ export class StudentAttendanceDialog implements OnInit{
     matSnackBar = inject(MatSnackBar);
     studentAttendanceEndpoints = inject(StudentAttendanceEndpoints);
     authService = inject(AuthService);
-    studentAttendanceTypeFilter = inject(StudentAttendanceFilterTypeService)
+    studentAttendanceType = inject(StudentAttendanceTypeService)
     formatService = inject(FormatService);
     // ##################### data #####################
     loading = signal<boolean>(true);
@@ -72,7 +72,8 @@ export class StudentAttendanceDialog implements OnInit{
     data = inject(MAT_DIALOG_DATA);
 
   constructor(){
-      
+    console.log(this.data);
+
     this.form = this.fb.group(
       {
           type: [ this.isUpdate()?this.data.studentAttendance.type:'1'],
@@ -82,16 +83,15 @@ export class StudentAttendanceDialog implements OnInit{
           semester:[]
       }
     );
-    this.form.get('semester')?.setValidators([this.dateBetweenValidator()]);
+    this.form.get('recordedAt')?.setValidators([this.dateBetweenValidator()]);
     this.form.patchValue({
-      type:this.isUpdate()?this.data.studentAttendance.type:'1',
+      type:this.isUpdate()?this.data.studentAttendance.type+"":'1',
       description:this.isUpdate()?this.data.studentAttendance.description:'', 
-      recordedAt:this.isUpdate()?this.data.studentAttendance.recordedAt:''});
+      recordedAt:this.isUpdate()?this.data.studentAttendance.recordedAt:this.formatService.dateToUTCDateOnly(new Date())});
 
     this.form.get('semester')?.valueChanges.subscribe(value => {
       if(this.form.get("semester")?.value){
         this.form.get('recordedAt')?.enable();
-        
       }else{
         this.form.get('recordedAt')?.disable();
       }
@@ -109,9 +109,7 @@ export class StudentAttendanceDialog implements OnInit{
     return (control: AbstractControl): ValidationErrors | null => {
       const value = control.value;
       
-      if (!value) return null; 
-
-      console.log(this.form.value)
+      if (!value || !this.form || !this.form.get("semester")?.value) return null; 
 
       let minDate = this.form.get("semester")?.value.startDate
       let maxDate = this.form.get("semester")?.value.endDate
@@ -121,15 +119,23 @@ export class StudentAttendanceDialog implements OnInit{
         return { failedSemesterLoading: true };
       }
 
-      const inputTime = new Date(this.formatService.ToDateOnly(value));
+      const inputTime = new Date(value);
       inputTime.setHours(0, 0, 0, 0);
       const minTime = new Date(minDate);
       minTime.setHours(0, 0, 0, 0);
       const maxTime = new Date(maxDate);
       maxTime.setHours(0, 0, 0, 0);
-      ({inputTime, minTime, maxTime});
+      
+      const today = new Date();
+      maxTime.setHours(0, 0, 0, 0);
+
+      if(inputTime > today)
+        return {
+          greaterThanDate:true
+        }
+        console.log({min,minTime,maxTime});
       if (inputTime >= minTime && inputTime <= maxTime) {
-        return inputTime> new Date()? { greaterThanDate:true } : null;
+        return  null;
       }
       
       return { outRange: true };
@@ -141,9 +147,10 @@ export class StudentAttendanceDialog implements OnInit{
   }
   
   submit(){
+    console.log(this.form);
     if(!this.form.valid)
       return;
-    
+    console.log("valid")
     this.loading.set(true);
 
     if(this.isUpdate()){

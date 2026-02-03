@@ -13,8 +13,12 @@ export class FormatService {
   }
 
  stringToDate(dateString:string){
-  const [year, month, day] = dateString.split("-").map(Number);
-  
-  return new Date(year, month - 1, day);
-}
+   const [year, month, day] = dateString.split("-").map(Number);
+    
+    return new Date(year, month - 1, day);
+  }
+
+  dateToUTCDateOnly(date:Date){
+    return date.toISOString().substring(0,10)
+  }
 }

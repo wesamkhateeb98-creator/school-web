@@ -101,6 +101,9 @@ export class StudentPointsPage implements OnInit{
   }
 
   onLoading(){
+    if(!this.form.value.semesterId)
+      return;
+    
     this.loading.set(true);
     this.studentPointEndpoints.get(
       this.studentId,

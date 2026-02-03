@@ -70,11 +70,13 @@ export class StudentattendancePage implements OnInit{
   });
   
   studentAttendanceStatistics = signal<AttendanceStatistics>({
-    absenceCount: 0,
-    escapedCount: 0,
-    excusedCount: 0,
-    latenessCount: 0,
-    presenceCount: 0,
+    presentCount: 0,
+    excusedAbsenceCount: 0,
+    unexcusedAbsenceCount:0,
+    excusedLateCount: 0,
+    unexcusedLateCount: 0,
+    excusedEarlyLeaveCount: 0,
+    unexcusedEarlyLeaveCount: 0,
     expelledCount: 0
   });
   
@@ -94,7 +96,7 @@ export class StudentattendancePage implements OnInit{
 
   constructor(){
     this.form = this.fb.group({
-      'type':[0],
+      'type':['0'],
       'semester':[null],
       'semesterId':[null],
       "semesterLoadFirst":[true]
@@ -102,8 +104,8 @@ export class StudentattendancePage implements OnInit{
     this.studentId = +(this.activatedRoute.snapshot.paramMap.get('id')??'0');
     this.classId = +(this.activatedRoute.snapshot.paramMap.get('classId')??'0');
 
-    this.form.patchValue({type: this.parmas.loadGenericFromUrl()['type'] ?? 0});
-    console.log(this.form.value)
+    this.form.patchValue({type: this.parmas.loadGenericFromUrl()['type'] ?? '0'});
+    
     this.filter.set({
       pageSize: +(this.parmas.loadGenericFromUrl()['pageSize'] ?? this.filter().pageSize),
       pageNumber: +(this.parmas.loadGenericFromUrl()['pageNumber'] ?? this.filter().pageNumber)
@@ -126,7 +128,9 @@ export class StudentattendancePage implements OnInit{
   }
 
   onLoading(){
-    this.loading.set(true);
+    if(!this.form.value.semesterId)
+      return;
+    
     this.studentAttendanceEndpoints.get(
       this.studentId,
       this.form.value.semesterId,
@@ -179,16 +183,20 @@ export class StudentattendancePage implements OnInit{
   changeStatistic(type: number , count:number){
     this.studentAttendanceStatistics.update(x=>{
           if(type === 1){
-            return {...x, presenceCount: x.presenceCount + count}
+            return {...x, presentCount: x.presentCount + count}
           }else if(type === 2){
-            return {...x, latenessCount: x.latenessCount + count}
+            return {...x, excusedAbsenceCount: x.excusedAbsenceCount + count}
           }else if(type === 3){
-            return {...x, absenceCount: x.absenceCount + count}
+            return {...x, unexcusedAbsenceCount: x.unexcusedAbsenceCount + count}
           }else if(type === 4){
-            return {...x, escapedCount: x.escapedCount + count}
+            return {...x, excusedLateCount: x.excusedLateCount + count}
           }else if(type === 5){
-            return {...x, excusedCount: x.excusedCount + count}
+            return {...x, unexcusedLateCount: x.unexcusedLateCount + count}
           }else if(type === 6){
+            return {...x, excusedEarlyLeaveCount: x.excusedEarlyLeaveCount + count}
+          }else if(type === 7){
+            return {...x, unexcusedEarlyLeaveCount: x.excusedEarlyLeaveCount + count}
+          }else if(type === 8){
             return {...x, expelledCount: x.expelledCount + count}
           }
           return x;

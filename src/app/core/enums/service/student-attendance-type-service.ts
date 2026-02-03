@@ -9,21 +9,23 @@ export class StudentAttendanceTypeService {
 
   private language = inject(Language);
 
-  attendance: { id: number; name: string }[];
+  attendances: { id: number; name: string }[];
 
   constructor() {
-    this.attendance = [
-      { id: 1, name: this.language.transform('presence_title') },
-      { id: 2, name: this.language.transform('late_title') },
-      { id: 3, name: this.language.transform('absence_title') },
-      { id: 4, name: this.language.transform('escaped_title') },
-      { id: 5, name: this.language.transform('excused_title') },
-      { id: 6, name: this.language.transform('expelled_title') },
+    this.attendances = [
+      { id: 1, name: this.language.transform('present_title') },           // حضور
+      { id: 2, name: this.language.transform('excused_absence_title') },   // غياب مبرر
+      { id: 3, name: this.language.transform('unexcused_absence_title') }, // غياب غير مبرر
+      { id: 4, name: this.language.transform('excused_late_title') },      // تأخير مبرر
+      { id: 5, name: this.language.transform('unexcused_late_title') },    // تأخير غير مبرر
+      { id: 6, name: this.language.transform('excused_leave_title') },     // خروج مبرر
+      { id: 7, name: this.language.transform('unexcused_leave_title') },   // خروج غير مبرر
+      { id: 8, name: this.language.transform('expelled_title') }           // مفصول
     ];
   }
 
   getAttendanceById(id: number) {
-    return this.attendance.find(p => p.id === id) ?? null;
+    return this.attendances.find(p => p.id === id) ?? null;
   }
 }
 

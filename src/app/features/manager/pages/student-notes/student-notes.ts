@@ -105,6 +105,7 @@ export class StudentNotesPage implements OnInit{
       pageNumber: +(this.parmas.loadGenericFromUrl()['pageNumber'] ?? this.filter().pageNumber)
     });
   }
+
   ngOnInit(): void {
     this.form.get('type')!.valueChanges.pipe(
         debounceTime(300),
@@ -122,6 +123,9 @@ export class StudentNotesPage implements OnInit{
   }
 
   onLoading(){
+    if(!this.form.value.semesterId)
+      return;
+    
     this.loading.set(true);
     this.studentNotesEndpoints.get(
       this.studentId,
