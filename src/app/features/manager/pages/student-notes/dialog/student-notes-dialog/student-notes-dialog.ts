@@ -88,7 +88,7 @@ export class StudentNotesDialog {
     this.form.patchValue({
       type:this.isUpdate()?this.data.studentNote.type:1,
       description:this.isUpdate()?this.data.studentNote.description:'', 
-      recordedAt:this.isUpdate()? this.data.studentNote.recordedAt:''});
+      recordedAt:this.isUpdate()? this.data.studentNote.recordedAt:this.formatService.dateToUTCDateOnly(new Date())});
 
     this.form.get('semester')?.valueChanges.subscribe(value => {
       if(this.form.get("semester")?.value){

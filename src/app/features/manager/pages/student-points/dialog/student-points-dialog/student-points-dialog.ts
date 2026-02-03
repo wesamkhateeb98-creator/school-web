@@ -82,7 +82,7 @@ export class StudentPointsDialog{
     this.form.patchValue({
       points:this.isUpdate()?this.data.studentPoint.points:0,
       description:this.isUpdate()?this.data.studentPoint.description:'', 
-      createdAt:this.isUpdate()?this.data.studentPoint.createdAt:''});
+      createdAt:this.isUpdate()?this.data.studentPoint.createdAt:this.formatService.dateToUTCDateOnly(new Date())});
       
     this.form.get('semester')?.valueChanges.subscribe(value => {  
       if(this.form.get("semester")?.value){

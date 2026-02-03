@@ -25,6 +25,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AgeGroupAutoComplete } from '../../shared/components/age-group-auto-complete/age-group-auto-complete';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap, tap } from 'rxjs';
 import { ClassStudentInfoDialog } from './Dialog/class-student-info-dialog/class-student-info-dialog';
+import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-class-student',
@@ -41,8 +42,9 @@ import { ClassStudentInfoDialog } from './Dialog/class-student-info-dialog/class
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatGridList,
     MatGridTile,
-    MatAutocompleteModule
-  ],
+    MatAutocompleteModule,
+    MatTooltip
+],
   templateUrl: './class-student.html',
 })
 export class ClassStudent implements OnInit{

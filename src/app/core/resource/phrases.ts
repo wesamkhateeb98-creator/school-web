@@ -202,7 +202,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         attendances: 'الحضور',
         add_attendance:  'إضافة حضور',
         update_attendance: 'تعديل حصور' ,
-        today_or_before:"يجب أن يكون التاريخ اليوم أو قبل اليوم"
+        today_or_before:"يجب أن يكون التاريخ اليوم أو قبل اليوم",
+        student_personal_information: " معلومات الطالب الشخصية"
     },
     en:{
         'name':"Name",
@@ -408,7 +409,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         attendances: 'Attendances',
         add_attendance:  'Add attendance',
         update_attendance: 'update attendance' ,
-        today_or_before: 'Date must be today or earlie'
+        today_or_before: 'Date must be today or earlie',
+        student_personal_information: "Student Personal Information"
     }
 }
 
@@ -439,6 +441,7 @@ export type StudentAttendancePhrases =
 'excused_leave_title'|
 'unexcused_leave_title'|
 'expelled_title'|
+
 
 'solve_attendance'|
 'attendances'|
@@ -553,7 +556,8 @@ export type StudentPhrases =
 'address_title'|
 'birthday_title'|
 'full_name_title'|
-'assign_student'
+'assign_student'|
+'student_personal_information'
 ;
 
 export type TeacherPhrases = 
