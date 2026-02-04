@@ -43,7 +43,7 @@ import { PermissionService } from '../../../../core/enums/service/permission-ser
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatAutocompleteModule,
     DatePipe
-  ],
+],
   templateUrl: './administrative-staff-page.html',
   styleUrl: './administrative-staff-page.scss',
 })
@@ -231,4 +231,12 @@ export class ManagerialPage {
       data: { id: id, phoneNumber: phone }
     });
   }
+
+  getPermissionTooltip(ids: number[]): string {
+    return ids
+      ?.map(x => this.permissionService.getPermissionById(x)?.name)
+      .filter(Boolean)
+      .join('  -  ') ?? '';
+}
+
 }

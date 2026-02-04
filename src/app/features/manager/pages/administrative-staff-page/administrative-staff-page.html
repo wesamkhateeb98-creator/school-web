@@ -57,13 +57,9 @@
             <td mat-cell *matCellDef="let element"> 
                 
                 <div style="display: flex; justify-content: start; flex-direction: column;">
-                
-                    @for (perm of element.permissions; track perm) {
-                        <p>
-                            {{ permissionService.getPermissionById(perm)?.name??"" }}
-                        </p>
+                    
+                        {{getPermissionTooltip(element.permissions)}}
                         
-                    }
                 </div>
                 
             </td>

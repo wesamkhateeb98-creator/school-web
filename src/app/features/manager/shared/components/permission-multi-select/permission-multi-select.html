@@ -1,8 +1,9 @@
 <div [formGroup]="form">
  
     <mat-form-field style="width: 100%;">
-      <mat-label>Pokemon</mat-label>
-      <mat-select formControlName="permissions" multiple  (selectionChange)="onSelectionChange()" >
+      <mat-label>{{language.transform('permissions_title')}}</mat-label>
+      <mat-select formControlName="permissions" multiple  (selectionChange)="onSelectionChange($event)" >
+        <mat-option [value]="-1">{{language.transform('all_title')}}</mat-option>
         @for (group of groups; track group) {
           <mat-optgroup [label]="group.name" >
             @for (pokemon of group.items; track pokemon) {
@@ -10,9 +11,9 @@
             }
           </mat-optgroup>
         }
-        @if(form.get('permissions')?.hasError('required')){
-            <mat-error>{{ language.transform('field_required') }}</mat-error>
-        }
       </mat-select>
+      @if(form.get('permissions')?.hasError('required')){
+          <mat-error>{{ language.transform('field_required') }}</mat-error>
+      }
     </mat-form-field>
 </div>

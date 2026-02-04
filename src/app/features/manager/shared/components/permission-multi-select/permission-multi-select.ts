@@ -4,6 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PermissionService } from '../../../../../core/enums/service/permission-service';
 
 @Component({
   selector: 'app-permission-multi-select',
@@ -22,6 +23,7 @@ export class PermissionMultiSelect implements OnInit {
 
   language = inject(Language)
   fb = inject(FormBuilder);
+  permissionService = inject(PermissionService);
   // ################ Initiate data
 
   groups = [
@@ -88,8 +90,49 @@ export class PermissionMultiSelect implements OnInit {
       
   }
 
-  onSelectionChange() {
-    console.log(this.form);
+  previousSelectedPermissions:number[] = [];
+
+  onSelectionChange(event: MatSelectChange) {
+    const current = event.value as number[];
+    const previous = this.previousSelectedPermissions;
+
+    const allIds = this.permissionService.permissions.map(x => x.id);
+
+    const added = current.filter(x => !previous.includes(x));
+    const removed = previous.filter(x => !current.includes(x));
+
+    const clicked = added[0] ?? removed[0]; // العنصر المتغير
+
+    let result = [...current];
+
+    // 🟢 ضغط ALL
+    if (clicked === -1) {
+      if (previous.includes(-1)) {
+        // كان الكل محدد → الغي الكل
+        result = [];
+      } else {
+        // تحديد الكل
+        result = [-1, ...allIds];
+      }
+    }
+    else {
+
+      // 🟡 كان الكل محدد وضغط عنصر
+      if (previous.includes(-1)) {
+        result = current.filter(x => x !== -1);
+      }
+
+      // 🟢 صار كل العناصر محددين
+      const withoutAll = result.filter(x => x !== -1);
+      if (withoutAll.length === allIds.length) {
+        result = [-1, ...allIds];
+      }
+    }
+
+    this.form.patchValue({ permissions: result }, { emitEvent: false });
+    this.previousSelectedPermissions = result;
   }
+
+
 }
 
