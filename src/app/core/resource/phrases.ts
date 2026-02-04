@@ -203,7 +203,34 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_attendance:  'إضافة حضور',
         update_attendance: 'تعديل حصور' ,
         today_or_before:"يجب أن يكون التاريخ اليوم أو قبل اليوم",
-        student_personal_information: " معلومات الطالب الشخصية"
+        student_personal_information: " معلومات الطالب الشخصية",
+        get_student_note_permission: 'عرض ملاحظات الطالب',
+        add_student_note_permission: 'إضافة ملاحظة طالب',
+        update_student_note_permission: 'تعديل ملاحظة طالب',
+        delete_student_note_permission: 'حذف ملاحظة طالب',
+
+        get_point_permission: 'عرض النقاط',
+        add_point_permission: 'إضافة نقاط',
+        update_point_permission: 'تعديل نقاط',
+        delete_point_permission: 'حذف نقاط',
+
+        release_student_note_to_parent_permission: 'إرسال الملاحظة لولي الأمر',
+        solve_student_note_permission: 'معالجة ملاحظة الطالب',
+
+        get_student_attendance_permission: 'عرض الحضور',
+        add_student_attendance_permission: 'إضافة حضور',
+        update_student_attendance_permission: 'تعديل حضور',
+        delete_student_attendance_permission: 'حذف حضور',
+        release_student_attendance_to_parent_permission: 'إرسال الحضور لولي الأمر',
+        solve_student_attendance_permission: 'معالجة الحضور',
+
+        expel_student_permission: 'فصل الطالب',
+
+        get_parent_visit_history_permission: 'عرض سجل زيارات ولي الأمر',
+        add_parent_visit_history_permission: 'إضافة زيارة ولي أمر',
+        update_parent_visit_history_permission: 'تعديل زيارة ولي أمر',
+        delete_parent_visit_history_permission: 'حذف زيارة ولي أمر',
+        confirm_parent_visit_permission: 'تأكيد زيارة ولي الأمر'
     },
     en:{
         'name':"Name",
@@ -410,7 +437,34 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_attendance:  'Add attendance',
         update_attendance: 'update attendance' ,
         today_or_before: 'Date must be today or earlie',
-        student_personal_information: "Student Personal Information"
+        student_personal_information: "Student Personal Information",
+        get_student_note_permission: 'Get Student Note',
+        add_student_note_permission: 'Add Student Note',
+        update_student_note_permission: 'Update Student Note',
+        delete_student_note_permission: 'Delete Student Note',
+
+        get_point_permission: 'Get Point',
+        add_point_permission: 'Add Point',
+        update_point_permission: 'Update Point',
+        delete_point_permission: 'Delete Point',
+
+        release_student_note_to_parent_permission: 'Release Student Note To Parent',
+        solve_student_note_permission: 'Solve Student Note',
+
+        get_student_attendance_permission: 'Get Student Attendance',
+        add_student_attendance_permission: 'Add Student Attendance',
+        update_student_attendance_permission: 'Update Student Attendance',
+        delete_student_attendance_permission: 'Delete Student Attendance',
+        release_student_attendance_to_parent_permission: 'Release Student Attendance To Parent',
+        solve_student_attendance_permission: 'Solve Student Attendance',
+
+        expel_student_permission: 'Expel Student',
+
+        get_parent_visit_history_permission: 'Get Parent Visit History',
+        add_parent_visit_history_permission: 'Add Parent Visit History',
+        update_parent_visit_history_permission: 'Update Parent Visit History',
+        delete_parent_visit_history_permission: 'Delete Parent Visit History',
+        confirm_parent_visit_permission: 'Confirm Parent Visit'
     }
 }
 
@@ -430,7 +484,33 @@ PersonPhrases |
 ClassPhrases|
 StudentNotePhrases|
 StudentPointPhrases|
-StudentAttendancePhrases;
+StudentAttendancePhrases|
+PermissionsPhrases;
+
+export type PermissionsPhrases =
+  | 'get_student_note_permission'
+  | 'add_student_note_permission'
+  | 'update_student_note_permission'
+  | 'delete_student_note_permission'
+  | 'get_point_permission'
+  | 'add_point_permission'
+  | 'update_point_permission'
+  | 'delete_point_permission'
+  | 'release_student_note_to_parent_permission'
+  | 'solve_student_note_permission'
+  | 'get_student_attendance_permission'
+  | 'add_student_attendance_permission'
+  | 'update_student_attendance_permission'
+  | 'delete_student_attendance_permission'
+  | 'release_student_attendance_to_parent_permission'
+  | 'solve_student_attendance_permission'
+  | 'expel_student_permission'
+  | 'get_parent_visit_history_permission'
+  | 'add_parent_visit_history_permission'
+  | 'update_parent_visit_history_permission'
+  | 'delete_parent_visit_history_permission'
+  | 'confirm_parent_visit_permission';
+
 
 export type StudentAttendancePhrases =
 'present_title'|

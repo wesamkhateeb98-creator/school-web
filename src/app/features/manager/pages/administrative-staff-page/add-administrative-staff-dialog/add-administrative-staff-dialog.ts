@@ -16,6 +16,7 @@ import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../..
 import { AdministrativeStaffViewModel } from '../view-model/administrative-staff-view-model';
 import { AddAdministrativeStaffViewModel } from '../view-model/add-administrative-staff-view-model';
 import { PermissionService } from '../../../../../core/enums/service/permission-service';
+import { PermissionMultiSelect } from "../../../shared/components/permission-multi-select/permission-multi-select";
 
 @Component({
   selector: 'app-add-administrative-staff-dialog',
@@ -24,8 +25,9 @@ import { PermissionService } from '../../../../../core/enums/service/permission-
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatDialogContent, MatGridList, MatDialogActions, MatDialogTitle,
     MatGridTile, MatProgressBar, MatSelectModule,
-    MatDatepickerModule, MatButtonModule
-  ],
+    MatDatepickerModule, MatButtonModule,
+    PermissionMultiSelect
+],
   templateUrl: './add-administrative-staff-dialog.html',
   styleUrl: './add-administrative-staff-dialog.scss',
   providers: [provideNativeDateAdapter()]
@@ -34,7 +36,7 @@ export class AddAdministrativeStaffDialog implements OnInit {
   private fb = inject(FormBuilder);
   private staffEndpoint = inject(AdministrativeStaffEndpoints);
   private dialogRef = inject(MatDialogRef<AddAdministrativeStaffDialog>);
-  private data = inject(MAT_DIALOG_DATA);
+  public data = inject(MAT_DIALOG_DATA);
   public language = inject(Language);
   public matSnackBar = inject(MatSnackBar);
   public permissionService = inject(PermissionService);
@@ -54,7 +56,6 @@ export class AddAdministrativeStaffDialog implements OnInit {
     this.form = this.fb.group({
       fullName: [staff?.fullName || '', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       phoneNumber: [staff?.phoneNumber || '', [Validators.required, Validators.pattern(/^\d{7,10}$/)]],
-      permissions: [staff?.permissions || [], [Validators.required]] // Added permissions
     });
   }
 

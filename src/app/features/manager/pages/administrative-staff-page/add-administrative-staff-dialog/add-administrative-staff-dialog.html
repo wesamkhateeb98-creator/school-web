@@ -31,18 +31,11 @@
                 </mat-grid-tile>
 
                 <mat-grid-tile colspan="2">
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>{{ language.transform("permissions_title") }}</mat-label>
-                        <mat-select formControlName="permissions" multiple>
-                            @for (perm of permissionService.permissions; track perm.id) {
-                                <mat-option [value]="perm.id">{{ perm.name }}</mat-option>
-                            }
-                        </mat-select>
-                        @if(form.get('permissions')?.hasError('required')){
-                            <mat-error>{{ language.transform('field_required') }}</mat-error>
-                        }
-                    </mat-form-field>
+                    <div style="min-width: 100%;">
+                        <app-permission-multi-select [form]="form" [permissions]="data?.staff?.permissions"/>
+                    </div>
                 </mat-grid-tile>
+                
             }
         </mat-grid-list>
     </mat-dialog-content>
