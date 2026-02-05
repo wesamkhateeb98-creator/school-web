@@ -82,10 +82,9 @@ export class PermissionMultiSelect implements OnInit {
   @Input() permissions?:number[]
 
   ngOnInit(): void {
-    console.log(this.permissions);
     this.form.addControl(
       'permissions',
-      this.fb.control(this.permissions ?? [], [Validators.required])
+      this.fb.control(this.permissions?.length == this.permissionService.permissions.length? [-1,...this.permissions]:this.permissions ?? [])
     );
       
   }

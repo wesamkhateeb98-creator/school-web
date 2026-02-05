@@ -17,7 +17,9 @@ import { ClassesPage } from "./pages/classes-page/classes-page";
 import { ClassInfoPage } from "./pages/class-info-page/class-info-page";
 import { StudentNotesPage } from "./pages/student-notes/student-notes";
 import { StudentPointsPage } from "./pages/student-points/student-points";
-import { StudentattendancePage } from "./pages/student-attendance/student-attendance";
+import { StudentattendancePage as StudentAttendancePage } from "./pages/student-attendance/student-attendance";
+import { StudentParentVisitDialog } from "./pages/student-parent-visit-history/dialog/student-parent-visit-dialog/student-parent-visit-dialog";
+import { StudentParentVisitHistory } from "./pages/student-parent-visit-history/student-parent-visit-history";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -81,8 +83,13 @@ export const DASHBOARD_ROUTES: Routes = [
           },
           {
             path:':id/student-attendance', 
-            component: StudentattendancePage, 
+            component: StudentAttendancePage, 
             title: messageTitle('attendances')
+          },
+          {
+            path:':id/student-parent-visits', 
+            component: StudentParentVisitHistory, 
+            title: messageTitle('student_parent_visits')
           },
         ]
       },
@@ -130,8 +137,13 @@ export const DASHBOARD_ROUTES: Routes = [
           },
           {
             path:':classId/student/:id/student-attendances', 
-            component: StudentattendancePage, 
+            component: StudentAttendancePage, 
             title: messageTitle('attendances')
+          },
+          {
+            path:':classId/student/:id/student-parent-visits', 
+            component: StudentParentVisitHistory, 
+            title: messageTitle('student_parent_visits')
           },
           { 
             path:'periods',

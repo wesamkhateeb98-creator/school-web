@@ -75,7 +75,7 @@ export class AddAdministrativeStaffDialog implements OnInit {
     const payload = new AddAdministrativeStaffViewModel(
       this.form.value.fullName,
       this.form.value.phoneNumber,
-      this.form.value.permissions
+      (this.form.value.permissions as number[]).filter(x=>x!==-1)
     );
 
     const obs = this.isUpdate() 

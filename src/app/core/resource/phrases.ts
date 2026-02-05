@@ -230,7 +230,20 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_parent_visit_history_permission: 'إضافة زيارة ولي أمر',
         update_parent_visit_history_permission: 'تعديل زيارة ولي أمر',
         delete_parent_visit_history_permission: 'حذف زيارة ولي أمر',
-        confirm_parent_visit_permission: 'تأكيد زيارة ولي الأمر'
+        confirm_parent_visit_permission: 'تأكيد زيارة ولي الأمر',
+        severity_title: "درجة الخطورة",
+        low_title: "منخفض",
+        middle_title: "متوسط",
+        high_title: "مرتفع",
+        confirm_parent_visit: "تأكيد زيارة ولي الأمر",
+        do_you_want_confirm_parent_visit_question: "هل تريد تأكيد زيارة ولي الأمر؟",
+        completed_parent_visit_count: "عدد زيارات أولياء الأمور المكتملة",
+        pending_parent_visit_count: "عدد زيارات أولياء الأمور المعلقة",
+        parent_visit: "زيارة ولي الأمر",
+        is_parent_visit: "تمت زيارةالأهل؟",
+        true: "نعم",
+        false: "لا",
+        student_parent_visits: 'زيارات الأهل'
     },
     en:{
         'name':"Name",
@@ -464,7 +477,20 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_parent_visit_history_permission: 'Add Parent Visit History',
         update_parent_visit_history_permission: 'Update Parent Visit History',
         delete_parent_visit_history_permission: 'Delete Parent Visit History',
-        confirm_parent_visit_permission: 'Confirm Parent Visit'
+        confirm_parent_visit_permission: 'Confirm Parent Visit',
+        severity_title: "Severity",
+        low_title: "Low",
+        middle_title: "Medium",
+        high_title: "High",
+        confirm_parent_visit: "Confirm Parent Visit",
+        do_you_want_confirm_parent_visit_question: "Do you want to confirm the parent visit?",
+        completed_parent_visit_count: "Completed Parent Visits",
+        pending_parent_visit_count: "Pending Parent Visits",
+        parent_visit: "Parent Visit",
+        is_parent_visit: "Is Parent Visit?",
+        true: "Yes",
+        false: "No",
+        student_parent_visits: 'Parent visits'
     }
 }
 
@@ -485,7 +511,24 @@ ClassPhrases|
 StudentNotePhrases|
 StudentPointPhrases|
 StudentAttendancePhrases|
-PermissionsPhrases;
+PermissionsPhrases|
+StudentParentVisitPhrases;
+
+export type StudentParentVisitPhrases =
+'severity_title'|
+'low_title'|
+'middle_title'|
+'high_title'|
+'confirm_parent_visit'|
+'do_you_want_confirm_parent_visit_question'|
+'completed_parent_visit_count'|
+'pending_parent_visit_count'|
+'parent_visit'|
+'is_parent_visit'|
+'true'|
+'false'|
+'student_parent_visits'
+;
 
 export type PermissionsPhrases =
   | 'get_student_note_permission'
