@@ -9,6 +9,9 @@ export class StudentViewModel {
     birthday: Date;
     phoneNumber: string;
     lock: boolean;
+    status: number;
+    isExpelled: boolean;
+    isVisitParentRequired: boolean;
 
     constructor(
         id: number,
@@ -20,7 +23,10 @@ export class StudentViewModel {
         address: string,
         birthday: Date,
         phoneNumber: string,
-        lock: boolean
+        lock: boolean,
+        status: number,
+        isExpelled: boolean,
+        isVisitParentRequired: boolean
     ) {
         this.id = id;
         this.ageGroupId = ageGroupId;
@@ -33,5 +39,9 @@ export class StudentViewModel {
         this.birthday = birthday;
         this.phoneNumber = phoneNumber;
         this.lock = lock;
+
+        this.status = status;
+        this.isExpelled = isExpelled
+        this.isVisitParentRequired = isVisitParentRequired
     }
 }

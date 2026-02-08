@@ -30,6 +30,7 @@ import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
 import { AgeGroupViewModel } from '../age-group/model/age-group-view-model';
 import { Router } from '@angular/router';
 import { MatTooltip } from "@angular/material/tooltip";
+import { StudentStatusService } from '../../../../core/enums/service/student-status-service';
 
 @Component({
   selector: 'app-student-page',
@@ -72,6 +73,9 @@ export class StudentsPage {
     'phonenumber',
     'address',
     'birthday',
+    'studentStatus',
+    'isExpelled',
+    'isVisitParentRequired',
     'action'
   ];
 
@@ -86,7 +90,8 @@ export class StudentsPage {
     public studentEndpoints:StudentEndpoints,
     public fb: FormBuilder,
     public responsive:ResponsiveScreen,
-    public router: Router
+    public router: Router,
+    public studentStatusService: StudentStatusService
   ){
     this.setFilterFromUrl()
     this.initiateForm();
@@ -158,7 +163,10 @@ export class StudentsPage {
             x.address,
             x.birthday,
             x.phoneNumber,
-            false
+            false,
+            x.status,
+            x.isExpelled,
+            x.isVisitParentRequired
           )));
         this.loading.set(false);
         

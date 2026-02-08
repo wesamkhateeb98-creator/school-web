@@ -10,11 +10,11 @@ export interface AttendanceItem {
   type: number;
   description: string;
   recordedBy: number;
-  recordedAt: Date; // ISO date
-  isReleased: boolean;
-  releasedAt: Date; // ISO date
-  isSolved: boolean;
-  solvedAt: Date; // ISO date
+  recordedAt: Date;
+  isReleased: boolean | undefined;
+  releasedAt: Date | undefined; 
+  isSolved: boolean | undefined;
+  solvedAt: Date | undefined; // ISO date
 }
 
 export interface AttendanceStatistics {

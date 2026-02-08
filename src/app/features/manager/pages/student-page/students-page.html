@@ -86,7 +86,22 @@
             <td mat-cell *matCellDef="let element"> {{ element.birthday }} </td>
         </ng-container>
 
-        <ng-container matColumnDef="{{headerTable[7]}}" stickyEnd>
+        <ng-container matColumnDef="{{headerTable[7]}}">
+            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('student_status')}} </th>
+            <td mat-cell *matCellDef="let element"> {{ studentStatusService.getById(element.studentStatus)?.name }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="{{headerTable[8]}}">
+            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('is_expelled')}} </th>
+            <td mat-cell *matCellDef="let element"> {{ language.transform(element.isExpelled?'true':'false') }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="{{headerTable[9]}}">
+            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('is_visit_parent_required')}} </th>
+            <td mat-cell *matCellDef="let element"> {{ language.transform(element.isVisitParentRequired?'true':'false') }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="{{headerTable[10]}}" stickyEnd>
             <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
             <td mat-cell *matCellDef="let element"> 
                 <div class="grid grid-four-column">

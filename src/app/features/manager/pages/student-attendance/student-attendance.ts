@@ -176,7 +176,7 @@ export class StudentattendancePage implements OnInit{
     dialogRef.afterClosed().subscribe(result => {
       if(result)
         this.studentAttendance.update(arr => [...arr, result.data]);
-        this.changeStatistic(result.data.type,1);
+        this.changeStatistic(this.form.value.type,1);
     });
   }
 

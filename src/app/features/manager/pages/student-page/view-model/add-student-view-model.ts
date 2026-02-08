@@ -9,6 +9,7 @@ export class AddStudentViewModel {
     address!: string;
     birthday!: Date;
     phoneNumber!: string;
+    status:number
 
     constructor(
         ageGroup: AgeGroupViewModel,
@@ -17,7 +18,8 @@ export class AddStudentViewModel {
         motherName: string,
         address: string,
         birthday: Date,
-        phoneNumber: string
+        phoneNumber: string,
+        status:number
     ) {
         this.ageGroup = ageGroup;
         this.fullName = fullName;
@@ -26,5 +28,6 @@ export class AddStudentViewModel {
         this.address = address;
         this.birthday = birthday;
         this.phoneNumber = phoneNumber;
+        this.status = status;
     }
 }

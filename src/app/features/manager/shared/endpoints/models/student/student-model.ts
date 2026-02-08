@@ -8,6 +8,9 @@ export interface StudentModel {
     address: string;
     birthday: Date;
     phoneNumber: string;
+    status: number,
+    isExpelled: boolean,
+    isVisitParentRequired: boolean
 }
 
 

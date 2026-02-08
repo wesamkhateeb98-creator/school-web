@@ -25,7 +25,6 @@ import { StudentAttendanceEndpoints } from "../../../../shared/endpoints/student
 import { AuthService } from "../../../../../../core/services/auth-service";
 import { StudentAttendanceTypeService } from "../../../../../../core/enums/service/student-attendance-type-service";
 import { AttendanceItem } from "../../../../shared/endpoints/models/student-Attendance/student-Attendances-response";
-import { StudentAttendanceFilterTypeService } from "../../../../../../core/enums/service/student-attendance-filter-type-service";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -133,7 +132,6 @@ export class StudentAttendanceDialog implements OnInit{
         return {
           greaterThanDate:true
         }
-        console.log({min,minTime,maxTime});
       if (inputTime >= minTime && inputTime <= maxTime) {
         return  null;
       }
@@ -164,9 +162,9 @@ addPeriod(){
   
   this.studentAttendanceEndpoints.add(
     this.key,
-    this.form.value.type,
+    +this.form.value.type,
     this.form.value.description,
-    this.formatService.ToDateOnly(this.form.value.recordedAt),
+    this.formatService.ToDateOnly(this.form.value.recordedAt, 0),
     this.form.value.semesterId??0,
     this.data.studentId
   )
@@ -175,18 +173,20 @@ addPeriod(){
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
         const data = {
           id:success.id,
+          type: +this.form.value.type,
           description: this.form.value.description,
-          isReleased: this.data.studentAttendance.isReleased,
+          
           recordedAt: this.form.value.recordedAt,
-          type: this.form.value.type,
-          isSolved: this.data.studentAttendance.isSolved,
-          recordedBy: this.data.studentAttendance.recordedBy,
-          releasedAt: this.data.studentAttendance.releasedAt,
-          solvedAt: this.data.studentAttendance.solvedAt
+          recordedBy: this.authService.getAuth()?.id,
+          isReleased: false,
+          isSolved: false,
+          releasedAt: undefined,
+          solvedAt: undefined
         } as AttendanceItem;
         this.dialogRef.close({
           data
         });
+        this.loading.set(false);
       },
       error: (error) => {
         this.loading.set(false);
@@ -199,9 +199,9 @@ addPeriod(){
   updateStudentAttendance(){
     this.studentAttendanceEndpoints.update(
       this.data.studentAttendance.id,
-      this.form.value.type,
+      +this.form.value.type,
       this.form.value.description,
-      this.formatService.ToDateOnly(this.form.value.recordedAt))
+      this.formatService.ToDateOnly(this.form.value.recordedAt, 0))
       .subscribe({
         next: success=>{
           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
@@ -216,9 +216,10 @@ addPeriod(){
             releasedAt: this.data.studentAttendance.releasedAt,
             solvedAt: this.data.studentAttendance.solvedAt
             } as AttendanceItem;
-          this.dialogRef.close({
-            data
-          });
+            this.dialogRef.close({
+              data
+            });
+            this.loading.set(false);
         },
         error: error=>{
           this.loading.set(false);

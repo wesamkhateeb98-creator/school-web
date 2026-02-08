@@ -19,6 +19,8 @@ import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../..
 import { StudentViewModel } from '../../view-model/student-view-model';
 import { AgeGroupModel } from '../../../../shared/endpoints/models/age-group/age-group-model';
 import { AgeGroupAutoComplete } from "../../../../shared/components/age-group-auto-complete/age-group-auto-complete";
+import { StudentStatusService } from '../../../../../../core/enums/service/student-status-service';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-add-student-dialog',
@@ -34,7 +36,8 @@ import { AgeGroupAutoComplete } from "../../../../shared/components/age-group-au
     MatDatepickerInput,
     MatDatepickerModule,
     MatButtonModule,
-    AgeGroupAutoComplete
+    AgeGroupAutoComplete,
+    MatSelectModule
 ],
   templateUrl: './add-student-dialog.html',
   providers:[
@@ -59,6 +62,7 @@ export class AddStudentDialog{
     public dialogRef:MatDialogRef<AddStudentDialog>,
     public ageGroupEndpoint:AgeGroupEndpoints,
     public studentEndpoint:StudentEndpoints,
+    public studentStatusService: StudentStatusService
   ){ 
     this.intiateForm();
   }
@@ -81,7 +85,8 @@ export class AddStudentDialog{
       motherName: [updateMode? this.data.student.motherName:'', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       address:    [updateMode? this.data.student.address:'', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       birthday:   [updateMode? this.data.student.birthday:'', [Validators.required, maxYearValidator(new Date().getFullYear())]],
-      phoneNumber:[updateMode? this.data.student.phoneNumber:'', [Validators.required, Validators.pattern(/^\d{7,10}$/)]],  // رقم هاتف أرقام فقط
+      phoneNumber: [updateMode? this.data.student.phoneNumber:'', [Validators.required, Validators.pattern(/^\d{7,10}$/)]], 
+      studentStatus: [0]
     });
   }
 
@@ -126,7 +131,8 @@ export class AddStudentDialog{
         phoneNumber: this.form.value.phoneNumber,
         address: this.form.value.address,
         ageGroup: this.form.value.ageGroup,
-        birthday: this.form.value.birthday
+        birthday: this.form.value.birthday,
+        status: this.form.value.studentStatus
       }
     )
     
@@ -143,6 +149,9 @@ export class AddStudentDialog{
             this.form.value.address,
             this.form.value.birthday,
             this.form.value.phoneNumber,
+            false,
+            this.form.value.studentStatus,
+            false,
             false
           );
           this.dialogRef.close({
@@ -166,7 +175,8 @@ export class AddStudentDialog{
         phoneNumber: this.form.value.phoneNumber,
         address: this.form.value.address,
         ageGroup: this.form.value.ageGroup,
-        birthday: this.form.value.birthday
+        birthday: this.form.value.birthday,
+        status: this.form.value.studentStatus
       }
     )
 
@@ -183,6 +193,9 @@ export class AddStudentDialog{
             this.form.value.address,
             this.form.value.birthday,
             this.form.value.phoneNumber,
+            false,
+            this.form.value.studentStatus,
+            false,
             false
           );
         this.dialogRef.close({

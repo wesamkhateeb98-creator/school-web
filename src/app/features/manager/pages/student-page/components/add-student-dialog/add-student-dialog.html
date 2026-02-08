@@ -98,11 +98,10 @@
           </mat-form-field>
         </mat-grid-tile>
 
-
         <mat-grid-tile >
             <mat-form-field class="example-full-width" style="width: 100%;" >
                 <mat-label >{{language.transform("birthday_title")}}</mat-label>
-                <input matInput [matDatepicker]="picker" [min]="minDate" formControlName="birthday" [readonly]="loading()">
+                <input matInput [matDatepicker]="picker" [min]="minDate" formControlName="birthday" [readonly]="true">
                 <mat-hint>MM/DD/YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="loading()"/>
                 <mat-datepicker #picker></mat-datepicker>
@@ -148,12 +147,29 @@
           </mat-form-field>
         </mat-grid-tile>
 
+        <mat-grid-tile >
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label>{{language.transform("student_status")}}</mat-label>
+            <mat-select formControlName="studentStatus">
+              @if(isUpdate()){
+                @for (item of  studentStatusService.statuses; track $index) {
+                    <mat-option [value]="item.id">{{ item.name }}</mat-option> 
+                }
+              }@else{
+                @for (item of  studentStatusService.getForRegister(); track $index) {
+                    <mat-option [value]="item.id">{{ item.name }}</mat-option> 
+                }
+              }
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+
       }
       
     </mat-grid-list>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button matButton (click)="onNoClick()" type="button" [disabled]="loading()">{{language.transform('cancel')}}</button>
-    <button matButton="filled" cdkFocusInitial [disabled]="loading()">{{language.transform(isUpdate() ? 'update':'add')}}</button>
+    <button matButton="filled" cdkFocusInitial [disabled]="loading() || !form.valid">{{language.transform(isUpdate() ? 'update':'add')}}</button>
   </mat-dialog-actions>
 </form>

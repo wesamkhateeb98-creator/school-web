@@ -26,7 +26,8 @@ export class StudentEndpoints {
       "motherName": addModel.motherName,
       "address": addModel.address,
       "birthday": addModel.birthday,
-      "phoneNumber": addModel.phoneNumber
+      "phoneNumber": addModel.phoneNumber,
+      "status": addModel.status
     })
   }
 

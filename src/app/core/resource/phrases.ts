@@ -190,14 +190,14 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         min_value_1:'القيمة يجب أن تكون أكبر من أو تساوي 1.',
         input_date_must_be_less_than_Date: 'يجب أن يكون التاريخ المُدخل اليوم أو تاريخًا في الماضي.',
         
-        present_title: "Present",
-        excused_absence_title: "Excused Absence",
-        unexcused_absence_title: "Unexcused Absence",
-        excused_late_title: "Excused Late",
-        unexcused_late_title: "Unexcused Late",
-        excused_leave_title: "Excused Early Leave",
-        unexcused_leave_title: "Unexcused Early Leave",
-        expelled_title: "Expelled",
+        present_title: "حاضر",
+        excused_absence_title: "غياب بعذر",
+        unexcused_absence_title: "غياب بدون عذر",
+        excused_late_title: "تأخر بعذر",
+        unexcused_late_title: "تأخر بدون عذر",
+        excused_leave_title: "مغادرة مبكرة بعذر",
+        unexcused_leave_title: "مغادرة مبكرة بدون عذر",
+        expelled_title: "مفصول",
         solve_attendance: 'حل الحضور',
         attendances: 'الحضور',
         add_attendance:  'إضافة حضور',
@@ -245,8 +245,16 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         false: "لا",
         student_parent_visits: 'زيارات الأهل',
         update_parent_visit: 'تحديث زيارة ولي الأمر',
-        add_parent_visit: 'إضافة زيارة ولي الأمر'
+        add_parent_visit: 'إضافة زيارة ولي الأمر',
+        
+        student_status_new: "جديد",
+        student_status_transferred: "منقول",
+        student_status_graduated: "أنهى المراحل",
+        student_status_expelled: "مفصول",
+        student_status: 'حالة الطالب',
 
+        is_expelled: 'هل الطالب مفصول؟',
+        is_visit_parent_required: 'هل زيارة وليّ الأمر مطلوبة؟'
     },
     en:{
         'name':"Name",
@@ -495,9 +503,17 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         false: "No",
         student_parent_visits: 'Parent visits',
         update_parent_visit: 'Update Parent Visit',
-        add_parent_visit: 'Add Parent Visit'
+        add_parent_visit: 'Add Parent Visit',
 
+        student_status_new: "New",
+        student_status_transferred: "Transferred",
+        student_status_graduated: "Graduated",
+        student_status_expelled: "Expelled",
 
+        student_status: 'Student status',
+
+        is_expelled: 'Is expelled?',
+        is_visit_parent_required: 'Is parent visit required?'
     }
 }
 
@@ -608,7 +624,14 @@ export type StudentNotePhrases =
 'failed_to_load_semester'|
 'to'|
 'add_student_note'|
-'update_student_note'
+'update_student_note'|
+'student_status_new'|
+'student_status_transferred'|
+'student_status_graduated'|
+'student_status_expelled'|
+'student_status'|
+'is_expelled'|
+'is_visit_parent_required'
 ;
 
 export type ClassPhrases = 
