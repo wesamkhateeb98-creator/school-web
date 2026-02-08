@@ -1,7 +1,6 @@
 <form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
-  <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_attendance':'add_attendance')}}</h2>
+  <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_parent_visit':'add_parent_visit')}}</h2>
   <mat-dialog-content>    
-
     <mat-grid-list [cols]="1" rowHeight="70px" gutterSize="10px">
       @if(loading()){
         <mat-grid-tile>
@@ -16,10 +15,10 @@
         
         <mat-grid-tile >
           <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label>{{language.transform("type")}}</mat-label>
-            <mat-select formControlName="type">
-                @for (item of studentAttendanceType.attendances; track $index) {
-                    <mat-option [value]="item.id.toString()">{{ item.name }}</mat-option> 
+            <mat-label>{{language.transform("severity_title")}}</mat-label>
+            <mat-select formControlName="severity">
+                @for (item of severityService.severity; track $index) {
+                    <mat-option [value]="item.id">{{ item.name }}</mat-option> 
                 }
             </mat-select>
           </mat-form-field>
@@ -50,42 +49,6 @@
               [semester]="data.semester"
               />
           </div>
-        </mat-grid-tile>
-
-        <mat-grid-tile >
-          <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("recordedAt")}}</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="recordedAt" [readonly]="true">
-              <mat-hint>MM/DD/YYYY</mat-hint>
-              <mat-datepicker-toggle matIconSuffix [for]="picker" [disabled]="loading()"/>
-              <mat-datepicker #picker></mat-datepicker>
-              @if(this.form.get('recordedAt')?.hasError('required')){
-                <mat-error>
-                    {{language.transform('field_required')}}
-                </mat-error>
-              }
-              @else if(this.form.get('recordedAt')?.hasError('outRange')){
-                <mat-error>
-                    {{
-
-                      
-                        language.transform('out_of_range_date')
-                          .replace('{first}', (this.form.get("semester")?.value.startDate | date:'yyyy-MM-dd') ?? '')
-                          .replace('{second}', (this.form.get("semester")?.value.endDate | date:'yyyy-MM-dd') ?? '')
-                      
-                    }}
-                </mat-error>
-              }
-              @else if(this.form.get('recordedAt')?.hasError('failedSemesterLoading')){
-                <mat-error>
-                    {{language.transform('failed_to_load_semester')}}
-                </mat-error>
-              }@else if(this.form.get('recordedAt')?.hasError('greaterThanDate')){
-                <mat-error>
-                    {{language.transform('today_or_before')}}
-                </mat-error>
-              }
-          </mat-form-field>
         </mat-grid-tile>
       }
       

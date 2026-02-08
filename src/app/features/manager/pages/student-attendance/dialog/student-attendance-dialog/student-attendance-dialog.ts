@@ -189,6 +189,7 @@ addPeriod(){
         });
       },
       error: (error) => {
+        this.loading.set(false);
         this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
     });
@@ -220,7 +221,7 @@ addPeriod(){
           });
         },
         error: error=>{
-          
+          this.loading.set(false);
           this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
         }
       });

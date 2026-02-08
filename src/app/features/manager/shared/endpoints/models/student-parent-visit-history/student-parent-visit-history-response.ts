@@ -1,7 +1,7 @@
 import { Page } from "../../../../../shared/model/page";
 
 export interface ParentVisitResponse {
-  parentVisit: Page<ParentVisitItem>;
+  parentVisits: Page<ParentVisitItem>;
   statistics: ParentVisitStatistics;
 }
 
@@ -10,11 +10,12 @@ export interface ParentVisitItem {
   description: string;
   isVisited: boolean;
   recordedAt: Date;
-  recordedBy: number;
-  visitedAt: Date;
-  verifiedBy: number;
+  recordedBy: number | null;
+  visitedAt: Date | null;
+  verifiedBy: number | null;
   severity: number;
 }
+
 
 export interface ParentVisitStatistics {
   completedParentVisitCount: number;

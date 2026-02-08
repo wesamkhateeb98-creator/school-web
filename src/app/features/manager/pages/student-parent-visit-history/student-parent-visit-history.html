@@ -41,10 +41,9 @@
     <form class="example-form" [formGroup]="form">
         <mat-form-field  class="example-full-width" style="width: 100%;">
             <mat-label>{{ language.transform("is_parent_visit") }}</mat-label>
-            <mat-select formControlName="isVisited">
-                
-                <mat-option [value]="true">{{ language.transform('true') }}</mat-option> 
+            <mat-select formControlName="isVisited" >
                 <mat-option [value]="false">{{ language.transform('false') }}</mat-option> 
+                <mat-option [value]="true">{{ language.transform('true') }}</mat-option> 
             </mat-select>
         </mat-form-field>
         
@@ -52,8 +51,9 @@
         [form]="form" 
         [loading]="loading"
         />
+        
     </form>
-    
+    {{ form.value.isVisited}}
 </mat-expansion-panel>
 <br/>
 
@@ -104,10 +104,12 @@
                 <button mat-icon-button (click)="openDeleteDialog(element)" [disabled]="loading()">
                     <mat-icon class="icon-error">delete</mat-icon>
                 </button>
-
-                <button mat-icon-button [matTooltip]="language.transform('solve')" (click)="openConfirmDialog(element.id)" [disabled]="loading() || element.isSolved">
-                    <mat-icon class="icon-success">person_check</mat-icon>
-                </button>
+                @if(!element.isVisited){
+                    <button mat-icon-button [matTooltip]="language.transform('solve')" (click)="openConfirmDialog(element.id)" [disabled]="loading()">
+                        <mat-icon class="icon-success">person_check</mat-icon>
+                    </button>
+                }
+                
             </div>
         </td>
     </ng-container>

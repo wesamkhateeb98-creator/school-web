@@ -18,14 +18,12 @@ import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
 import { MatSelectModule } from "@angular/material/select";
 import { FormatService } from "../../../../../../core/services/format-service";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
-import { DatePipe, formatDate } from "@angular/common";
+import { DatePipe, JsonPipe } from "@angular/common";
 import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete";
-import { min } from "rxjs";
-import { StudentAttendanceEndpoints } from "../../../../shared/endpoints/student-attendance-endpoint";
 import { AuthService } from "../../../../../../core/services/auth-service";
-import { StudentAttendanceTypeService } from "../../../../../../core/enums/service/student-attendance-type-service";
-import { AttendanceItem } from "../../../../shared/endpoints/models/student-Attendance/student-Attendances-response";
-import { StudentAttendanceFilterTypeService } from "../../../../../../core/enums/service/student-attendance-filter-type-service";
+import { StudentParentVisitHistoryEndpoints } from "../../../../shared/endpoints/student-parent-visit-history-endpoint copy";
+import { SeverityService } from "../../../../../../core/enums/service/severity-service";
+import { ParentVisitItem } from "../../../../shared/endpoints/models/student-parent-visit-history/student-parent-visit-history-response";
 
 @Component({
   selector: 'app-add-academic-year-dialog',
@@ -45,7 +43,6 @@ import { StudentAttendanceFilterTypeService } from "../../../../../../core/enums
     MatOption,
     MatSelectModule,
     ErrorTitleComponent,
-    DatePipe,
     AcademicYearSemesterAutoComplete
 ],
   providers:[provideNativeDateAdapter()],
@@ -55,15 +52,15 @@ import { StudentAttendanceFilterTypeService } from "../../../../../../core/enums
 
 export class StudentParentVisitDialog implements OnInit{
   // ##################### Injections #####################
-  dialogRef = inject(MatDialogRef<StudentParentVisitDialog>);
+    dialogRef = inject(MatDialogRef<StudentParentVisitDialog>);
     language = inject(Language);
     responsiveScreen = inject(ResponsiveScreen);
     fb = inject(FormBuilder);
     http = inject(HttpHelper);
     matSnackBar = inject(MatSnackBar);
-    studentAttendanceEndpoints = inject(StudentAttendanceEndpoints);
+    studentParentVisitEndpoints = inject(StudentParentVisitHistoryEndpoints);
     authService = inject(AuthService);
-    studentAttendanceType = inject(StudentAttendanceTypeService)
+    severityService = inject(SeverityService)
     formatService = inject(FormatService);
     // ##################### data #####################
     loading = signal<boolean>(true);
@@ -72,22 +69,19 @@ export class StudentParentVisitDialog implements OnInit{
     data = inject(MAT_DIALOG_DATA);
 
   constructor(){
-    console.log(this.data);
-
     this.form = this.fb.group(
       {
-          type: [ this.isUpdate()?this.data.studentAttendance.type:'1'],
-          description: [ this.isUpdate()?this.data.studentAttendance.description:'', [Validators.required, Validators.maxLength(1000)]],
-          recordedAt: [ this.isUpdate()?this.data.studentAttendance.recordedAt:'',[Validators.required]],
+          severity: [ this.isUpdate()?this.data.studentParentVisit.severity:1],
+          description: [ this.isUpdate()?this.data.studentParentVisit.description:'', [Validators.required, Validators.maxLength(1000)]],
           semesterId:[],
           semester:[]
       }
     );
     this.form.get('recordedAt')?.setValidators([this.dateBetweenValidator()]);
     this.form.patchValue({
-      type:this.isUpdate()?this.data.studentAttendance.type+"":'1',
-      description:this.isUpdate()?this.data.studentAttendance.description:'', 
-      recordedAt:this.isUpdate()?this.data.studentAttendance.recordedAt:this.formatService.dateToUTCDateOnly(new Date())});
+      severity:this.isUpdate()?this.data.studentParentVisit.severity:1,
+      description:this.isUpdate()?this.data.studentParentVisit.description:'', 
+      recordedAt:this.isUpdate()?this.data.studentParentVisit.recordedAt:this.formatService.dateToUTCDateOnly(new Date())});
 
     this.form.get('semester')?.valueChanges.subscribe(value => {
       if(this.form.get("semester")?.value){
@@ -133,7 +127,6 @@ export class StudentParentVisitDialog implements OnInit{
         return {
           greaterThanDate:true
         }
-        console.log({min,minTime,maxTime});
       if (inputTime >= minTime && inputTime <= maxTime) {
         return  null;
       }
@@ -147,87 +140,80 @@ export class StudentParentVisitDialog implements OnInit{
   }
   
   submit(){
-    console.log(this.form);
     if(!this.form.valid)
       return;
-    console.log("valid")
     this.loading.set(true);
 
     if(this.isUpdate()){
-      this.updateStudentAttendance();
+      this.updateStudentParentVisit();
     }else{
-      this.addPeriod();    
+      this.addStudentParentVisit();    
     }
   }
 
-addPeriod(){
+addStudentParentVisit(){
   
-  this.studentAttendanceEndpoints.add(
+  this.studentParentVisitEndpoints.add(
     this.key,
-    this.form.value.type,
+    this.form.value.severity,
     this.form.value.description,
-    this.formatService.ToDateOnly(this.form.value.recordedAt),
     this.form.value.semesterId??0,
-    this.data.studentId
-  )
+    this.data.studentId)
     .subscribe({
       next: (success) => {
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
         const data = {
-          id:success.id,
+          id: success.id,
           description: this.form.value.description,
-          isReleased: this.data.studentAttendance.isReleased,
-          recordedAt: this.form.value.recordedAt,
-          type: this.form.value.type,
-          isSolved: this.data.studentAttendance.isSolved,
-          recordedBy: this.data.studentAttendance.recordedBy,
-          releasedAt: this.data.studentAttendance.releasedAt,
-          solvedAt: this.data.studentAttendance.solvedAt
-        } as AttendanceItem;
+          isVisited: false,
+          recordedAt: new Date(),
+          recordedBy: null,
+          visitedAt: null,
+          verifiedBy: null,
+          severity: this.form.value.severity
+        } as ParentVisitItem;
+
         this.dialogRef.close({
           data
         });
       },
       error: (error) => {
+        this.loading.set(false);
         this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
     });
   }
 
 
-  updateStudentAttendance(){
-    this.studentAttendanceEndpoints.update(
-      this.data.studentAttendance.id,
-      this.form.value.type,
-      this.form.value.description,
-      this.formatService.ToDateOnly(this.form.value.recordedAt))
+  updateStudentParentVisit(){
+    this.studentParentVisitEndpoints.update(
+      this.data.studentParentVisit.id,
+      this.form.value.severity,
+      this.form.value.description,)
       .subscribe({
         next: success=>{
           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
           const data = {
-            id:success.id,
+            ... this.data.studentParentVisit,
+            id: success.id,
             description: this.form.value.description,
-            isReleased: this.data.studentAttendance.isReleased,
-            recordedAt: this.form.value.recordedAt,
-            type: this.form.value.type,
-            isSolved: this.data.studentAttendance.isSolved,
-            recordedBy: this.data.studentAttendance.recordedBy,
-            releasedAt: this.data.studentAttendance.releasedAt,
-            solvedAt: this.data.studentAttendance.solvedAt
-            } as AttendanceItem;
+            recordedAt: new Date(),
+            severity: this.form.value.severity
+          } as ParentVisitItem;
+
           this.dialogRef.close({
             data
           });
         },
         error: error=>{
-          
+          this.loading.set(false);
           this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
         }
       });
   }
 
   isUpdate () : boolean{
-    return this.data && this.data.studentAttendance && this.data.studentAttendance != null ;
+    return this.data && this.data.studentParentVisit && this.data.studentParentVisit != null ;
   }
 }
 

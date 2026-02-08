@@ -243,7 +243,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         is_parent_visit: "تمت زيارةالأهل؟",
         true: "نعم",
         false: "لا",
-        student_parent_visits: 'زيارات الأهل'
+        student_parent_visits: 'زيارات الأهل',
+        update_parent_visit: 'تحديث زيارة ولي الأمر',
+        add_parent_visit: 'إضافة زيارة ولي الأمر'
+
     },
     en:{
         'name':"Name",
@@ -490,7 +493,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         is_parent_visit: "Is Parent Visit?",
         true: "Yes",
         false: "No",
-        student_parent_visits: 'Parent visits'
+        student_parent_visits: 'Parent visits',
+        update_parent_visit: 'Update Parent Visit',
+        add_parent_visit: 'Add Parent Visit'
+
+
     }
 }
 
@@ -527,7 +534,9 @@ export type StudentParentVisitPhrases =
 'is_parent_visit'|
 'true'|
 'false'|
-'student_parent_visits'
+'student_parent_visits'|
+'add_parent_visit'|
+'update_parent_visit'
 ;
 
 export type PermissionsPhrases =

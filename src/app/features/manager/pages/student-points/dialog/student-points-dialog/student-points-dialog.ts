@@ -178,6 +178,7 @@ addPoints(){
         });
       },
       error: (error) => {
+        this.loading.set(false);
         this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
     });
@@ -206,7 +207,7 @@ addPoints(){
           });
         },
         error: error=>{
-          
+          this.loading.set(false);
           this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
         }
       });

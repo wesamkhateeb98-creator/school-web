@@ -48,7 +48,7 @@ import { SeverityService } from '../../../../core/enums/service/severity-service
   templateUrl: './student-parent-visit-history.html',
 })
 
-export class StudentParentVisitHistory implements OnInit{
+export class StudentParentVisitHistory{
   // ############# injections #############
   language = inject(Language);
   dialog = inject(MatDialog);
@@ -88,10 +88,9 @@ export class StudentParentVisitHistory implements OnInit{
 
   constructor(){
     this.form = this.fb.group({
-      'type':['0'],
+      'isVisited':[false],
       'semester':[null],
-      'semesterId':[null],
-      "semesterLoadFirst":[true]
+      'semesterId':[null]
     });
     this.studentId = +(this.activatedRoute.snapshot.paramMap.get('id')??'0');
     this.classId = +(this.activatedRoute.snapshot.paramMap.get('classId')??'0');
@@ -102,10 +101,9 @@ export class StudentParentVisitHistory implements OnInit{
       pageSize: +(this.parmas.loadGenericFromUrl()['pageSize'] ?? this.filter().pageSize),
       pageNumber: +(this.parmas.loadGenericFromUrl()['pageNumber'] ?? this.filter().pageNumber)
     });
-  }
-  ngOnInit(): void {
-    this.form.get('type')!.valueChanges.pipe(
-        debounceTime(300),
+
+    this.form.get('isVisited')!.valueChanges.pipe(
+        debounceTime(100),  
         distinctUntilChanged(),
       ).subscribe(x=>{
         this.onLoading()
@@ -122,24 +120,23 @@ export class StudentParentVisitHistory implements OnInit{
   onLoading(){
     if(!this.form.value.semesterId)
       return;
-    
     this.studentParentVisitEndpoints.get(
       this.studentId,
       this.form.value.semesterId,
-      this.form.value.type,
+      this.form.value.isVisited,
       this.filter().pageNumber,
       this.filter().pageSize)
         .subscribe({
           next:(success)=>{
             if(success.statistics)
               this.studentParentVisitStatistics.set(success.statistics);
-            this.studentParentVisit.set(success.parentVisit.content);
+            this.studentParentVisit.set(success.parentVisits.content); // content
             this.filter.set({
-              pageSize: success.parentVisit.pageSize,
-              pageNumber: success.parentVisit.pageNumber
+              pageSize: success.parentVisits.pageSize,
+              pageNumber: success.parentVisits.pageNumber
             });
 
-            this.totalPages.set(success.parentVisit.countPages) 
+            this.totalPages.set(success.parentVisits.countPages) 
 
             this.setFilterToUrl();
 
@@ -155,21 +152,21 @@ export class StudentParentVisitHistory implements OnInit{
   // ############# dialogs #############
 
   openAddDialog(){
-    // const dialogRef = this.dialog.open(
-    //   StudentParentVisitDialog, 
-    //   {
-    //     width: "80%",
-    //     data:{
-    //       studentId: this.studentId
-    //     }
-    //   }
-    // );
+    const dialogRef = this.dialog.open(
+      StudentParentVisitDialog, 
+      {
+        width: "80%",
+        data:{
+          studentId: this.studentId
+        }
+      }
+    );
     
-    // dialogRef.afterClosed().subscribe(result => {
-    //   if(result)
-    //     this.studentParentVisit.update(arr => [...arr, result.data]);
-    //     this.changeStatistic(result.data.type,1);
-    // });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result)
+        this.studentParentVisit.update(arr => [...arr, result.data]);
+        this.changeStatistic(result.data.type,1);
+    });
   }
 
   changeStatistic(visited: boolean , count:number){
@@ -185,33 +182,31 @@ export class StudentParentVisitHistory implements OnInit{
 
   
   openUpdateDialog(studentParentVisit: ParentVisitItem){
-    // const dialogRef = this.dialog.open(
-    //   StudentParentVisitDialog, 
-    //   {
-    //     width: "80%",
-    //     data:{     
-    //       studentId: this.studentId,
-    //       studentParentVisit: studentParentVisit,
-    //       semester: this.form.get('semester')?.value
-    //     }
-    //   }
-    // );
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   if (result) {
-    //     this.studentParentVisit.update(arr => 
-    //       {
-    //         arr = arr.map(x => x.id === result.data.id ? result.data : x);
-    //         return arr;
-    //       }
-    //     );
-    //     this.studentParentVisitStatistics.update(x=>{
-    //       this.changeStatistic(result.data.type,+1);
-    //       this.changeStatistic(studentParentVisit.isVisited,-1);
-    //       return x;
-    //     })
+    const dialogRef = this.dialog.open(
+      StudentParentVisitDialog, 
+      {
+        width: "80%",
+        data:{     
+          studentId: this.studentId,
+          studentParentVisit: studentParentVisit,
+          semester: this.form.get('semester')?.value
+        }
+      }
+    );
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.studentParentVisit.update(arr => 
+          {
+            arr = arr.map(x => x.id === result.data.id ? result.data : x);
+            return arr;
+          }
+        );
+        this.studentParentVisitStatistics.update(x=>{
+          return x;
+        })
         
-    //   }
-    // });
+      }
+    });
   }
 
   openDeleteDialog(ParentVisit:ParentVisitItem){
@@ -262,10 +257,13 @@ export class StudentParentVisitHistory implements OnInit{
 
                   this.studentParentVisit.update(arr =>
                       {
-                        arr = arr.map(x => x.id === id ? {...x, isReleased: true} : x);
+                        arr = arr.filter(x => x.id !== id);
                         return arr;
                       }
                     );
+
+                  this.changeStatistic(false,+1);
+                  this.changeStatistic(true,-1);
 
                   this.matSnackBar.open(this.language.transform('success'), this.language.transform('close'), successMatSnackbarConfig(this.language));
                 },

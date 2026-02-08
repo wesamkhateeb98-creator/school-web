@@ -21,6 +21,14 @@ export class StudentAttendanceEndpoints {
     academicYearSemesterId:number,
     studentId:number
    ): Observable<MutateResponse>{
+    console.log({
+      "key": key,
+      "type": type,
+      "description": description,
+      "recordedAt": recordedAt,
+      "academicYearSemesterId": academicYearSemesterId,
+      "studentId": studentId
+    });
     return this.http.post<MutateResponse>("student-Attendance",{
       "key": key,
       "type": type,
