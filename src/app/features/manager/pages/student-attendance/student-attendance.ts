@@ -28,6 +28,7 @@ import { StudentAttendanceEndpoints } from '../../shared/endpoints/student-atten
 import { StudentAttendanceDialog } from './dialog/student-attendance-dialog/student-attendance-dialog';
 import { StudentAttendanceTypeService } from '../../../../core/enums/service/student-attendance-type-service';
 import { StudentAttendanceFilterTypeService } from '../../../../core/enums/service/student-attendance-filter-type-service';
+import { ExpelDialog } from './dialog/expel-dialog/expel-dialog';
 
 @Component({
   selector: 'app-student-attendance-component',
@@ -175,8 +176,29 @@ export class StudentattendancePage implements OnInit{
     
     dialogRef.afterClosed().subscribe(result => {
       if(result)
-        this.studentAttendance.update(arr => [...arr, result.data]);
+        this.studentAttendance.update(arr => [result.data, ...arr]);
         this.changeStatistic(this.form.value.type,1);
+    });
+  }
+
+  openExpelDialog(){
+    const dialogRef = this.dialog.open(
+      ExpelDialog, 
+      {
+        width: "80%",
+        data:{
+          studentId: this.studentId
+        }
+      }
+    );
+    
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        this.studentAttendance.update(arr => [...result.data, ...arr]);
+        this.changeStatistic(this.form.value.type,(result.data as any[]).length);
+        this.onLoading()
+      }
+        
     });
   }
 
@@ -239,7 +261,7 @@ export class StudentattendancePage implements OnInit{
       DeleteDialog, 
       {
         data:{
-          title:this.language.transform('delete_period'),
+          title:this.language.transform('delete_attendance'),
           action: ()=>{
             this.studentAttendanceEndpoints.delete(attendance.id)
               .subscribe({

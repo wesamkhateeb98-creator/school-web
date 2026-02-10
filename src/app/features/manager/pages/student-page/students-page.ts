@@ -263,7 +263,6 @@ export class StudentsPage {
           x.pageNumber = pageEvent.pageIndex + 1;  
           return x;
         });
-      this.loading();
 
       this.parmas.setToUrl({
         'pageSize':this.studentFilter().pageSize,
@@ -272,6 +271,7 @@ export class StudentsPage {
         'phonenumber':this.studentFilter().phonenumber,
         'ageGroupName':this.studentFilter().ageGroup?.name,
       });
+    this.loadStudentViewModel();
   }  
 
   displayFn = (option?: AgeGroupModel): string =>  {

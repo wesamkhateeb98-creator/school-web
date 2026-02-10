@@ -21,14 +21,7 @@ export class StudentAttendanceEndpoints {
     academicYearSemesterId:number,
     studentId:number
    ): Observable<MutateResponse>{
-    console.log({
-      "key": key,
-      "type": type,
-      "description": description,
-      "recordedAt": recordedAt,
-      "academicYearSemesterId": academicYearSemesterId,
-      "studentId": studentId
-    });
+    
     return this.http.post<MutateResponse>("student-Attendance",{
       "key": key,
       "type": type,
@@ -70,5 +63,22 @@ export class StudentAttendanceEndpoints {
 
   solve(id:number): Observable<MutateResponse>{
     return this.http.patch<MutateResponse>(`student-Attendance/${id}/solve`,{});
+  }
+
+  expel(
+    key:string, 
+    date:string[],
+    description:string,
+    academicYearSemesterId:number,
+    studentId:number
+   ): Observable<MutateResponse>{
+    
+    return this.http.post<MutateResponse>("student-attendance/expel-student",{
+      "key": key,
+      "studentId": studentId,
+      "academicYearSemesterId": academicYearSemesterId,
+      "recordedAtList": date,
+      "description": description
+    })
   }
 }
