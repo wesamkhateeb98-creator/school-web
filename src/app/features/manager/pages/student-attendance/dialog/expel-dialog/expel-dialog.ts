@@ -81,7 +81,7 @@ export class ExpelDialog{
       {
           description: [ '', [Validators.required, Validators.maxLength(1000)]],
           date: [ '',[Validators.required]],
-          selectedDates: ['' ,[this.minArrayLength(1)]],
+          selectedDates: [this.selectedDates() ,[this.minArrayLength(1)]],
           semesterId:[],
           semester:[]
       }
@@ -189,7 +189,7 @@ export class ExpelDialog{
     });
   }
 
-  selectedDates = signal<Date[]>([])
+  selectedDates = signal<Date[]>([new Date()])
 
   existsSelectedDate(){
     const date = this.form.value.date as Date;
