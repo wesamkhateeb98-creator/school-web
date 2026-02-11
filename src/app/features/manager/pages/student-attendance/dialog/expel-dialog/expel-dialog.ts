@@ -81,6 +81,7 @@ export class ExpelDialog{
       {
           description: [ '', [Validators.required, Validators.maxLength(1000)]],
           date: [ '',[Validators.required]],
+          selectedDates: ['' ,[this.minArrayLength(1)]],
           semesterId:[],
           semester:[]
       }
@@ -102,40 +103,6 @@ export class ExpelDialog{
     this.loading.set(false);
   }
   
-  selectedDates = signal<Date[]>([])
-
-  existsSelectedDate(){
-    const date = this.form.value.date as Date;
-
-    return this.selectedDates().findIndex(
-      d => d.getTime() === date.getTime()) >= 0
-  }
-
-  selectDate() {
-    const date = this.form.value.date as Date;
-    if (!date) return;
-
-    const index = this.selectedDates().findIndex(d => d.getTime() === date.getTime());
-
-    if (index < 0) {
-      this.selectedDates.update(x=>{
-        x.push(date); 
-        
-        x.sort((a, b) => a.getTime() - b.getTime());
-
-        return x ;
-      });
-    }
-  }
-
-removeDate(dateToRemove: Date): void {
-  const updatedDates = this.selectedDates.update(x=>{
-    return x.filter(
-      date => date.getTime() !== dateToRemove.getTime()
-    );
-  });
-}
-
   // ##################### Validations #####################
   dateBetweenValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -169,12 +136,19 @@ removeDate(dateToRemove: Date): void {
     };
   }
 
+  minArrayLength(min: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const length = control.value ? control.value.length : 0;
+      
+      return length >= min ? null : { minLengthList: { actual: length, required: min } };
+    };
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }
   
   submit(){
-    console.log(this.form);
     if(!this.form.valid)
       return;
     
@@ -212,6 +186,46 @@ removeDate(dateToRemove: Date): void {
         this.loading.set(false);
         this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
+    });
+  }
+
+  selectedDates = signal<Date[]>([])
+
+  existsSelectedDate(){
+    const date = this.form.value.date as Date;
+
+    return this.selectedDates().findIndex(
+      d => d.getTime() === date.getTime()) >= 0
+  }
+
+  selectDate() {
+    const date = this.form.value.date as Date;
+    if (!date) return;
+
+    const index = this.selectedDates().findIndex(d => d.getTime() === date.getTime());
+
+    if (index < 0) {
+      this.selectedDates.update(x=>{
+        x.push(date); 
+        
+        x.sort((a, b) => a.getTime() - b.getTime());
+
+        return x ;
+      });
+      this.form.patchValue({
+        selectedDates:this.selectedDates()
+      });
+    }
+  }
+
+  removeDate(dateToRemove: Date): void {
+    this.selectedDates.update(x=>{
+      return x.filter(
+        date => date.getTime() !== dateToRemove.getTime()
+      );
+    });
+    this.form.patchValue({
+      selectedDates:this.selectedDates()
     });
   }
 }

@@ -254,7 +254,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         is_expelled: 'هل الطالب مفصول؟',
         is_visit_parent_required: 'هل زيارة وليّ الأمر مطلوبة؟',
         date: 'التاريخ',
-        delete_attendance: 'حذف الحضور'
+        delete_attendance: 'حذف الحضور',
+        select_at_less_one_date: 'يجب أختيار تاريخ واحد على الأقل.'
     },
     en:{
         'name':"Name",
@@ -505,7 +506,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         is_expelled: 'Is expelled?',
         is_visit_parent_required: 'Is parent visit required?',
         date:'Date',
-        delete_attendance: 'Delete attendation'
+        delete_attendance: 'Delete attendation',
+        select_at_less_one_date: 'At least one date must be selected.'
     }
 }
 
@@ -776,7 +778,8 @@ export type ValidationMessagePhrases =
 'max_value_1000'|
 'min_value_1'|
 'input_date_must_be_less_than_Date'|
-'today_or_before';
+'today_or_before'|
+'select_at_less_one_date';
 
 export type ButtonPhrases = 
 'add' | 

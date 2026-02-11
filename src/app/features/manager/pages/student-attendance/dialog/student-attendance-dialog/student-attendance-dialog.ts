@@ -71,8 +71,6 @@ export class StudentAttendanceDialog implements OnInit{
     data = inject(MAT_DIALOG_DATA);
 
   constructor(){
-    console.log(this.data);
-
     this.form = this.fb.group(
       {
           type: [ this.isUpdate()?this.data.studentAttendance.type:'1'],
@@ -145,10 +143,8 @@ export class StudentAttendanceDialog implements OnInit{
   }
   
   submit(){
-    console.log(this.form);
     if(!this.form.valid)
       return;
-    console.log("valid")
     this.loading.set(true);
 
     if(this.isUpdate()){

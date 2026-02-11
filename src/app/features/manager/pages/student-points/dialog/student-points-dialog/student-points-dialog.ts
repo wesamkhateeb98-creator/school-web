@@ -101,7 +101,6 @@ export class StudentPointsDialog{
       const value = control.value;
       
       if (!value || !this.form || !this.form.get("semester")?.value) return null; 
-      console.log(this.form.value)
 
       let minDate = this.form.get("semester")?.value.startDate
       let maxDate = this.form.get("semester")?.value.endDate
@@ -138,7 +137,6 @@ export class StudentPointsDialog{
   }
   
   submit(){
-    console.log(this.form.errors)
     if(!this.form.valid)
       return;
     

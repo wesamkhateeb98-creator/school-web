@@ -196,7 +196,6 @@ addPeriod(){
 
 
   updateStudentNote(){
-    console.log(this.form.value)
     this.studentNoteEndpoints.update(
       this.data.studentNote.id,
       +this.form.value.type,

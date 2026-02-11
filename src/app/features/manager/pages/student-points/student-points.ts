@@ -178,7 +178,6 @@ export class StudentPointsPage implements OnInit{
             return arr;
           }
         );
-        console.log(result.data)
         this.totalPoints.update(x=>{
           x-= studentPoint.points;
           x+= result.data.points;

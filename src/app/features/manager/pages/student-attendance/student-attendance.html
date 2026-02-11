@@ -1,11 +1,11 @@
 <div style="display: flex; justify-content: space-between;">
-    <div style="display: flex;">
+    <div class="flex-between">
         <h2 >{{language.transform('attendances')}}</h2>
         <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
             <mat-icon>add</mat-icon>
         </button>
-        <button matFab (click)="openExpelDialog()" style="margin: 0 20px ">
-            <mat-icon>add</mat-icon>
+        <button matButton="elevated" (click)="openExpelDialog()" style="margin: 0 20px ">
+            {{language.transform('expel_student_permission')}}
         </button>
     </div>
     <div>
