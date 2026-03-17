@@ -143,7 +143,7 @@ export class StudentParentVisitHistory{
             this.loading.set(false);
           },
           error:(error)=>{
-            this.matSnackBar.open(error.message, this.language.transform('close'), successMatSnackbarConfig(this.language));
+            this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
             this.loading.set(false);
           }
         })
@@ -173,10 +173,8 @@ export class StudentParentVisitHistory{
     this.studentParentVisitStatistics.update(x=>{
           if(visited){
             return {...x, completedParentVisitCount: x.completedParentVisitCount + count}
-          }else{
-            return {...x, pendingParentVisitCount: x.pendingParentVisitCount + count}
           }
-          return x;
+          return {...x, pendingParentVisitCount: x.pendingParentVisitCount + count};
         })
   }
 

@@ -43,11 +43,11 @@ export class Login {
   ) { 
     this.form = this.fb.group({
       phonenumber:[
-        '0999999990',
+        '',
         [Validators.required, Validators.pattern('^09\\d{8}$')]
       ],
       password:[
-        'Wesam@204',
+        '',
         [Validators.required,Validators.pattern('^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[^\\w\\s]).{8,20}$')]
       ]
     });

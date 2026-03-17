@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators, ValueChangeEvent } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -27,8 +27,6 @@ import { StudentAttendanceTypeService } from "../../../../../../core/enums/servi
 import { AttendanceItem } from "../../../../shared/endpoints/models/student-Attendance/student-Attendances-response";
 import { MatChipSet, MatChip, MatChipRemove } from "@angular/material/chips";
 import { MatIcon } from "@angular/material/icon";
-import { dateInRange } from "../../../../../../core/validator/validator";
-
 @Component({
   selector: 'app-add-academic-year-dialog',
   imports: [
@@ -206,11 +204,7 @@ export class ExpelDialog{
 
     if (index < 0) {
       this.selectedDates.update(x=>{
-        x.push(date); 
-        
-        x.sort((a, b) => a.getTime() - b.getTime());
-
-        return x ;
+        return [...x, date].sort((a, b) => a.getTime() - b.getTime());
       });
       this.form.patchValue({
         selectedDates:this.selectedDates()

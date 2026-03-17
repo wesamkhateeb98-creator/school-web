@@ -19,17 +19,6 @@ export function startDateMustLessEndDateValidator(control: AbstractControl) : Va
   return null;
 }
 
-export function dateInRange(control: AbstractControl) : ValidationErrors | null {
-  const start = control.get('startDate')?.value;
-  
-  const end = control.get('endDate')?.value;
-  
-  if (start && end && new Date(start) > new Date(end)) {
-    return { dateRangeInvalid: true };
-  }
-  return null;
-}
-
 
 export function maxYearValidator(maxYear: number) {
   return (control: AbstractControl): ValidationErrors | null => {

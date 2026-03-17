@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Language } from './language';
 import { AuthService } from './auth-service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpHelper {
-  private readonly BASE_URL = 'http://localhost:5156/api/v1.0';
-  // private readonly BASE_URL = 'https://overanxious-rosalinda-haematocryal.ngrok-free.dev/api/v1.0';
+  private readonly BASE_URL = environment.apiBaseUrl;
 
   constructor(public http: HttpClient, public language:Language, public authService:AuthService) {}
 

@@ -150,7 +150,7 @@ export class StudentNotesPage implements OnInit{
             this.loading.set(false);
           },
           error:(error)=>{
-            this.matSnackBar.open(error.message, this.language.transform('close'), successMatSnackbarConfig(this.language));
+            this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
             this.loading.set(false);
           }
         })

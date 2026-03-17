@@ -21,18 +21,8 @@ export const authGuard: CanActivateFn = (route, state) => {
   }
   
   if ( data.role === 3 ) {
-    return true; 
-  } else {
-    return router.parseUrl('denied');
+    return true;
   }
-  
-  return true;
-  
-  // // If role doesn't match route, redirect to their default page
-  // if (data.role === 0) {
-  //   return router.parseUrl('/manager');
-  // } else if (data.role === 1) {
-  //   return router.parseUrl('/consumer');
-  // }
-  // return true
+
+  return router.parseUrl('denied');
 };

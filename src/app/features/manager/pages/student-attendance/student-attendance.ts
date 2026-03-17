@@ -155,7 +155,7 @@ export class StudentattendancePage implements OnInit{
             this.loading.set(false);
           },
           error:(error)=>{
-            this.matSnackBar.open(error.message, this.language.transform('close'), successMatSnackbarConfig(this.language));
+            this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
             this.loading.set(false);
           }
         })
@@ -217,7 +217,7 @@ export class StudentattendancePage implements OnInit{
           }else if(type === 6){
             return {...x, excusedEarlyLeaveCount: x.excusedEarlyLeaveCount + count}
           }else if(type === 7){
-            return {...x, unexcusedEarlyLeaveCount: x.excusedEarlyLeaveCount + count}
+            return {...x, unexcusedEarlyLeaveCount: x.unexcusedEarlyLeaveCount + count}
           }else if(type === 8){
             return {...x, expelledCount: x.expelledCount + count}
           }

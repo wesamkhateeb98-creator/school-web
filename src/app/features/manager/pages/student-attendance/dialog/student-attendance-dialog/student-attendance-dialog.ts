@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from "@angular/core";
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators, ValueChangeEvent } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -20,7 +20,6 @@ import { FormatService } from "../../../../../../core/services/format-service";
 import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
 import { DatePipe, formatDate } from "@angular/common";
 import { AcademicYearSemesterAutoComplete } from "../../../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete";
-import { min } from "rxjs";
 import { StudentAttendanceEndpoints } from "../../../../shared/endpoints/student-attendance-endpoint";
 import { AuthService } from "../../../../../../core/services/auth-service";
 import { StudentAttendanceTypeService } from "../../../../../../core/enums/service/student-attendance-type-service";
