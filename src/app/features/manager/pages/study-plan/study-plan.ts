@@ -1,270 +1,145 @@
-import { Component, effect, signal } from '@angular/core';
-import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { MatTableModule } from '@angular/material/table';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { Language } from '../../../../core/services/language';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { ParamsService } from '../../../../core/services/params-service';
-import { MatButtonModule } from '@angular/material/button';
-import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
-import { MatDialog } from '@angular/material/dialog';
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatExpansionPanel, MatExpansionPanelHeader, MatExpansionPanelTitle } from "@angular/material/expansion";
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { debounceTime, take, takeWhile } from 'rxjs';
-import { MatGridList, MatGridTile } from "@angular/material/grid-list";
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
-import { AgeGroupModel } from '../../shared/endpoints/models/age-group/age-group-model';
-import { StudentEndpoints } from '../../shared/endpoints/student-endpoint';
-import { AgeGroupAutoComplete } from "../../shared/components/age-group-auto-complete/age-group-auto-complete";
-import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { distinctUntilChanged, filter } from 'rxjs';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
+import { Language } from '../../../../core/services/language';
+import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
+import { AgeGroupEndpoints } from '../../shared/endpoints/age-group-endpoint';
+import { StudyPlanTitleModel, StudyPlanWeekModel } from '../../shared/endpoints/models/subject/study-plan-week-model';
+import { AcademicYearSemesterAutoComplete } from '../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete';
+import { AddStudyPlanDialog } from './dialog/add-study-plan-dialog/add-study-plan-dialog';
+import { EditStudyPlanDialog } from './dialog/edit-study-plan-dialog/edit-study-plan-dialog';
 
 @Component({
-  selector: 'app-student-page',
+  selector: 'app-study-plan',
   imports: [
-    // MatProgressBarModule,
-    // MatTableModule,
-    // MatCardModule,
-    // MatIconModule,
-    // MatPaginatorModule,
-    // MatButtonModule,
-    // MatExpansionPanel,
-    // MatExpansionPanelHeader,
-    // MatExpansionPanelTitle,
-    // MatFormFieldModule, MatInputModule, ReactiveFormsModule,
-    // MatGridList,
-    // MatGridTile,
-    // MatAutocompleteModule,
-    // AgeGroupAutoComplete
-],
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    MatDividerModule,
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    AcademicYearSemesterAutoComplete,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './study-plan.html',
 })
-export class StudyPlan {
-  // students = signal<StudentViewModel[]>([]);
-  // studentFilter = signal<StudentFilterViewModel>(
-  //   {
-  //     pageNumber:1,
-  //     pageSize:10
-  //   }
-  // );
+export class StudyPlan implements AfterViewInit {
+  language     = inject(Language);
+  dialog       = inject(MatDialog);
+  matSnackBar  = inject(MatSnackBar);
+  route        = inject(ActivatedRoute);
+  router       = inject(Router);
+  fb           = inject(FormBuilder);
+  ageGroupEndpoints = inject(AgeGroupEndpoints);
 
-  // totalPages = signal<number>(1);
+  loading             = signal<boolean>(false);
+  weeks               = signal<StudyPlanWeekModel[]>([]);
+  ageGroupId          = 0;
+  ageGroupSubjectId   = 0;
+  filterForm!: FormGroup;
 
-  // loading = signal<boolean>(false);
-  // headerTable:string[] = [
-  //   'name',
-  //   'fatherName',
-  //   'motherName',
-  //   'ageGroup',
-  //   'phonenumber',
-  //   'address',
-  //   'birthday',
-  //   'action'
-  // ];
+  ngOnInit() {
+    this.ageGroupId        = +(this.route.snapshot.paramMap.get('ageGroupId') ?? '0');
+    this.ageGroupSubjectId = +(this.route.snapshot.paramMap.get('subject')    ?? '0');
+    this.filterForm = this.fb.group({});
+  }
 
-  // form!: FormGroup;
+  ngAfterViewInit() {
+    this.filterForm.get('semesterId')!.valueChanges.pipe(
+      distinctUntilChanged(),
+      filter((id): id is number => !!id && +id > 0),
+    ).subscribe(id => this.loadStudyPlan(id));
+  }
 
+  loadStudyPlan(semesterId?: number) {
+    this.loading.set(true);
+    const id = semesterId ?? (this.filterForm.value.semesterId as number);
 
-  // constructor(
-  //   public language:Language,
-  //   public dialog :MatDialog,
-  //   public parmas:ParamsService,
-  //   public matSnackBar:MatSnackBar,
-  //   public studentEndpoints:StudentEndpoints,
-  //   public fb: FormBuilder,
-  //   public responsive:ResponsiveScreen
-  // ){
-  //   this.setFilterFromUrl()
-  //   this.initiateForm();
-  // }
+    this.ageGroupEndpoints.getStudyPlan(this.ageGroupId, this.ageGroupSubjectId, id)
+      .subscribe({
+        next: weeks => {
+          this.weeks.set(weeks);
+          this.loading.set(false);
+        },
+        error: error => {
+          this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+          this.loading.set(false);
+        }
+      });
+  }
 
-  
-  // setFilterFromUrl(){
-  //   this.studentFilter.update(x=>{
-  //       const param = this.parmas.loadGenericFromUrl();
-        
-  //       x.pageSize = param['pageSize']?  param['pageSize']: 10;
-  //       x.pageNumber = param['pageNumber']? param['pageNumber']: 1;
-  //       x.name = param['fullName']
-  //       x.phonenumber =  param['phonenumber'];
-        
-  //       return x;
-  //     });
-  // }
+  openAddDialog() {
+    const ref = this.dialog.open(AddStudyPlanDialog, {
+      width: '60%',
+      data: { ageGroupId: this.ageGroupId, ageGroupSubjectId: this.ageGroupSubjectId }
+    });
 
-  // initiateForm(){
-  //   this.form = this.fb.group(
-  //     {
-  //       fullName: [this.studentFilter().name??''],
-  //       phonenumber: [this.studentFilter().phonenumber??''],
-  //     } 
-  //   );
+    ref.afterClosed().subscribe(result => {
+      if (result?.reload) this.loadStudyPlan(this.filterForm.value.semesterId);
+    });
+  }
 
-  //   this.form.valueChanges
-  //     .pipe(debounceTime(500))
-  //     .subscribe(value=>{
-  //       this.studentFilter.update(prev => 
-  //         ({
-  //           ...prev, 
-  //           name: value.fullName?? '',
-  //           phonenumber: value.phonenumber??'',
-  //           ageGroup: value.ageGroup
-  //         }));
-  //       this.loadStudentViewModel();
-  //   })
+  openEditDialog(title: StudyPlanTitleModel) {
+    const ref = this.dialog.open(EditStudyPlanDialog, {
+      width: '40%',
+      data: {
+        ageGroupId:        this.ageGroupId,
+        ageGroupSubjectId: this.ageGroupSubjectId,
+        studyPlanId:       title.id,
+        currentTitle:      title.title,
+      }
+    });
 
-  // }
+    ref.afterClosed().subscribe((result: { studyPlanId: number; newTitle: string } | undefined) => {
+      if (!result) return;
+      this.weeks.update(list =>
+        list.map(week => ({
+          ...week,
+          titles: week.titles.map(t =>
+            t.id === result.studyPlanId ? { ...t, title: result.newTitle } : t
+          )
+        }))
+      );
+    });
+  }
 
-  // loadStudentViewModel(){
-  //   this.loading.set(true);
-    
-  //   this.studentFilter.update(x=>({...x,ageGroup:this.form.value.ageGroup??undefined }))
-  
-  //   const result = this.studentEndpoints.get(this.studentFilter())
+  openDeleteDialog(title: StudyPlanTitleModel) {
+    const ref = this.dialog.open(DeleteDialog, {
+      width: '40%',
+      data: {
+        title: this.language.transform('delete_study_plan'),
+        action: () => {
+          this.ageGroupEndpoints
+            .deleteStudyPlan(this.ageGroupId, this.ageGroupSubjectId, title.id)
+            .subscribe({
+              next: () => {
+                ref.close();
+                this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+                this.weeks.update(list =>
+                  list
+                    .map(week => ({ ...week, titles: week.titles.filter(t => t.id !== title.id) }))
+                    .filter(week => week.titles.length > 0)
+                );
+              },
+              error: error => {
+                this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+              }
+            });
+        }
+      }
+    });
+  }
 
-  //   result.subscribe({
-  //     next:(success)=>{
-  //       this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-        
-  //       this.studentFilter.update(x=>
-  //       {
-  //         x.pageSize = success.pageSize;
-  //         x.pageNumber = success.pageNumber;  
-  //         return x;
-  //       });
-  //       this.totalPages.set(success.countPages)
-  //       this.students.set(
-  //           success.content.map(x=> new StudentViewModel(
-  //           x.id,
-  //           x.ageGroupId,
-  //           x.ageGroupName,
-  //           x.fullName,
-  //           x.fatherName,
-  //           x.motherName,
-  //           x.address,
-  //           x.birthday,
-  //           x.phoneNumber,
-  //           false
-  //         )));
-  //       this.loading.set(false);
-        
-  //     },
-  //     error:(error)=>{
-  //       this.matSnackBar.open(error.error.Title, this.language.transform('close'), successMatSnackbarConfig(this.language));
-  //       this.loading.set(false);
-  //     }
-  //   })
-  // }
-
-  // openAddDialog(){
-  //   const dialogRef = this.dialog.open(
-  //     AddStudentDialog, 
-  //     {
-  //       width: "80vw",
-  //       maxWidth: "80vw"
-  //     }
-  //   );
-    
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     this.students.update(arr => [result.data, ...arr]);
-  //   });
-  // }
-
-  // openUpdateDialog(student:StudentViewModel){
-  //   const dialogRef = this.dialog.open(
-  //     AddStudentDialog, 
-  //     {
-  //       width: "80vw",
-  //       maxWidth: "80vw",
-  //       data:{
-  //         student: student
-  //       }
-  //     }
-  //   );
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     if (result) {
-  //       this.students.update(arr => 
-  //         {
-  //           arr = arr.map(x => x.id === result.data.id ? result.data : x);
-  //           return arr;
-  //         }
-  //       );
-        
-  //     }
-  //   });
-  // }
-
-  // openDeleteDialog(id:number){
-  //   const dialogRef = this.dialog.open(
-  //     DeleteDialog, 
-  //     {
-  //       data:{
-  //         title:this.language.transform('delete_age_group'),
-  //         action: ()=>{
-  //           this.studentEndpoints.delete(id).subscribe({
-  //           next:success=>{
-  //             dialogRef.close();
-  //             this.students.update(x=>{
-  //               return x.filter(item => item.id !== id);
-  //             })
-  //             this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));                        
-  //           },
-  //           error: error=>{
-  //             this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-  //           }
-  //         });
-  //           }  
-  //       },
-  //       width: "80%"
-  //     }
-  //   );
-  // }
-
-  // openAssignStudentDialog(viewModel:StudentViewModel){
-  //   const dialogRef = this.dialog.open(
-  //     AssignStudentDialog, 
-  //     {
-  //       data:{
-  //         ageGroupId: viewModel.ageGroupId,
-  //         accountId: viewModel.id
-  //       },
-  //       width: "80vw",
-  //       maxWidth: "80vw"
-  //     }
-  //   );
-  // }
-
-  // changeInPage(pageEvent:PageEvent){
-  //   this.studentFilter.update(x=>
-  //       {
-  //         x.pageSize = pageEvent.pageSize;
-  //         x.pageNumber = pageEvent.pageIndex + 1;  
-  //         return x;
-  //       });
-  //     this.loading();
-
-  //     this.parmas.setToUrl({
-  //       'pageSize':this.studentFilter().pageSize,
-  //       'pageNumber':this.studentFilter().pageNumber,
-  //       'fullName':this.studentFilter().name,
-  //       'phonenumber':this.studentFilter().phonenumber,
-  //       'ageGroupName':this.studentFilter().ageGroup?.name,
-  //     });
-  // }  
-
-  // displayFn = (option?: AgeGroupModel): string =>  {
-  //   return option ? option.name : '';
-  // }
-
-  // openAccountCodeDialog(id: number, phone: string) {
-  //   this.dialog.open(AccountCodeDialog, {
-  //     width: '50%',
-  //     data: { id: id, phoneNumber: phone }
-  //   });
-  // }
+  goBack() {
+    this.router.navigate(['manager/age-group', this.ageGroupId, 'subject']);
+  }
 }

@@ -1,127 +1,80 @@
-<!-- 
-<div style="display: flex; justify-content: start;">
-    <h2 >{{language.transform('students_title')}}</h2>
-    <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
-        <mat-icon>add</mat-icon>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+  <h2 style="margin: 0;">{{ language.transform('study_plan_title') }}</h2>
+  <div style="display: flex; gap: 12px;">
+    <button mat-fab (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
     </button>
+    <button mat-fab (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
 </div>
-
-
-<mat-expansion-panel>
-    <mat-expansion-panel-header>
-        <mat-panel-title> {{language.transform('filter')}}</mat-panel-title>
-    </mat-expansion-panel-header>
-
-    <form class="example-form" [formGroup]="form">
-        <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
-            
-            <mat-grid-tile>
-                <mat-form-field  class="example-full-width" style="width: 100%;">
-                    <mat-label>{{ language.transform("full_name_title") }}</mat-label>
-                    <input type="text" matInput formControlName="fullName">
-                </mat-form-field>
-            </mat-grid-tile>
-
-            <mat-grid-tile>
-                <mat-form-field  class="example-full-width" style="width: 100%;">
-                    <mat-label>{{ language.transform("phonenumber_title") }}</mat-label>
-                    <input type="text" matInput formControlName="phonenumber">
-                </mat-form-field>
-            </mat-grid-tile>
-
-            <mat-grid-tile>
-                <app-age-group-auto-complete 
-                    [form]="form" 
-                    [loading]="loading"
-                    style="width: 100%;"
-                    [checkUrl]="true" />
-            </mat-grid-tile>
-            
-            
-        </mat-grid-list>
-    </form>
-    
-</mat-expansion-panel>
 
 <br/>
 
-<mat-card style="overflow-x: auto;">
-    @if(this.loading())
-    {
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+<form [formGroup]="filterForm">
+  <app-academic-year-semester-auto-complete
+    [form]="filterForm"
+    [semester]="null"
+    [loading]="loading"
+    [checkUrl]="false" />
+</form>
+
+<br/>
+
+@if(loading()) {
+  <div class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
+} @else if(weeks().length === 0) {
+  <mat-card>
+    <mat-card-content style="display: flex; flex-direction: column; align-items: center; padding: 48px 16px; gap: 12px;">
+      <mat-icon style="font-size: 48px; width: 48px; height: 48px; opacity: 0.3;">menu_book</mat-icon>
+      <p style="margin: 0; opacity: 0.5;">{{ language.transform('no_study_plan') }}</p>
+    </mat-card-content>
+  </mat-card>
+} @else {
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+    @for(week of weeks(); track week.weekNumber) {
+      <mat-card style="border-radius: 12px; overflow: hidden;">
+
+        <div style="padding: 14px 20px; background: var(--mat-sys-primary); display: flex; align-items: center; gap: 10px;">
+          <mat-icon style="color: var(--mat-sys-on-primary);">calendar_view_week</mat-icon>
+          <span style="color: var(--mat-sys-on-primary); font-size: 16px; font-weight: 600;">
+            {{ language.transform('week_title') }} {{ week.weekNumber }}
+          </span>
+          <span style="color: var(--mat-sys-on-primary); opacity: 0.7; font-size: 13px; margin-inline-start: auto;">
+            {{ week.titles.length }} {{ language.transform('titles_label') }}
+          </span>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <mat-card-content style="padding: 8px 0;">
+          @for(title of week.titles; track title.id; let i = $index) {
+            <div style="display: flex; align-items: center; padding: 6px 16px; gap: 10px;"
+                 [style.background]="i % 2 === 0 ? 'transparent' : 'rgba(0,0,0,0.02)'">
+              <span style="min-width: 24px; width: 24px; height: 24px; border-radius: 50%;
+                           background: var(--mat-sys-primary-container);
+                           color: var(--mat-sys-on-primary-container);
+                           display: flex; align-items: center; justify-content: center;
+                           font-size: 12px; font-weight: 600; flex-shrink: 0;">
+                {{ i + 1 }}
+              </span>
+              <span style="flex: 1; font-size: 14px; line-height: 1.4;">{{ title.title }}</span>
+              <div style="display: flex; flex-shrink: 0;">
+                <button mat-icon-button (click)="openEditDialog(title)" style="width: 32px; height: 32px;">
+                  <mat-icon class="icon-update" style="font-size: 18px;">edit</mat-icon>
+                </button>
+                <button mat-icon-button (click)="openDeleteDialog(title)" style="width: 32px; height: 32px;">
+                  <mat-icon class="icon-error" style="font-size: 18px;">delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          }
+        </mat-card-content>
+
+      </mat-card>
     }
-    <table mat-table [dataSource]="students()" class="mat-elevation-z8" style="width: 80%;">
-
-        <ng-container matColumnDef="{{headerTable[0]}}" sticky>
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('name')}} </th>
-            <td mat-cell *matCellDef="let element"> {{ element.fullName }} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="{{headerTable[1]}}">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('father_name_title')}} </th>
-            <td mat-cell *matCellDef="let element"> {{ element.fatherName }} </td>
-        </ng-container>
-       
-        <ng-container matColumnDef="{{headerTable[2]}}">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('mother_name_title')}} </th>
-            <td mat-cell *matCellDef="let element"> {{ element.motherName }} </td>
-        </ng-container>
-       
-        <ng-container matColumnDef="{{headerTable[3]}}">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('age_group_title')}} </th>
-            <td mat-cell *matCellDef="let element"> {{ element.ageGroupName }} </td>
-        </ng-container>
-        <ng-container matColumnDef="{{headerTable[4]}}">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('phonenumber_title')}} </th>
-            <td mat-cell *matCellDef="let element"> {{ element.phoneNumber }} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="{{headerTable[5]}}">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('address_title')}} </th>
-            <td mat-cell *matCellDef="let element"> {{ element.address }} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="{{headerTable[6]}}">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('birthday_title')}} </th>
-            <td mat-cell *matCellDef="let element"> {{ element.birthday }} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="{{headerTable[7]}}" stickyEnd>
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
-            <td mat-cell *matCellDef="let element"> 
-                <div style="display: flex; justify-content: space-between;">
-                    <button mat-icon-button (click)="openUpdateDialog(element)">
-                        <mat-icon class="icon-update">edit</mat-icon>
-                    </button>
-                    
-                    <button mat-icon-button (click)="openDeleteDialog(element.id)" >
-                        <mat-icon class="icon-error">delete</mat-icon>
-                    </button>
-
-                    <button mat-icon-button (click)="openAssignStudentDialog(element)" >
-                        <mat-icon class="icon-success">assignment</mat-icon>
-                    </button>
-
-                    <button mat-icon-button (click)="openAccountCodeDialog(element.id,element.phoneNumber)" >
-                        <mat-icon class="icon-success">verified_user</mat-icon>
-                    </button>
-                    
-                </div>
-            </td>
-        </ng-container>
-
-
-        <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
-        <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
-
-    </table>
-    <mat-paginator 
-        [length]="totalPages() * studentFilter().pageSize" 
-        [pageSize]="studentFilter().pageSize"
-        [pageIndex]="studentFilter().pageNumber - 1"
-        
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        showFirstLastButtons="false"
-        (page)="changeInPage($event)"
-    />
-</mat-card> -->
+  </div>
+}

@@ -258,7 +258,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         select_at_less_one_date: 'يجب أختيار تاريخ واحد على الأقل.',
         max_grade_title: 'العلامة القصوى',
         min_pass_grade_title: 'علامة النجاح',
-        sort_order_title: 'ترتيب'
+        sort_order_title: 'ترتيب',
+        week_title: 'الأسبوع',
+        week_number_title: 'رقم الأسبوع',
+        title_label: 'العنوان',
+        titles_label: 'عناوين',
+        no_study_plan: 'لا توجد خطة دراسية'
     },
     en:{
         'name':"Name",
@@ -513,7 +518,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         select_at_less_one_date: 'At least one date must be selected.',
         max_grade_title: 'Max Grade',
         min_pass_grade_title: 'Min Pass Grade',
-        sort_order_title: 'Sort Order'
+        sort_order_title: 'Sort Order',
+        week_title: 'Week',
+        week_number_title: 'Week Number',
+        title_label: 'Title',
+        titles_label: 'Titles',
+        no_study_plan: 'No study plan available'
     }
 }
 
@@ -835,7 +845,12 @@ export type SubjectPhrases =
 'update_study_plan'|
 'delete_study_plan'|
 'max_grade_title'|
-'min_pass_grade_title';
+'min_pass_grade_title'|
+'week_title'|
+'week_number_title'|
+'title_label'|
+'titles_label'|
+'no_study_plan';
 
 export type HttpErrors = 
 'http_401'|

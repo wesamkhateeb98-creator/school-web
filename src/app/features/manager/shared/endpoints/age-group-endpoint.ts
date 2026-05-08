@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { AgeGroupModel } from './models/age-group/age-group-model';
 import { SubjectViewModel } from '../../pages/subject/model/subject-view-model';
 import { SubjectForAgeGroupModel } from './models/age-group/subject-for-age-group-model';
+import { StudyPlanWeekModel, StudyPlanWeekRequest } from './models/subject/study-plan-week-model';
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +65,22 @@ export class AgeGroupEndpoints {
       PageNumber:pageNumber,
       PageSize:pageSize
     });
+  }
+
+  getStudyPlan(ageGroupId:number, ageGroupSubjectId:number, semesterId:number): Observable<StudyPlanWeekModel[]>{
+    return this.http.get<StudyPlanWeekModel[]>(`age-group/${ageGroupId}/age-group-subject/${ageGroupSubjectId}/study-plan`, { SemesterId: semesterId });
+  }
+
+  addStudyPlan(ageGroupId:number, ageGroupSubjectId:number, body:{key:string, semesterId:number, weeks:StudyPlanWeekRequest[]}): Observable<MutateResponse>{
+    return this.http.post<MutateResponse>(`age-group/${ageGroupId}/age-group-subject/${ageGroupSubjectId}/study-plan`, body);
+  }
+
+  updateStudyPlan(ageGroupId:number, ageGroupSubjectId:number, studyPlanId:number, title:string): Observable<MutateResponse>{
+    return this.http.put<MutateResponse>(`age-group/${ageGroupId}/age-group-subject/${ageGroupSubjectId}/study-plan/${studyPlanId}`, { title });
+  }
+
+  deleteStudyPlan(ageGroupId:number, ageGroupSubjectId:number, studyPlanId:number): Observable<MutateResponse>{
+    return this.http.delete<MutateResponse>(`age-group/${ageGroupId}/age-group-subject/${ageGroupSubjectId}/study-plan/${studyPlanId}`);
   }
 }
 
