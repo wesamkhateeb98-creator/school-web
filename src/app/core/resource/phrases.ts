@@ -257,7 +257,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         delete_attendance: 'حذف الحضور',
         select_at_less_one_date: 'يجب أختيار تاريخ واحد على الأقل.',
         max_grade_title: 'العلامة القصوى',
-        min_pass_grade_title: 'علامة النجاح'
+        min_pass_grade_title: 'علامة النجاح',
+        sort_order_title: 'ترتيب'
     },
     en:{
         'name':"Name",
@@ -511,7 +512,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         delete_attendance: 'Delete attendation',
         select_at_less_one_date: 'At least one date must be selected.',
         max_grade_title: 'Max Grade',
-        min_pass_grade_title: 'Min Pass Grade'
+        min_pass_grade_title: 'Min Pass Grade',
+        sort_order_title: 'Sort Order'
     }
 }
 
@@ -812,13 +814,14 @@ export type SemesterPhrases =
 'delete_semester'
 ;
 
-export type AgeGroupPhrases = 
+export type AgeGroupPhrases =
 'age_group_title'|
 'add_age_group'|
 'update_age_group'|
 'delete_age_group'|
 'add_subject_to_age_group'|
-'subjects_age_group'
+'subjects_age_group'|
+'sort_order_title'
 ;
 
 export type SubjectPhrases =

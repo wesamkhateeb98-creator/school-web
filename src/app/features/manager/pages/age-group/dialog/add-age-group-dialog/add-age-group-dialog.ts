@@ -53,6 +53,7 @@ export class AddAgeGroupDialog {
     this.form = this.fb.group(
       {
         name: [ this.isUpdate()?this.data.ageGroup.name:'', [Validators.required, Validators.minLength(3)]],
+        sortOrder: [ this.isUpdate()?this.data.ageGroup.sortOrder:0, [Validators.required, Validators.min(0)]],
       }
     );
   }
@@ -76,20 +77,16 @@ export class AddAgeGroupDialog {
   }
 
 addAcademicYear(){
+    const { name, sortOrder } = this.form.value;
     this.http.post<MutateResponse>("age-group",{
-      key:this.key,
-      name:this.form.get('name')?.value,
+      key: this.key,
+      name,
+      sortOrder,
     }).subscribe({
       next: (success) => {
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-        const data = new AgeGroupViewModel(
-          success.id,
-          this.form.get('name')?.value,
-          new Date());
-        // this.data.ChangeAction(data);
-        this.dialogRef.close({
-          data
-        });
+        const data = new AgeGroupViewModel(success.id, name, sortOrder, new Date());
+        this.dialogRef.close({ data });
       },
       error: (error) => {
         this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
@@ -97,25 +94,21 @@ addAcademicYear(){
     });
   }
 
-
   updateAcademicYear(){
+    const { name, sortOrder } = this.form.value;
     this.http.put<MutateResponse>("age-group/" + this.data.ageGroup.id,{
-      name:this.form.get('name')?.value,
+      name,
+      sortOrder,
     }).subscribe({
-      next: success=>{
+      next: success => {
         this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-        const data = new AgeGroupViewModel(
-          success.id,
-          this.form.get('name')?.value,
-          new Date());
-        this.dialogRef.close({
-          data
-        });
+        const data = new AgeGroupViewModel(success.id, name, sortOrder, this.data.ageGroup.createdAt);
+        this.dialogRef.close({ data });
       },
-      error: error=>{
+      error: error => {
         this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
       }
-  });
+    });
   }
 
   isUpdate () : boolean{

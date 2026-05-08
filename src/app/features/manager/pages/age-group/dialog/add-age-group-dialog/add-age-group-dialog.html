@@ -1,32 +1,32 @@
 <form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
   <h2 mat-dialog-title>{{language.transform( isUpdate() ? 'update_age_group':'add_age_group')}}</h2>
   <mat-dialog-content>
-    <mat-grid-list [cols]="1" rowHeight="70px" gutterSize="10px">
-      @if(loading()){
-        <mat-grid-tile>
-          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-        </mat-grid-tile>
-      }
-      @else{
-        <mat-grid-tile >
-          <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label >{{language.transform("name")}}</mat-label>
-            <input type="text" matInput formControlName="name">
-            @if(this.form.get('name')?.hasError('required')){
-              <mat-error>
-                {{language.transform('field_required')}}
-              </mat-error>
-            }
-            @else if(this.form.get('academicYear')?.hasError('minLength')){
-              <mat-error>
-                {{language.transform('min_length_3')}}
-              </mat-error>
-            }
-          </mat-form-field>
-        </mat-grid-tile>
-      }
-      
-    </mat-grid-list>
+    @if(loading()){
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+    @else{
+      <mat-form-field class="example-full-width" style="width: 100%; margin-top: 8px;">
+        <mat-label>{{language.transform("name")}}</mat-label>
+        <input type="text" matInput formControlName="name">
+        @if(form.get('name')?.hasError('required')){
+          <mat-error>{{language.transform('field_required')}}</mat-error>
+        }
+        @else if(form.get('name')?.hasError('minlength')){
+          <mat-error>{{language.transform('min_length_3')}}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="example-full-width" style="width: 100%;">
+        <mat-label>{{language.transform("sort_order_title")}}</mat-label>
+        <input type="number" matInput formControlName="sortOrder" min="0">
+        @if(form.get('sortOrder')?.hasError('required')){
+          <mat-error>{{language.transform('field_required')}}</mat-error>
+        }
+        @else if(form.get('sortOrder')?.hasError('min')){
+          <mat-error>{{language.transform('min_number_0')}}</mat-error>
+        }
+      </mat-form-field>
+    }
   </mat-dialog-content>
   <mat-dialog-actions>
     <button matButton (click)="onNoClick()" type="button" [disabled]="loading()">{{language.transform('cancel')}}</button>

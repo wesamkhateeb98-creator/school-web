@@ -34,7 +34,7 @@ import { MutateResponse } from '../../../shared/model/mutate-response';
 })
 export class AgeGroup {
   ageGroupViewModels = signal<AgeGroupViewModel[]>([]);
-  headerTable:string[] = ['semester','createdAt','action'];
+  headerTable:string[] = ['semester','sortOrder','createdAt','action'];
 
   filter = signal<AgeGroupFilterViewModel>( {
       pageSize:10,
