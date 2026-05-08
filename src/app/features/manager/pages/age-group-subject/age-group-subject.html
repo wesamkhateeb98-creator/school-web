@@ -16,24 +16,63 @@
 @else {
 <form [formGroup]="form" class="example-form">
     <mat-expansion-panel>
-    <mat-expansion-panel-header>
-        <h2 mat-dialog-title style="padding: 0px 26px;">{{ language.transform("add_subject_to_age_group") }}</h2>
-    </mat-expansion-panel-header>
-    
-    <mat-form-field style="width: 100%;">
-        <mat-label>{{ language.transform("class_title") }}</mat-label>
-        <input type="text" matInput formControlName="subject" [matAutocomplete]="autoAge">
-        <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displaySubject" (optionSelected)="onSubjectSelected($event)">
-            @for (item of subjects$ | async; track item.id) {
-                <mat-option [value]="item">{{ displaySubject(item) }}</mat-option>
-            }
-        </mat-autocomplete>
-    </mat-form-field>
-    <div class='justify-end'>
-        <button mat-button mat-flat-button (click)="addSubject()">{{language.transform('ok')}} </button>
-    </div>
+        <mat-expansion-panel-header>
+            <h2 mat-dialog-title style="padding: 0px 26px;">{{ language.transform("add_subject_to_age_group") }}</h2>
+        </mat-expansion-panel-header>
+
+        <mat-form-field style="width: 100%;">
+            <mat-label>{{ language.transform("class_title") }}</mat-label>
+            <input type="text" matInput formControlName="subject" [matAutocomplete]="autoAge">
+            <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displaySubject" (optionSelected)="onSubjectSelected($event)">
+                @for (item of subjects$ | async; track item.id) {
+                    <mat-option [value]="item">{{ displaySubject(item) }}</mat-option>
+                }
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <div style="display: flex; gap: 16px;">
+            <mat-form-field style="flex: 1;">
+                <mat-label>{{ language.transform("max_grade_title") }}</mat-label>
+                <input type="number" matInput formControlName="maxGrade" min="0">
+            </mat-form-field>
+            <mat-form-field style="flex: 1;">
+                <mat-label>{{ language.transform("min_pass_grade_title") }}</mat-label>
+                <input type="number" matInput formControlName="minPassGrade" min="0">
+            </mat-form-field>
+        </div>
+
+        <div class='justify-end'>
+            <button mat-button mat-flat-button (click)="addSubject()">{{language.transform('ok')}} </button>
+        </div>
     </mat-expansion-panel>
 </form>
+
+@if(selectedForEdit()){
+<br/>
+<form [formGroup]="updateForm" class="example-form">
+    <mat-expansion-panel [expanded]="true">
+        <mat-expansion-panel-header>
+            <h2 mat-dialog-title style="padding: 0px 26px;">{{ language.transform("update_subject") }}: {{ selectedForEdit()!.name }}</h2>
+        </mat-expansion-panel-header>
+
+        <div style="display: flex; gap: 16px;">
+            <mat-form-field style="flex: 1;">
+                <mat-label>{{ language.transform("max_grade_title") }}</mat-label>
+                <input type="number" matInput formControlName="maxGrade" min="0">
+            </mat-form-field>
+            <mat-form-field style="flex: 1;">
+                <mat-label>{{ language.transform("min_pass_grade_title") }}</mat-label>
+                <input type="number" matInput formControlName="minPassGrade" min="0">
+            </mat-form-field>
+        </div>
+
+        <div class='justify-end' style="gap: 8px; display: flex;">
+            <button mat-button (click)="cancelEdit()">{{ language.transform('cancel') }}</button>
+            <button mat-button mat-flat-button (click)="updateSubject()">{{ language.transform('update') }}</button>
+        </div>
+    </mat-expansion-panel>
+</form>
+}
 <br/>
 <mat-card style="overflow-x: auto;">
     @if(this.loading())
@@ -53,16 +92,30 @@
         </ng-container>
 
         <ng-container matColumnDef="{{headerTable[2]}}">
+            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('max_grade_title')}} </th>
+            <td mat-cell *matCellDef="let element"> {{ element.maxGrade }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="{{headerTable[3]}}">
+            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('min_pass_grade_title')}} </th>
+            <td mat-cell *matCellDef="let element"> {{ element.minPassGrade }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="{{headerTable[4]}}">
             <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('created_at_title')}} </th>
             <td mat-cell *matCellDef="let element"> {{ element.createdAt|date:'yyyy-MM-dd HH:mm:ss' }} </td>
         </ng-container>
-        <ng-container matColumnDef="{{headerTable[3]}}" stickyEnd>
+        <ng-container matColumnDef="{{headerTable[5]}}" stickyEnd>
             <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
             <td mat-cell *matCellDef="let element"> 
                 <div style="display: flex; justify-content: space-between;">
                     
                     <button mat-icon-button (click)="removeSubject(element.id)" >
                         <mat-icon class="icon-error">remove</mat-icon>
+                    </button>
+
+                    <button mat-icon-button (click)="startEdit(element)">
+                        <mat-icon>edit</mat-icon>
                     </button>
 
                     <button mat-icon-button (click)="OpenStudyPlanPage(element.id)" >

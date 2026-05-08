@@ -255,7 +255,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         is_visit_parent_required: 'هل زيارة وليّ الأمر مطلوبة؟',
         date: 'التاريخ',
         delete_attendance: 'حذف الحضور',
-        select_at_less_one_date: 'يجب أختيار تاريخ واحد على الأقل.'
+        select_at_less_one_date: 'يجب أختيار تاريخ واحد على الأقل.',
+        max_grade_title: 'العلامة القصوى',
+        min_pass_grade_title: 'علامة النجاح'
     },
     en:{
         'name':"Name",
@@ -507,7 +509,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         is_visit_parent_required: 'Is parent visit required?',
         date:'Date',
         delete_attendance: 'Delete attendation',
-        select_at_less_one_date: 'At least one date must be selected.'
+        select_at_less_one_date: 'At least one date must be selected.',
+        max_grade_title: 'Max Grade',
+        min_pass_grade_title: 'Min Pass Grade'
     }
 }
 
@@ -817,7 +821,7 @@ export type AgeGroupPhrases =
 'subjects_age_group'
 ;
 
-export type SubjectPhrases = 
+export type SubjectPhrases =
 'subject_title'|
 'add_subject'|
 'update_subject'|
@@ -826,7 +830,9 @@ export type SubjectPhrases =
 'study_plan_title'|
 'add_study_plan'|
 'update_study_plan'|
-'delete_study_plan';
+'delete_study_plan'|
+'max_grade_title'|
+'min_pass_grade_title';
 
 export type HttpErrors = 
 'http_401'|

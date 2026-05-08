@@ -40,9 +40,18 @@ export class AgeGroupEndpoints {
     return this.http.delete<MutateResponse>("age-group/"+id);
   }
 
-  addSubject(id:number,subjectId:number): Observable<MutateResponse>{
+  addSubject(id:number, subjectId:number, maxGrade:number, minPassGrade:number): Observable<MutateResponse>{
     return this.http.post<MutateResponse>(`age-group/${id}/subject`,{
-      "subjectId": subjectId
+      subjectId,
+      maxGrade,
+      minPassGrade
+    });
+  }
+
+  updateSubject(ageGroupId:number, subjectAgeGroupId:number, maxGrade:number, minPassGrade:number): Observable<MutateResponse>{
+    return this.http.put<MutateResponse>(`age-group/${ageGroupId}/subject/${subjectAgeGroupId}`,{
+      maxGrade,
+      minPassGrade
     });
   }
 
@@ -52,8 +61,8 @@ export class AgeGroupEndpoints {
 
   getSubjects(id:number,pageNumber:number,pageSize:number): Observable<Page<SubjectForAgeGroupModel>>{
     return this.http.get<Page<SubjectForAgeGroupModel>>(`age-group/${id}/subjects`,{
-      pageNumber:pageNumber,
-      pageSize:pageSize
+      PageNumber:pageNumber,
+      PageSize:pageSize
     });
   }
 }

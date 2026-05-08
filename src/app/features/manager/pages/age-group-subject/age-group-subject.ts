@@ -64,13 +64,15 @@ export class AgeGroupSubject {
   existingCode = signal<boolean>(true);
   subjects$ = of<SubjectViewModel[]>([]);
   key:string = crypto.randomUUID();
-  headerTable:string[] = ['subject','description','createdAt','action'];
+  headerTable:string[] = ['subject','description','maxGrade','minPassGrade','createdAt','action'];
   filter = signal<SubjectForAgeGroupFilterViewModel>({
     pageSize: 10,
     pageNumber: 1
   });
   totalPages = signal<number>(1);
   assignedSubjects = signal<SubjectForAgeGroupModel[]>([]);
+  selectedForEdit = signal<SubjectForAgeGroupModel | null>(null);
+  updateForm!: FormGroup;
 
   ageGroupId:number = 0;
 
@@ -81,7 +83,7 @@ export class AgeGroupSubject {
     this.loadSubjects();
 
     this.initiateForm();
-    
+    this.initiateUpdateForm();
     this.setupAutocompletes();
   }
 
@@ -103,12 +105,32 @@ export class AgeGroupSubject {
     })
   }
 
-   initiateForm() {
-
+  initiateForm() {
     this.form = this.fb.group({
       subjectId: ['', [Validators.required]],
       subject: [''],
+      maxGrade: [0, [Validators.required, Validators.min(0)]],
+      minPassGrade: [0, [Validators.required, Validators.min(0)]],
     });
+  }
+
+  initiateUpdateForm() {
+    this.updateForm = this.fb.group({
+      maxGrade: [0, [Validators.required, Validators.min(0)]],
+      minPassGrade: [0, [Validators.required, Validators.min(0)]],
+    });
+  }
+
+  startEdit(element: SubjectForAgeGroupModel) {
+    this.selectedForEdit.set(element);
+    this.updateForm.patchValue({
+      maxGrade: element.maxGrade,
+      minPassGrade: element.minPassGrade,
+    });
+  }
+
+  cancelEdit() {
+    this.selectedForEdit.set(null);
   }
 
   setupAutocompletes() {
@@ -124,31 +146,59 @@ export class AgeGroupSubject {
 
   addSubject(){
     this.loading.set(true);
+    const { subjectId, subject, maxGrade, minPassGrade } = this.form.value;
 
-    this.ageGroupEndpoints.addSubject(this.ageGroupId,this.form.value.subjectId)
+    this.ageGroupEndpoints.addSubject(this.ageGroupId, subjectId, maxGrade, minPassGrade)
       .subscribe({
         next: success => {
-           this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
-        
-            this.assignedSubjects.update(x=> {
-              x.unshift({
-                id: success.id,
-                name:this.form.value.subject.name,
-                description: this.form.value.subject.description,
-                subjectId: this.form.value.subject.id,
-                createdAt: new Date()
-              })
-              return x;
-            });
+          this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
 
-            this.loading.set(false);
+          this.assignedSubjects.update(x => {
+            x.unshift({
+              id: success.id,
+              name: subject.name,
+              description: subject.description,
+              subjectId: subject.id,
+              maxGrade,
+              minPassGrade,
+              createdAt: new Date()
+            });
+            return x;
+          });
+
+          this.loading.set(false);
         },
-        error: error =>{
+        error: error => {
           this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
-        
           this.loading.set(false);
         }
-      })
+      });
+  }
+
+  updateSubject() {
+    const editing = this.selectedForEdit();
+    if (!editing) return;
+
+    this.loading.set(true);
+    const { maxGrade, minPassGrade } = this.updateForm.value;
+
+    this.ageGroupEndpoints.updateSubject(this.ageGroupId, editing.id, maxGrade, minPassGrade)
+      .subscribe({
+        next: () => {
+          this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+
+          this.assignedSubjects.update(list =>
+            list.map(x => x.id === editing.id ? { ...x, maxGrade, minPassGrade } : x)
+          );
+
+          this.selectedForEdit.set(null);
+          this.loading.set(false);
+        },
+        error: error => {
+          this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+          this.loading.set(false);
+        }
+      });
   }
 
   removeSubject(id:number){
