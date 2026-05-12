@@ -48,7 +48,7 @@ export class AssignmentFormDialog implements OnInit {
   matSnackBar         = inject(MatSnackBar);
   assignmentEndpoints = inject(AssignmentEndpoints);
   classEndpoints      = inject(ClassEndpoints);
-
+  key = crypto.randomUUID();
   loading  = signal(false);
   classes  = signal<ClassModel[]>([]);
   ageGroupId = signal<number | null>(null);
@@ -150,7 +150,7 @@ export class AssignmentFormDialog implements OnInit {
       });
     } else {
       this.assignmentEndpoints.add({
-        key:               crypto.randomUUID(),
+        key:               this.key,
         title:             this.form.value.title,
         description:       this.form.value.description || undefined,
         type:              this.form.value.type,
