@@ -263,7 +263,14 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         week_number_title: 'رقم الأسبوع',
         title_label: 'العنوان',
         titles_label: 'عناوين',
-        no_study_plan: 'لا توجد خطة دراسية'
+        no_study_plan: 'لا توجد خطة دراسية',
+        assignments_title: 'التكليفات',
+        add_assignment: 'إضافة تكليف',
+        update_assignment: 'تعديل تكليف',
+        delete_assignment: 'حذف تكليف',
+        assignment_at_title: 'تاريخ التكليف',
+        required_time_title: 'محدد بوقت',
+        no_assignments: 'لا توجد تكليفات',
     },
     en:{
         'name':"Name",
@@ -523,12 +530,19 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         week_number_title: 'Week Number',
         title_label: 'Title',
         titles_label: 'Titles',
-        no_study_plan: 'No study plan available'
+        no_study_plan: 'No study plan available',
+        assignments_title: 'Assignments',
+        add_assignment: 'Add Assignment',
+        update_assignment: 'Update Assignment',
+        delete_assignment: 'Delete Assignment',
+        assignment_at_title: 'Assignment Date',
+        required_time_title: 'Required Time',
+        no_assignments: 'No assignments',
     }
 }
 
-export type PhrasesType =  
-LoginPhrases | 
+export type PhrasesType =
+LoginPhrases |
 AcademicYearPhrases|
 SettingsPhrases|
 ValidationMessagePhrases|
@@ -545,7 +559,8 @@ StudentNotePhrases|
 StudentPointPhrases|
 StudentAttendancePhrases|
 PermissionsPhrases|
-StudentParentVisitPhrases;
+StudentParentVisitPhrases|
+AssignmentPhrases;
 
 export type StudentParentVisitPhrases =
 'severity_title'|
@@ -862,8 +877,17 @@ export type HttpErrors =
 "success"
 ;
 
-export type Denied = 
+export type Denied =
     'denied_title'|
     'denied_header'|
     'denied_content'
 ;
+
+export type AssignmentPhrases =
+  'assignments_title'|
+  'add_assignment'|
+  'update_assignment'|
+  'delete_assignment'|
+  'assignment_at_title'|
+  'required_time_title'|
+  'no_assignments';

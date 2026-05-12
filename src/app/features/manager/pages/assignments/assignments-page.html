@@ -1,0 +1,130 @@
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+  <h2 style="margin: 0;">{{ language.transform('assignments_title') }}</h2>
+  <button mat-fab (click)="openAddDialog()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+
+<br/>
+
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>{{ language.transform('filter') }}</mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <form [formGroup]="filterForm" style="display: flex; flex-wrap: wrap; gap: 12px; padding-top: 8px;">
+    <mat-form-field style="flex: 1; min-width: 180px;">
+      <mat-label>{{ language.transform('class_title') }}</mat-label>
+      <mat-select formControlName="classId">
+        <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+        @for (cls of classes(); track cls.id) {
+          <mat-option [value]="cls.id">{{ cls.ageGroupName }} - {{ cls.section }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field style="flex: 1; min-width: 180px;">
+      <mat-label>{{ language.transform('subject_title') }}</mat-label>
+      <mat-select formControlName="subjectAgeGroupId" [disabled]="!filterForm.value.classId">
+        <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+        @for (s of subjects(); track s.id) {
+          <mat-option [value]="s.id">{{ s.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field style="flex: 1; min-width: 180px;">
+      <mat-label>{{ language.transform('type') }}</mat-label>
+      <mat-select formControlName="type">
+        <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+        @for (t of assignmentTypes; track t.value) {
+          <mat-option [value]="t.value">{{ t.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <button mat-flat-button (click)="applyFilter()">{{ language.transform('filter') }}</button>
+      <button mat-stroked-button (click)="resetFilter()">{{ language.transform('cancel') }}</button>
+    </div>
+  </form>
+</mat-expansion-panel>
+
+<br/>
+
+@if (loading()) {
+  <div class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
+} @else if (assignments().length === 0) {
+  <mat-card>
+    <mat-card-content style="display: flex; flex-direction: column; align-items: center; padding: 48px 16px; gap: 12px;">
+      <mat-icon style="font-size: 48px; width: 48px; height: 48px; opacity: 0.3;">assignment</mat-icon>
+      <p style="margin: 0; opacity: 0.5;">{{ language.transform('no_assignments') }}</p>
+    </mat-card-content>
+  </mat-card>
+} @else {
+  <mat-card>
+    <mat-card-content style="padding: 0;">
+      <table mat-table [dataSource]="assignments()" style="width: 100%;">
+
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>{{ language.transform('title_label') }}</th>
+          <td mat-cell *matCellDef="let row">{{ row.title }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>{{ language.transform('type') }}</th>
+          <td mat-cell *matCellDef="let row">{{ getTypeLabel(row.type) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="subjectName">
+          <th mat-header-cell *matHeaderCellDef>{{ language.transform('subject_title') }}</th>
+          <td mat-cell *matCellDef="let row">{{ row.subjectName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="assignmentAt">
+          <th mat-header-cell *matHeaderCellDef>{{ language.transform('assignment_at_title') }}</th>
+          <td mat-cell *matCellDef="let row">{{ row.assignmentAt | date:'yyyy-MM-dd' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="requiredTime">
+          <th mat-header-cell *matHeaderCellDef>{{ language.transform('required_time_title') }}</th>
+          <td mat-cell *matCellDef="let row">
+            <mat-icon [style.color]="row.requiredTime ? 'var(--mat-sys-primary)' : 'var(--mat-sys-outline)'">
+              {{ row.requiredTime ? 'check_circle' : 'cancel' }}
+            </mat-icon>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef>{{ language.transform('created_at_title') }}</th>
+          <td mat-cell *matCellDef="let row">{{ row.createdAt | date:'yyyy-MM-dd' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>{{ language.transform('action') }}</th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button (click)="openEditDialog(row)">
+              <mat-icon class="icon-update">edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="openDeleteDialog(row)">
+              <mat-icon class="icon-error">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
+        <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-paginator
+    [length]="totalPages() * pageSize()"
+    [pageSize]="pageSize()"
+    [pageIndex]="pageNumber() - 1"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    (page)="changePage($event)">
+  </mat-paginator>
+}

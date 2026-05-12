@@ -14,6 +14,12 @@ export class ManagerNavItemStateService {
       isExpended:false
     },
     {
+      url:"/manager/assignments",
+      name:"assignments_title",
+      icon:"assignment",
+      isExpended:false
+    },
+    {
       url:"",
       name:"registrations_title",
       icon:"app_registration",

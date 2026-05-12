@@ -1,0 +1,101 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <h2 mat-dialog-title>
+    {{ isEdit ? language.transform('update_assignment') : language.transform('add_assignment') }}
+  </h2>
+
+  <mat-dialog-content style="min-width: 500px;">
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate" style="margin-bottom: 12px;"></mat-progress-bar>
+    }
+
+    @if (!isEdit) {
+      <app-academic-year-semester-auto-complete
+        [form]="form"
+        [semester]="null"
+        [loading]="loading"
+        [checkUrl]="false" />
+    }
+
+    <mat-form-field style="width: 100%; margin-top: 8px;">
+      <mat-label>{{ language.transform('title_label') }}</mat-label>
+      <input matInput formControlName="title">
+      @if (form.get('title')?.hasError('required')) {
+        <mat-error>{{ language.transform('field_required') }}</mat-error>
+      }
+      @if (form.get('title')?.hasError('maxlength')) {
+        <mat-error>{{ language.transform('max_length_100') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field style="width: 100%;">
+      <mat-label>{{ language.transform('description_title') }}</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+      @if (form.get('description')?.hasError('maxlength')) {
+        <mat-error>{{ language.transform('max_length_1000') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <mat-form-field>
+        <mat-label>{{ language.transform('type') }}</mat-label>
+        <mat-select formControlName="type">
+          @for (t of assignmentTypes; track t.value) {
+            <mat-option [value]="t.value">{{ t.label }}</mat-option>
+          }
+        </mat-select>
+        @if (form.get('type')?.hasError('required')) {
+          <mat-error>{{ language.transform('field_required') }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>{{ language.transform('assignment_at_title') }}</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="assignmentAt">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        @if (form.get('assignmentAt')?.hasError('required')) {
+          <mat-error>{{ language.transform('field_required') }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <mat-form-field>
+        <mat-label>{{ language.transform('class_title') }}</mat-label>
+        <mat-select formControlName="classId">
+          <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+          @for (cls of classes(); track cls.id) {
+            <mat-option [value]="cls.id">{{ cls.ageGroupName }} - {{ cls.section }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>{{ language.transform('subject_title') }}</mat-label>
+        <mat-select formControlName="subjectAgeGroupId" [disabled]="subjectsLoading()">
+          @for (s of subjects(); track s.id) {
+            <mat-option [value]="s.id">{{ s.name }}</mat-option>
+          }
+        </mat-select>
+        @if (form.get('subjectAgeGroupId')?.hasError('required') && form.get('subjectAgeGroupId')?.touched) {
+          <mat-error>{{ language.transform('field_required') }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div style="padding: 4px 0 8px;">
+      <mat-checkbox formControlName="requiredTime">
+        {{ language.transform('required_time_title') }}
+      </mat-checkbox>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button matButton type="button" (click)="onNoClick()" [disabled]="loading()">
+      {{ language.transform('cancel') }}
+    </button>
+    <button matButton="filled" type="submit" [disabled]="loading()">
+      {{ isEdit ? language.transform('update') : language.transform('add') }}
+    </button>
+  </mat-dialog-actions>
+</form>

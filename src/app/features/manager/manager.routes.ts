@@ -20,6 +20,7 @@ import { StudentPointsPage } from "./pages/student-points/student-points";
 import { StudentattendancePage as StudentAttendancePage } from "./pages/student-attendance/student-attendance";
 import { StudentParentVisitDialog } from "./pages/student-parent-visit-history/dialog/student-parent-visit-dialog/student-parent-visit-dialog";
 import { StudentParentVisitHistory } from "./pages/student-parent-visit-history/student-parent-visit-history";
+import { AssignmentsPage } from "./pages/assignments/assignments-page";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -152,6 +153,7 @@ export const DASHBOARD_ROUTES: Routes = [
           },
         ]
       },
+      { path: 'assignments', component: AssignmentsPage, title: messageTitle('assignments_title') },
       { path: '', redirectTo: 'classes', pathMatch: 'full' },
       { path: '**', redirectTo: 'classes', pathMatch: 'full' },
     ],
