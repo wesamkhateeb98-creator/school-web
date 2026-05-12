@@ -85,7 +85,7 @@ export class SubjectAgeGroupAutoComplete implements OnInit {
 
   private onAgeGroupIdChange(val: number | null) {
     this.displayControl.setValue(null, { emitEvent: false });
-    this.form.get('subjectAgeGroupId')!.setValue(null, { emitEvent: true });
+    this.form.get('subjectAgeGroupId')!.setValue(null, { emitEvent: false });
     this._allSubjects.set([]);
     this.filtered.set([]);
 

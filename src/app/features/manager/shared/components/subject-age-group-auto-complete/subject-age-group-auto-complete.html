@@ -19,7 +19,7 @@
 
     }
 
-    @if (form.get('subjectAgeGroupId')?.touched && form.get('subjectAgeGroupId')?.hasError('required')) {
+    @if ((form.get('subjectAgeGroupId')?.touched || form.get('subjectAgeGroupId')?.dirty) && form.get('subjectAgeGroupId')?.hasError('required')) {
       <mat-error>{{ language.transform('field_required') }}</mat-error>
     }
 

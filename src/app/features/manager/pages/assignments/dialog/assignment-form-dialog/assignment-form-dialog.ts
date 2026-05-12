@@ -119,7 +119,11 @@ export class AssignmentFormDialog implements OnInit {
   onNoClick() { this.dialogRef.close(); }
 
   submit() {
-    if (!this.form.valid) return;
+    if (!this.form.valid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    if (this.loading()) return;
     this.loading.set(true);
 
     const assignmentAt = this.buildAssignmentAt();
