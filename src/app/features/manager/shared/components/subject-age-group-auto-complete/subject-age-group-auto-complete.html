@@ -1,0 +1,32 @@
+<div [formGroup]="form">
+  <mat-form-field style="width: 100%;">
+    <mat-label>{{ language.transform('subject_title') }}</mat-label>
+    <input
+      type="text"
+      matInput
+      [formControl]="displayControl"
+      [matAutocomplete]="autoSubject"
+    >
+
+    @if (displayControl.value) {
+      <button matSuffix matIconButton aria-label="Clear" (click)="clear()">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+
+    @if (loadingSubjects()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+
+    }
+
+    @if (form.get('subjectAgeGroupId')?.touched && form.get('subjectAgeGroupId')?.hasError('required')) {
+      <mat-error>{{ language.transform('field_required') }}</mat-error>
+    }
+
+    <mat-autocomplete #autoSubject="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onSelected($event)">
+      @for (item of filtered(); track item.id) {
+        <mat-option [value]="item">{{ item.name }}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</div>

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { debounceTime } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,17 +13,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { DatePipe } from '@angular/common';
 import { Language } from '../../../../core/services/language';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { AssignmentEndpoints } from '../../shared/endpoints/assignment-endpoint';
 import { ClassEndpoints } from '../../shared/endpoints/class-endpoint';
-import { AgeGroupEndpoints } from '../../shared/endpoints/age-group-endpoint';
 import { ClassModel } from '../../shared/endpoints/models/class/class-model';
-import { SubjectForAgeGroupModel } from '../../shared/endpoints/models/age-group/subject-for-age-group-model';
 import { AssignmentResponse, AssignmentType, ASSIGNMENT_TYPE_LABELS } from './model/assignment.model';
 import { AssignmentFormDialog } from './dialog/assignment-form-dialog/assignment-form-dialog';
+import { ParamsService } from '../../../../core/services/params-service';
+import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
+import { SubjectAgeGroupAutoComplete } from '../../shared/components/subject-age-group-auto-complete/subject-age-group-auto-complete';
 
 @Component({
   selector: 'app-assignments-page',
@@ -37,31 +40,36 @@ import { AssignmentFormDialog } from './dialog/assignment-form-dialog/assignment
     MatSelectModule,
     MatExpansionModule,
     MatInputModule,
+    MatGridListModule,
     ReactiveFormsModule,
     DatePipe,
+    SubjectAgeGroupAutoComplete,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './assignments-page.html',
 })
 export class AssignmentsPage implements OnInit {
-  language          = inject(Language);
-  dialog            = inject(MatDialog);
-  matSnackBar       = inject(MatSnackBar);
-  fb                = inject(FormBuilder);
+  language            = inject(Language);
+  dialog              = inject(MatDialog);
+  matSnackBar         = inject(MatSnackBar);
+  fb                  = inject(FormBuilder);
+  params              = inject(ParamsService);
+  responsive          = inject(ResponsiveScreen);
   assignmentEndpoints = inject(AssignmentEndpoints);
-  classEndpoints    = inject(ClassEndpoints);
-  ageGroupEndpoints = inject(AgeGroupEndpoints);
+  classEndpoints      = inject(ClassEndpoints);
 
-  loading       = signal(false);
-  assignments   = signal<AssignmentResponse[]>([]);
-  classes       = signal<ClassModel[]>([]);
-  subjects      = signal<SubjectForAgeGroupModel[]>([]);
-  totalPages    = signal(0);
-  pageNumber    = signal(1);
-  pageSize      = signal(10);
+  loading        = signal(false);
+  assignments    = signal<AssignmentResponse[]>([]);
+  classes        = signal<ClassModel[]>([]);
+  filterAgeGroupId = signal<number | null>(null);
+  totalPages     = signal(0);
+  pageNumber     = signal(1);
+  pageSize       = signal(10);
 
   filterForm!: FormGroup;
-  headerTable = ['title', 'type', 'subjectName', 'assignmentAt', 'requiredTime', 'createdAt', 'action'];
+  urlSubjectId: number | null = null;
+
+  headerTable = ['title', 'type', 'className', 'subjectName', 'assignmentAt', 'requiredTime', 'createdAt', 'action'];
 
   assignmentTypes = Object.entries(ASSIGNMENT_TYPE_LABELS).map(([value, label]) => ({
     value: +value as AssignmentType,
@@ -69,10 +77,18 @@ export class AssignmentsPage implements OnInit {
   }));
 
   ngOnInit() {
+    const urlParams  = this.params.loadGenericFromUrl();
+    const urlClassId = urlParams['classId']          ? +urlParams['classId']          : null;
+    const urlType    = urlParams['type'] != null      ? +urlParams['type']             : null;
+    this.urlSubjectId = urlParams['subjectAgeGroupId'] ? +urlParams['subjectAgeGroupId'] : null;
+
+    if (urlParams['pageNumber']) this.pageNumber.set(+urlParams['pageNumber']);
+    if (urlParams['pageSize'])   this.pageSize.set(+urlParams['pageSize']);
+
     this.filterForm = this.fb.group({
-      classId:          [null],
-      subjectAgeGroupId:[null],
-      type:             [null],
+      classId:          [urlClassId],
+      subjectAgeGroupId:[this.urlSubjectId],
+      type:             [urlType],
     });
 
     this.classEndpoints.getByOpenAcademicYear(1, 100).subscribe({
@@ -80,18 +96,21 @@ export class AssignmentsPage implements OnInit {
     });
 
     this.filterForm.get('classId')!.valueChanges.subscribe(classId => {
-      this.subjects.set([]);
-      this.filterForm.patchValue({ subjectAgeGroupId: null }, { emitEvent: false });
+      this.filterAgeGroupId.set(null);
       if (classId) {
         this.classEndpoints.getByIdClassForAdmin(classId).subscribe({
-          next: cls => {
-            this.ageGroupEndpoints.getSubjects(cls.ageGroupId, 1, 100).subscribe({
-              next: res => this.subjects.set(res.content),
-            });
-          },
+          next: cls => this.filterAgeGroupId.set(cls.ageGroupId),
         });
       }
     });
+
+    if (urlClassId) {
+      this.classEndpoints.getByIdClassForAdmin(urlClassId).subscribe({
+        next: cls => this.filterAgeGroupId.set(cls.ageGroupId),
+      });
+    }
+
+    this.filterForm.valueChanges.pipe(debounceTime(300)).subscribe(() => this.applyFilter());
 
     this.load();
   }
@@ -118,21 +137,33 @@ export class AssignmentsPage implements OnInit {
     });
   }
 
+  private syncUrl() {
+    const { classId, subjectAgeGroupId, type } = this.filterForm.value;
+    this.params.setToUrl({
+      classId:          classId          ?? null,
+      subjectAgeGroupId:subjectAgeGroupId ?? null,
+      type:             type !== null && type !== undefined ? type : null,
+      pageNumber:       this.pageNumber(),
+      pageSize:         this.pageSize(),
+    });
+  }
+
   applyFilter() {
     this.pageNumber.set(1);
+    this.syncUrl();
     this.load();
   }
 
   resetFilter() {
+    this.filterAgeGroupId.set(null);
+    this.pageSize.set(10);
     this.filterForm.reset({ classId: null, subjectAgeGroupId: null, type: null });
-    this.subjects.set([]);
-    this.pageNumber.set(1);
-    this.load();
   }
 
   changePage(event: PageEvent) {
     this.pageNumber.set(event.pageIndex + 1);
     this.pageSize.set(event.pageSize);
+    this.syncUrl();
     this.load();
   }
 

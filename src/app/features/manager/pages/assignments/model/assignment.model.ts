@@ -22,6 +22,12 @@ export const ASSIGNMENT_TYPE_LABELS: Record<AssignmentType, string> = {
   [AssignmentType.Other]: 'غير ذلك',
 };
 
+export interface AssignmentClassInfo {
+  id: number;
+  name: string;
+  section: number;
+}
+
 export interface AssignmentResponse {
   id: number;
   key: string;
@@ -30,7 +36,7 @@ export interface AssignmentResponse {
   type: AssignmentType;
   assignmentAt: string;
   requiredTime: boolean;
-  classId: number | null;
+  classInfo: AssignmentClassInfo | null;
   subjectAgeGroupId: number;
   subjectName: string;
   createdById: number;

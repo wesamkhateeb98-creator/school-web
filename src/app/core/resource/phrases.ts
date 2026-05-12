@@ -271,6 +271,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         assignment_at_title: 'تاريخ التكليف',
         required_time_title: 'محدد بوقت',
         no_assignments: 'لا توجد تكليفات',
+        clear: 'امسح',
+        time: "الوقت",
+        include_time: "تضمين الوقت"
     },
     en:{
         'name':"Name",
@@ -538,6 +541,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         assignment_at_title: 'Assignment Date',
         required_time_title: 'Required Time',
         no_assignments: 'No assignments',
+        clear: 'Clear',
+        time: 'Time',
+        include_time: 'Include Time'
     }
 }
 
@@ -828,7 +834,8 @@ export type ButtonPhrases =
 'confirm'|
 'shift'|
 'insert'|
-'update_mode';
+'update_mode'|
+'clear';
 
 export type SemesterPhrases = 
 'semester_title'|
@@ -890,4 +897,6 @@ export type AssignmentPhrases =
   'delete_assignment'|
   'assignment_at_title'|
   'required_time_title'|
-  'no_assignments';
+  'no_assignments'|
+  'time'|
+  'include_time';
