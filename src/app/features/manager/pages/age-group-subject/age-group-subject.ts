@@ -17,6 +17,7 @@ import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
 import { MatExpansionPanel, MatExpansionPanelHeader } from "@angular/material/expansion";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { SubjectEndpoints } from "../../shared/endpoints/subject-endpoint";
 import { SubjectViewModel } from "../subject/model/subject-view-model";
 import { debounceTime, map, of, startWith, switchMap } from "rxjs";
@@ -41,7 +42,8 @@ import { ActivatedRoute, Router } from "@angular/router";
     MatPaginatorModule,
     MatExpansionPanel,
     MatExpansionPanelHeader,
-    MatGridListModule
+    MatGridListModule,
+    MatTooltipModule,
 ],
   providers:[provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +66,7 @@ export class AgeGroupSubject {
   existingCode = signal<boolean>(true);
   subjects$ = of<SubjectViewModel[]>([]);
   key:string = crypto.randomUUID();
-  headerTable:string[] = ['subject','description','maxGrade','minPassGrade','createdAt','action'];
+  headerTable:string[] = ['subject','description','minPassGrade','maxGrade','createdAt','action'];
   filter = signal<SubjectForAgeGroupFilterViewModel>({
     pageSize: 10,
     pageNumber: 1
@@ -248,6 +250,10 @@ export class AgeGroupSubject {
 
   operAgeGroupPage(){
     this.router.navigate(['manager/age-group'])
+  }
+
+  openMarkDistributionPage(subjectAgeGroupId: number): void {
+    this.router.navigate(['manager/age-group', this.ageGroupId, 'subject', subjectAgeGroupId, 'mark-distribution']);
   }
 }
 

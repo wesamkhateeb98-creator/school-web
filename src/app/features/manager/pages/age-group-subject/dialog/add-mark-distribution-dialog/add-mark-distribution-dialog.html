@@ -1,0 +1,68 @@
+<form class="example-form" [formGroup]="form" (ngSubmit)="submit()">
+  <h2 mat-dialog-title>{{language.transform(isUpdate() ? 'update_mark_distribution' : 'add_mark_distribution')}}</h2>
+  <mat-dialog-content>
+    <mat-grid-list [cols]="loading() ? 1 : 2" rowHeight="70px" gutterSize="10px">
+      @if(loading()) {
+        <mat-grid-tile>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </mat-grid-tile>
+      }
+      @else {
+        <mat-grid-tile>
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label>{{language.transform('name')}}</mat-label>
+            <input type="text" matInput formControlName="name">
+            @if(name()?.hasError('required')) {
+              <mat-error>{{language.transform('field_required')}}</mat-error>
+            }
+            @else if(name()?.hasError('maxlength')) {
+              <mat-error>{{language.transform('max_length_100')}}</mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label>{{language.transform('grade_title')}}</mat-label>
+            <input type="number" matInput formControlName="grade"
+                   min="0.0001" [max]="maxAllowedGrade" step="0.0001">
+            <mat-hint>
+              {{language.transform('remaining_grade_title')}}: {{maxAllowedGrade | number:'1.0-4'}}
+            </mat-hint>
+            @if(grade()?.hasError('required')) {
+              <mat-error>{{language.transform('field_required')}}</mat-error>
+            }
+            @else if(grade()?.hasError('min')) {
+              <mat-error>{{language.transform('percentage_must_be_greater_than_0')}}</mat-error>
+            }
+            @else if(grade()?.hasError('max')) {
+              <mat-error>{{language.transform('percentage_must_not_exceed_100')}}</mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+          <mat-form-field class="example-full-width" style="width: 100%;">
+            <mat-label>{{language.transform('mark_type_title')}}</mat-label>
+            <mat-select formControlName="markType">
+              @for(item of markTypes; track item.id) {
+                <mat-option [value]="item.id">{{item.name}}</mat-option>
+              }
+            </mat-select>
+            @if(markType()?.hasError('required')) {
+              <mat-error>{{language.transform('field_required')}}</mat-error>
+            }
+          </mat-form-field>
+        </mat-grid-tile>
+      }
+    </mat-grid-list>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button matButton (click)="onNoClick()" type="button" [disabled]="loading()">
+      {{language.transform('cancel')}}
+    </button>
+    <button matButton="filled" cdkFocusInitial [disabled]="loading()">
+      {{language.transform(isUpdate() ? 'update' : 'add')}}
+    </button>
+  </mat-dialog-actions>
+</form>

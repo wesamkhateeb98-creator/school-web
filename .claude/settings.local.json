@@ -3,7 +3,10 @@
     "allow": [
       "Bash(npx tsc *)",
       "Bash(Get-ChildItem -Recurse \"D:\\\\SoftPro\\\\Projects\\\\School\\\\school-web\\\\.claude\")",
-      "Bash(Select-Object FullName)"
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"D:\\\\SoftPro\\\\Projects\\\\School\\\\school-web\" -Recurse -Directory -Depth 3)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(del \"D:\\\\SoftPro\\\\Projects\\\\School\\\\school-web\\\\src\\\\app\\\\features\\\\manager\\\\pages\\\\age-group-subject\\\\dialog\\\\subject-mark-distribution-dialog\\\\subject-mark-distribution-dialog.ts\" \"D:\\\\SoftPro\\\\Projects\\\\School\\\\school-web\\\\src\\\\app\\\\features\\\\manager\\\\pages\\\\age-group-subject\\\\dialog\\\\subject-mark-distribution-dialog\\\\subject-mark-distribution-dialog.html\")"
     ]
   }
 }

@@ -92,14 +92,14 @@
         </ng-container>
 
         <ng-container matColumnDef="{{headerTable[2]}}">
+            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('min_pass_grade_title')}} </th>
+            <td mat-cell *matCellDef="let element"> {{ element.minPassGrade }} </td>
+        </ng-container>
+        <ng-container matColumnDef="{{headerTable[3]}}">
             <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('max_grade_title')}} </th>
             <td mat-cell *matCellDef="let element"> {{ element.maxGrade }} </td>
         </ng-container>
 
-        <ng-container matColumnDef="{{headerTable[3]}}">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('min_pass_grade_title')}} </th>
-            <td mat-cell *matCellDef="let element"> {{ element.minPassGrade }} </td>
-        </ng-container>
 
         <ng-container matColumnDef="{{headerTable[4]}}">
             <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('created_at_title')}} </th>
@@ -120,6 +120,10 @@
 
                     <button mat-icon-button (click)="OpenStudyPlanPage(element.id)" >
                         <mat-icon class="icon-success">list_alt_add</mat-icon>
+                    </button>
+
+                    <button mat-icon-button [matTooltip]="language.transform('mark_distribution_title')" (click)="openMarkDistributionPage(element.id)">
+                        <mat-icon>percent</mat-icon>
                     </button>
 
                 </div>

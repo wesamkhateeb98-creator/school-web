@@ -273,7 +273,20 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         no_assignments: 'لا توجد تكليفات',
         clear: 'امسح',
         time: "الوقت",
-        include_time: "تضمين الوقت"
+        include_time: "تضمين الوقت",
+        mark_distribution_title: 'توزيع العلامات',
+        add_mark_distribution: 'إضافة توزيع علامة',
+        update_mark_distribution: 'تعديل توزيع علامة',
+        delete_mark_distribution: 'حذف توزيع علامة',
+        coursework_title: 'أعمال الطلاب',
+        final_exam_title: 'الامتحان النهائي',
+        percentage_title: 'النسبة المئوية',
+        mark_type_title: 'نوع العلامة',
+        percentage_must_be_greater_than_0: 'العلامة يجب أن تكون أكبر من 0',
+        percentage_must_not_exceed_100: 'العلامة تتجاوز الحد المتبقي',
+        grade_title: 'العلامة',
+        remaining_grade_title: 'المتبقي',
+        entered_grade_title: 'المدخل',
     },
     en:{
         'name':"Name",
@@ -543,7 +556,20 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         no_assignments: 'No assignments',
         clear: 'Clear',
         time: 'Time',
-        include_time: 'Include Time'
+        include_time: 'Include Time',
+        mark_distribution_title: 'Mark Distribution',
+        add_mark_distribution: 'Add Mark Distribution',
+        update_mark_distribution: 'Update Mark Distribution',
+        delete_mark_distribution: 'Delete Mark Distribution',
+        coursework_title: 'Coursework',
+        final_exam_title: 'Final Exam',
+        percentage_title: 'Percentage',
+        mark_type_title: 'Mark Type',
+        percentage_must_be_greater_than_0: 'Grade must be greater than 0',
+        percentage_must_not_exceed_100: 'Grade exceeds the remaining limit',
+        grade_title: 'Grade',
+        remaining_grade_title: 'Remaining',
+        entered_grade_title: 'Entered',
     }
 }
 
@@ -566,7 +592,8 @@ StudentPointPhrases|
 StudentAttendancePhrases|
 PermissionsPhrases|
 StudentParentVisitPhrases|
-AssignmentPhrases;
+AssignmentPhrases|
+MarkDistributionPhrases;
 
 export type StudentParentVisitPhrases =
 'severity_title'|
@@ -900,3 +927,18 @@ export type AssignmentPhrases =
   'no_assignments'|
   'time'|
   'include_time';
+
+export type MarkDistributionPhrases =
+  'mark_distribution_title'|
+  'add_mark_distribution'|
+  'update_mark_distribution'|
+  'delete_mark_distribution'|
+  'coursework_title'|
+  'final_exam_title'|
+  'percentage_title'|
+  'mark_type_title'|
+  'percentage_must_be_greater_than_0'|
+  'percentage_must_not_exceed_100'|
+  'grade_title'|
+  'remaining_grade_title'|
+  'entered_grade_title';

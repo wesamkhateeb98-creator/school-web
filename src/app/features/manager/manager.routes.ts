@@ -21,6 +21,7 @@ import { StudentattendancePage as StudentAttendancePage } from "./pages/student-
 import { StudentParentVisitDialog } from "./pages/student-parent-visit-history/dialog/student-parent-visit-dialog/student-parent-visit-dialog";
 import { StudentParentVisitHistory } from "./pages/student-parent-visit-history/student-parent-visit-history";
 import { AssignmentsPage } from "./pages/assignments/assignments-page";
+import { SubjectMarkDistributionPage } from "./pages/subject-mark-distribution/subject-mark-distribution";
 
 export const DASHBOARD_ROUTES: Routes = [
   {
@@ -47,9 +48,14 @@ export const DASHBOARD_ROUTES: Routes = [
             title: messageTitle('subjects_age_group')
           },
           {
-            path:':ageGroupId/subject/:subject/study-plan', 
-            component: StudyPlan, 
+            path:':ageGroupId/subject/:subject/study-plan',
+            component: StudyPlan,
             title: messageTitle('study_plan_title')
+          },
+          {
+            path:':ageGroupId/subject/:subject/mark-distribution',
+            component: SubjectMarkDistributionPage,
+            title: messageTitle('mark_distribution_title')
           }
         ],
       },
