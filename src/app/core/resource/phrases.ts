@@ -287,6 +287,14 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         grade_title: 'العلامة',
         remaining_grade_title: 'المتبقي',
         entered_grade_title: 'المدخل',
+        student_mark_title: 'علامات الطلاب',
+        student_mark_sheet_title: 'كشوف العلامات',
+        add_student_mark_sheet: 'إضافة كشف علامات',
+        update_student_mark_sheet: 'تعديل كشف علامات',
+        delete_student_mark_sheet: 'حذف كشف علامات',
+        no_student_mark_sheets: 'لا توجد كشوف علامات',
+        students_count_title: 'عدد الطلاب',
+        details_title: 'تفاصيل',
     },
     en:{
         'name':"Name",
@@ -570,6 +578,14 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         grade_title: 'Grade',
         remaining_grade_title: 'Remaining',
         entered_grade_title: 'Entered',
+        student_mark_title: 'Student Mark',
+        student_mark_sheet_title: 'Student Mark Sheets',
+        add_student_mark_sheet: 'Add Mark Sheet',
+        update_student_mark_sheet: 'Update Mark Sheet',
+        delete_student_mark_sheet: 'Delete Mark Sheet',
+        no_student_mark_sheets: 'No mark sheets found',
+        students_count_title: 'Students Count',
+        details_title: 'Details',
     }
 }
 
@@ -593,7 +609,18 @@ StudentAttendancePhrases|
 PermissionsPhrases|
 StudentParentVisitPhrases|
 AssignmentPhrases|
-MarkDistributionPhrases;
+MarkDistributionPhrases|
+StudentMarkSheetPhrases;
+
+export type StudentMarkSheetPhrases =
+  'student_mark_title'|
+  'student_mark_sheet_title'|
+  'add_student_mark_sheet'|
+  'update_student_mark_sheet'|
+  'delete_student_mark_sheet'|
+  'no_student_mark_sheets'|
+  'students_count_title'|
+  'details_title';
 
 export type StudentParentVisitPhrases =
 'severity_title'|

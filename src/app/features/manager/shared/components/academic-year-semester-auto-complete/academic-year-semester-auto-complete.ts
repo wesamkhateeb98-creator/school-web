@@ -66,7 +66,7 @@ export class AcademicYearSemesterAutoComplete implements OnInit {
 
     let source$ = this.form.get('semester')!.valueChanges;
 
-    if (!hasParam || this.form.get('semesterLoadFirst')?.valid) {
+    if ((!hasParam || this.form.get('semesterLoadFirst')?.valid) && !this.semester) {
       source$ = source$.pipe(startWith(''));
     }
 

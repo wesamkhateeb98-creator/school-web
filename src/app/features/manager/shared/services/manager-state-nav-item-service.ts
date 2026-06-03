@@ -20,6 +20,12 @@ export class ManagerNavItemStateService {
       isExpended:false
     },
     {
+      url:"/manager/student-mark-sheet",
+      name:"student_mark_title",
+      icon:"grading",
+      isExpended:false
+    },
+    {
       url:"",
       name:"registrations_title",
       icon:"app_registration",

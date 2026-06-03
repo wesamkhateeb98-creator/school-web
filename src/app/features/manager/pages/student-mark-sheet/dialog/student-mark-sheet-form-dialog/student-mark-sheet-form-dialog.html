@@ -1,0 +1,61 @@
+<h2 mat-dialog-title>
+  {{ isEdit ? language.transform('update_student_mark_sheet') : language.transform('add_student_mark_sheet') }}
+</h2>
+
+<mat-dialog-content>
+  @if (loading()) { <mat-progress-bar mode="indeterminate" /> }
+
+  <form [formGroup]="form" style="padding-top: 16px; display: flex; flex-direction: column; gap: 4px;">
+
+    <mat-form-field style="width: 100%;">
+      <mat-label>{{ language.transform('semester_title') }}</mat-label>
+      <mat-select formControlName="semesterId">
+        @for (s of semesters; track s.academicYearSemesterId) {
+          <mat-option [value]="s.academicYearSemesterId">{{ semesterLabel(s) }}</mat-option>
+        }
+      </mat-select>
+      @if (form.get('semesterId')?.invalid && form.get('semesterId')?.touched) {
+        <mat-error>{{ language.transform('field_required') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field style="width: 100%;">
+      <mat-label>{{ language.transform('age_group_title') }}</mat-label>
+      <input matInput formControlName="ageGroupSearch" [matAutocomplete]="ageAuto" (focus)="onAgeGroupFocus()" />
+      @if (form.get('ageGroupSearch')?.value) {
+        <button matSuffix mat-icon-button (click)="clearAgeGroup()"><mat-icon>close</mat-icon></button>
+      }
+      <mat-autocomplete #ageAuto [displayWith]="displayAgeGroup" (optionSelected)="onAgeGroupSelected($event.option.value)">
+        @for (g of ageGroupItems(); track g.id) {
+          <mat-option [value]="g">{{ g.name }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field style="width: 100%;">
+      <mat-label>{{ language.transform('subject_title') }}</mat-label>
+      <input matInput formControlName="subjectSearch" [matAutocomplete]="subAuto" />
+      @if (subjectsLoading()) {
+        <mat-spinner matSuffix diameter="18" />
+      } @else if (form.get('subjectSearch')?.value && !form.get('subjectSearch')?.disabled) {
+        <button matSuffix mat-icon-button (click)="clearSubject()"><mat-icon>close</mat-icon></button>
+      }
+      <mat-autocomplete #subAuto [displayWith]="displaySubject" (optionSelected)="onSubjectSelected($event.option.value)">
+        @for (s of subjectItems(); track s.subjectAgeGroupId) {
+          <mat-option [value]="s">{{ s.subjectName }}</mat-option>
+        }
+      </mat-autocomplete>
+      @if (form.get('subjectAgeGroupId')?.invalid && form.get('subjectAgeGroupId')?.touched) {
+        <mat-error>{{ language.transform('field_required') }}</mat-error>
+      }
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">{{ language.transform('cancel') }}</button>
+  <button mat-flat-button (click)="submit()" [disabled]="loading()">
+    {{ isEdit ? language.transform('update') : language.transform('add') }}
+  </button>
+</mat-dialog-actions>
