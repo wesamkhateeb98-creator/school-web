@@ -5,4 +5,5 @@ export interface StudentMarkSheetModel {
   subjectName: string;
   ageGroupName: string;
   studentsCount: number;
+  isConfirmed: boolean;
 }

@@ -1,8 +1,17 @@
 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
   <h2 style="margin: 0;">{{ language.transform('student_mark_sheet_title') }}</h2>
-  <button mat-fab (click)="openAddDialog()">
-    <mat-icon>add</mat-icon>
-  </button>
+  <div style="display: flex; gap: 12px; align-items: center;">
+    @if (isAdmin()) {
+      <button mat-fab extended (click)="openPublishDialog()" color="accent">
+        <mat-icon>send</mat-icon>
+        {{ language.transform('publish_title') }}
+      </button>
+    }
+    <button mat-fab (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+    </button>
+  
+  </div>
 </div>
 
 <mat-expansion-panel [expanded]="true" style="margin-bottom: 16px;">
@@ -83,6 +92,17 @@
           <td mat-cell *matCellDef="let row">{{ row.studentsCount }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="isConfirmed">
+          <th mat-header-cell *matHeaderCellDef>{{ language.transform('confirm_mark_sheet') }}</th>
+          <td mat-cell *matCellDef="let row">
+            @if (row.isConfirmed) {
+              <mat-icon style="color: #388e3c; vertical-align: middle;">check_circle</mat-icon>
+            } @else {
+              <mat-icon style="color: #d32f2f; vertical-align: middle;">cancel</mat-icon>
+            }
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef>{{ language.transform('action') }}</th>
           <td mat-cell *matCellDef="let row">
@@ -95,6 +115,15 @@
             <button mat-icon-button [matTooltip]="language.transform('delete')" (click)="openDeleteDialog(row)">
               <mat-icon class="icon-error">delete</mat-icon>
             </button>
+          
+            @if (isStaff()) {
+              <button mat-icon-button
+                      [matTooltip]="row.isConfirmed ? language.transform('already_confirmed') : language.transform('confirm_mark_sheet')"
+                      [disabled]="row.isConfirmed"
+                      (click)="confirmSheet(row)">
+                <mat-icon [style.color]="row.isConfirmed ? '#388e3c' : ''">task_alt</mat-icon>
+              </button>
+            }
           </td>
         </ng-container>
 

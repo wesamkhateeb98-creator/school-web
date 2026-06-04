@@ -192,15 +192,30 @@ export class SubjectMarkPage implements OnInit {
     const ref = this.dialog.open(EditMarkDialog, {
       width: '380px',
       data: {
-        studentId:       event.studentId,
-        distributionId:  event.distributionId,
+        studentId:        event.studentId,
+        distributionId:   event.distributionId,
         distributionName: event.distributionName,
-        enteredValue:    event.enteredValue,
-        maxValue:        event.maxValue,
+        enteredValue:     event.enteredValue,
+        maxValue:         event.maxValue,
       },
     });
-    ref.afterClosed().subscribe(result => {
-      if (result?.updated) this.loadEntries();
+    ref.afterClosed().subscribe((result?: { updated: boolean; value: number }) => {
+      if (!result?.updated) return;
+      this.rows.update(rows =>
+        rows.map(row => {
+          if (row.studentId !== event.studentId) return row;
+          return {
+            ...row,
+            cellMap: {
+              ...row.cellMap,
+              [event.distributionId]: {
+                ...row.cellMap[event.distributionId],
+                enteredValue: result.value,
+              },
+            },
+          };
+        }),
+      );
     });
   }
 
@@ -214,7 +229,7 @@ export class SubjectMarkPage implements OnInit {
           forkJoin(deletes$).subscribe({
             next: () => {
               ref.close();
-              this.loadEntries();
+              this.rows.update(rows => rows.filter(r => r.studentId !== row.studentId));
               this.matSnackBar.open(
                 this.language.transform('success'),
                 this.language.transform('close'),
@@ -223,7 +238,7 @@ export class SubjectMarkPage implements OnInit {
             },
             error: err => {
               this.matSnackBar.open(
-                err.error?.Title ?? err.message,
+                err.message ?? err.error?.Title,
                 this.language.transform('close'),
                 errorMatSnackbarConfig(this.language),
               );

@@ -12,7 +12,7 @@ export class StudentMarkEntryEndpoints {
   constructor(private http: HttpHelper) {}
 
   getEntries(markSheetId: number, studentId?: number): Observable<StudentMarkEntryResponse> {
-    return this.http.get<StudentMarkEntryResponse>(`student-mark-entry/sheet/${markSheetId}`, {
+    return this.http.get<StudentMarkEntryResponse>(`StudentMarkEntry/sheet/${markSheetId}`, {
       studentId: studentId ?? undefined,
     });
   }
@@ -23,7 +23,7 @@ export class StudentMarkEntryEndpoints {
     studentId: number,
     entries: { subjectMarkDistributionId: number; value: number }[],
   ): Observable<number[]> {
-    return this.http.post<number[]>('student-mark-entry', {
+    return this.http.post<number[]>('StudentMarkEntry', {
       key,
       studentMarkSheetId,
       studentId,
@@ -32,11 +32,11 @@ export class StudentMarkEntryEndpoints {
   }
 
   update(studentId: number, distributionId: number, value: number): Observable<MutateResponse> {
-    return this.http.put<MutateResponse>('student-mark-entry', { studentId, distributionId, value });
+    return this.http.put<MutateResponse>('StudentMarkEntry', { studentId, distributionId, value });
   }
 
   delete(markEntryId: number): Observable<MutateResponse> {
-    return this.http.delete<MutateResponse>(`student-mark-entry/${markEntryId}`);
+    return this.http.delete<MutateResponse>(`StudentMarkEntry/${markEntryId}`);
   }
 
   getStudents(
@@ -45,7 +45,7 @@ export class StudentMarkEntryEndpoints {
     pageSize: number,
     name?: string,
   ): Observable<Page<StudentSimpleModel>> {
-    return this.http.get<Page<StudentSimpleModel>>('student', {
+    return this.http.get<Page<StudentSimpleModel>>('Student', {
       subjectAgeGroupId,
       pageNumber,
       pageSize,

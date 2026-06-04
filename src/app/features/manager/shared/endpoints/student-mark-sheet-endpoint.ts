@@ -4,6 +4,7 @@ import { HttpHelper } from '../../../../core/services/http-helper';
 import { MutateResponse } from '../../../shared/model/mutate-response';
 import { Page } from '../../../shared/model/page';
 import { StudentMarkSheetModel } from './models/student-mark-sheet/student-mark-sheet-model';
+import { MarkSheetReportResponse } from './models/student-mark-sheet/mark-sheet-report-response';
 
 @Injectable({ providedIn: 'root' })
 export class StudentMarkSheetEndpoints {
@@ -40,5 +41,17 @@ export class StudentMarkSheetEndpoints {
       PageNumber: pageNumber,
       PageSize: pageSize,
     });
+  }
+
+  confirm(id: number): Observable<MutateResponse> {
+    return this.http.put<MutateResponse>(`StudentMarkSheet/${id}/confirm`, {});
+  }
+
+  release(academicYearSemesterId: number): Observable<{ count: number }> {
+    return this.http.put<{ count: number }>(`StudentMarkSheet/release/${academicYearSemesterId}`, {});
+  }
+
+  getReport(academicYearSemesterId: number): Observable<MarkSheetReportResponse> {
+    return this.http.get<MarkSheetReportResponse>(`StudentMarkSheet/report/${academicYearSemesterId}`);
   }
 }

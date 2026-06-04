@@ -295,6 +295,17 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         no_student_mark_sheets: 'لا توجد كشوف علامات',
         students_count_title: 'عدد الطلاب',
         details_title: 'تفاصيل',
+        confirm_mark_sheet: 'تأكيد الكشف',
+        already_confirmed: 'مؤكد مسبقاً',
+        publish_title: 'نشر',
+        release_title: 'رفع للأهل',
+        report_title: 'تقرير',
+        with_sheet_title: 'لديها كشف',
+        without_sheet_title: 'بدون كشف',
+        not_confirmed_title: 'غير مؤكدة',
+        pending_subjects_title: 'مواد معلقة',
+        has_sheet_title: 'لديها كشف',
+        release_success: 'تم الرفع بنجاح',
         mark_entry_title: 'إدخال العلامات',
         add_mark_entry: 'إضافة علامة',
         no_distribution_found: 'لا يوجد توزيعة لهذه المادة ضمن الفئة العمرية',
@@ -597,6 +608,17 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         no_student_mark_sheets: 'No mark sheets found',
         students_count_title: 'Students Count',
         details_title: 'Details',
+        confirm_mark_sheet: 'Confirm Sheet',
+        already_confirmed: 'Already confirmed',
+        publish_title: 'Publish',
+        release_title: 'Release to Parent',
+        report_title: 'Report',
+        with_sheet_title: 'With Sheet',
+        without_sheet_title: 'Without Sheet',
+        not_confirmed_title: 'Not Confirmed',
+        pending_subjects_title: 'Pending Subjects',
+        has_sheet_title: 'Has Sheet',
+        release_success: 'Released successfully',
         mark_entry_title: 'Mark Entry',
         add_mark_entry: 'Add Mark',
         no_distribution_found: 'No distribution found for this subject in this age group',
@@ -643,7 +665,18 @@ export type StudentMarkSheetPhrases =
   'delete_student_mark_sheet'|
   'no_student_mark_sheets'|
   'students_count_title'|
-  'details_title';
+  'details_title'|
+  'confirm_mark_sheet'|
+  'already_confirmed'|
+  'publish_title'|
+  'release_title'|
+  'report_title'|
+  'with_sheet_title'|
+  'without_sheet_title'|
+  'not_confirmed_title'|
+  'pending_subjects_title'|
+  'has_sheet_title'|
+  'release_success';
 
 export type StudentMarkEntryPhrases =
   'mark_entry_title'|

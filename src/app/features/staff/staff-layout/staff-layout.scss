@@ -1,0 +1,49 @@
+@use '@angular/material' as mat;
+@use "../../../../styles.scss";
+
+.sidenav-container {
+  height: calc(100vh - 64px);
+}
+
+.f-column-between {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+}
+
+.side-nav {
+  background-color: var(--mat-sys-background);
+
+  @include mat.sidenav-overrides((
+    container-divider-color: var(--mat-sys-outline-variant),
+    container-shape: 0,
+  ));
+
+  width: 200px;
+  height: 100%;
+}
+
+.tool-bar {
+  background-color: var(--mat-sys-primary);
+
+  > img {
+    width: 40px;
+  }
+}
+
+.sidebar-button {
+  background-color: var(--mat-sys-primary);
+  border-radius: 90px;
+  border: 0;
+
+  &:hover {
+    opacity: var(--mat-sys-hover-state-layer-opacity);
+    background-color: var(--mat-sys-on-primary);
+  }
+
+  > mat-icon {
+    padding: 10px;
+    border-radius: 90px;
+  }
+}

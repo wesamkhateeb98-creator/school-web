@@ -76,12 +76,17 @@ export class MarkSheetTableComponent implements OnChanges {
     return `${dist.name} — ${typeName} — ${max}`;
   }
 
+  isCellEditable(row: MarkTableRow, distId: number): boolean {
+    return !!row.cellMap[distId]?.markEntryId;
+  }
+
   onCellClick(row: MarkTableRow, dist: SubjectMarkDistributionModel) {
+    if (!this.isCellEditable(row, dist.id)) return;
     const cell = row.cellMap[dist.id];
     this.editCell.emit({
       studentId:        row.studentId,
       distributionId:   dist.id,
-      enteredValue:     cell?.enteredValue ?? null,
+      enteredValue:     cell.enteredValue,
       maxValue:         +(dist.percentage * this.maxGrade).toFixed(2),
       distributionName: dist.name,
     });

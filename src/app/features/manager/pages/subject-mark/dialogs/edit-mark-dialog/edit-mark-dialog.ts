@@ -61,7 +61,7 @@ export class EditMarkDialog {
           this.language.transform('close'),
           successMatSnackbarConfig(this.language),
         );
-        this.dialogRef.close({ updated: true });
+        this.dialogRef.close({ updated: true, value: this.valueControl.value });
       },
       error: err => {
         this.loading.set(false);

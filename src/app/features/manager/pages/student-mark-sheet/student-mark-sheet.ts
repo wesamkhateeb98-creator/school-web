@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +18,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { debounceTime } from 'rxjs';
 import { Language } from '../../../../core/services/language';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
+import { AuthService } from '../../../../core/services/auth-service';
+import { ROLES } from '../../../../core/model/roles';
+import { PublishDialog } from './dialog/publish-dialog/publish-dialog';
 import { AgeGroupEndpoints } from '../../shared/endpoints/age-group-endpoint';
 import { AgeGroupModel } from '../../shared/endpoints/models/age-group/age-group-model';
 import { SubjectAgeGroupModel } from '../../shared/endpoints/models/age-group/subject-age-group-model';
@@ -58,6 +61,10 @@ export class StudentMarkSheetPage implements OnInit {
   ageGroupEndpoints = inject(AgeGroupEndpoints);
   semesterEndpoints = inject(SemesterEndpoints);
   sheetEndpoints    = inject(StudentMarkSheetEndpoints);
+  authService       = inject(AuthService);
+
+  isAdmin = computed(() => this.authService.getAuth()?.role === ROLES.ADMIN);
+  isStaff = computed(() => this.authService.getAuth()?.role === ROLES.ADMINISTRATIVE_STAFF);
 
   loading         = signal(false);
   subjectsLoading = signal(false);
@@ -70,7 +77,7 @@ export class StudentMarkSheetPage implements OnInit {
   pageSize        = signal(10);
 
   filterForm!: FormGroup;
-  headerTable = ['subjectName', 'ageGroupName', 'studentsCount', 'action'];
+  headerTable = ['subjectName', 'ageGroupName', 'studentsCount', 'isConfirmed', 'action'];
 
   displayAgeGroup = (g: AgeGroupModel | string | null): string =>
     !g || typeof g === 'string' ? ((g as string) ?? '') : g.name;
@@ -135,6 +142,37 @@ export class StudentMarkSheetPage implements OnInit {
     this.syncUrl();
     const ageGroupId = this.filterForm.value.ageGroupId;
     if (ageGroupId) this.loadSubjects(ageGroupId, null);
+  }
+
+  confirmSheet(row: StudentMarkSheetModel) {
+    this.sheetEndpoints.confirm(row.id).subscribe({
+      next: () => {
+        this.records.update(list =>
+          list.map(r => r.id === row.id ? { ...r, isConfirmed: true } : r),
+        );
+        this.matSnackBar.open(
+          this.language.transform('success'),
+          this.language.transform('close'),
+          successMatSnackbarConfig(this.language),
+        );
+      },
+      error: err => {
+        this.matSnackBar.open(
+          err.message ?? err.error?.Title,
+          this.language.transform('close'),
+          errorMatSnackbarConfig(this.language),
+        );
+      },
+    });
+  }
+
+  openPublishDialog() {
+    const semesterId = this.filterForm.value.semesterId;
+    if (!semesterId) return;
+    this.dialog.open(PublishDialog, {
+      width: '640px',
+      data: { semesterId },
+    });
   }
 
   goToDetails(row: StudentMarkSheetModel) {
