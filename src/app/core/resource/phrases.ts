@@ -295,6 +295,17 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         no_student_mark_sheets: 'لا توجد كشوف علامات',
         students_count_title: 'عدد الطلاب',
         details_title: 'تفاصيل',
+        mark_entry_title: 'إدخال العلامات',
+        add_mark_entry: 'إضافة علامة',
+        no_distribution_found: 'لا يوجد توزيعة لهذه المادة ضمن الفئة العمرية',
+        delete_mark_entry: 'حذف علامات الطالب',
+        update_mark_entry: 'تعديل علامة',
+        value_title: 'القيمة',
+        value_exceeds_max: 'القيمة تتجاوز الحد الأقصى المسموح',
+        search_student_placeholder: 'ابحث عن طالب...',
+        coursework_avg_title: 'متوسط الأعمال',
+        final_exam_avg_title: 'متوسط الامتحان',
+        total_avg_title: 'المتوسط الكلي',
     },
     en:{
         'name':"Name",
@@ -586,6 +597,17 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         no_student_mark_sheets: 'No mark sheets found',
         students_count_title: 'Students Count',
         details_title: 'Details',
+        mark_entry_title: 'Mark Entry',
+        add_mark_entry: 'Add Mark',
+        no_distribution_found: 'No distribution found for this subject in this age group',
+        delete_mark_entry: 'Delete Student Marks',
+        update_mark_entry: 'Update Mark',
+        value_title: 'Value',
+        value_exceeds_max: 'Value exceeds the allowed maximum',
+        search_student_placeholder: 'Search for a student...',
+        coursework_avg_title: 'Coursework Avg',
+        final_exam_avg_title: 'Final Exam Avg',
+        total_avg_title: 'Total Avg',
     }
 }
 
@@ -610,7 +632,8 @@ PermissionsPhrases|
 StudentParentVisitPhrases|
 AssignmentPhrases|
 MarkDistributionPhrases|
-StudentMarkSheetPhrases;
+StudentMarkSheetPhrases|
+StudentMarkEntryPhrases;
 
 export type StudentMarkSheetPhrases =
   'student_mark_title'|
@@ -621,6 +644,19 @@ export type StudentMarkSheetPhrases =
   'no_student_mark_sheets'|
   'students_count_title'|
   'details_title';
+
+export type StudentMarkEntryPhrases =
+  'mark_entry_title'|
+  'add_mark_entry'|
+  'no_distribution_found'|
+  'delete_mark_entry'|
+  'update_mark_entry'|
+  'value_title'|
+  'value_exceeds_max'|
+  'search_student_placeholder'|
+  'coursework_avg_title'|
+  'final_exam_avg_title'|
+  'total_avg_title';
 
 export type StudentParentVisitPhrases =
 'severity_title'|

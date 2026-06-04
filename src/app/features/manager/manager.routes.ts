@@ -80,7 +80,7 @@ export const DASHBOARD_ROUTES: Routes = [
       },
       { path:'assignments', component: AssignmentsPage, title: messageTitle('assignments_title') },
       { path:'student-mark-sheet', component: StudentMarkSheetPage, title: messageTitle('student_mark_sheet_title') },
-      { path:'subject-mark/:subjectAgeGroupId', component: SubjectMarkPage, title: messageTitle('student_mark_title') },
+      { path:'subject-mark-sheed/:markSheetId/subjectAgeGroupId/:subjectAgeGroupId', component: SubjectMarkPage, title: messageTitle('student_mark_title') },
       { path: '', redirectTo: 'classes', pathMatch: 'full' },
       { path: '**', redirectTo: 'classes', pathMatch: 'full' },
     ],

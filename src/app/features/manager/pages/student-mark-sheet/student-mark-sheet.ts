@@ -138,7 +138,7 @@ export class StudentMarkSheetPage implements OnInit {
   }
 
   goToDetails(row: StudentMarkSheetModel) {
-    this.router.navigate(['/manager/subject-mark', row.subjectAgeGroupId]);
+    this.router.navigate(['/manager/subject-mark-sheed', row.id, 'subjectAgeGroupId', row.subjectAgeGroupId]);
   }
 
   changePage(event: PageEvent) {

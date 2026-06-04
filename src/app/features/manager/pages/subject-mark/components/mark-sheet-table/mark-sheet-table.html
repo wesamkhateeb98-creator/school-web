@@ -1,0 +1,90 @@
+<table mat-table [dataSource]="rows" style="width: 100%;">
+
+  <!-- Student Name -->
+  <ng-container matColumnDef="studentName" sticky>
+    <th mat-header-cell *matHeaderCellDef style="font-weight: bold;">
+      {{ language.transform('full_name_title') }}
+    </th>
+    <td mat-cell *matCellDef="let row">{{ row.studentName }}</td>
+  </ng-container>
+
+  <!-- Dynamic Distribution Columns -->
+  @for (dist of sortedDistributions(); track dist.id) {
+    <ng-container [matColumnDef]="'dist_' + dist.id">
+      <th mat-header-cell *matHeaderCellDef style="font-weight: bold; min-width: 180px; white-space: nowrap;">
+        {{ columnHeader(dist) }}
+      </th>
+      <td mat-cell *matCellDef="let row"
+          style="cursor: pointer;"
+          [matTooltip]="language.transform('update_mark_entry')"
+          (click)="onCellClick(row, dist)">
+        @if (row.cellMap[dist.id]?.enteredValue !== null && row.cellMap[dist.id]?.enteredValue !== undefined) {
+          {{ row.cellMap[dist.id].enteredValue }}
+        } @else {
+          <span style="opacity: 0.35;">—</span>
+        }
+      </td>
+    </ng-container>
+  }
+
+  <!-- Coursework Average -->
+  <ng-container matColumnDef="courseworkAvg">
+    <th mat-header-cell *matHeaderCellDef
+        style="font-weight: bold; min-width: 140px; white-space: nowrap; background: rgba(0,0,0,0.04);">
+      {{ language.transform('coursework_avg_title') }}
+    </th>
+    <td mat-cell *matCellDef="let row"
+        style="font-weight: 500; background: rgba(0,0,0,0.04);">
+      {{ courseworkAvg(row) }}
+    </td>
+  </ng-container>
+
+  <!-- Final Exam Average -->
+  <ng-container matColumnDef="finalExamAvg">
+    <th mat-header-cell *matHeaderCellDef
+        style="font-weight: bold; min-width: 140px; white-space: nowrap; background: rgba(0,0,0,0.04);">
+      {{ language.transform('final_exam_avg_title') }}
+    </th>
+    <td mat-cell *matCellDef="let row"
+        style="font-weight: 500; background: rgba(0,0,0,0.04);">
+      {{ finalExamAvg(row) }}
+    </td>
+  </ng-container>
+
+  <!-- Total Average -->
+  <ng-container matColumnDef="totalAvg">
+    <th mat-header-cell *matHeaderCellDef
+        style="font-weight: bold; min-width: 130px; white-space: nowrap; background: rgba(25,118,210,0.08);">
+      {{ language.transform('total_avg_title') }}
+    </th>
+    <td mat-cell *matCellDef="let row"
+        style="font-weight: 600; background: rgba(25,118,210,0.08);">
+      {{ totalAvg(row) }}
+    </td>
+  </ng-container>
+
+  <!-- Action -->
+  <ng-container matColumnDef="action" stickyEnd>
+    <th mat-header-cell *matHeaderCellDef style="font-weight: bold;">
+      {{ language.transform('action') }}
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <button mat-icon-button
+              [matTooltip]="language.transform('delete_mark_entry')"
+              (click)="deleteRow.emit(row)">
+        <mat-icon class="icon-error">delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  <tr class="mat-row" *matNoDataRow>
+    <td [colSpan]="displayedColumns.length"
+        style="text-align: center; padding: 48px 16px; opacity: 0.5;">
+      {{ language.transform('no_student_mark_sheets') }}
+    </td>
+  </tr>
+
+</table>
