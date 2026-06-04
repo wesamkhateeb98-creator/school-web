@@ -187,11 +187,11 @@ export class StudentMarkSheetPage implements OnInit {
   }
 
   openPublishDialog() {
-    const semesterId = this.filterForm.value.semesterId;
-    if (!semesterId) return;
     this.dialog.open(PublishDialog, {
-      width: '640px',
-      data: { semesterId },
+      width: '90vw',
+      maxWidth: '720px',
+      disableClose: true,
+      data: {},
     });
   }
 
