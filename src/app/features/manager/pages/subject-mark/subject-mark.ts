@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Location } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,6 +12,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { Language } from '../../../../core/services/language';
+import { AuthService } from '../../../../core/services/auth-service';
+import { ROLES } from '../../../../core/model/roles';
+import { StaffProfileService } from '../../../staff/services/staff-profile.service';
+import { StaffPermission } from '../../../../core/enums/staff-permission.enum';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { SubjectMarkDistributionEndpoints } from '../../shared/endpoints/subject-mark-distribution-endpoint';
 import { StudentMarkEntryEndpoints } from '../../shared/endpoints/student-mark-entry-endpoint';
@@ -41,14 +45,22 @@ import { EditMarkDialog } from './dialogs/edit-mark-dialog/edit-mark-dialog';
   templateUrl: './subject-mark.html',
 })
 export class SubjectMarkPage implements OnInit {
-  private route        = inject(ActivatedRoute);
-  private router       = inject(Router);
-  private location     = inject(Location);
-  private dialog       = inject(MatDialog);
-  private matSnackBar  = inject(MatSnackBar);
-  private distEndpoint = inject(SubjectMarkDistributionEndpoints);
+  private route         = inject(ActivatedRoute);
+  private router        = inject(Router);
+  private location      = inject(Location);
+  private dialog        = inject(MatDialog);
+  private matSnackBar   = inject(MatSnackBar);
+  private distEndpoint  = inject(SubjectMarkDistributionEndpoints);
   private entryEndpoint = inject(StudentMarkEntryEndpoints);
+  private authService   = inject(AuthService);
+  private staffProfile  = inject(StaffProfileService);
   language = inject(Language);
+
+  private isAdmin = computed(() => this.authService.getAuth()?.role === ROLES.ADMIN);
+  canGet     = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.GetSubjectMarkEntry));
+  canAdd     = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.AddSubjectMarkEntry));
+  canEdit    = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.UpdateSubjectMarkEntry));
+  canDelete  = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.DeleteSubjectMarkEntry));
 
   markSheetId       = 0;
   subjectAgeGroupId = 0;

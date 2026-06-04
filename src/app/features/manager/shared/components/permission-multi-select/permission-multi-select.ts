@@ -71,9 +71,28 @@ export class PermissionMultiSelect implements OnInit {
         { value: 19, view: this.language.transform('add_parent_visit_history_permission') },
         { value: 20, view: this.language.transform('update_parent_visit_history_permission') },
         { value: 21, view: this.language.transform('delete_parent_visit_history_permission') },
-        { value: 22, view: this.language.transform('confirm_parent_visit_permission') }
+        { value: 22, view: this.language.transform('confirm_parent_visit_permission') },
       ]
-    }
+    },
+    {
+      name: "Mark Sheets",
+      items: [
+        { value: 32, view: this.language.transform('add_mark_sheet_permission') },
+        { value: 33, view: this.language.transform('update_mark_sheet_permission') },
+        { value: 34, view: this.language.transform('delete_mark_sheet_permission') },
+        { value: 35, view: this.language.transform('get_mark_sheet_permission') },
+        { value: 36, view: this.language.transform('confirm_mark_sheet_permission') },
+      ]
+    },
+    {
+      name: "Mark Entry",
+      items: [
+        { value: 28, view: this.language.transform('add_mark_entry_permission') },
+        { value: 29, view: this.language.transform('update_mark_entry_permission') },
+        { value: 30, view: this.language.transform('delete_mark_entry_permission') },
+        { value: 31, view: this.language.transform('get_mark_entry_permission') },
+      ]
+    },
   ];
 
   // ################### input

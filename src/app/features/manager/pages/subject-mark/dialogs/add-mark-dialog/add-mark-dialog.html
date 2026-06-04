@@ -19,7 +19,7 @@
       }
       <mat-autocomplete #auto [displayWith]="displayFn" (optionSelected)="onStudentSelected($event.option.value)">
         @for (student of students(); track student.id) {
-          <mat-option [value]="student">{{ student.fullName }}</mat-option>
+          <mat-option [value]="student">{{ student.name }}</mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>

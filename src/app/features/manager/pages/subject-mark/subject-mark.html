@@ -2,7 +2,7 @@
 <app-mark-sheet-header
   [ageGroupName]="ageGroupName()"
   [subjectName]="subjectName()"
-  [showActions]="!notFound() && !distLoading()"
+  [showActions]="!notFound() && !distLoading() && canAdd()"
   (addMarkClicked)="onAddMark()"
   (backClicked)="goBack()"
 />
@@ -92,6 +92,8 @@
         [rows]="rows()"
         [distributions]="distributions()"
         [maxGrade]="maxGrade()"
+        [canEdit]="canEdit()"
+        [canDelete]="canDelete()"
         (deleteRow)="onDeleteRow($event)"
         (editCell)="onEditCell($event)"
       />

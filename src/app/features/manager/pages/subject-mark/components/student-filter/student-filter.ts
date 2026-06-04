@@ -50,7 +50,7 @@ import { StudentSimpleModel } from '../../../../shared/endpoints/models/student/
       <mat-autocomplete #auto [displayWith]="displayFn"
                         (optionSelected)="onSelect($event.option.value)">
         @for (student of students(); track student.id) {
-          <mat-option [value]="student">{{ student.fullName }}</mat-option>
+          <mat-option [value]="student">{{ student.name }}</mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>
@@ -64,7 +64,7 @@ export class StudentFilterComponent implements OnInit {
   @Input() subjectAgeGroupId!: number;
   @Input() set initialStudent(val: { id: number; name: string } | null) {
     if (val) {
-      this.searchControl.setValue({ id: val.id, fullName: val.name } as StudentSimpleModel, { emitEvent: false });
+      this.searchControl.setValue({ id: val.id, name: val.name } as StudentSimpleModel, { emitEvent: false });
     }
   }
 
@@ -81,7 +81,7 @@ export class StudentFilterComponent implements OnInit {
 
   displayFn = (s: StudentSimpleModel | string | null): string => {
     if (!s) return '';
-    return typeof s === 'string' ? s : s.fullName;
+    return typeof s === 'string' ? s : s.name;
   };
 
   ngOnInit() {

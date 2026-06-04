@@ -20,6 +20,8 @@ import { Language } from '../../../../core/services/language';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { AuthService } from '../../../../core/services/auth-service';
 import { ROLES } from '../../../../core/model/roles';
+import { StaffProfileService } from '../../../staff/services/staff-profile.service';
+import { StaffPermission } from '../../../../core/enums/staff-permission.enum';
 import { PublishDialog } from './dialog/publish-dialog/publish-dialog';
 import { AgeGroupEndpoints } from '../../shared/endpoints/age-group-endpoint';
 import { AgeGroupModel } from '../../shared/endpoints/models/age-group/age-group-model';
@@ -61,10 +63,19 @@ export class StudentMarkSheetPage implements OnInit {
   ageGroupEndpoints = inject(AgeGroupEndpoints);
   semesterEndpoints = inject(SemesterEndpoints);
   sheetEndpoints    = inject(StudentMarkSheetEndpoints);
-  authService       = inject(AuthService);
+  authService   = inject(AuthService);
+  staffProfile  = inject(StaffProfileService);
 
   isAdmin = computed(() => this.authService.getAuth()?.role === ROLES.ADMIN);
   isStaff = computed(() => this.authService.getAuth()?.role === ROLES.ADMINISTRATIVE_STAFF);
+
+  // Permission helpers — Admin always has access
+  canAdd     = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.AddSubjectMarkSheet));
+  canEdit    = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.UpdateSubjectMarkSheet));
+  canDelete  = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.DeleteSubjectMarkSheet));
+  canGet     = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.GetSubjectMarkSheet));
+  canDetails = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.GetSubjectMarkEntry));
+  canConfirm = computed(() => this.isStaff() && this.staffProfile.hasPermission(StaffPermission.ConfirmSubjectMarkSheet));
 
   loading         = signal(false);
   subjectsLoading = signal(false);
@@ -145,23 +156,32 @@ export class StudentMarkSheetPage implements OnInit {
   }
 
   confirmSheet(row: StudentMarkSheetModel) {
-    this.sheetEndpoints.confirm(row.id).subscribe({
-      next: () => {
-        this.records.update(list =>
-          list.map(r => r.id === row.id ? { ...r, isConfirmed: true } : r),
-        );
-        this.matSnackBar.open(
-          this.language.transform('success'),
-          this.language.transform('close'),
-          successMatSnackbarConfig(this.language),
-        );
-      },
-      error: err => {
-        this.matSnackBar.open(
-          err.message ?? err.error?.Title,
-          this.language.transform('close'),
-          errorMatSnackbarConfig(this.language),
-        );
+    const ref = this.dialog.open(DeleteDialog, {
+      width: '40%',
+      data: {
+        title: this.language.transform('confirm_mark_sheet'),
+        action: () => {
+          this.sheetEndpoints.confirm(row.id).subscribe({
+            next: () => {
+              ref.close();
+              this.records.update(list =>
+                list.map(r => r.id === row.id ? { ...r, isConfirmed: true } : r),
+              );
+              this.matSnackBar.open(
+                this.language.transform('success'),
+                this.language.transform('close'),
+                successMatSnackbarConfig(this.language),
+              );
+            },
+            error: err => {
+              this.matSnackBar.open(
+                err.message ?? err.error?.Title,
+                this.language.transform('close'),
+                errorMatSnackbarConfig(this.language),
+              );
+            },
+          });
+        },
       },
     });
   }

@@ -231,6 +231,15 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         update_parent_visit_history_permission: 'تعديل زيارة ولي أمر',
         delete_parent_visit_history_permission: 'حذف زيارة ولي أمر',
         confirm_parent_visit_permission: 'تأكيد زيارة ولي الأمر',
+        add_mark_entry_permission: 'إضافة علامات',
+        update_mark_entry_permission: 'تعديل علامات',
+        delete_mark_entry_permission: 'حذف علامات',
+        get_mark_entry_permission: 'عرض إدخال العلامات',
+        add_mark_sheet_permission: 'إضافة كشف علامات',
+        update_mark_sheet_permission: 'تعديل كشف علامات',
+        delete_mark_sheet_permission: 'حذف كشف علامات',
+        get_mark_sheet_permission: 'عرض كشوف العلامات',
+        confirm_mark_sheet_permission: 'تأكيد كشف العلامات',
         severity_title: "درجة الخطورة",
         low_title: "منخفض",
         middle_title: "متوسط",
@@ -314,9 +323,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         value_title: 'القيمة',
         value_exceeds_max: 'القيمة تتجاوز الحد الأقصى المسموح',
         search_student_placeholder: 'ابحث عن طالب...',
-        coursework_avg_title: 'متوسط الأعمال',
-        final_exam_avg_title: 'متوسط الامتحان',
-        total_avg_title: 'المتوسط الكلي',
+        coursework_avg_title: 'مجموع الأعمال',
+        final_exam_avg_title: 'مجموع الامتحان',
+        total_avg_title: 'المجموع الكلي',
     },
     en:{
         'name':"Name",
@@ -544,6 +553,15 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         update_parent_visit_history_permission: 'Update Parent Visit History',
         delete_parent_visit_history_permission: 'Delete Parent Visit History',
         confirm_parent_visit_permission: 'Confirm Parent Visit',
+        add_mark_entry_permission: 'Add Mark Entry',
+        update_mark_entry_permission: 'Update Mark Entry',
+        delete_mark_entry_permission: 'Delete Mark Entry',
+        get_mark_entry_permission: 'Get Mark Entry',
+        add_mark_sheet_permission: 'Add Mark Sheet',
+        update_mark_sheet_permission: 'Update Mark Sheet',
+        delete_mark_sheet_permission: 'Delete Mark Sheet',
+        get_mark_sheet_permission: 'Get Mark Sheets',
+        confirm_mark_sheet_permission: 'Confirm Mark Sheet',
         severity_title: "Severity",
         low_title: "Low",
         middle_title: "Medium",
@@ -627,9 +645,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         value_title: 'Value',
         value_exceeds_max: 'Value exceeds the allowed maximum',
         search_student_placeholder: 'Search for a student...',
-        coursework_avg_title: 'Coursework Avg',
-        final_exam_avg_title: 'Final Exam Avg',
-        total_avg_title: 'Total Avg',
+        coursework_avg_title: 'Coursework Total',
+        final_exam_avg_title: 'Final Exam Total',
+        total_avg_title: 'Grand Total',
     }
 }
 
@@ -731,7 +749,16 @@ export type PermissionsPhrases =
   | 'add_parent_visit_history_permission'
   | 'update_parent_visit_history_permission'
   | 'delete_parent_visit_history_permission'
-  | 'confirm_parent_visit_permission';
+  | 'confirm_parent_visit_permission'
+  | 'add_mark_entry_permission'
+  | 'update_mark_entry_permission'
+  | 'delete_mark_entry_permission'
+  | 'get_mark_entry_permission'
+  | 'add_mark_sheet_permission'
+  | 'update_mark_sheet_permission'
+  | 'delete_mark_sheet_permission'
+  | 'get_mark_sheet_permission'
+  | 'confirm_mark_sheet_permission';
 
 
 export type StudentAttendancePhrases =

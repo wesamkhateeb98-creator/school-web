@@ -45,8 +45,8 @@ export class StudentMarkEntryEndpoints {
     pageSize: number,
     name?: string,
   ): Observable<Page<StudentSimpleModel>> {
-    return this.http.get<Page<StudentSimpleModel>>('Student', {
-      subjectAgeGroupId,
+    return this.http.get<Page<StudentSimpleModel>>('Student/filter', {
+      SubjectAgeGroupId: subjectAgeGroupId,
       pageNumber,
       pageSize,
       name: name || undefined,

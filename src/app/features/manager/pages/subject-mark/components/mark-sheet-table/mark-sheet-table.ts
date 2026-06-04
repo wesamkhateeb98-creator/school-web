@@ -34,7 +34,9 @@ export class MarkSheetTableComponent implements OnChanges {
 
   @Input() rows: MarkTableRow[]                          = [];
   @Input() distributions: SubjectMarkDistributionModel[] = [];
-  @Input() maxGrade = 0;
+  @Input() maxGrade  = 0;
+  @Input() canEdit   = true;
+  @Input() canDelete = true;
 
   @Output() deleteRow = new EventEmitter<MarkTableRow>();
   @Output() editCell  = new EventEmitter<EditCellEvent>();
@@ -92,33 +94,52 @@ export class MarkSheetTableComponent implements OnChanges {
     });
   }
 
-  courseworkAvg(row: MarkTableRow): string {
-    return this.computeAvg(this.courseworkDists(), row);
+  // ── Per-row sums ────────────────────────────────────────────────────────
+
+  courseworkSum(row: MarkTableRow): string {
+    return this.computeSum(this.courseworkDists(), row);
   }
 
-  finalExamAvg(row: MarkTableRow): string {
-    return this.computeAvg(this.finalExamDists(), row);
+  finalExamSum(row: MarkTableRow): string {
+    return this.computeSum(this.finalExamDists(), row);
   }
 
-  totalAvg(row: MarkTableRow): string {
-    const cwVal = this.numericAvg(this.courseworkDists(), row);
-    const feVal = this.numericAvg(this.finalExamDists(), row);
-    const vals  = [cwVal, feVal].filter((v): v is number => v !== null);
-    if (!vals.length) return '—';
-    return (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(2);
+  totalSum(row: MarkTableRow): string {
+    const cw = this.numericSum(this.courseworkDists(), row);
+    const fe = this.numericSum(this.finalExamDists(), row);
+    if (cw === null && fe === null) return '—';
+    return ((cw ?? 0) + (fe ?? 0)).toFixed(2);
   }
 
-  private computeAvg(dists: SubjectMarkDistributionModel[], row: MarkTableRow): string {
-    const val = this.numericAvg(dists, row);
+  private computeSum(dists: SubjectMarkDistributionModel[], row: MarkTableRow): string {
+    const val = this.numericSum(dists, row);
     return val !== null ? val.toFixed(2) : '—';
   }
 
-  private numericAvg(dists: SubjectMarkDistributionModel[], row: MarkTableRow): number | null {
+  private numericSum(dists: SubjectMarkDistributionModel[], row: MarkTableRow): number | null {
     if (!dists.length) return null;
     const entered = dists
       .map(d => row.cellMap[d.id]?.enteredValue)
       .filter((v): v is number => v !== null && v !== undefined);
     if (!entered.length) return null;
-    return entered.reduce((a, b) => a + b, 0) / entered.length;
+    return entered.reduce((a, b) => a + b, 0);
+  }
+
+  // ── Max-grade sums for column headers ───────────────────────────────────
+
+  courseworkMaxSum(): number {
+    return +this.courseworkDists()
+      .reduce((acc, d) => acc + d.percentage * this.maxGrade, 0)
+      .toFixed(2);
+  }
+
+  finalExamMaxSum(): number {
+    return +this.finalExamDists()
+      .reduce((acc, d) => acc + d.percentage * this.maxGrade, 0)
+      .toFixed(2);
+  }
+
+  grandMaxSum(): number {
+    return +(this.courseworkMaxSum() + this.finalExamMaxSum()).toFixed(2);
   }
 }

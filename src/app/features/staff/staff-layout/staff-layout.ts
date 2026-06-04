@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { Language } from '../../../core/services/language';
 import { ResponsiveScreen } from '../../../core/services/responsive-screen';
 import { StaffNavItemService } from './services/staff-nav-item.service';
+import { StaffProfileService } from '../services/staff-profile.service';
 import { SettingButtonComponent } from '../../shared/components/setting-button-component/setting-button-component';
 import { MenuItemComponent } from '../../manager/manager-layout/components/menu-item-component/menu-item-component';
 
@@ -29,9 +30,12 @@ export class StaffLayout implements OnInit, OnDestroy {
     public staffNav: StaffNavItemService,
     public language: Language,
     public responseScreen: ResponsiveScreen,
+    public staffProfile: StaffProfileService,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.staffProfile.loadProfile();
+  }
 
   ngOnDestroy(): void {
     this.responseScreen.destroy();

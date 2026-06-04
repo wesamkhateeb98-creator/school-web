@@ -39,7 +39,17 @@ export class PermissionService {
       { id: 19, name: this.language.transform('add_parent_visit_history_permission') },
       { id: 20, name: this.language.transform('update_parent_visit_history_permission') },
       { id: 21, name: this.language.transform('delete_parent_visit_history_permission') },
-      { id: 22, name: this.language.transform('confirm_parent_visit_permission') }
+      { id: 22, name: this.language.transform('confirm_parent_visit_permission') },
+
+      { id: 28, name: this.language.transform('add_mark_entry_permission') },
+      { id: 29, name: this.language.transform('update_mark_entry_permission') },
+      { id: 30, name: this.language.transform('delete_mark_entry_permission') },
+      { id: 31, name: this.language.transform('get_mark_entry_permission') },
+      { id: 32, name: this.language.transform('add_mark_sheet_permission') },
+      { id: 33, name: this.language.transform('update_mark_sheet_permission') },
+      { id: 34, name: this.language.transform('delete_mark_sheet_permission') },
+      { id: 35, name: this.language.transform('get_mark_sheet_permission') },
+      { id: 36, name: this.language.transform('confirm_mark_sheet_permission') },
     ];
   }
 

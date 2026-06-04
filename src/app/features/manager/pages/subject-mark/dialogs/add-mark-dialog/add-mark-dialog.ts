@@ -74,7 +74,7 @@ export class AddMarkDialog implements OnInit {
   displayFn = (s: StudentSimpleModel | string | null): string => {
     if (!s) return '';
     if (typeof s === 'string') return s;
-    return s.fullName;
+    return s.name;
   };
 
   maxValueFor(dist: SubjectMarkDistributionModel): number {

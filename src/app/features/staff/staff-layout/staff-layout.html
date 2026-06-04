@@ -19,7 +19,7 @@
     [opened]="!responseScreen.isMobile()">
     <div class="f-column-between">
       <mat-nav-list style="padding-top: 0;">
-        @for (item of staffNav.navItems; track $index) {
+        @for (item of staffNav.navItems(); track $index) {
           <app-menu-item-component [navItem]="item" [level]="1" />
         }
       </mat-nav-list>

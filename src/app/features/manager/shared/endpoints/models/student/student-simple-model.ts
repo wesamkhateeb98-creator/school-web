@@ -1,4 +1,4 @@
 export interface StudentSimpleModel {
   id: number;
-  fullName: string;
+  name: string;
 }

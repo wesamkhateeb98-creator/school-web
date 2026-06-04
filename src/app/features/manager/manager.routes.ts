@@ -2,6 +2,8 @@ import { Routes } from "@angular/router";
 import { messageTitle } from "../../core/consts";
 import { adminMatchGuard } from "../../core/guard/admin-match.guard";
 import { staffMatchGuard } from "../../core/guard/staff-match.guard";
+import { staffPermissionGuard } from "../../core/guard/staff-permission.guard";
+import { StaffPermission } from "../../core/enums/staff-permission.enum";
 
 // ── Admin layout ──────────────────────────────────────────────────────────
 import { DashboardLayout } from "./manager-layout/manager-layout";
@@ -100,8 +102,18 @@ export const DASHBOARD_ROUTES: Routes = [
     canMatch: [staffMatchGuard],
     component: StaffLayout,
     children: [
-      { path: 'student-mark-sheet', component: StudentMarkSheetPage, title: messageTitle('student_mark_sheet_title') },
-      { path: 'subject-mark-sheed/:markSheetId/subjectAgeGroupId/:subjectAgeGroupId', component: SubjectMarkPage, title: messageTitle('student_mark_title') },
+      {
+        path: 'student-mark-sheet',
+        component: StudentMarkSheetPage,
+        title: messageTitle('student_mark_sheet_title'),
+        canActivate: [staffPermissionGuard(StaffPermission.GetSubjectMarkSheet)],
+      },
+      {
+        path: 'subject-mark-sheed/:markSheetId/subjectAgeGroupId/:subjectAgeGroupId',
+        component: SubjectMarkPage,
+        title: messageTitle('student_mark_title'),
+        canActivate: [staffPermissionGuard(StaffPermission.GetSubjectMarkEntry)],
+      },
       { path: '',   redirectTo: 'student-mark-sheet', pathMatch: 'full' },
       { path: '**', redirectTo: 'student-mark-sheet', pathMatch: 'full' },
     ],
