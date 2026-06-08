@@ -9,7 +9,10 @@
       "Bash(del \"D:\\\\SoftPro\\\\Projects\\\\School\\\\school-web\\\\src\\\\app\\\\features\\\\manager\\\\pages\\\\age-group-subject\\\\dialog\\\\subject-mark-distribution-dialog\\\\subject-mark-distribution-dialog.ts\" \"D:\\\\SoftPro\\\\Projects\\\\School\\\\school-web\\\\src\\\\app\\\\features\\\\manager\\\\pages\\\\age-group-subject\\\\dialog\\\\subject-mark-distribution-dialog\\\\subject-mark-distribution-dialog.html\")",
       "Bash(xargs grep -l \"mark.*entry\\\\|entry.*mark\")",
       "Bash(npx ng *)",
-      "mcp__Claude_in_Chrome__tabs_context_mcp"
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "Bash(Get-ChildItem -Path \"D:\\\\SoftPro\\\\Projects\\\\School\\\\school-web\" -Directory)",
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash(xargs grep -l \"mat-app-bar\\\\|matToolbar\\\\|toolbar\\\\|<app-header\\\\|<app-navbar\")"
     ]
   }
 }

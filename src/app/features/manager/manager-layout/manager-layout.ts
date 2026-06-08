@@ -4,12 +4,15 @@ import { ManagerNavItemStateService } from '../shared/services/manager-state-nav
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterLink, RouterOutlet } from "@angular/router";
 import { SettingButtonComponent } from "../../shared/components/setting-button-component/setting-button-component";
 import { Language } from '../../../core/services/language';
 import { ResponsiveScreen } from '../../../core/services/responsive-screen';
 import { AuthService } from '../../../core/services/auth-service';
 import { MenuItemComponent } from "./components/menu-item-component/menu-item-component";
+import { SelectedAcademicYearService } from '../../../core/services/selected-academic-year.service';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -18,6 +21,8 @@ import { MenuItemComponent } from "./components/menu-item-component/menu-item-co
     MatToolbarModule,
     MatIconModule,
     MatListModule,
+    MatSelectModule,
+    MatFormFieldModule,
     RouterOutlet,
     SettingButtonComponent,
     MenuItemComponent
@@ -26,11 +31,12 @@ import { MenuItemComponent } from "./components/menu-item-component/menu-item-co
   styleUrl: './manager-layout.scss',
 })
 export class DashboardLayout implements OnInit, OnDestroy  {
-  
+
   constructor(
-    public managerState:ManagerNavItemStateService, 
+    public managerState:ManagerNavItemStateService,
     public language:Language,
-    public responseScreen:ResponsiveScreen
+    public responseScreen:ResponsiveScreen,
+    public academicYearSvc: SelectedAcademicYearService,
   ){}
 
   ngOnInit(): void {  }

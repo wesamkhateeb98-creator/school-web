@@ -1,5 +1,5 @@
 <mat-toolbar class="tool-bar" style="padding: 20px;" >
-    <button 
+    <button
         matIconButton
         class="sidebar-button"
         aria-label="Example icon button with a menu icon"
@@ -7,9 +7,23 @@
         <mat-icon>menu</mat-icon>
     </button>
 
-    <img src="logo.png" 
+    <img src="logo.png"
         alt="Logo" style="margin: 10px 0 10px  10px;" />
-    <span style="margin: 10px; font-weight: 900;"> School</span>    
+    <span style="margin: 10px; font-weight: 900;"> School</span>
+
+    <span style="flex: 1 1 auto;"></span>
+
+    <!-- @if (academicYearSvc.academicYears().length > 0) { -->
+        <mat-form-field class="year-select" subscriptSizing="dynamic" appearance="outline">
+            <mat-select
+                [value]="academicYearSvc.selectedId()"
+                (selectionChange)="academicYearSvc.select($event.value)">
+                @for (year of academicYearSvc.academicYears(); track year.id) {
+                    <mat-option [value]="year.id">{{ year.year }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    <!-- } -->
 </mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container" [dir]="language.direction()" >

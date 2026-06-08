@@ -44,6 +44,26 @@
     }
 }
 
+.year-select {
+    width: 140px;
+
+    @include mat.form-field-overrides((
+        outlined-label-text-color: var(--mat-sys-on-primary),
+        outlined-hover-label-text-color: var(--mat-sys-on-primary),
+        outlined-focus-label-text-color: var(--mat-sys-on-primary),
+        outlined-outline-color: var(--mat-sys-on-primary),
+        outlined-hover-outline-color: var(--mat-sys-on-primary),
+        outlined-focus-outline-color: var(--mat-sys-on-primary),
+    ));
+
+    @include mat.select-overrides((
+        enabled-trigger-text-color: var(--mat-sys-on-primary),
+        enabled-arrow-color: var(--mat-sys-on-primary),
+        focused-arrow-color: var(--mat-sys-on-primary),
+        panel-background-color: var(--mat-sys-background),
+    ));
+}
+
 .sidebar-button{
     background-color: var(--mat-sys-primary);
     border-radius: 90px;
