@@ -19,6 +19,7 @@ import { debounceTime } from 'rxjs';
 import { Language } from '../../../../core/services/language';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { AuthService } from '../../../../core/services/auth-service';
+import { SelectedAcademicYearService } from '../../../../core/services/selected-academic-year.service';
 import { ROLES } from '../../../../core/model/roles';
 import { StaffProfileService } from '../../../staff/services/staff-profile.service';
 import { StaffPermission } from '../../../../core/enums/staff-permission.enum';
@@ -63,8 +64,9 @@ export class StudentMarkSheetPage implements OnInit {
   ageGroupEndpoints = inject(AgeGroupEndpoints);
   semesterEndpoints = inject(SemesterEndpoints);
   sheetEndpoints    = inject(StudentMarkSheetEndpoints);
-  authService   = inject(AuthService);
-  staffProfile  = inject(StaffProfileService);
+  authService             = inject(AuthService);
+  staffProfile            = inject(StaffProfileService);
+  selectedAcademicYearSvc = inject(SelectedAcademicYearService);
 
   isAdmin = computed(() => this.authService.getAuth()?.role === ROLES.ADMIN);
   isStaff = computed(() => this.authService.getAuth()?.role === ROLES.ADMINISTRATIVE_STAFF);
@@ -224,7 +226,7 @@ export class StudentMarkSheetPage implements OnInit {
 
     // Load semesters once
     this.semesterEndpoints.getSemesterByAcademicYear({
-      year: undefined, justStarted: false, PageNumber: 1, pageSize: 50,
+      year: this.selectedAcademicYearSvc.selected()?.year, justStarted: false, PageNumber: 1, pageSize: 50,
     }).subscribe({
       next: page => {
         this.semesters.set(page.content);

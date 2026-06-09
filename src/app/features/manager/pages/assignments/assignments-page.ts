@@ -17,6 +17,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { DatePipe } from '@angular/common';
 import { Language } from '../../../../core/services/language';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
+import { SelectedAcademicYearService } from '../../../../core/services/selected-academic-year.service';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { AssignmentEndpoints } from '../../shared/endpoints/assignment-endpoint';
 import { ClassEndpoints } from '../../shared/endpoints/class-endpoint';
@@ -55,8 +56,9 @@ export class AssignmentsPage implements OnInit {
   fb                  = inject(FormBuilder);
   params              = inject(ParamsService);
   responsive          = inject(ResponsiveScreen);
-  assignmentEndpoints = inject(AssignmentEndpoints);
-  classEndpoints      = inject(ClassEndpoints);
+  assignmentEndpoints     = inject(AssignmentEndpoints);
+  classEndpoints          = inject(ClassEndpoints);
+  selectedAcademicYearSvc = inject(SelectedAcademicYearService);
 
   loading        = signal(false);
   assignments    = signal<AssignmentResponse[]>([]);
@@ -91,7 +93,11 @@ export class AssignmentsPage implements OnInit {
       type:             [urlType],
     });
 
-    this.classEndpoints.getByOpenAcademicYear(1, 100).subscribe({
+    this.classEndpoints.get({
+      academicYear: this.selectedAcademicYearSvc.selected() ?? undefined,
+      pageNumber: 1,
+      pageSize: 100,
+    }).subscribe({
       next: res => this.classes.set(res.content),
     });
 

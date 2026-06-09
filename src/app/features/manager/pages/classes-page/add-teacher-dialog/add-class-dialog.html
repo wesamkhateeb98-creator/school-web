@@ -24,18 +24,6 @@
 
                 <mat-grid-tile>
                     <mat-form-field style="width: 100%;">
-                        <mat-label>{{ language.transform("academic_year_title") }}</mat-label>
-                        <input type="text" matInput formControlName="academicYear" [matAutocomplete]="autoYear">
-                        <mat-autocomplete #autoYear="matAutocomplete" [displayWith]="displayAcademicYear" (optionSelected)="onAcademicYearSelected($event)">
-                            @for (year of academicYears$ | async; track year.id) {
-                                <mat-option [value]="year">{{ `${year.year}/${year.year + 1}` }}</mat-option>
-                            }
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </mat-grid-tile>
-
-                <mat-grid-tile>
-                    <mat-form-field style="width: 100%;">
                         <mat-label>{{ language.transform("section_title") }}</mat-label>
                         <input type="number" matInput formControlName="section">
                         @if(form.get('section')?.hasError('required')){

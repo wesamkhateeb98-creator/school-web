@@ -11,6 +11,7 @@ import { ParamsService } from '../../../../../core/services/params-service';
 import { SemesterEndpoints } from '../../endpoints/semester-endpoints';
 import { SemesterViewModel } from '../../../pages/semester/model/semester-view-model';
 import { GetSemesterByAcademicYearModel } from '../../endpoints/models/semester/getSemesterByAcademicYearModel';
+import { SelectedAcademicYearService } from '../../../../../core/services/selected-academic-year.service';
 
 @Component({
   selector: 'app-academic-year-semester-auto-complete',
@@ -32,6 +33,7 @@ export class AcademicYearSemesterAutoComplete implements OnInit {
   language = inject(Language);
   parmas = inject(ParamsService);
   semesterEndpoints = inject(SemesterEndpoints);
+  selectedAcademicYearSvc = inject(SelectedAcademicYearService);
 
   ngOnInit(): void {
     this.form.addControl('semester', this.fb.control(this.semester));
@@ -46,7 +48,7 @@ export class AcademicYearSemesterAutoComplete implements OnInit {
     const paramsItem = this.parmas.loadGenericFromUrl();
     if(paramsItem['semester'] || !this.form.get('semester')?.value )
       this.semesterEndpoints.getSemesterByAcademicYear({
-        year: paramsItem['semester'],
+        year: this.selectedAcademicYearSvc.selected()?.year,
         justStarted:false,
         PageNumber:1,
         pageSize:10
@@ -72,8 +74,8 @@ export class AcademicYearSemesterAutoComplete implements OnInit {
 
     source$.pipe(
       debounceTime(300),
-      switchMap(value => this.semesterEndpoints.getSemesterByAcademicYear({
-        year: (typeof(value) == "number" ?+value : undefined) ??undefined,
+      switchMap(() => this.semesterEndpoints.getSemesterByAcademicYear({
+        year: this.selectedAcademicYearSvc.selected()?.year,
         justStarted:false,
         PageNumber:1,
         pageSize:20

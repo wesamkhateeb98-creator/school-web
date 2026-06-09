@@ -19,36 +19,23 @@
     </mat-expansion-panel-header>
 
     <form [formGroup]="form">
-        <mat-grid-list [cols]="2" rowHeight="70px" gutterSize="10px">
+        <mat-grid-list [cols]="1" rowHeight="70px" gutterSize="10px">
             <mat-grid-tile>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>{{ language.transform("age_group_title") }}</mat-label>
-                        <input type="text" matInput formControlName="ageGroup" [matAutocomplete]="autoAge">
-                        @if (form.get('ageGroup')?.value) {
-                            <button matSuffix mat-icon-button aria-label="Clear" (click)="clearAgeGroup(); $event.stopPropagation();">
-                                <mat-icon>close</mat-icon>
-                            </button>
+                <mat-form-field style="width: 100%;">
+                    <mat-label>{{ language.transform("age_group_title") }}</mat-label>
+                    <input type="text" matInput formControlName="ageGroup" [matAutocomplete]="autoAge">
+                    @if (form.get('ageGroup')?.value) {
+                        <button matSuffix mat-icon-button aria-label="Clear" (click)="clearAgeGroup(); $event.stopPropagation();">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    }
+                    <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayAgeGroup" (optionSelected)="onAgeGroupSelected($event)">
+                        @for (item of ageGroups$ | async; track item.id) {
+                            <mat-option [value]="item">{{ item.name }}</mat-option>
                         }
-                        <mat-autocomplete #autoAge="matAutocomplete" [displayWith]="displayAgeGroup" (optionSelected)="onAgeGroupSelected($event)">
-                            @for (item of ageGroups$ | async; track item.id) {
-                                <mat-option [value]="item">{{ item.name }}</mat-option>
-                            }
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </mat-grid-tile>
-
-            <mat-grid-tile>
-                    <mat-form-field style="width: 100%;">
-                        <mat-label>{{ language.transform("academic_year_title") }}</mat-label>
-                        <input type="text" matInput formControlName="academicYear" [matAutocomplete]="autoYear">
-                        
-                        <mat-autocomplete #autoYear="matAutocomplete" [displayWith]="displayAcademicYear" (optionSelected)="onAcademicYearSelected($event)">
-                            @for (year of academicYears$ | async; track year.id) {
-                                <mat-option [value]="year">{{ `${year.year}/${year.year + 1}` }}</mat-option>
-                            }
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </mat-grid-tile>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </mat-grid-tile>
         </mat-grid-list>
     </form>
 </mat-expansion-panel>
