@@ -58,6 +58,6 @@ export class AssignmentDetailPage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/assignments']);
+    this.router.navigate(['manager/assignments']);
   }
 }

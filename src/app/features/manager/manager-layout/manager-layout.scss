@@ -42,9 +42,17 @@
 
 .tool-bar{
     background-color: var(--mat-sys-primary);
+    padding-left: 10px;
+    gap: 0;
 
     > img{
         width: 40px;
+        display: block;
+        margin-inline-start: 16px;
+    }
+
+    > span {
+        margin-inline-start: 8px;
     }
 }
 
@@ -75,14 +83,16 @@
 
 .sidebar-button{
     background-color: var(--mat-sys-primary);
-    border-radius: 90px;
+    border-radius: 0 !important;
     border: 0;
+    height: 100% !important;
+    width: 64px !important;
+
     & :hover{
         opacity: var(--mat-sys-hover-state-layer-opacity);
         background-color: var(--mat-sys-on-primary);
     }
     & > mat-icon{
-        padding: 10px;
-        border-radius: 90px;
+        color: var(--mat-sys-on-primary);
     }
 }

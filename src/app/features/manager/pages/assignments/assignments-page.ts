@@ -180,7 +180,7 @@ export class AssignmentsPage implements OnInit {
   }
 
   goToDetail(id: number) {
-    this.router.navigate(['/assignments', id]);
+    this.router.navigate(['manager/assignments', id]);
   }
 
   openAddDialog() {
