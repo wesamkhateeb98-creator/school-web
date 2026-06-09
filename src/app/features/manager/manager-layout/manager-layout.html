@@ -8,12 +8,18 @@
     </button>
 
     <img src="logo.png"
-        alt="Logo" style="margin: 10px 0 10px  10px;" />
+        alt="Logo" style="margin: 10px 0 10px 10px;" />
     <span style="margin: 10px; font-weight: 900;"> School</span>
 
     <span style="flex: 1 1 auto;"></span>
 
-    <!-- @if (academicYearSvc.academicYears().length > 0) { -->
+    @if (academicYearSvc.loading()) {
+        <mat-progress-spinner
+            diameter="32"
+            mode="indeterminate"
+            style="--mdc-circular-progress-active-indicator-color: var(--mat-sys-on-primary)">
+        </mat-progress-spinner>
+    } @else {
         <mat-form-field class="year-select" subscriptSizing="dynamic" appearance="outline">
             <mat-select
                 [value]="academicYearSvc.selectedId()"
@@ -23,31 +29,35 @@
                 }
             </mat-select>
         </mat-form-field>
-    <!-- } -->
+    }
 </mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container" [dir]="language.direction()" >
-    <mat-sidenav 
+    <mat-sidenav
         #matSidenav
-        opened="false" 
+        opened="false"
         [mode]="responseScreen.isMobile() ? 'over' : 'side'"
-        class= "side-nav"
-        style = "width:200px"
+        class="side-nav"
+        style="width:200px"
         [opened]="!responseScreen.isMobile()">
         <div class="f-column-between">
             <mat-nav-list style="padding-top: 0;">
-                <!-- {{language.direction() == 'rtl'?'side-nav-border-right':''}}  -->
-
                 @for (item of managerState.navItems; track $index) {
                     <app-menu-item-component [navItem]="item" [level]="1"/>
                 }
             </mat-nav-list>
-            
             <app-setting-button-component />
         </div>
     </mat-sidenav>
-    <div style="margin: 0; padding: 5px 10px; height: calc(100vh - 90px); ">
-        <router-outlet/>    
+
+    <div style="margin: 0; padding: 5px 10px; height: calc(100vh - 90px);">
+        @if (academicYearSvc.loading()) {
+            <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                <mat-progress-spinner diameter="56" mode="indeterminate"></mat-progress-spinner>
+            </div>
+        } @else {
+            <router-outlet/>
+        }
     </div>
-    
+
 </mat-sidenav-container>

@@ -1,9 +1,10 @@
 import { HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth-service';
 import { Language } from '../services/language';
+import { RefreshTokenService } from '../services/refresh-token.service';
 
 interface CustomError {
   message: string;
@@ -11,31 +12,49 @@ interface CustomError {
 }
 
 export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
-    const authService = inject(AuthService);
-    const language = inject(Language);
-    
-    const authData = authService.getAuth(); 
-    
-    let modifiedRequest = req;
+    const authService       = inject(AuthService);
+    const language          = inject(Language);
+    const refreshTokenSvc   = inject(RefreshTokenService);
 
-    if (authData && authData.token) {
-      
-      modifiedRequest = req.clone({ 
+    const authData = authService.getAuth();
+
+    let modifiedRequest = req;
+    if (authData?.token) {
+      modifiedRequest = req.clone({
         setHeaders: {
           Authorization: `Bearer ${authData.token}`,
-          language:language.language()
+          language: language.language()
         }
       });
     }
 
-    // Fix: Directly return the observable chain without calling .handle()
     return next(modifiedRequest).pipe(
       catchError((error: HttpErrorResponse) => {
+
+        // ── 401 → try refresh token (skip if the request IS the refresh endpoint)
+        if (error.status === 401 && !req.url.includes('refresh-token')) {
+          return refreshTokenSvc.refresh().pipe(
+            switchMap(newAuth => {
+              const retried = req.clone({
+                setHeaders: {
+                  Authorization: `Bearer ${newAuth.token}`,
+                  language: language.language()
+                }
+              });
+              return next(retried);
+            }),
+            catchError(() => throwError(() => <CustomError>{
+              message: language.transform('http_401'),
+              status: 401
+            }))
+          );
+        }
+
+        // ── other errors
         let errorMessage = 'An unknown error occurred.';
         if (error.error instanceof ErrorEvent) {
           errorMessage = `Client Error: ${error.error.message}`;
         } else {
-          // Server-side error
           switch (error.status) {
             case 0:
               errorMessage = language.transform('network_down');
@@ -50,7 +69,9 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
             case 404:
             case 409:
             case 412:
-              errorMessage = error.error?.Title || error.error?.title || Object.values(error.error?.Extensions ?? {})[0] as string || language.transform('server_error');
+              errorMessage = error.error?.Title || error.error?.title
+                || Object.values(error.error?.Extensions ?? {})[0] as string
+                || language.transform('server_error');
               break;
             case 500:
               errorMessage = language.transform('http_500') || 'Internal server error';
@@ -65,10 +86,8 @@ export function tokenInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn)
               }
           }
         }
-        return throwError(() => <CustomError>{
-          message: errorMessage,
-          status: error.status
-        });
+
+        return throwError(() => <CustomError>{ message: errorMessage, status: error.status });
       })
     );
 }

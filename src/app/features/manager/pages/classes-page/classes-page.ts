@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ClassFilterViewModel } from './view-model/class-filter-view-model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Language } from '../../../../core/services/language';
@@ -75,11 +75,22 @@ export class ClassesPage implements OnInit {
 
   form!: FormGroup;
   ageGroups$ = of<AgeGroupModel[]>([]);
+  private initialized = false;
+
+  constructor() {
+    effect(() => {
+      const id = this.academicYearSvc.selectedId();
+      if (id !== null && this.initialized) {
+        this.loadClassViewModel();
+      }
+    });
+  }
 
   async ngOnInit(): Promise<void> {
     this.initiateForm();
     this.setupAutocompletes();
     await this.syncFiltersFromUrl();
+    this.initialized = true;
     this.loadClassViewModel();
   }
 
