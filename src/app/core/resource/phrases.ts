@@ -326,6 +326,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         coursework_avg_title: 'مجموع الأعمال',
         final_exam_avg_title: 'مجموع الامتحان',
         total_avg_title: 'المجموع الكلي',
+        dashboard: 'لوحة التحكم',
     },
     en:{
         'name':"Name",
@@ -648,6 +649,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         coursework_avg_title: 'Coursework Total',
         final_exam_avg_title: 'Final Exam Total',
         total_avg_title: 'Grand Total',
+        dashboard: 'Dashboard',
     }
 }
 
@@ -905,11 +907,12 @@ export type TeacherPhrases =
 
 export type ManagerialPhrases = 'managerial_title';
 
-export type GlobalType = 
+export type GlobalType =
 'registrations_title' |
 'filter'|
 'all_title'|
-'select_from_here'
+'select_from_here'|
+'dashboard'
 
 export type LoginPhrases = 
 'name' |

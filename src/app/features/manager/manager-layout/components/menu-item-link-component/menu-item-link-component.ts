@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { NavItemViewModel } from '../../../../shared/model/NavItemViewModel';
 import { Language } from '../../../../../core/services/language';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 
 @Component({
@@ -10,7 +10,8 @@ import { MatListModule } from '@angular/material/list';
   imports: [
     MatIconModule,
     RouterLink,
-    MatListModule
+    RouterLinkActive,
+    MatListModule,
   ],
   templateUrl: './menu-item-link-component.html',
   styleUrl: './menu-item-link-component.scss',

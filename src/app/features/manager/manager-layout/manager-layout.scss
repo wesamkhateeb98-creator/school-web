@@ -24,16 +24,20 @@
     height: 100%;
 }
 
-.side-nav{
-    background-color: var(--mat-sys-background);
-    
+.side-nav {
+    background-color: var(--mat-sys-surface-container-low);
+
     @include mat.sidenav-overrides((
-        container-divider-color:var(--mat-sys-outline-variant),
+        container-divider-color: var(--mat-sys-outline-variant),
         container-shape: 0,
     ));
 
-    width: 200px;
+    width: 250px;
     height: 100%;
+
+    mat-nav-list {
+        padding: 8px 0;
+    }
 }
 
 .tool-bar{

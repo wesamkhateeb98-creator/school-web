@@ -7,6 +7,7 @@ import { StaffPermission } from "../../core/enums/staff-permission.enum";
 
 // ── Admin layout ──────────────────────────────────────────────────────────
 import { DashboardLayout } from "./manager-layout/manager-layout";
+import { DashboardPage } from "./pages/dashboard/dashboard";
 import { AcademicYear } from "./pages/academic-year/academic-year";
 import { Semester } from "./pages/semester/semester";
 import { AgeGroup } from "./pages/age-group/age-group";
@@ -91,8 +92,9 @@ export const DASHBOARD_ROUTES: Routes = [
       },
       { path: 'student-mark-sheet', component: StudentMarkSheetPage, title: messageTitle('student_mark_sheet_title') },
       { path: 'subject-mark-sheed/:markSheetId/subjectAgeGroupId/:subjectAgeGroupId', component: SubjectMarkPage, title: messageTitle('student_mark_title') },
-      { path: '',   redirectTo: 'classes', pathMatch: 'full' },
-      { path: '**', redirectTo: 'classes', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardPage, title: messageTitle('dashboard') },
+      { path: '',   redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },
 
