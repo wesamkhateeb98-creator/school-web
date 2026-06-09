@@ -7,6 +7,8 @@ import {
   AssignmentPayload,
   AssignmentResponse,
   AssignmentUpdatePayload,
+  StudentEvaluationResponse,
+  StudentForAssignmentItem,
 } from '../../pages/assignments/model/assignment.model';
 
 @Injectable({ providedIn: 'root' })
@@ -31,6 +33,30 @@ export class AssignmentEndpoints {
 
   getById(id: number): Observable<AssignmentResponse> {
     return this.http.get<AssignmentResponse>(`assignment/${id}`);
+  }
+
+  getStudentEvaluations(
+    classAssignmentId: number,
+    pageNumber: number,
+    pageSize: number,
+    studentId?: number,
+  ): Observable<Page<StudentEvaluationResponse>> {
+    return this.http.get<Page<StudentEvaluationResponse>>(
+      `assignment/student-evaluation/${classAssignmentId}/students`,
+      { PageNumber: pageNumber, PageSize: pageSize, StudentId: studentId },
+    );
+  }
+
+  getStudentsForDropdown(
+    pageNumber: number,
+    pageSize: number,
+    classAssignmentId?: number,
+    name?: string,
+  ): Observable<Page<StudentForAssignmentItem>> {
+    return this.http.get<Page<StudentForAssignmentItem>>(
+      'student/by-class-assignment',
+      { PageNumber: pageNumber, PageSize: pageSize, ClassAssignmentId: classAssignmentId, Name: name || undefined },
+    );
   }
 
   add(body: AssignmentPayload): Observable<MutateResponse> {

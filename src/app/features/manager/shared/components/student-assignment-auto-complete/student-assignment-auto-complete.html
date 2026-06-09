@@ -1,0 +1,26 @@
+<mat-form-field style="width: 100%;">
+  <mat-label>{{ language.transform('student') }}</mat-label>
+  <input
+    type="text"
+    matInput
+    [formControl]="displayControl"
+    [matAutocomplete]="autoStudent"
+    (focus)="onFocus()"
+  />
+
+  @if (displayControl.value) {
+    <button matSuffix matIconButton aria-label="Clear" (click)="clear()">
+      <mat-icon>close</mat-icon>
+    </button>
+  }
+
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+
+  <mat-autocomplete #autoStudent="matAutocomplete" [displayWith]="displayFn" (optionSelected)="onSelected($event)">
+    @for (item of options(); track item.studentId) {
+      <mat-option [value]="item">{{ item.name }}</mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>

@@ -179,8 +179,8 @@ export class AssignmentsPage implements OnInit {
     return ASSIGNMENT_TYPE_LABELS[type] ?? '';
   }
 
-  goToDetail(id: number) {
-    this.router.navigate(['manager/assignments', id]);
+  goToDetail(row: AssignmentResponse) {
+    this.router.navigate(['/manager/assignments', row.id], { state: { assignment: row } });
   }
 
   openAddDialog() {

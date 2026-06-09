@@ -43,6 +43,22 @@ export interface AssignmentResponse {
   createdAt: string;
 }
 
+export interface StudentForAssignmentItem {
+  studentId: number;
+  name: string;
+}
+
+export interface StudentEvaluationResponse {
+  id: number;
+  studentId: number;
+  studentName: string;
+  evaluationRatio: number;
+  description: string | null;
+  createdById: number;
+  createdByName: string;
+  createdAt: string;
+}
+
 export interface AssignmentPayload {
   key: string;
   title: string;

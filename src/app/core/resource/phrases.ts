@@ -328,6 +328,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         total_avg_title: 'المجموع الكلي',
         dashboard: 'لوحة التحكم',
         back: 'رجوع',
+        student: 'طالب',
+        no_data: 'لا توجد بيانات',
+        created_by: 'بواسطة',
+        student_evaluations: 'تقييمات الطلاب',
+        evaluation_ratio: 'نسبة التقييم',
     },
     en:{
         'name':"Name",
@@ -652,6 +657,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         total_avg_title: 'Grand Total',
         dashboard: 'Dashboard',
         back: 'Back',
+        student: 'Student',
+        no_data: 'No data found',
+        created_by: 'Created By',
+        student_evaluations: 'Student Evaluations',
+        evaluation_ratio: 'Evaluation Ratio',
     }
 }
 
@@ -914,7 +924,10 @@ export type GlobalType =
 'filter'|
 'all_title'|
 'select_from_here'|
-'dashboard'
+'dashboard'|
+'student'|
+'no_data'|
+'created_by'
 
 export type LoginPhrases = 
 'name' |
@@ -1055,7 +1068,9 @@ export type AssignmentPhrases =
   'required_time_title'|
   'no_assignments'|
   'time'|
-  'include_time';
+  'include_time'|
+  'student_evaluations'|
+  'evaluation_ratio';
 
 export type MarkDistributionPhrases =
   'mark_distribution_title'|

@@ -14,7 +14,9 @@
       "Bash(Select-Object -ExpandProperty Name)",
       "Bash(xargs grep -l \"mat-app-bar\\\\|matToolbar\\\\|toolbar\\\\|<app-header\\\\|<app-navbar\")",
       "Bash(xargs grep -l \"ApiBar\\\\|api-bar\\\\|apiBar\")",
-      "Bash(xargs grep -l \"ApiBar\\\\|api-bar\\\\|api_bar\\\\|ApiBarComponent\")"
+      "Bash(xargs grep -l \"ApiBar\\\\|api-bar\\\\|api_bar\\\\|ApiBarComponent\")",
+      "Bash(Get-Content \"D:\\\\SoftPro\\\\Projects\\\\School\\\\school-web\\\\src\\\\app\\\\core\\\\resource\\\\phrases.ts\")",
+      "Bash(Measure-Object -Line)"
     ]
   }
 }
