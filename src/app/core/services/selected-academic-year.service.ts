@@ -9,6 +9,7 @@ export class SelectedAcademicYearService {
   academicYears = signal<AcademicYearModel[]>([]);
   selectedId    = signal<number | null>(null);
   loading       = signal<boolean>(true);
+  hasError      = signal<boolean>(false);
 
   selected = computed(() =>
     this.academicYears().find(y => y.id === this.selectedId()) ?? null
@@ -18,8 +19,13 @@ export class SelectedAcademicYearService {
     this.loadYears();
   }
 
+  reload(): void {
+    this.loadYears();
+  }
+
   private loadYears(): void {
     this.loading.set(true);
+    this.hasError.set(false);
     this.endpoints.get(1, 100).subscribe({
       next: page => {
         this.academicYears.set(page.content);
@@ -33,7 +39,10 @@ export class SelectedAcademicYearService {
         }
         this.loading.set(false);
       },
-      error: () => this.loading.set(false),
+      error: () => {
+        this.hasError.set(true);
+        this.loading.set(false);
+      },
     });
   }
 

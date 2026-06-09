@@ -61,11 +61,16 @@
     ));
 
     @include mat.select-overrides((
-        enabled-trigger-text-color: var(--mat-sys-on-primary),
-        enabled-arrow-color: var(--mat-sys-on-primary),
-        focused-arrow-color: var(--mat-sys-on-primary),
+        enabled-trigger-text-color: var(--mat-sys-on-surface),
+        enabled-arrow-color: var(--mat-sys-on-surface),
+        focused-arrow-color: var(--mat-sys-primary),
         panel-background-color: var(--mat-sys-background),
     ));
+
+    .mat-mdc-text-field-wrapper {
+        background-color: var(--mat-sys-surface);
+        border-radius: 4px;
+    }
 }
 
 .sidebar-button{

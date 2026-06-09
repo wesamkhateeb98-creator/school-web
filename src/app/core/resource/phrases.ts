@@ -327,6 +327,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         final_exam_avg_title: 'مجموع الامتحان',
         total_avg_title: 'المجموع الكلي',
         dashboard: 'لوحة التحكم',
+        back: 'رجوع',
     },
     en:{
         'name':"Name",
@@ -650,6 +651,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         final_exam_avg_title: 'Final Exam Total',
         total_avg_title: 'Grand Total',
         dashboard: 'Dashboard',
+        back: 'Back',
     }
 }
 
@@ -988,7 +990,8 @@ export type ButtonPhrases =
 'shift'|
 'insert'|
 'update_mode'|
-'clear';
+'clear'|
+'back';
 
 export type SemesterPhrases = 
 'semester_title'|

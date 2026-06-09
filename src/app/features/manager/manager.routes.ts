@@ -27,6 +27,7 @@ import { StudentPointsPage } from "./pages/student-points/student-points";
 import { StudentattendancePage as StudentAttendancePage } from "./pages/student-attendance/student-attendance";
 import { StudentParentVisitHistory } from "./pages/student-parent-visit-history/student-parent-visit-history";
 import { AssignmentsPage } from "./pages/assignments/assignments-page";
+import { AssignmentDetailPage } from "./pages/assignments/assignment-detail-page/assignment-detail-page";
 import { SubjectMarkDistributionPage } from "./pages/subject-mark-distribution/subject-mark-distribution";
 import { StudentMarkSheetPage } from "./pages/student-mark-sheet/student-mark-sheet";
 import { SubjectMarkPage } from "./pages/subject-mark/subject-mark";
@@ -56,7 +57,13 @@ export const DASHBOARD_ROUTES: Routes = [
       { path: 'subjects',  component: SubjectPage,  title: messageTitle('subject_title') },
       { path: 'teachers',  component: TeacherPage,  title: messageTitle('teachers_title') },
       { path: 'managerial', component: ManagerialPage, title: messageTitle('managerial_title') },
-      { path: 'assignments', component: AssignmentsPage, title: messageTitle('assignments_title') },
+      {
+        path: 'assignments',
+        children: [
+          { path: '',    component: AssignmentsPage,     title: messageTitle('assignments_title') },
+          { path: ':id', component: AssignmentDetailPage, title: messageTitle('assignments_title') },
+        ],
+      },
       {
         path: 'students',
         children: [{ path: '', component: StudentsPage, title: messageTitle('students_title') }],

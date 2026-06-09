@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
 import { RouterLink, RouterOutlet } from "@angular/router";
 import { SettingButtonComponent } from "../../shared/components/setting-button-component/setting-button-component";
 import { Language } from '../../../core/services/language';
@@ -25,6 +26,7 @@ import { SelectedAcademicYearService } from '../../../core/services/selected-aca
     MatSelectModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
+    MatButtonModule,
     RouterOutlet,
     SettingButtonComponent,
     MenuItemComponent

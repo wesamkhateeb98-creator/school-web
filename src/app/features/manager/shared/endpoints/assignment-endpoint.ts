@@ -29,6 +29,10 @@ export class AssignmentEndpoints {
     });
   }
 
+  getById(id: number): Observable<AssignmentResponse> {
+    return this.http.get<AssignmentResponse>(`assignment/${id}`);
+  }
+
   add(body: AssignmentPayload): Observable<MutateResponse> {
     return this.http.post<MutateResponse>('assignment', body);
   }

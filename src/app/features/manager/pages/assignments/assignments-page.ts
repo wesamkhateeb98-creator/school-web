@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { DatePipe } from '@angular/common';
 import { Language } from '../../../../core/services/language';
+import { Router } from '@angular/router';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { SelectedAcademicYearService } from '../../../../core/services/selected-academic-year.service';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
@@ -51,6 +52,7 @@ import { SubjectAgeGroupAutoComplete } from '../../shared/components/subject-age
 })
 export class AssignmentsPage implements OnInit {
   language            = inject(Language);
+  router              = inject(Router);
   dialog              = inject(MatDialog);
   matSnackBar         = inject(MatSnackBar);
   fb                  = inject(FormBuilder);
@@ -175,6 +177,10 @@ export class AssignmentsPage implements OnInit {
 
   getTypeLabel(type: AssignmentType): string {
     return ASSIGNMENT_TYPE_LABELS[type] ?? '';
+  }
+
+  goToDetail(id: number) {
+    this.router.navigate(['/assignments', id]);
   }
 
   openAddDialog() {
