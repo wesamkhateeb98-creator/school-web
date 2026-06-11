@@ -1,0 +1,120 @@
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 16px;">
+
+  <!-- Header -->
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <button mat-icon-button (click)="goBack()" [matTooltip]="language.transform('back')">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2 style="margin: 0;">{{ language.transform('student_assignments') }}</h2>
+  </div>
+
+  <!-- Filters -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>{{ language.transform('filter') }}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    @if (filterForm) {
+      <form [formGroup]="filterForm" style="display: flex; flex-wrap: wrap; gap: 16px; padding: 8px 0;">
+
+        <!-- Semester -->
+        <div style="min-width: 300px; flex: 1;">
+          <app-academic-year-semester-auto-complete
+            [form]="filterForm"
+            [semester]="null"
+            [loading]="loading"
+            [checkUrl]="false">
+          </app-academic-year-semester-auto-complete>
+        </div>
+
+        <!-- IsCompleted -->
+        <mat-form-field appearance="outline" style="min-width: 200px; flex: 1;">
+          <mat-label>{{ language.transform('status') }}</mat-label>
+          <mat-select formControlName="isCompleted">
+            <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+            <mat-option [value]="true">{{ language.transform('completed') }}</mat-option>
+            <mat-option [value]="false">{{ language.transform('not_completed') }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </form>
+    }
+  </mat-expansion-panel>
+
+  <!-- Table -->
+  <mat-card>
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <table mat-table [dataSource]="items()" style="width: 100%;">
+
+      <ng-container matColumnDef="assignmentTitle">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('assignments_title') }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.assignmentTitle }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="subjectName">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('subject_title') }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.subjectName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="assignmentType">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('type') }}</th>
+        <td mat-cell *matCellDef="let row">{{ getTypeLabel(row.assignmentType) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="assignmentAt">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('assignment_at_title') }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.assignmentAt | date:'yyyy-MM-dd' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="isCompleted">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('status') }}</th>
+        <td mat-cell *matCellDef="let row">
+          @if (row.isCompleted) {
+            <span style="display:flex; align-items:center; gap:4px; color: #4caf50;">
+              <mat-icon style="font-size:18px; width:18px; height:18px;">check_circle</mat-icon>
+              {{ language.transform('completed') }}
+            </span>
+          } @else {
+            <span style="display:flex; align-items:center; gap:4px; color: #f44336;">
+              <mat-icon style="font-size:18px; width:18px; height:18px;">cancel</mat-icon>
+              {{ language.transform('not_completed') }}
+            </span>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="evaluationRatio">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('evaluation_ratio') }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.isCompleted ? row.evaluationRatio : '—' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('description_title') }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.description ?? '—' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
+      <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
+
+    </table>
+
+    @if (!loading() && items().length === 0) {
+      <div style="text-align: center; padding: 32px; color: gray;">
+        <mat-icon style="font-size: 40px; width: 40px; height: 40px;">assignment_late</mat-icon>
+        <p>{{ language.transform('no_data') }}</p>
+      </div>
+    }
+
+    <mat-paginator
+      [length]="totalPages() * pageSize()"
+      [pageSize]="pageSize()"
+      [pageIndex]="pageNumber() - 1"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="changePage($event)">
+    </mat-paginator>
+  </mat-card>
+
+</div>

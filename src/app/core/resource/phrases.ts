@@ -337,6 +337,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         value_must_be_positive: 'القيمة يجب أن تكون رقمًا إيجابيًا',
         max_100: 'القيمة يجب ألا تتجاوز 100',
         unassigned_students: 'لم يُقيَّموا',
+        student_assignments: 'تكليفات الطالب',
+        completed: 'مكتمل',
+        not_completed: 'غير مكتمل',
     },
     en:{
         'name':"Name",
@@ -670,6 +673,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         value_must_be_positive: 'Value must be a positive number',
         max_100: 'Value must not exceed 100',
         unassigned_students: 'Not Evaluated',
+        student_assignments: 'Student Assignments',
+        completed: 'Completed',
+        not_completed: 'Not Completed',
     }
 }
 
@@ -1082,7 +1088,10 @@ export type AssignmentPhrases =
   'add_evaluation'|
   'value_must_be_positive'|
   'max_100'|
-  'unassigned_students'
+  'unassigned_students'|
+  'student_assignments'|
+  'completed'|
+  'not_completed'
   ;
 
 export type MarkDistributionPhrases =

@@ -95,3 +95,15 @@ export interface StudentEvaluationUpdatePayload {
   evaluationRatio: number;
   description?: string;
 }
+
+export interface StudentAssignmentReportItem {
+  assignmentId: number;
+  assignmentTitle: string;
+  assignmentType: AssignmentType;
+  assignmentAt: string;
+  subjectAgeGroupId: number;
+  subjectName: string;
+  isCompleted: boolean;
+  evaluationRatio: number;
+  description: string | null;
+}

@@ -181,6 +181,10 @@ export class ClassStudent implements OnInit{
     this.router.navigate(["manager/class",this.classId,"student",studentId,"student-parent-visits"])
   }
 
+  openStudentAssignmentsPage(studentId: number) {
+    this.router.navigate(['manager/class', this.classId, 'student', studentId, 'assignments']);
+  }
+
   // ========== Pagination ========== 
 
    changeInPage(pageEvent:PageEvent){

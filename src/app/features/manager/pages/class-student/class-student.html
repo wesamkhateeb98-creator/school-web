@@ -67,6 +67,10 @@
                     <button mat-icon-button [matTooltip]="language.transform('attendances')" (click)="openStudentParentVisitsPage(element.id)" >
                         <mat-icon class="icon-error ">family_restroom</mat-icon>
                     </button>
+
+                    <button mat-icon-button [matTooltip]="language.transform('assignments_title')" (click)="openStudentAssignmentsPage(element.id)">
+                        <mat-icon class="icon-update">assignment</mat-icon>
+                    </button>
                 </div>
             </td>
         </ng-container>

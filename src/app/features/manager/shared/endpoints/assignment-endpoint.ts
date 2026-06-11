@@ -7,6 +7,7 @@ import {
   AssignmentPayload,
   AssignmentResponse,
   AssignmentUpdatePayload,
+  StudentAssignmentReportItem,
   StudentEvaluationPayload,
   StudentEvaluationResponse,
   StudentEvaluationUpdatePayload,
@@ -95,5 +96,25 @@ export class AssignmentEndpoints {
 
   deleteStudentEvaluation(id: number): Observable<MutateResponse> {
     return this.http.delete<MutateResponse>(`student-evaluation/${id}`);
+  }
+
+  getAdminStudentAssignments(
+    studentId: number,
+    pageNumber: number,
+    pageSize: number,
+    academicYearSemesterId?: number,
+    subjectAgeGroupId?: number,
+    isCompleted?: boolean,
+  ): Observable<Page<StudentAssignmentReportItem>> {
+    return this.http.get<Page<StudentAssignmentReportItem>>(
+      `student-evaluation/admin/student/${studentId}/assignments`,
+      {
+        PageNumber: pageNumber,
+        PageSize: pageSize,
+        AcademicYearSemesterId: academicYearSemesterId,
+        SubjectAgeGroupId: subjectAgeGroupId,
+        IsCompleted: isCompleted,
+      },
+    );
   }
 }
