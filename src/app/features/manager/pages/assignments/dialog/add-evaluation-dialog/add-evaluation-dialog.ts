@@ -10,7 +10,7 @@ import { Language } from '../../../../../../core/services/language';
 import { successMatSnackbarConfig } from '../../../../../../core/consts';
 import { AssignmentEndpoints } from '../../../../shared/endpoints/assignment-endpoint';
 import { StudentAssignmentAutoComplete } from '../../../../shared/components/student-assignment-auto-complete/student-assignment-auto-complete';
-import { StudentEvaluationResponse } from '../../model/assignment.model';
+import { StudentEvaluationResponse, StudentForAssignmentItem } from '../../model/assignment.model';
 
 @Component({
   selector: 'app-add-evaluation-dialog',
@@ -28,7 +28,7 @@ import { StudentEvaluationResponse } from '../../model/assignment.model';
 })
 export class AddEvaluationDialog {
   dialogRef = inject(MatDialogRef<AddEvaluationDialog>);
-  data: { classAssignmentId: number; evaluation?: StudentEvaluationResponse } = inject(MAT_DIALOG_DATA);
+  data: { classAssignmentId: number; evaluation?: StudentEvaluationResponse; preselectedStudent?: StudentForAssignmentItem } = inject(MAT_DIALOG_DATA);
   language            = inject(Language);
   fb                  = inject(FormBuilder);
   matSnackBar         = inject(MatSnackBar);
@@ -40,7 +40,7 @@ export class AddEvaluationDialog {
   get isEdit() { return !!this.data.evaluation; }
 
   form = this.fb.group({
-    studentId:       [this.data.evaluation?.studentId ?? null as number | null, Validators.required],
+    studentId:       [this.data.evaluation?.studentId ?? this.data.preselectedStudent?.studentId ?? null as number | null, Validators.required],
     evaluationRatio: [this.data.evaluation?.evaluationRatio ?? null as number | null, [Validators.required, Validators.min(0.01), Validators.max(100)]],
     description:     [this.data.evaluation?.description ?? '', Validators.maxLength(1000)],
   });

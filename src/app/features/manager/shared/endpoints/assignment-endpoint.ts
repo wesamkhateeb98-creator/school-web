@@ -41,11 +41,11 @@ export class AssignmentEndpoints {
     classAssignmentId: number,
     pageNumber: number,
     pageSize: number,
-    studentId?: number,
+    name?: string,
   ): Observable<Page<StudentEvaluationResponse>> {
     return this.http.get<Page<StudentEvaluationResponse>>(
       `student-evaluation/${classAssignmentId}/students`,
-      { PageNumber: pageNumber, PageSize: pageSize, StudentId: studentId },
+      { PageNumber: pageNumber, PageSize: pageSize, Name: name || undefined },
     );
   }
 
@@ -71,6 +71,18 @@ export class AssignmentEndpoints {
 
   delete(id: number): Observable<MutateResponse> {
     return this.http.delete<MutateResponse>(`assignment/${id}`);
+  }
+
+  getUnAssignedStudents(
+    assignmentId: number,
+    pageNumber: number,
+    pageSize: number,
+    name?: string,
+  ): Observable<Page<StudentForAssignmentItem>> {
+    return this.http.get<Page<StudentForAssignmentItem>>(
+      `student-evaluation/${assignmentId}/unassigned-students`,
+      { PageNumber: pageNumber, PageSize: pageSize, Name: name || undefined },
+    );
   }
 
   addStudentEvaluation(body: StudentEvaluationPayload): Observable<MutateResponse> {
