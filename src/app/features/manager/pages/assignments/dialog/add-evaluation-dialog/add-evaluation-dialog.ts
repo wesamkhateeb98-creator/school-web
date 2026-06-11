@@ -33,33 +33,25 @@ export class AddEvaluationDialog {
   matSnackBar         = inject(MatSnackBar);
   assignmentEndpoints = inject(AssignmentEndpoints);
 
-  loading        = signal(false);
-  studentId      = signal<number | null>(null);
-  studentTouched = signal(false);
+  loading = signal(false);
 
   form = this.fb.group({
+    studentId:       [null as number | null, Validators.required],
     evaluationRatio: [null as number | null, [Validators.required, Validators.min(0.01)]],
     description:     ['', Validators.maxLength(1000)],
   });
-
-  onStudentChanged(id: number | null) {
-    this.studentId.set(id);
-  }
 
   onNoClick() { this.dialogRef.close(); }
 
   submit() {
     this.form.markAllAsTouched();
-    this.studentTouched.set(true);
-
-    if (!this.form.valid || !this.studentId()) return;
-    if (this.loading()) return;
+    if (!this.form.valid || this.loading()) return;
     this.loading.set(true);
 
     this.assignmentEndpoints.addStudentEvaluation({
       key:               crypto.randomUUID(),
       classAssignmentId: this.data.classAssignmentId,
-      studentId:         this.studentId()!,
+      studentId:         this.form.value.studentId!,
       evaluationRatio:   this.form.value.evaluationRatio!,
       description:       this.form.value.description || undefined,
     }).subscribe({

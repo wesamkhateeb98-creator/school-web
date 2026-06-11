@@ -70,7 +70,7 @@
       <div style="max-width: 320px; margin-bottom: 8px;">
         <app-student-assignment-auto-complete
           [classAssignmentId]="id"
-          (changed)="onStudentChanged($event)">
+          [formControl]="filterForm.controls.studentId">
         </app-student-assignment-auto-complete>
       </div>
 

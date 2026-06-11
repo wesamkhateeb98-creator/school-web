@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -12,7 +13,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Language } from '../../../../../core/services/language';
 import { errorMatSnackbarConfig } from '../../../../../core/consts';
 import { AssignmentEndpoints } from '../../../shared/endpoints/assignment-endpoint';
-// Note: getById is no longer used — assignment data comes via router state
 import {
   AssignmentResponse,
   ASSIGNMENT_TYPE_LABELS,
@@ -25,6 +25,7 @@ import { AddEvaluationDialog } from '../dialog/add-evaluation-dialog/add-evaluat
 @Component({
   selector: 'app-assignment-detail-page',
   imports: [
+    ReactiveFormsModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
@@ -43,18 +44,21 @@ export class AssignmentDetailPage implements OnInit {
   route               = inject(ActivatedRoute);
   matSnackBar         = inject(MatSnackBar);
   dialog              = inject(MatDialog);
+  fb                  = inject(FormBuilder);
   assignmentEndpoints = inject(AssignmentEndpoints);
 
   id         = 0;
   assignment = signal<AssignmentResponse | null>(null);
 
-  // evaluations table
-  loadingEval  = signal(false);
-  evaluations  = signal<StudentEvaluationResponse[]>([]);
-  totalPages   = signal(0);
-  pageNumber   = signal(1);
-  pageSize     = signal(10);
-  studentId    = signal<number | null>(null);
+  filterForm = this.fb.group({
+    studentId: [null as number | null],
+  });
+
+  loadingEval = signal(false);
+  evaluations = signal<StudentEvaluationResponse[]>([]);
+  totalPages  = signal(0);
+  pageNumber  = signal(1);
+  pageSize    = signal(10);
 
   headerTable = ['studentName', 'evaluationRatio', 'description', 'createdByName', 'createdAt'];
 
@@ -66,6 +70,11 @@ export class AssignmentDetailPage implements OnInit {
       this.assignment.set(state.assignment);
     }
 
+    this.filterForm.controls.studentId.valueChanges.subscribe(() => {
+      this.pageNumber.set(1);
+      this.loadEvaluations();
+    });
+
     this.loadEvaluations();
   }
 
@@ -76,7 +85,7 @@ export class AssignmentDetailPage implements OnInit {
         this.id,
         this.pageNumber(),
         this.pageSize(),
-        this.studentId() ?? undefined,
+        this.filterForm.value.studentId ?? undefined,
       )
       .subscribe({
         next: page => {
@@ -89,12 +98,6 @@ export class AssignmentDetailPage implements OnInit {
           this.loadingEval.set(false);
         },
       });
-  }
-
-  onStudentChanged(studentId: number | null) {
-    this.studentId.set(studentId);
-    this.pageNumber.set(1);
-    this.loadEvaluations();
   }
 
   changePage(event: PageEvent) {

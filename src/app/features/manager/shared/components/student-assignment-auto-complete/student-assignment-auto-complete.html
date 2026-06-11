@@ -6,6 +6,7 @@
     [formControl]="displayControl"
     [matAutocomplete]="autoStudent"
     (focus)="onFocus()"
+    (blur)="onBlur()"
   />
 
   @if (displayControl.value) {

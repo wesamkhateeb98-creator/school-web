@@ -43,7 +43,7 @@ export class AssignmentEndpoints {
     studentId?: number,
   ): Observable<Page<StudentEvaluationResponse>> {
     return this.http.get<Page<StudentEvaluationResponse>>(
-      `assignment/student-evaluation/${classAssignmentId}/students`,
+      `student-evaluation/${classAssignmentId}/students`,
       { PageNumber: pageNumber, PageSize: pageSize, StudentId: studentId },
     );
   }

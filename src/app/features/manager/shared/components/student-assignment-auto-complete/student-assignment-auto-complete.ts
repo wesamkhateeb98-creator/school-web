@@ -1,14 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  forwardRef,
   inject,
   Input,
   OnInit,
-  Output,
-  EventEmitter,
   signal,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -31,12 +35,18 @@ import { StudentForAssignmentItem } from '../../../pages/assignments/model/assig
     MatIconButton,
     MatProgressBarModule,
   ],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => StudentAssignmentAutoComplete),
+      multi: true,
+    },
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './student-assignment-auto-complete.html',
 })
-export class StudentAssignmentAutoComplete implements OnInit {
+export class StudentAssignmentAutoComplete implements OnInit, ControlValueAccessor {
   @Input() classAssignmentId: number | null = null;
-  @Output() changed = new EventEmitter<number | null>();
 
   language            = inject(Language);
   assignmentEndpoints = inject(AssignmentEndpoints);
@@ -44,6 +54,9 @@ export class StudentAssignmentAutoComplete implements OnInit {
   displayControl = new FormControl<StudentForAssignmentItem | string | null>(null);
   loading        = signal(false);
   options        = signal<StudentForAssignmentItem[]>([]);
+
+  private _onChange: (value: number | null) => void = () => {};
+  private _onTouched: () => void = () => {};
 
   ngOnInit() {
     this.displayControl.valueChanges
@@ -55,10 +68,34 @@ export class StudentAssignmentAutoComplete implements OnInit {
       });
   }
 
+  writeValue(value: number | null): void {
+    if (!value) {
+      this.displayControl.setValue(null, { emitEvent: false });
+      this.options.set([]);
+    }
+  }
+
+  registerOnChange(fn: (value: number | null) => void): void {
+    this._onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this._onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    if (isDisabled) this.displayControl.disable();
+    else this.displayControl.enable();
+  }
+
   onFocus() {
     if (typeof this.displayControl.value !== 'object' || this.displayControl.value === null) {
       this.search(typeof this.displayControl.value === 'string' ? this.displayControl.value : '');
     }
+  }
+
+  onBlur() {
+    this._onTouched();
   }
 
   private search(name: string) {
@@ -80,13 +117,14 @@ export class StudentAssignmentAutoComplete implements OnInit {
   };
 
   onSelected(event: { option: { value: StudentForAssignmentItem } }) {
-    this.changed.emit(event.option.value.studentId);
+    this._onChange(event.option.value.studentId);
   }
 
   clear() {
     this.displayControl.setValue(null, { emitEvent: false });
     this.options.set([]);
     this.search('');
-    this.changed.emit(null);
+    this._onChange(null);
+    this._onTouched();
   }
 }
