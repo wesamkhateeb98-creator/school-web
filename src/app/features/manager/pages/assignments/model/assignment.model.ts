@@ -80,3 +80,11 @@ export interface AssignmentUpdatePayload {
   classId?: number;
   subjectAgeGroupId: number;
 }
+
+export interface StudentEvaluationPayload {
+  key: string;
+  classAssignmentId: number;
+  studentId: number;
+  evaluationRatio: number;
+  description?: string;
+}

@@ -3,6 +3,7 @@ import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTableModule } from '@angular/material/table';
@@ -19,6 +20,7 @@ import {
   StudentEvaluationResponse,
 } from '../model/assignment.model';
 import { StudentAssignmentAutoComplete } from '../../../shared/components/student-assignment-auto-complete/student-assignment-auto-complete';
+import { AddEvaluationDialog } from '../dialog/add-evaluation-dialog/add-evaluation-dialog';
 
 @Component({
   selector: 'app-assignment-detail-page',
@@ -40,6 +42,7 @@ export class AssignmentDetailPage implements OnInit {
   router              = inject(Router);
   route               = inject(ActivatedRoute);
   matSnackBar         = inject(MatSnackBar);
+  dialog              = inject(MatDialog);
   assignmentEndpoints = inject(AssignmentEndpoints);
 
   id         = 0;
@@ -102,6 +105,16 @@ export class AssignmentDetailPage implements OnInit {
 
   getTypeLabel(type: AssignmentType): string {
     return ASSIGNMENT_TYPE_LABELS[type] ?? '';
+  }
+
+  openAddEvaluation() {
+    const ref = this.dialog.open(AddEvaluationDialog, {
+      data: { classAssignmentId: this.id },
+      width: '420px',
+    });
+    ref.afterClosed().subscribe(result => {
+      if (result?.reload) this.loadEvaluations();
+    });
   }
 
   goBack() {

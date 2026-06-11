@@ -333,6 +333,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         created_by: 'بواسطة',
         student_evaluations: 'تقييمات الطلاب',
         evaluation_ratio: 'نسبة التقييم',
+        add_evaluation: 'إضافة تقييم',
+        value_must_be_positive: 'القيمة يجب أن تكون رقمًا إيجابيًا',
     },
     en:{
         'name':"Name",
@@ -662,6 +664,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         created_by: 'Created By',
         student_evaluations: 'Student Evaluations',
         evaluation_ratio: 'Evaluation Ratio',
+        add_evaluation: 'Add Evaluation',
+        value_must_be_positive: 'Value must be a positive number',
     }
 }
 
@@ -1070,7 +1074,10 @@ export type AssignmentPhrases =
   'time'|
   'include_time'|
   'student_evaluations'|
-  'evaluation_ratio';
+  'evaluation_ratio'|
+  'add_evaluation'|
+  'value_must_be_positive'
+  ;
 
 export type MarkDistributionPhrases =
   'mark_distribution_title'|
