@@ -21,6 +21,7 @@ import {
 } from '../model/assignment.model';
 import { StudentAssignmentAutoComplete } from '../../../shared/components/student-assignment-auto-complete/student-assignment-auto-complete';
 import { AddEvaluationDialog } from '../dialog/add-evaluation-dialog/add-evaluation-dialog';
+import { DeleteDialog } from '../../../../shared/components/dialogs/delete-dialog/delete-dialog';
 
 @Component({
   selector: 'app-assignment-detail-page',
@@ -60,7 +61,7 @@ export class AssignmentDetailPage implements OnInit {
   pageNumber  = signal(1);
   pageSize    = signal(10);
 
-  headerTable = ['studentName', 'evaluationRatio', 'description', 'createdByName', 'createdAt'];
+  headerTable = ['studentName', 'evaluationRatio', 'description', 'createdByName', 'createdAt', 'actions'];
 
   ngOnInit() {
     this.id = +(this.route.snapshot.paramMap.get('id') ?? '0');
@@ -108,6 +109,38 @@ export class AssignmentDetailPage implements OnInit {
 
   getTypeLabel(type: AssignmentType): string {
     return ASSIGNMENT_TYPE_LABELS[type] ?? '';
+  }
+
+  openUpdateEvaluation(evaluation: StudentEvaluationResponse) {
+    const ref = this.dialog.open(AddEvaluationDialog, {
+      data: { classAssignmentId: this.id, evaluation },
+      width: '420px',
+    });
+    ref.afterClosed().subscribe(result => {
+      if (result?.reload) this.loadEvaluations();
+    });
+  }
+
+  openDeleteEvaluation(evaluation: StudentEvaluationResponse) {
+    const ref = this.dialog.open(DeleteDialog, {
+      data: {
+        title: this.language.transform('delete'),
+        action: () => {
+          this.assignmentEndpoints.deleteStudentEvaluation(evaluation.id).subscribe({
+            next: () => {
+              ref.close({ reload: true });
+            },
+            error: err => {
+              this.matSnackBar.open(err.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+              ref.close();
+            },
+          });
+        },
+      },
+    });
+    ref.afterClosed().subscribe(result => {
+      if (result?.reload) this.loadEvaluations();
+    });
   }
 
   openAddEvaluation() {

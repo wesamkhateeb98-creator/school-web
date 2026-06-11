@@ -7,9 +7,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Language } from '../../../../../../core/services/language';
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
+import { successMatSnackbarConfig } from '../../../../../../core/consts';
 import { AssignmentEndpoints } from '../../../../shared/endpoints/assignment-endpoint';
 import { StudentAssignmentAutoComplete } from '../../../../shared/components/student-assignment-auto-complete/student-assignment-auto-complete';
+import { StudentEvaluationResponse } from '../../model/assignment.model';
 
 @Component({
   selector: 'app-add-evaluation-dialog',
@@ -26,19 +27,22 @@ import { StudentAssignmentAutoComplete } from '../../../../shared/components/stu
   templateUrl: './add-evaluation-dialog.html',
 })
 export class AddEvaluationDialog {
-  dialogRef           = inject(MatDialogRef<AddEvaluationDialog>);
-  data: { classAssignmentId: number } = inject(MAT_DIALOG_DATA);
+  dialogRef = inject(MatDialogRef<AddEvaluationDialog>);
+  data: { classAssignmentId: number; evaluation?: StudentEvaluationResponse } = inject(MAT_DIALOG_DATA);
   language            = inject(Language);
   fb                  = inject(FormBuilder);
   matSnackBar         = inject(MatSnackBar);
   assignmentEndpoints = inject(AssignmentEndpoints);
 
-  loading = signal(false);
+  loading      = signal(false);
+  errorMessage = signal<string | null>(null);
+
+  get isEdit() { return !!this.data.evaluation; }
 
   form = this.fb.group({
-    studentId:       [null as number | null, Validators.required],
-    evaluationRatio: [null as number | null, [Validators.required, Validators.min(0.01)]],
-    description:     ['', Validators.maxLength(1000)],
+    studentId:       [this.data.evaluation?.studentId ?? null as number | null, Validators.required],
+    evaluationRatio: [this.data.evaluation?.evaluationRatio ?? null as number | null, [Validators.required, Validators.min(0.01), Validators.max(100)]],
+    description:     [this.data.evaluation?.description ?? '', Validators.maxLength(1000)],
   });
 
   onNoClick() { this.dialogRef.close(); }
@@ -47,14 +51,24 @@ export class AddEvaluationDialog {
     this.form.markAllAsTouched();
     if (!this.form.valid || this.loading()) return;
     this.loading.set(true);
+    this.errorMessage.set(null);
 
-    this.assignmentEndpoints.addStudentEvaluation({
-      key:               crypto.randomUUID(),
-      classAssignmentId: this.data.classAssignmentId,
-      studentId:         this.form.value.studentId!,
-      evaluationRatio:   this.form.value.evaluationRatio!,
-      description:       this.form.value.description || undefined,
-    }).subscribe({
+    const obs = this.isEdit
+      ? this.assignmentEndpoints.updateStudentEvaluation(this.data.evaluation!.id, {
+          classAssignmentId: this.data.classAssignmentId,
+          studentId:         this.form.value.studentId!,
+          evaluationRatio:   this.form.value.evaluationRatio!,
+          description:       this.form.value.description || undefined,
+        })
+      : this.assignmentEndpoints.addStudentEvaluation({
+          key:               crypto.randomUUID(),
+          classAssignmentId: this.data.classAssignmentId,
+          studentId:         this.form.value.studentId!,
+          evaluationRatio:   this.form.value.evaluationRatio!,
+          description:       this.form.value.description || undefined,
+        });
+
+    obs.subscribe({
       next: () => {
         this.loading.set(false);
         this.matSnackBar.open(
@@ -66,7 +80,7 @@ export class AddEvaluationDialog {
       },
       error: err => {
         this.loading.set(false);
-        this.matSnackBar.open(err.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+        this.errorMessage.set(err.message);
       },
     });
   }

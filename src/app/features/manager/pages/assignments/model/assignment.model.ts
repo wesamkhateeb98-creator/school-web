@@ -88,3 +88,10 @@ export interface StudentEvaluationPayload {
   evaluationRatio: number;
   description?: string;
 }
+
+export interface StudentEvaluationUpdatePayload {
+  classAssignmentId: number;
+  studentId: number;
+  evaluationRatio: number;
+  description?: string;
+}

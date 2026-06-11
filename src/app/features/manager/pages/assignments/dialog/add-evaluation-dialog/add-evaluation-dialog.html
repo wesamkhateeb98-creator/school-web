@@ -1,5 +1,7 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
-  <h2 mat-dialog-title>{{ language.transform('add_evaluation') }}</h2>
+  <h2 mat-dialog-title>
+    {{ isEdit ? language.transform('update') : language.transform('add_evaluation') }}
+  </h2>
 
   <mat-dialog-content>
     @if (loading()) {
@@ -8,17 +10,24 @@
 
     <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 8px; min-width: 380px;">
 
-      <div>
-        <app-student-assignment-auto-complete
-          [classAssignmentId]="data.classAssignmentId"
-          formControlName="studentId">
-        </app-student-assignment-auto-complete>
-        @if (form.controls.studentId.invalid && form.controls.studentId.touched) {
-          <mat-error style="font-size: 12px; padding-inline-start: 16px;">
-            {{ language.transform('field_required') }}
-          </mat-error>
-        }
-      </div>
+      @if (isEdit) {
+        <mat-form-field>
+          <mat-label>{{ language.transform('student') }}</mat-label>
+          <input matInput [value]="data.evaluation!.studentName" readonly>
+        </mat-form-field>
+      } @else {
+        <div>
+          <app-student-assignment-auto-complete
+            [classAssignmentId]="data.classAssignmentId"
+            formControlName="studentId">
+          </app-student-assignment-auto-complete>
+          @if (form.controls.studentId.invalid && form.controls.studentId.touched) {
+            <mat-error style="font-size: 12px; padding-inline-start: 16px;">
+              {{ language.transform('field_required') }}
+            </mat-error>
+          }
+        </div>
+      }
 
       <mat-form-field>
         <mat-label>{{ language.transform('evaluation_ratio') }}</mat-label>
@@ -28,6 +37,9 @@
         }
         @if (form.controls.evaluationRatio.hasError('min')) {
           <mat-error>{{ language.transform('value_must_be_positive') }}</mat-error>
+        }
+        @if (form.controls.evaluationRatio.hasError('max')) {
+          <mat-error>{{ language.transform('max_100') }}</mat-error>
         }
       </mat-form-field>
 
@@ -39,6 +51,10 @@
         }
       </mat-form-field>
 
+      @if (errorMessage()) {
+        <mat-error style="font-size: 13px; padding: 4px 0;">{{ errorMessage() }}</mat-error>
+      }
+
     </div>
   </mat-dialog-content>
 
@@ -47,7 +63,7 @@
       {{ language.transform('cancel') }}
     </button>
     <button matButton="filled" type="submit" [disabled]="loading()">
-      {{ language.transform('add') }}
+      {{ isEdit ? language.transform('update') : language.transform('add') }}
     </button>
   </mat-dialog-actions>
 </form>

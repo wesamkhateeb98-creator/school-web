@@ -9,6 +9,7 @@ import {
   AssignmentUpdatePayload,
   StudentEvaluationPayload,
   StudentEvaluationResponse,
+  StudentEvaluationUpdatePayload,
   StudentForAssignmentItem,
 } from '../../pages/assignments/model/assignment.model';
 
@@ -74,5 +75,13 @@ export class AssignmentEndpoints {
 
   addStudentEvaluation(body: StudentEvaluationPayload): Observable<MutateResponse> {
     return this.http.post<MutateResponse>('student-evaluation', body);
+  }
+
+  updateStudentEvaluation(id: number, body: StudentEvaluationUpdatePayload): Observable<MutateResponse> {
+    return this.http.put<MutateResponse>(`student-evaluation/${id}`, body);
+  }
+
+  deleteStudentEvaluation(id: number): Observable<MutateResponse> {
+    return this.http.delete<MutateResponse>(`student-evaluation/${id}`);
   }
 }
