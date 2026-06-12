@@ -27,6 +27,25 @@
           </app-academic-year-semester-auto-complete>
         </div>
 
+        <!-- Subject -->
+        <mat-form-field appearance="outline" style="min-width: 260px; flex: 1;">
+          <mat-label>{{ language.transform('subject_title') }}</mat-label>
+          <mat-icon matPrefix>book</mat-icon>
+          <input matInput [formControl]="subjectControl" [matAutocomplete]="subjectAuto">
+          @if (subjectControl.value) {
+            <button matSuffix mat-icon-button (click)="clearSubject()">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+          <mat-autocomplete #subjectAuto="matAutocomplete"
+            [displayWith]="subjectDisplayFn"
+            (optionSelected)="onSubjectSelected($event.option.value)">
+            @for (item of subjectItems(); track item.subjectAgeGroupId) {
+              <mat-option [value]="item">{{ item.subjectName }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+
         <!-- IsCompleted -->
         <mat-form-field appearance="outline" style="min-width: 200px; flex: 1;">
           <mat-label>{{ language.transform('status') }}</mat-label>

@@ -107,3 +107,8 @@ export interface StudentAssignmentReportItem {
   evaluationRatio: number;
   description: string | null;
 }
+
+export interface SubjectForStudentItem {
+  subjectAgeGroupId: number;
+  subjectName: string;
+}

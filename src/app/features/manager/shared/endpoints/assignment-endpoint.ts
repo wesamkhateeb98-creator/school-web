@@ -12,6 +12,7 @@ import {
   StudentEvaluationResponse,
   StudentEvaluationUpdatePayload,
   StudentForAssignmentItem,
+  SubjectForStudentItem,
 } from '../../pages/assignments/model/assignment.model';
 
 @Injectable({ providedIn: 'root' })
@@ -96,6 +97,18 @@ export class AssignmentEndpoints {
 
   deleteStudentEvaluation(id: number): Observable<MutateResponse> {
     return this.http.delete<MutateResponse>(`student-evaluation/${id}`);
+  }
+
+  getSubjectForStudent(
+    studentId: number,
+    pageNumber: number,
+    pageSize: number,
+    name?: string,
+  ): Observable<Page<SubjectForStudentItem>> {
+    return this.http.get<Page<SubjectForStudentItem>>(
+      `student-evaluation/admin/student/${studentId}/subjects`,
+      { PageNumber: pageNumber, PageSize: pageSize, Name: name || undefined },
+    );
   }
 
   getAdminStudentAssignments(

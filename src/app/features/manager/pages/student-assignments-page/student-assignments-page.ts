@@ -1,13 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
@@ -21,6 +23,7 @@ import {
   ASSIGNMENT_TYPE_LABELS,
   AssignmentType,
   StudentAssignmentReportItem,
+  SubjectForStudentItem,
 } from '../assignments/model/assignment.model';
 import { AcademicYearSemesterAutoComplete } from '../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete';
 
@@ -29,11 +32,13 @@ import { AcademicYearSemesterAutoComplete } from '../../shared/components/academ
   imports: [
     DatePipe,
     ReactiveFormsModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatSelectModule,
@@ -73,14 +78,36 @@ export class StudentAssignmentsPage implements OnInit {
 
   filterForm!: FormGroup;
 
+  // subject autocomplete
+  subjectControl        = new FormControl<SubjectForStudentItem | string | null>(null);
+  subjectItems          = signal<SubjectForStudentItem[]>([]);
+  subjectDisplayFn      = (item?: SubjectForStudentItem | null): string =>
+    item?.subjectName ?? '';
+
   ngOnInit() {
     this.studentId = +(this.route.snapshot.paramMap.get('id')      ?? '0');
     this.classId   = +(this.route.snapshot.paramMap.get('classId') ?? '0');
 
     this.filterForm = this.fb.group({
-      isCompleted: [null as boolean | null],
+      isCompleted:      [null as boolean | null],
+      subjectAgeGroupId: [null as number | null],
       // 'semester' + 'semesterId' added by AcademicYearSemesterAutoComplete
     });
+
+    // load subjects when user types
+    this.subjectControl.valueChanges.pipe(
+      debounceTime(300),
+      switchMap(value => {
+        const name = typeof value === 'string' ? value : '';
+        return this.assignmentEndpoints.getSubjectForStudent(
+          this.studentId, 1, 20, name || undefined,
+        ).pipe(catchError(() => of(null)));
+      }),
+    ).subscribe(page => { if (page) this.subjectItems.set(page.content); });
+
+    // initial load of subjects list
+    this.assignmentEndpoints.getSubjectForStudent(this.studentId, 1, 20)
+      .subscribe(page => this.subjectItems.set(page.content));
 
     this.filterForm.valueChanges.pipe(
       debounceTime(300),
@@ -95,16 +122,16 @@ export class StudentAssignmentsPage implements OnInit {
 
   load() {
     this.loading.set(true);
-    const { isCompleted, semesterId } = this.filterForm.value;
+    const { isCompleted, semesterId, subjectAgeGroupId } = this.filterForm.value;
 
     this.assignmentEndpoints
       .getAdminStudentAssignments(
         this.studentId,
         this.pageNumber(),
         this.pageSize(),
-        semesterId  ?? undefined,
-        undefined,
-        isCompleted ?? undefined,
+        semesterId        ?? undefined,
+        subjectAgeGroupId ?? undefined,
+        isCompleted       ?? undefined,
       )
       .subscribe({
         next: page => {
@@ -123,6 +150,15 @@ export class StudentAssignmentsPage implements OnInit {
     this.pageNumber.set(event.pageIndex + 1);
     this.pageSize.set(event.pageSize);
     this.load();
+  }
+
+  onSubjectSelected(item: SubjectForStudentItem) {
+    this.filterForm.patchValue({ subjectAgeGroupId: item.subjectAgeGroupId });
+  }
+
+  clearSubject() {
+    this.subjectControl.setValue(null);
+    this.filterForm.patchValue({ subjectAgeGroupId: null });
   }
 
   getTypeLabel(type: AssignmentType): string {
