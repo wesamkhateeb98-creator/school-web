@@ -4,6 +4,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
 import { Language } from '../../../core/services/language';
 import { ResponsiveScreen } from '../../../core/services/responsive-screen';
 import { StaffNavItemService } from './services/staff-nav-item.service';
@@ -19,6 +21,8 @@ import { MenuItemComponent } from '../../manager/manager-layout/components/menu-
     MatToolbarModule,
     MatIconModule,
     MatListModule,
+    MatDividerModule,
+    MatButtonModule,
     SettingButtonComponent,
     MenuItemComponent,
   ],

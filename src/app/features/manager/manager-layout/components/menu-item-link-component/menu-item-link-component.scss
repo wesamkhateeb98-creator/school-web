@@ -8,38 +8,51 @@
   transition: background-color 150ms ease;
 
   .nav-icon {
-    color: var(--mat-sys-on-surface-variant);
-    transition: color 150ms ease;
+    color: var(--mat-sys-on-primary);
+    opacity: 0.85;
+    transition: color 150ms ease, opacity 150ms ease;
   }
 
   .nav-label {
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--mat-sys-on-surface-variant);
+    color: var(--mat-sys-on-primary);
     transition: color 150ms ease;
   }
 
   .nav-arrow {
-    color: var(--mat-sys-on-surface-variant);
+    color: var(--mat-sys-on-primary);
+    opacity: 0.85;
     font-size: 20px;
     width: 20px;
     height: 20px;
   }
 
   &:hover:not(.nav-active) {
-    background-color: var(--mat-sys-surface-container-highest) !important;
+    background-color: color-mix(in srgb, var(--mat-sys-on-primary) 10%, transparent) !important;
+
+    .nav-icon,
+    .nav-arrow {
+      opacity: 1;
+    }
   }
 
   &.nav-active {
-    background-color: var(--mat-sys-secondary-container) !important;
+    background-color: var(--mat-sys-primary-container) !important;
 
     .nav-icon {
-      color: var(--mat-sys-on-secondary-container) !important;
+      color: var(--mat-sys-on-primary-container) !important;
+      opacity: 1;
     }
 
     .nav-label {
-      color: var(--mat-sys-on-secondary-container) !important;
+      color: var(--mat-sys-on-primary-container) !important;
       font-weight: 600;
+    }
+
+    .nav-arrow {
+      color: var(--mat-sys-on-primary-container) !important;
+      opacity: 1;
     }
   }
 }

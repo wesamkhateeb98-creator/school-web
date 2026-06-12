@@ -1,0 +1,38 @@
+// Match nav-item styling exactly (on-primary colors)
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
+mat-divider {
+  --mat-divider-color: color-mix(in srgb, var(--mat-sys-on-primary) 20%, transparent);
+}
+
+mat-nav-list {
+  padding: 8px 0 !important;
+
+  a[mat-list-item] {
+    border-radius: 10px !important;
+    margin: 2px 8px;
+    transition: background-color 150ms ease;
+
+    mat-icon {
+      color: var(--mat-sys-on-primary) !important;
+      opacity: 0.85;
+    }
+
+    span {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--mat-sys-on-primary) !important;
+    }
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--mat-sys-on-primary) 10%, transparent) !important;
+
+      mat-icon {
+        opacity: 1;
+      }
+    }
+  }
+}

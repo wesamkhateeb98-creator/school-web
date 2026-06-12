@@ -1,4 +1,4 @@
 .sub-items {
-  border-inline-start: 2px solid var(--mat-sys-outline-variant);
+  border-inline-start: 2px solid color-mix(in srgb, var(--mat-sys-on-primary) 30%, transparent);
   margin-inline-start: 24px;
 }

@@ -1,33 +1,64 @@
-<mat-toolbar class="tool-bar" style="padding: 20px;">
-  <button
-    matIconButton
-    class="sidebar-button"
-    aria-label="Toggle sidebar"
-    (click)="matSidenav.toggle()">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <img src="logo.png" alt="Logo" style="margin: 10px 0 10px 10px;" />
-  <span style="margin: 10px; font-weight: 900;">School</span>
-</mat-toolbar>
 
 <mat-sidenav-container class="sidenav-container" [dir]="language.direction()">
-  <mat-sidenav
-    #matSidenav
-    [mode]="responseScreen.isMobile() ? 'over' : 'side'"
-    class="side-nav"
-    style="width: 200px;"
-    [opened]="!responseScreen.isMobile()">
-    <div class="f-column-between">
-      <mat-nav-list style="padding-top: 0;">
-        @for (item of staffNav.navItems(); track $index) {
-          <app-menu-item-component [navItem]="item" [level]="1" />
-        }
-      </mat-nav-list>
-      <app-setting-button-component />
-    </div>
-  </mat-sidenav>
 
-  <div style="margin: 0; padding: 5px 10px; height: calc(100vh - 90px);">
-    <router-outlet />
-  </div>
+    <mat-sidenav
+        #matSidenav
+        [mode]="responseScreen.isMobile() ? 'over' : 'side'"
+        class="side-nav"
+        [opened]="!responseScreen.isMobile()">
+
+        <!-- Header: Logo + School Name + Close (mobile) -->
+        <div class="sidebar-header">
+            <img src="logo.png" alt="Logo" />
+            <span class="school-name">School</span>
+            <span style="flex: 1 1 auto;"></span>
+            @if (responseScreen.isMobile()) {
+                <button mat-icon-button (click)="matSidenav.close()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            }
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Nav Items (scrollable) + Settings (pinned bottom) -->
+        <div class="f-column-between">
+            <mat-nav-list>
+                @for (item of staffNav.navItems(); track $index) {
+                    <app-menu-item-component [navItem]="item" [level]="1" />
+                }
+            </mat-nav-list>
+            <app-setting-button-component />
+        </div>
+
+        <!-- Desktop border toggle button -->
+        @if (!responseScreen.isMobile()) {
+            <button mat-icon-button class="sidebar-toggle-btn" (click)="matSidenav.toggle()">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+        }
+
+    </mat-sidenav>
+
+    <!-- Mobile top bar -->
+    @if (responseScreen.isMobile()) {
+        <div class="mobile-header">
+            <button mat-icon-button (click)="matSidenav.open()">
+                <mat-icon>menu</mat-icon>
+            </button>
+        </div>
+    }
+
+    <!-- Desktop open button (shown only when sidebar is closed) -->
+    @if (!responseScreen.isMobile() && !matSidenav.opened) {
+        <button mat-icon-button class="sidebar-open-btn" (click)="matSidenav.open()">
+            <mat-icon>chevron_right</mat-icon>
+        </button>
+    }
+
+    <!-- Main Content -->
+    <div class="content-area" [class.with-mobile-header]="responseScreen.isMobile()">
+        <router-outlet />
+    </div>
+
 </mat-sidenav-container>

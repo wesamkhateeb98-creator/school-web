@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
 import { Theme } from '../../../../core/services/theme';
 import { Language } from '../../../../core/services/language';
 import { AuthService } from '../../../../core/services/auth-service';
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-setting-button-component',
-  imports: [MatMenuModule, MatButtonModule , MatIconModule, MatListModule],
+  imports: [MatMenuModule, MatButtonModule, MatIconModule, MatListModule, MatDividerModule],
   templateUrl: './setting-button-component.html',
   styleUrl: './setting-button-component.scss',
 })
