@@ -30,12 +30,12 @@ export class PermissionMultiSelect implements OnInit {
     {
       name: "Student Notes",
       items: [
-        { value: 1, view: this.language.transform('get_student_note_permission') },
-        { value: 2, view: this.language.transform('add_student_note_permission') },
-        { value: 3, view: this.language.transform('update_student_note_permission') },
-        { value: 4, view: this.language.transform('delete_student_note_permission') },
-        { value: 9, view: this.language.transform('release_student_note_to_parent_permission') },
-        { value: 10, view: this.language.transform('solve_student_note_permission') }
+        { value: 1,  view: this.language.transform('get_student_note_permission') },
+        { value: 2,  view: this.language.transform('add_student_note_permission') },
+        { value: 3,  view: this.language.transform('update_student_note_permission') },
+        { value: 4,  view: this.language.transform('delete_student_note_permission') },
+        { value: 10, view: this.language.transform('release_student_note_to_parent_permission') },
+        { value: 11, view: this.language.transform('solve_student_note_permission') },
       ]
     },
     {
@@ -44,34 +44,53 @@ export class PermissionMultiSelect implements OnInit {
         { value: 5, view: this.language.transform('get_point_permission') },
         { value: 6, view: this.language.transform('add_point_permission') },
         { value: 7, view: this.language.transform('update_point_permission') },
-        { value: 8, view: this.language.transform('delete_point_permission') }
+        { value: 8, view: this.language.transform('delete_point_permission') },
+        { value: 9, view: this.language.transform('consume_points_permission') },
       ]
     },
     {
       name: "Student Attendance",
       items: [
-        { value: 11, view: this.language.transform('get_student_attendance_permission') },
-        { value: 12, view: this.language.transform('add_student_attendance_permission') },
-        { value: 13, view: this.language.transform('update_student_attendance_permission') },
-        { value: 14, view: this.language.transform('delete_student_attendance_permission') },
-        { value: 15, view: this.language.transform('release_student_attendance_to_parent_permission') },
-        { value: 16, view: this.language.transform('solve_student_attendance_permission') }
+        { value: 12, view: this.language.transform('get_student_attendance_permission') },
+        { value: 13, view: this.language.transform('add_student_attendance_permission') },
+        { value: 14, view: this.language.transform('update_student_attendance_permission') },
+        { value: 15, view: this.language.transform('delete_student_attendance_permission') },
+        { value: 16, view: this.language.transform('release_student_attendance_to_parent_permission') },
+        { value: 17, view: this.language.transform('solve_student_attendance_permission') },
       ]
     },
     {
       name: "Student Actions",
       items: [
-        { value: 17, view: this.language.transform('expel_student_permission') }
+        { value: 18, view: this.language.transform('expel_student_permission') },
       ]
     },
     {
       name: "Parent Visits",
       items: [
-        { value: 18, view: this.language.transform('get_parent_visit_history_permission') },
-        { value: 19, view: this.language.transform('add_parent_visit_history_permission') },
-        { value: 20, view: this.language.transform('update_parent_visit_history_permission') },
-        { value: 21, view: this.language.transform('delete_parent_visit_history_permission') },
-        { value: 22, view: this.language.transform('confirm_parent_visit_permission') },
+        { value: 19, view: this.language.transform('get_parent_visit_history_permission') },
+        { value: 20, view: this.language.transform('add_parent_visit_history_permission') },
+        { value: 21, view: this.language.transform('update_parent_visit_history_permission') },
+        { value: 22, view: this.language.transform('delete_parent_visit_history_permission') },
+        { value: 23, view: this.language.transform('confirm_parent_visit_permission') },
+      ]
+    },
+    {
+      name: "Assignments",
+      items: [
+        { value: 24, view: this.language.transform('add_assignment_permission') },
+        { value: 25, view: this.language.transform('update_assignment_permission') },
+        { value: 26, view: this.language.transform('delete_assignment_permission') },
+        { value: 27, view: this.language.transform('get_assignment_permission') },
+      ]
+    },
+    {
+      name: "Mark Entry",
+      items: [
+        { value: 28, view: this.language.transform('add_mark_entry_permission') },
+        { value: 29, view: this.language.transform('update_mark_entry_permission') },
+        { value: 30, view: this.language.transform('delete_mark_entry_permission') },
+        { value: 31, view: this.language.transform('get_mark_entry_permission') },
       ]
     },
     {
@@ -85,12 +104,12 @@ export class PermissionMultiSelect implements OnInit {
       ]
     },
     {
-      name: "Mark Entry",
+      name: "Assignment Evaluations",
       items: [
-        { value: 28, view: this.language.transform('add_mark_entry_permission') },
-        { value: 29, view: this.language.transform('update_mark_entry_permission') },
-        { value: 30, view: this.language.transform('delete_mark_entry_permission') },
-        { value: 31, view: this.language.transform('get_mark_entry_permission') },
+        { value: 37, view: this.language.transform('add_student_assignment_evaluation_permission') },
+        { value: 38, view: this.language.transform('update_student_assignment_evaluation_permission') },
+        { value: 39, view: this.language.transform('delete_student_assignment_evaluation_permission') },
+        { value: 40, view: this.language.transform('get_student_assignment_evaluation_permission') },
       ]
     },
   ];

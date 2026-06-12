@@ -77,7 +77,7 @@ export class StudentMarkSheetPage implements OnInit {
   canDelete  = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.DeleteSubjectMarkSheet));
   canGet     = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.GetSubjectMarkSheet));
   canDetails = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.GetSubjectMarkEntry));
-  canConfirm = computed(() => this.isStaff() && this.staffProfile.hasPermission(StaffPermission.ConfirmSubjectMarkSheet));
+  canConfirm = computed(() => this.isAdmin() || (this.isStaff() && this.staffProfile.hasPermission(StaffPermission.ConfirmSubjectMarkSheet)));
 
   loading         = signal(false);
   subjectsLoading = signal(false);

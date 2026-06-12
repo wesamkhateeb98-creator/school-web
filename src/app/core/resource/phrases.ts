@@ -213,6 +213,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_point_permission: 'إضافة نقاط',
         update_point_permission: 'تعديل نقاط',
         delete_point_permission: 'حذف نقاط',
+        consume_points_permission: 'استهلاك النقاط',
 
         release_student_note_to_parent_permission: 'إرسال الملاحظة لولي الأمر',
         solve_student_note_permission: 'معالجة ملاحظة الطالب',
@@ -231,6 +232,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         update_parent_visit_history_permission: 'تعديل زيارة ولي أمر',
         delete_parent_visit_history_permission: 'حذف زيارة ولي أمر',
         confirm_parent_visit_permission: 'تأكيد زيارة ولي الأمر',
+
+        add_assignment_permission: 'إضافة تكليف',
+        update_assignment_permission: 'تعديل تكليف',
+        delete_assignment_permission: 'حذف تكليف',
+        get_assignment_permission: 'عرض التكليفات',
+
         add_mark_entry_permission: 'إضافة علامات',
         update_mark_entry_permission: 'تعديل علامات',
         delete_mark_entry_permission: 'حذف علامات',
@@ -240,6 +247,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         delete_mark_sheet_permission: 'حذف كشف علامات',
         get_mark_sheet_permission: 'عرض كشوف العلامات',
         confirm_mark_sheet_permission: 'تأكيد كشف العلامات',
+
+        add_student_assignment_evaluation_permission: 'إضافة تقييم تكليف',
+        update_student_assignment_evaluation_permission: 'تعديل تقييم تكليف',
+        delete_student_assignment_evaluation_permission: 'حذف تقييم تكليف',
+        get_student_assignment_evaluation_permission: 'عرض تقييم التكليفات',
+
         severity_title: "درجة الخطورة",
         low_title: "منخفض",
         middle_title: "متوسط",
@@ -553,6 +566,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         add_point_permission: 'Add Point',
         update_point_permission: 'Update Point',
         delete_point_permission: 'Delete Point',
+        consume_points_permission: 'Consume Points',
         release_student_note_to_parent_permission: 'Release Student Note To Parent',
         solve_student_note_permission: 'Solve Student Note',
         get_student_attendance_permission: 'Get Student Attendance',
@@ -567,6 +581,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         update_parent_visit_history_permission: 'Update Parent Visit History',
         delete_parent_visit_history_permission: 'Delete Parent Visit History',
         confirm_parent_visit_permission: 'Confirm Parent Visit',
+
+        add_assignment_permission: 'Add Assignment',
+        update_assignment_permission: 'Update Assignment',
+        delete_assignment_permission: 'Delete Assignment',
+        get_assignment_permission: 'Get Assignments',
+
         add_mark_entry_permission: 'Add Mark Entry',
         update_mark_entry_permission: 'Update Mark Entry',
         delete_mark_entry_permission: 'Delete Mark Entry',
@@ -576,6 +596,12 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         delete_mark_sheet_permission: 'Delete Mark Sheet',
         get_mark_sheet_permission: 'Get Mark Sheets',
         confirm_mark_sheet_permission: 'Confirm Mark Sheet',
+
+        add_student_assignment_evaluation_permission: 'Add Assignment Evaluation',
+        update_student_assignment_evaluation_permission: 'Update Assignment Evaluation',
+        delete_student_assignment_evaluation_permission: 'Delete Assignment Evaluation',
+        get_student_assignment_evaluation_permission: 'Get Assignment Evaluations',
+
         severity_title: "Severity",
         low_title: "Low",
         middle_title: "Medium",
@@ -764,6 +790,7 @@ export type PermissionsPhrases =
   | 'add_point_permission'
   | 'update_point_permission'
   | 'delete_point_permission'
+  | 'consume_points_permission'
   | 'release_student_note_to_parent_permission'
   | 'solve_student_note_permission'
   | 'get_student_attendance_permission'
@@ -778,6 +805,10 @@ export type PermissionsPhrases =
   | 'update_parent_visit_history_permission'
   | 'delete_parent_visit_history_permission'
   | 'confirm_parent_visit_permission'
+  | 'add_assignment_permission'
+  | 'update_assignment_permission'
+  | 'delete_assignment_permission'
+  | 'get_assignment_permission'
   | 'add_mark_entry_permission'
   | 'update_mark_entry_permission'
   | 'delete_mark_entry_permission'
@@ -786,7 +817,11 @@ export type PermissionsPhrases =
   | 'update_mark_sheet_permission'
   | 'delete_mark_sheet_permission'
   | 'get_mark_sheet_permission'
-  | 'confirm_mark_sheet_permission';
+  | 'confirm_mark_sheet_permission'
+  | 'add_student_assignment_evaluation_permission'
+  | 'update_student_assignment_evaluation_permission'
+  | 'delete_student_assignment_evaluation_permission'
+  | 'get_student_assignment_evaluation_permission';
 
 
 export type StudentAttendancePhrases =
