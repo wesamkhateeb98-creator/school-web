@@ -6,19 +6,19 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatGridListModule } from "@angular/material/grid-list";
 import { MatInputModule } from "@angular/material/input";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
-import { Language } from "../../../../../../core/services/language";
-import { ResponsiveScreen } from "../../../../../../core/services/responsive-screen";
+import { Language } from "../../../../../../../../core/services/language";
+import { ResponsiveScreen } from "../../../../../../../../core/services/responsive-screen";
 import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { HttpHelper } from "../../../../../../core/services/http-helper";
-import { errorMatSnackbarConfig, successMatSnackbarConfig, time12hTo24, time24hTo12 } from "../../../../../../core/consts";
-import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
-import { PeriodEndpoints } from "../../../../shared/endpoints/period-endpoint";
-import { PeriodModel } from "../../../../shared/endpoints/models/Period/period-model";
+import { HttpHelper } from "../../../../../../../../core/services/http-helper";
+import { errorMatSnackbarConfig, successMatSnackbarConfig, time12hTo24, time24hTo12 } from "../../../../../../../../core/consts";
+import { ErrorTitleComponent } from "../../../../../../../shared/components/error-title-component/error-title-component";
+import { PeriodEndpoints } from "../../../../../../shared/endpoints/period-endpoint";
+import { PeriodModel } from "../../../../../../shared/endpoints/models/Period/period-model";
 import { MatTimepickerModule } from "@angular/material/timepicker";
 import { NgxMatTimepickerModule } from "ngx-mat-timepicker";
-import { fromTimeMustLessThanToTimeValidator } from "../../../../../../core/validator/validator";
+import { fromTimeMustLessThanToTimeValidator } from "../../../../../../../../core/validator/validator";
 
 @Component({
   selector: 'app-add-academic-year-dialog',

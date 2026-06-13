@@ -9,10 +9,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { Language } from '../../../../../../core/services/language';
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
-import { ClassEndpoints } from '../../../../shared/endpoints/class-endpoint';
-import { StudentEndpoints } from '../../../../shared/endpoints/student-endpoint';
+import { Language } from '../../../../../../../../core/services/language';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../../../core/consts';
+import { ClassEndpoints } from '../../../../../../shared/endpoints/class-endpoint';
+import { StudentEndpoints } from '../../../../../../shared/endpoints/student-endpoint';
 
 export interface AddStudentToClassDialogData {
   classId: number;

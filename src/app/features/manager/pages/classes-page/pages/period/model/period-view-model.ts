@@ -1,5 +1,5 @@
-import { time24hTo12 } from "../../../../../core/consts"
-import { Language } from "../../../../../core/services/language"
+import { time24hTo12 } from "../../../../../../../core/consts"
+import { Language } from "../../../../../../../core/services/language"
 
 export class PeriodViewModel {
   constructor(

@@ -10,7 +10,7 @@ import { AgeGroupModel } from '../../endpoints/models/age-group/age-group-model'
 import { MatIconModule } from "@angular/material/icon";
 import { MatIconButton } from '@angular/material/button';
 import { ParamsService } from '../../../../../core/services/params-service';
-import { PeriodViewModel } from '../../../pages/period/model/period-view-model';
+import { PeriodViewModel } from '../../../pages/classes-page/pages/period/model/period-view-model';
 import { PeriodEndpoints } from '../../endpoints/period-endpoint';
 
 @Component({

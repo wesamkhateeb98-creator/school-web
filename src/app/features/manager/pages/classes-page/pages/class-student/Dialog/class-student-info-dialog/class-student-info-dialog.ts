@@ -10,25 +10,25 @@ import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
-import { Language } from '../../../../../../core/services/language';
-import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../core/consts';
-import { DayDropDown } from "../../../../shared/components/day-drop-down/day-drop-down";
-import { SubjectAutoComplete } from "../../../../shared/components/subject-auto-complete/subject-auto-complete";
-import { PeriodAutoComplete } from "../../../../shared/components/period-auto-complete/period-auto-complete";
-import { TeacherAutoComplete } from "../../../../shared/components/teacher-auto-complete/teacher-auto-complete";
+import { Language } from '../../../../../../../../core/services/language';
+import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../../../core/consts';
+import { DayDropDown } from "../../../../../../shared/components/day-drop-down/day-drop-down";
+import { SubjectAutoComplete } from "../../../../../../shared/components/subject-auto-complete/subject-auto-complete";
+import { PeriodAutoComplete } from "../../../../../../shared/components/period-auto-complete/period-auto-complete";
+import { TeacherAutoComplete } from "../../../../../../shared/components/teacher-auto-complete/teacher-auto-complete";
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { ErrorTitleComponent } from "../../../../../shared/components/error-title-component/error-title-component";
-import { StudentEndpoints } from '../../../../shared/endpoints/student-endpoint';
+import { ErrorTitleComponent } from "../../../../../../../shared/components/error-title-component/error-title-component";
+import { StudentEndpoints } from '../../../../../../shared/endpoints/student-endpoint';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDivider } from "@angular/material/divider";
 import { MatCardActions, MatCard, MatCardModule } from "@angular/material/card";
 import { CommonModule, DatePipe } from '@angular/common';
-import { StudentByIdModel } from '../../../../shared/endpoints/models/student/student-by-id-model';
+import { StudentByIdModel } from '../../../../../../shared/endpoints/models/student/student-by-id-model';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChip, MatChipSet } from '@angular/material/chips';
-import { ResponsiveScreen } from '../../../../../../core/services/responsive-screen';
+import { ResponsiveScreen } from '../../../../../../../../core/services/responsive-screen';
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { FormatService } from '../../../../../../core/services/format-service';
+import { FormatService } from '../../../../../../../../core/services/format-service';
 
 @Component({
   selector: 'app-class-student-info-dialog',

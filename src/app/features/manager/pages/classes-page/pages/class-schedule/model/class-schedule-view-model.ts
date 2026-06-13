@@ -1,4 +1,4 @@
-import { ScheduleClassDailyModel } from "../../../shared/endpoints/models/schedule-class/schedule-class-model";
+import { ScheduleClassDailyModel } from "../../../../../shared/endpoints/models/schedule-class/schedule-class-model";
 
 export class ScheduleClassViewModel {
   day: number;

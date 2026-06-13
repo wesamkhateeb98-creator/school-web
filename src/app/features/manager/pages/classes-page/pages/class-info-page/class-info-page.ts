@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Language } from '../../../../core/services/language';
+import { Language } from '../../../../../../core/services/language';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -12,15 +12,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { errorMatSnackbarConfig } from '../../../../core/consts';
-import { ClassEndpoints } from '../../shared/endpoints/class-endpoint';
+import { errorMatSnackbarConfig } from '../../../../../../core/consts';
+import { ClassEndpoints } from '../../../../shared/endpoints/class-endpoint';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClassByIdModel } from '../../shared/endpoints/models/class/class-by-id-model';
+import { ClassByIdModel } from '../../../../shared/endpoints/models/class/class-by-id-model';
 import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
-import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
+import { ResponsiveScreen } from '../../../../../../core/services/responsive-screen';
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
-import { FormatService } from '../../../../core/services/format-service';
+import { FormatService } from '../../../../../../core/services/format-service';
 
 @Component({
   selector: 'app-class-page',
