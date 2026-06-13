@@ -25,6 +25,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         "update": 'تعديل',
         "delete": 'حذف',
         'cancel': 'إلغاء',
+        'save': 'حفظ',
+        'add_student_to_class': 'إضافة طالب إلى الصف',
         'details_academic_year': 'تفاصيل السنة الأكاديمية',
         'semester_title': 'الفصل',
         'start_date_title':"تاريخ البداية",
@@ -47,6 +49,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'of':'من',
         'login': 'تسجيل الدخول',
         'logout':'تسجيل خروج',
+        'notifications': 'الإشعارات',
+        'no_notifications': 'لا توجد إشعارات',
+        'load_more': 'تحميل المزيد',
         'denied_title':"مرفوض",
         'denied_header':'الوصول إلى واجهه التحكم غير مسموح',
         'denied_content':"ليس لديك صلاحية الوصول إلى لوحة التحكم. هذه المنطقة مخصصة للاشخاص المصرح لهم فقط.",
@@ -380,6 +385,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         "update": 'Update',
         "delete": 'Delete',
         'cancel': 'Cancel',
+        'save': 'Save',
+        'add_student_to_class': 'Add Student to Class',
         'details_academic_year': 'Academic year details',
         'semester_title': 'Semester',
         'start_date_title':"Start Date",
@@ -402,6 +409,9 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'of':"of",
         'login':'Login',
         'logout':'logout',
+        'notifications': 'Notifications',
+        'no_notifications': 'No notifications',
+        'load_more': 'Load more',
         'denied_title':"Denied",
         "denied_header":"Access Denied",
         'denied_content':"You don't have permission to Dashboard. This area is restricted to authorized personnel only.",
@@ -1036,15 +1046,20 @@ export type ValidationMessagePhrases =
 'select_at_less_one_date';
 
 export type ButtonPhrases = 
-'add' | 
-'update' | 
-'delete' | 
-'cancel' | 
+'add' |
+'update' |
+'delete' |
+'cancel' |
+'save' |
+'add_student_to_class' |
 'ok'| 
 'close' | 
 'of' | 
 'login'|
 'logout'|
+'notifications'|
+'no_notifications'|
+'load_more'|
 'click_here_to_login_screen'|
 'copy'|
 'generate-code'|

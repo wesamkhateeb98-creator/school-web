@@ -12,6 +12,7 @@ import { StaffNavItemService } from './services/staff-nav-item.service';
 import { StaffProfileService } from '../services/staff-profile.service';
 import { SettingButtonComponent } from '../../shared/components/setting-button-component/setting-button-component';
 import { MenuItemComponent } from '../../manager/manager-layout/components/menu-item-component/menu-item-component';
+import { NotificationBellComponent } from '../../shared/components/notification-bell/notification-bell';
 
 @Component({
   selector: 'app-staff-layout',
@@ -25,6 +26,7 @@ import { MenuItemComponent } from '../../manager/manager-layout/components/menu-
     MatButtonModule,
     SettingButtonComponent,
     MenuItemComponent,
+    NotificationBellComponent,
   ],
   templateUrl: './staff-layout.html',
   styleUrl: './staff-layout.scss',

@@ -70,4 +70,12 @@ export class StudentEndpoints {
   getStudentById(studentId:number):Observable<StudentByIdModel>{
     return this.http.get<StudentByIdModel>(`student/${studentId}`,)
   }
+
+  getStudentsSimple(name: string, pageNumber: number, pageSize: number): Observable<Page<{ id: number; fullName: string }>> {
+    return this.http.get<Page<{ id: number; fullName: string }>>('student/filter', {
+      Name: name,
+      pageNumber,
+      pageSize,
+    });
+  }
 }

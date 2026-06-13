@@ -16,6 +16,7 @@ import { ResponsiveScreen } from '../../../core/services/responsive-screen';
 import { AuthService } from '../../../core/services/auth-service';
 import { MenuItemComponent } from "./components/menu-item-component/menu-item-component";
 import { SelectedAcademicYearService } from '../../../core/services/selected-academic-year.service';
+import { NotificationBellComponent } from '../../shared/components/notification-bell/notification-bell';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -31,7 +32,8 @@ import { SelectedAcademicYearService } from '../../../core/services/selected-aca
     MatDividerModule,
     RouterOutlet,
     SettingButtonComponent,
-    MenuItemComponent
+    MenuItemComponent,
+    NotificationBellComponent,
   ],
   templateUrl: './manager-layout.html',
   styleUrl: './manager-layout.scss',

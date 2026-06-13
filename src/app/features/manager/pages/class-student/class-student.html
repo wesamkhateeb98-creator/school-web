@@ -1,15 +1,15 @@
-<div style="display: flex; justify-content: space-between;">
-    <div style="display: flex; justify-content: start; align-items: center;">
-        <h2>{{ language.transform('class_title') }}</h2>
-        
-        <div style="margin: 0 10px;"></div>
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+    <h2 style="margin: 0;">{{ language.transform('class_title') }}</h2>
+
+    <div style="display: flex; gap: 8px; align-items: center;">
+        <button mat-flat-button (click)="openAddStudentToClassDialog()">
+            <mat-icon>person_add</mat-icon>
+            {{ language.transform('add_student_to_class') }}
+        </button>
+        <button mat-icon-button (click)="openClassInfoPage()" [matTooltip]="language.transform('back')">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
     </div>
-
-    
-    <button matFab (click)="openClassInfoPage()" style="margin: 0 20px ">
-        <mat-icon>arrow_back</mat-icon>
-    </button>
-
 </div>
 
 <mat-expansion-panel>

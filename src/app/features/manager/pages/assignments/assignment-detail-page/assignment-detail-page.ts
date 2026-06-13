@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -17,6 +17,10 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Language } from '../../../../../core/services/language';
 import { errorMatSnackbarConfig } from '../../../../../core/consts';
+import { AuthService } from '../../../../../core/services/auth-service';
+import { ROLES } from '../../../../../core/model/roles';
+import { StaffProfileService } from '../../../../staff/services/staff-profile.service';
+import { StaffPermission } from '../../../../../core/enums/staff-permission.enum';
 import { AssignmentEndpoints } from '../../../shared/endpoints/assignment-endpoint';
 import {
   AssignmentResponse,
@@ -54,6 +58,13 @@ export class AssignmentDetailPage implements OnInit {
   matSnackBar         = inject(MatSnackBar);
   dialog              = inject(MatDialog);
   assignmentEndpoints = inject(AssignmentEndpoints);
+  private authService  = inject(AuthService);
+  private staffProfile = inject(StaffProfileService);
+
+  private isAdmin = computed(() => this.authService.getAuth()?.role === ROLES.ADMIN);
+  canAdd    = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.AddStudentAssignmentEvaluation));
+  canEdit   = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.UpdateStudentAssignmentEvaluation));
+  canDelete = computed(() => this.isAdmin() || this.staffProfile.hasPermission(StaffPermission.DeleteStudentAssignmentEvaluation));
 
   id         = 0;
   assignment = signal<AssignmentResponse | null>(null);
@@ -78,9 +89,8 @@ export class AssignmentDetailPage implements OnInit {
   unassignedPageSize    = signal(10);
   unassignedHeaderTable = ['name', 'unassignedActions'];
 
-  unassignedLoaded = false; // track if tab 2 was ever opened
-
   ngOnInit() {
+    this.staffProfile.loadProfile();
     this.id = +(this.route.snapshot.paramMap.get('id') ?? '0');
 
     const state = this.router.lastSuccessfulNavigation?.extras?.state as { assignment?: AssignmentResponse } | null;
@@ -93,14 +103,13 @@ export class AssignmentDetailPage implements OnInit {
       distinctUntilChanged(),
     ).subscribe(() => {
       this.pageNumber.set(1);
+      this.unassignedPageNumber.set(1);
       this.loadEvaluations();
-      if (this.unassignedLoaded) {
-        this.unassignedPageNumber.set(1);
-        this.loadUnassignedStudents();
-      }
+      this.loadUnassignedStudents();
     });
 
     this.loadEvaluations();
+    this.loadUnassignedStudents();
   }
 
   loadEvaluations() {
@@ -147,12 +156,7 @@ export class AssignmentDetailPage implements OnInit {
       });
   }
 
-  onTabChange(index: number) {
-    if (index === 1) {
-      this.unassignedLoaded = true;
-      this.loadUnassignedStudents();
-    }
-  }
+  onTabChange(_index: number) { /* data loads on init */ }
 
   changePage(event: PageEvent) {
     this.pageNumber.set(event.pageIndex + 1);

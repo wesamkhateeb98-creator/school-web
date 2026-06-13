@@ -125,6 +125,23 @@ export const DASHBOARD_ROUTES: Routes = [
         title: messageTitle('student_mark_title'),
         canActivate: [staffPermissionGuard(StaffPermission.GetSubjectMarkEntry)],
       },
+      {
+        path: 'assignments',
+        children: [
+          {
+            path: '',
+            component: AssignmentsPage,
+            title: messageTitle('assignments_title'),
+            canActivate: [staffPermissionGuard(StaffPermission.GetStudentAssignmentEvaluation)],
+          },
+          {
+            path: ':id',
+            component: AssignmentDetailPage,
+            title: messageTitle('assignments_title'),
+            canActivate: [staffPermissionGuard(StaffPermission.GetStudentAssignmentEvaluation)],
+          },
+        ],
+      },
       { path: '',   redirectTo: 'student-mark-sheet', pathMatch: 'full' },
       { path: '**', redirectTo: 'student-mark-sheet', pathMatch: 'full' },
     ],

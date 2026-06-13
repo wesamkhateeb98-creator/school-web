@@ -117,4 +117,8 @@ export class ClassEndpoints {
     ): Observable<ClassByIdModel> {
         return this.http.get<ClassByIdModel>(`${this.baseUrl}/${id}/admin`);
     }
+
+    addStudentToClass(classId: number, accountId: number): Observable<MutateResponse> {
+        return this.http.post<MutateResponse>(`${this.baseUrl}/${classId}/student`, { accountId });
+    }
 }
