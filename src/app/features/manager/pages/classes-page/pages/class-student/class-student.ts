@@ -25,6 +25,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AgeGroupAutoComplete } from '../../../../shared/components/age-group-auto-complete/age-group-auto-complete';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap, tap } from 'rxjs';
 import { ClassStudentInfoDialog } from './Dialog/class-student-info-dialog/class-student-info-dialog';
+import { AssignStudentDialog } from '../../../student-page/components/assign-student-dialog/assign-student-dialog';
 import { MatTooltip } from "@angular/material/tooltip";
 
 @Component({
@@ -43,7 +44,7 @@ import { MatTooltip } from "@angular/material/tooltip";
     MatGridList,
     MatGridTile,
     MatAutocompleteModule,
-    MatTooltip
+    MatTooltip,
 ],
   templateUrl: './class-student.html',
 })
@@ -183,6 +184,16 @@ export class ClassStudent implements OnInit{
 
   openStudentAssignmentsPage(studentId: number) {
     this.router.navigate(['manager/class', this.classId, 'student', studentId, 'assignments']);
+  }
+
+  openAssignStudentDialog() {
+    const ref = this.dialog.open(AssignStudentDialog, {
+      width: '500px',
+      data: { classId: this.classId },
+    });
+    ref.afterClosed().subscribe(result => {
+      if (result?.reload) this.onLoading();
+    });
   }
 
   // ========== Pagination ========== 

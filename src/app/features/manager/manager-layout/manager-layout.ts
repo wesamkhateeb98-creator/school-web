@@ -52,4 +52,9 @@ export class DashboardLayout implements OnInit, OnDestroy  {
   ngOnDestroy(): void {
     this.responseScreen.destroy();
   }
+
+  onYearChange(id: number): void {
+    this.academicYearSvc.select(id);
+    window.location.reload();
+  }
 }

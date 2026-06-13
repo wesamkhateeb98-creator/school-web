@@ -23,10 +23,8 @@ export class AccountsEndpoints {
     });
   }
 
-  assignStudent(accountId:number ,classId:number , key:string ){
-    return this.http.post(`account/assign/student/${accountId}/class/${classId}`,{
-      key:key
-    });
+  assignStudent(accountId: number, classId: number, key: string, academicYearId: number) {
+    return this.http.post(`account/assign/student/${accountId}/class/${classId}`, { key, academicYearId });
   }
 
   assignTeacher(accountId:number ,classId:number , key:string ){
