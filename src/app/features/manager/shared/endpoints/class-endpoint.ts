@@ -121,4 +121,12 @@ export class ClassEndpoints {
     addStudentToClass(classId: number, accountId: number): Observable<MutateResponse> {
         return this.http.post<MutateResponse>(`${this.baseUrl}/${classId}/student`, { accountId });
     }
+
+    getStudentsByClassId(classId: number, name: string | null, pageNumber: number, pageSize: number): Observable<Page<{ id: number; fullName: string; isExpelled: boolean }>> {
+        return this.http.get<Page<{ id: number; fullName: string; isExpelled: boolean }>>(`${this.baseUrl}/${classId}/students`, {
+            name,
+            pageNumber,
+            pageSize,
+        });
+    }
 }

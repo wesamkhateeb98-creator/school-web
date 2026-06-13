@@ -30,7 +30,7 @@ import { SubjectAutoComplete } from "../../../../shared/components/subject-auto-
 import { MatInputModule } from '@angular/material/input';
 import { TeacherAutoComplete } from "../../../../shared/components/teacher-auto-complete/teacher-auto-complete";
 import { AddClassScheduleViewModel } from './model/add-class-schedule.view.model';
-import { PeriodViewModel } from '../../../period/model/period-view-model';
+import { PeriodViewModel } from '../period/model/period-view-model';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { UpdateClassScheduleDialog } from './dialog/update-class-schedule-dialog/update-class-schedule-dialog';
 import { MatProgressBar } from "@angular/material/progress-bar";

@@ -2,11 +2,7 @@
     <h2 style="margin: 0;">{{ language.transform('class_title') }}</h2>
 
     <div style="display: flex; gap: 8px; align-items: center;">
-        <button mat-flat-button (click)="openAddStudentToClassDialog()">
-            <mat-icon>person_add</mat-icon>
-            {{ language.transform('add_student_to_class') }}
-        </button>
-        <button mat-icon-button (click)="openClassInfoPage()" [matTooltip]="language.transform('back')">
+<button mat-icon-button (click)="openClassInfoPage()" [matTooltip]="language.transform('back')">
             <mat-icon>arrow_back</mat-icon>
         </button>
     </div>

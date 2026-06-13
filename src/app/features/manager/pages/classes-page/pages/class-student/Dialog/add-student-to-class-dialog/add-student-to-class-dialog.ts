@@ -12,7 +12,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Language } from '../../../../../../../../core/services/language';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../../../core/consts';
 import { ClassEndpoints } from '../../../../../../shared/endpoints/class-endpoint';
-import { StudentEndpoints } from '../../../../../../shared/endpoints/student-endpoint';
 
 export interface AddStudentToClassDialogData {
   classId: number;
@@ -74,8 +73,7 @@ export class AddStudentToClassDialog {
   matSnackBar   = inject(MatSnackBar);
   dialogRef     = inject(MatDialogRef<AddStudentToClassDialog>);
   data          = inject<AddStudentToClassDialogData>(MAT_DIALOG_DATA);
-  classEndpoints   = inject(ClassEndpoints);
-  studentEndpoints = inject(StudentEndpoints);
+  classEndpoints = inject(ClassEndpoints);
 
   searchCtrl      = new FormControl('');
   students        = signal<{ id: number; fullName: string }[]>([]);
@@ -88,11 +86,12 @@ export class AddStudentToClassDialog {
       debounceTime(300),
       distinctUntilChanged(),
     ).subscribe(val => {
-      if (typeof val === 'string' && val.trim().length > 1) {
+      const name = typeof val === 'string' ? val.trim() : '';
+      if (name.length > 1) {
         this.searching.set(true);
-        this.studentEndpoints.getStudentsSimple(val.trim(), 1, 20).subscribe({
+        this.classEndpoints.getStudentsByClassId(this.data.classId, name, 1, 20).subscribe({
           next: page => { this.students.set(page.content); this.searching.set(false); },
-          error: ()  => this.searching.set(false),
+          error: ()   => this.searching.set(false),
         });
       } else {
         this.students.set([]);
