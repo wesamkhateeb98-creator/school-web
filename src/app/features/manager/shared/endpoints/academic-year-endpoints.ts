@@ -19,7 +19,7 @@ export class AcademicYearEndpoints {
   add(key:string, name:string): Observable<MutateResponse>{
     return this.http.post<MutateResponse>("academic-year",{
       key:key,
-      year:name,
+      year:name
     })
   }
 
@@ -29,9 +29,12 @@ export class AcademicYearEndpoints {
     })
   }
 
-  end(academicYearId:number): Observable<MutateResponse>{
-    
-    return this.http.patch<MutateResponse>("academic-year/" + academicYearId + '/end',{})
+  deactive(academicYearId:number): Observable<MutateResponse>{
+    return this.http.patch<MutateResponse>("academic-year/" + academicYearId + '/deactive',{})
+  }
+
+  active(academicYearId:number, academicYearSemesterId:number): Observable<MutateResponse>{
+    return this.http.patch<MutateResponse>(`academic-year/${academicYearId}/semester/${academicYearSemesterId}/active`,{})
   }
 
   get(selectedPage:number, pageSize:number,academicYear?:number):Observable<Page<AcademicYearModel>>{

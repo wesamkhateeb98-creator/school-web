@@ -38,7 +38,7 @@ export class SelectedAcademicYearService {
           this.selectedId.set(found.id);
         } else {
           const defaultYear =
-            page.content.find(y => y.status === AcademicYearStatus.Started) ??
+            page.content.find(y => y.status === AcademicYearStatus.Active) ??
             page.content[0];
           this.selectedId.set(defaultYear?.id ?? null);
         }

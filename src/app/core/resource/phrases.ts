@@ -111,6 +111,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'status':'الحالة',
         'end_title':'إنهاء',
         'do_you_want_end_question':'هل تريد إنهاء السنة؟؟',
+        'active':'تفعيل',
+        'deactive':'إلغاء التفعيل',
+        'active_academic_year':'تفعيل السنة الدراسية',
+        'deactive_academic_year':'إلغاء تفعيل السنة الدراسية',
+        'active_title':'تفعيل',
         'class_title':"الصف",
         'assign_student':'تكليف طالب',
         'select_from_here':'أختر من هنا',
@@ -471,6 +476,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'status':'Status',
         'end_title':'End',
         'do_you_want_end_question':'Do you want to end academicYear ??',
+        'active':'Active',
+        'deactive':'Deactive',
+        'active_academic_year':'Active academic year',
+        'deactive_academic_year':'Deactive academic year',
+        'active_title':'Active',
         'class_title':"Class",
         'assign_student':'Assign student',
         'select_from_here':'Select from here.',
@@ -1008,7 +1018,7 @@ export type SettingsPhrases =
 'green_color'|
 'blue_color';
 
-export type AcademicYearPhrases = 
+export type AcademicYearPhrases =
 'academic_year_title'|
 'created_at_title'|
 'action'|
@@ -1022,7 +1032,12 @@ export type AcademicYearPhrases =
 'started'|
 'ended'|
 'end_title'|
-'do_you_want_end_question';
+'do_you_want_end_question'|
+'active'|
+'deactive'|
+'active_academic_year'|
+'deactive_academic_year'|
+'active_title';
 
 export type ValidationMessagePhrases = 
 'field_required'|

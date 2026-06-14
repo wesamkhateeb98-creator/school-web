@@ -17,10 +17,12 @@ import { ParamsService } from '../../../../core/services/params-service';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { AcademicYearEndpoints } from '../../shared/endpoints/academic-year-endpoints';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AssignSemesterToAcademicYear } from './dialog/assign-semester-to-academic-year/assign-semester-to-academic-year';
 import { AcademicYearService } from '../../../../core/enums/service/academic-year-service';
 import { AcademicYearStatus } from '../../../../core/enums/academic-year-status';
 import { EndDialog } from './dialog/end-dialog/end-dialog';
+import { ActiveDialog } from './dialog/active-dialog/active-dialog';
 
 @Component({
   selector: 'app-academic-year',
@@ -31,7 +33,8 @@ import { EndDialog } from './dialog/end-dialog/end-dialog';
     MatCard,
     MatIconModule,
     MatButtonModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatTooltipModule
 ],
   templateUrl: './academic-year.html',
   styleUrl: './academic-year.scss',
@@ -165,22 +168,22 @@ export class AcademicYear{
     );
   }
 
-  openEndDialog(id:number){
+  openDeactiveDialog(id: number) {
     const dialogRef = this.dialog.open(
-      EndDialog, 
+      EndDialog,
       {
-        data:{
-          title:this.language.transform('end_academic_year'),
-          action: ()=>{
-            this.academicYearEndpoints.end(id).subscribe({
-              next: success=>{
+        data: {
+          title: this.language.transform('deactive_academic_year'),
+          action: () => {
+            this.academicYearEndpoints.deactive(id).subscribe({
+              next: success => {
                 dialogRef.close();
-                this.academicYearViewModel.update(x=>{
-                  return x.map(item => item.id === id ? {...item,status: AcademicYearStatus.Ended} : item);
-                });
-                this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));                        
+                this.academicYearViewModel.update(x =>
+                  x.map(item => item.id === id ? { ...item, status: AcademicYearStatus.Deactive } : item)
+                );
+                this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
               },
-              error: error=>{
+              error: error => {
                 this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
               }
             });
@@ -189,6 +192,25 @@ export class AcademicYear{
         width: "80%"
       }
     );
+  }
+
+  openActiveDialog(id: number) {
+    const dialogRef = this.dialog.open(
+      ActiveDialog,
+      {
+        width: "80%",
+        data: {
+          academicYearId: id
+        }
+      }
+    );
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.success) {
+        this.academicYearViewModel.update(x =>
+          x.map(item => item.id === id ? { ...item, status: AcademicYearStatus.Active } : item)
+        );
+      }
+    });
   }
 
   changeInPage(pageEvent:PageEvent){

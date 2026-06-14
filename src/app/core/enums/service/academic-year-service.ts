@@ -14,8 +14,8 @@ export class AcademicYearService {
 
   constructor() {
     this.academicYears = [
-      { id: AcademicYearStatus.Started, name: this.language.transform('started') },
-      { id: AcademicYearStatus.Ended, name: this.language.transform('ended') }
+      { id: AcademicYearStatus.Active, name: this.language.transform('active') },
+      { id: AcademicYearStatus.Deactive, name: this.language.transform('deactive') }
     ];
   }
 

@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>{{language.transform('active_academic_year')}}</h2>
+<mat-dialog-content>
+    @if(loading()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    } @else {
+        <form [formGroup]="form">
+            <mat-form-field style="width: 100%;">
+                <mat-label>{{language.transform('semester_title')}}</mat-label>
+                <mat-select formControlName="semesterId">
+                    @for(semester of semesters(); track semester.id) {
+                        <mat-option [value]="semester.id">
+                            {{semester.semesterName}}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </form>
+    }
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button matButton (click)="onNoClick()" [disabled]="loading()">{{language.transform('cancel')}}</button>
+    <button matButton="filled" class="icon-success" cdkFocusInitial (click)="submit()" [disabled]="loading() || !form.valid">{{language.transform('active_title')}}</button>
+</mat-dialog-actions>

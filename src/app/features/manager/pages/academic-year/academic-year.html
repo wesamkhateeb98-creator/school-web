@@ -42,11 +42,19 @@
                     <mat-icon class="icon-error">delete</mat-icon>
                 </button>
 
-                <button mat-icon-button 
-                        [disabled]="element.status == 2"
-                        (click)="openEndDialog(element.id)" >
-                    <mat-icon class="icon-success">stop</mat-icon>
-                </button>
+                @if(element.status == 1) {
+                    <button mat-icon-button
+                            [matTooltip]="language.transform('deactive')"
+                            (click)="openDeactiveDialog(element.id)">
+                        <mat-icon class="icon-error">stop</mat-icon>
+                    </button>
+                } @else {
+                    <button mat-icon-button
+                            [matTooltip]="language.transform('active')"
+                            (click)="openActiveDialog(element.id)">
+                        <mat-icon class="icon-success">play_arrow</mat-icon>
+                    </button>
+                }
                 <button mat-icon-button (click)="openDetailsDialog(element.id)">
                     <mat-icon>info</mat-icon>
                 </button>

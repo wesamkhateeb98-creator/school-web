@@ -41,7 +41,7 @@ export class SemesterEndpoints {
   }  
 
   getSemesterForOpenAcademicYear():Observable<SemesterInOpenAcademicYear>{
-    return this.http.get<SemesterInOpenAcademicYear>('semester/academic-year/started',{})
+    return this.http.get<SemesterInOpenAcademicYear>('semester/academic-year/active',{})
   }
 
   getSemesterByAcademicYear(input:{year:number| undefined, justStarted:boolean ,PageNumber:number, pageSize:number}):
