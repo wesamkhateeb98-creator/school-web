@@ -6,6 +6,7 @@ export interface SemesterForAcademicYearViewModel
     endDate:Date,
     semesterId:number,
     semesterName:string,
+    status:number,
     createdAt:Date,
 }
 
@@ -16,5 +17,6 @@ export interface SemesterForAcademicYearModel
     endDate:string,
     semesterId:number,
     semesterName:string,
+    status:number,
     createdAt:Date,
 }

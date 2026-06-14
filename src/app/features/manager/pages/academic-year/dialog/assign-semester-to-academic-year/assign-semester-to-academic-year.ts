@@ -65,7 +65,7 @@ export class AssignSemesterToAcademicYear {
   semesterForAcademicYear = signal<SemesterForAcademicYearViewModel[]>([]);
   semesterViewModels = signal<SemesterViewModel[]>([]);
   loading = signal<boolean>(false);
-  headerTable:string[] = ['startDate','endDate','semesterName','createdAt','Action'];
+  headerTable:string[] = ['startDate','endDate','semesterName','status','createdAt','Action'];
   semesterForm!: FormGroup;
   data = inject(MAT_DIALOG_DATA);
   key:string = crypto.randomUUID();
@@ -146,6 +146,7 @@ export class AssignSemesterToAcademicYear {
               endDate: StringToDate(x.endDate),
               semesterId: x.semesterId,
               semesterName: x.semesterName,
+              status: x.status,
               createdAt: new Date(x.createdAt)
             } as SemesterForAcademicYearViewModel) ))
         
@@ -263,6 +264,7 @@ export class AssignSemesterToAcademicYear {
           semesterName: this.semesterForm.value.name.semesterName,
           startDate: this.semesterForm.value.startDate,
           endDate:this.semesterForm.value.endDate,
+          status: 1,
           createdAt: new Date()
         };
         this.semesterForAcademicYear.update(x=>[data,...x]);
@@ -275,6 +277,12 @@ export class AssignSemesterToAcademicYear {
         this.loading.set(false); 
       }
     })
+  }
+
+  getSemesterStatus(status: number): string {
+    return status === 0
+      ? this.language.transform('semester_status_active')
+      : this.language.transform('semester_status_deactive');
   }
 
   deleteSemester(id:number){

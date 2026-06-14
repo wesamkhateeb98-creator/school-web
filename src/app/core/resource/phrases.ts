@@ -116,6 +116,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'active_academic_year':'تفعيل السنة الدراسية',
         'deactive_academic_year':'إلغاء تفعيل السنة الدراسية',
         'active_title':'تفعيل',
+        'semester_status_start':'بدء',
+        'semester_status_end':'منتهي',
+        semester_status_active:'مفعل',
+        semester_status_deactive:'غير مفعل',
         'class_title':"الصف",
         'assign_student':'تكليف طالب',
         'select_from_here':'أختر من هنا',
@@ -481,6 +485,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'active_academic_year':'Active academic year',
         'deactive_academic_year':'Deactive academic year',
         'active_title':'Active',
+        'semester_status_start':'started',
+        'semester_status_end':'ended',
+        semester_status_active:'Active',
+        semester_status_deactive:'Deactive',
         'class_title':"Class",
         'assign_student':'Assign student',
         'select_from_here':'Select from here.',
@@ -1037,7 +1045,12 @@ export type AcademicYearPhrases =
 'deactive'|
 'active_academic_year'|
 'deactive_academic_year'|
-'active_title';
+'active_title'|
+'semester_status_start'|
+'semester_status_end'|
+'semester_status_active'|
+'semester_status_deactive'
+;
 
 export type ValidationMessagePhrases = 
 'field_required'|

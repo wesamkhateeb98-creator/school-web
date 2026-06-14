@@ -57,6 +57,7 @@ export class ActiveDialog {
             endDate: StringToDate(x.endDate),
             semesterId: x.semesterId,
             semesterName: x.semesterName,
+            status: x.status,
             createdAt: new Date(x.createdAt)
           } as SemesterForAcademicYearViewModel))
         );
