@@ -10,6 +10,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { DatePipe } from '@angular/common';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SemesterForAcademicYearFilter } from '../../model/semester-for-academic-year-filter';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParamsService } from '../../../../../../core/services/params-service';
@@ -51,7 +52,8 @@ import { SemesterViewModel } from '../../../semester/model/semester-view-model';
     MatDatepickerModule,
     MatDialogContent,
     MatGridList,
-    MatGridTile
+    MatGridTile,
+    MatTooltipModule
 ],
   providers:[
     provideNativeDateAdapter()
@@ -283,6 +285,30 @@ export class AssignSemesterToAcademicYear {
     return status === 0
       ? this.language.transform('semester_status_active')
       : this.language.transform('semester_status_deactive');
+  }
+
+  activateSemester(id: number) {
+    this.academicYearEndpoints.active(this.data.academicYearId, id).subscribe({
+      next: () => {
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        this.semesterForAcademicYear.update(list => list.map(x => x.id === id ? { ...x, status: 0 } : x));
+      },
+      error: error => {
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+      }
+    });
+  }
+
+  deactivateSemester(id: number) {
+    this.academicYearEndpoints.deactiveSemester(this.data.academicYearId, id).subscribe({
+      next: () => {
+        this.matSnackBar.open("success", this.language.transform('close'), successMatSnackbarConfig(this.language));
+        this.semesterForAcademicYear.update(list => list.map(x => x.id === id ? { ...x, status: 1 } : x));
+      },
+      error: error => {
+        this.matSnackBar.open(error.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
+      }
+    });
   }
 
   deleteSemester(id:number){

@@ -126,18 +126,29 @@
 
                 <ng-container matColumnDef="{{headerTable[5]}}">
                     <th mat-header-cell *matHeaderCellDef style="font-weight: bold;"> {{language.transform('action')}} </th>
-                    <td mat-cell *matCellDef="let element" > 
+                    <td mat-cell *matCellDef="let element" >
                         <div style="display: flex; justify-content: space-between;">
-                            <div style="display: flex; justify-content: space-between;">
+                            @if(element.status === 0) {
+                                <button mat-icon-button
+                                        [matTooltip]="language.transform('deactive')"
+                                        [disabled]="data.academicYearStatus !== 1"
+                                        (click)="deactivateSemester(element.id)">
+                                    <mat-icon class="icon-error">stop</mat-icon>
+                                </button>
+                            } @else {
+                                <button mat-icon-button
+                                        [matTooltip]="language.transform('active')"
+                                        [disabled]="data.academicYearStatus !== 1"
+                                        (click)="activateSemester(element.id)">
+                                    <mat-icon class="icon-success">play_arrow</mat-icon>
+                                </button>
+                            }
                             <button mat-icon-button (click)="setUpdateMode(element)">
                                 <mat-icon class="icon-update">edit</mat-icon>
                             </button>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;" >
                             <button mat-icon-button (click)="deleteSemester(element.id)">
                                 <mat-icon class="icon-error">delete</mat-icon>
                             </button>
-                        </div>
                         </div>
                     </td>
                 </ng-container>

@@ -78,7 +78,7 @@ export class ActiveDialog {
     if (!this.form.valid) return;
 
     this.loading.set(true);
-    this.academicYearEndpoints.active(this.data.academicYearId, this.form.value.semesterId).subscribe({
+    this.academicYearEndpoints.activeYear(this.data.academicYearId, this.form.value.semesterId).subscribe({
       next: success => {
         this.matSnackBar.open('success', this.language.transform('close'), successMatSnackbarConfig(this.language));
         this.dialogRef.close({ success: true });

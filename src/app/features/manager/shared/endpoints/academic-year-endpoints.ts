@@ -33,6 +33,10 @@ export class AcademicYearEndpoints {
     return this.http.patch<MutateResponse>("academic-year/" + academicYearId + '/deactive',{})
   }
 
+  activeYear(academicYearId:number, semesterYearId:number): Observable<MutateResponse>{
+    return this.http.patch<MutateResponse>(`academic-year/${academicYearId}/active/semester/${semesterYearId}`,{})
+  }
+
   active(academicYearId:number, academicYearSemesterId:number): Observable<MutateResponse>{
     return this.http.patch<MutateResponse>(`academic-year/${academicYearId}/semester/${academicYearSemesterId}/active`,{})
   }
@@ -63,6 +67,10 @@ export class AcademicYearEndpoints {
       startDate: ToDateOnly(startDate),
       endDate: ToDateOnly(endDate)
     })
+  }
+
+  deactiveSemester(academicYearId:number, semesterYearId:number): Observable<MutateResponse>{
+    return this.http.patch<MutateResponse>(`academic-year/${academicYearId}/semester/${semesterYearId}/deactive`,{})
   }
 
   deleteSemester(academicYearId:number ,academicYearSemesterId:number):Observable<MutateResponse>{

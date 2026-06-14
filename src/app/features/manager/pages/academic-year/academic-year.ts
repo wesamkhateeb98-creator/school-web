@@ -224,13 +224,14 @@ export class AcademicYear{
       this.parmas.setToUrl(this.filter())
   }  
 
-  openDetailsDialog(academicYearId:number){
+  openDetailsDialog(element: AcademicYearViewModel){
     this.dialog.open(
-      AssignSemesterToAcademicYear, 
+      AssignSemesterToAcademicYear,
       {
         minWidth: '80vw',
         data:{
-          academicYearId: academicYearId
+          academicYearId: element.id,
+          academicYearStatus: element.status
         }
       }
     );
