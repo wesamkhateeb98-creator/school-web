@@ -118,11 +118,23 @@ export class ClassEndpoints {
         return this.http.get<ClassByIdModel>(`${this.baseUrl}/${id}/admin`);
     }
 
-    getStudentsByClassId(classId: number, name: string | null, pageNumber: number, pageSize: number): Observable<Page<{ id: number; name: string }>> {
-        return this.http.get<Page<{ id: number; name: string }>>(`${this.baseUrl}/${classId}/students`, {
+    getClassesForStudentAgeGroup(studentId: number, academicYearId: number, pageNumber: number, pageSize: number): Observable<Page<ClassModel>> {
+        return this.http.get<Page<ClassModel>>(`${this.baseUrl}/student/${studentId}/age-group`, {
+            academicYearId,
+            pageNumber,
+            pageSize,
+        });
+    }
+
+    getStudentsByClassId(classId: number, name: string | null, pageNumber: number, pageSize: number): Observable<Page<{ id: number; fullName: string }>> {
+        return this.http.get<Page<{ id: number; fullName: string }>>(`${this.baseUrl}/${classId}/students`, {
             name,
             pageNumber,
             pageSize,
         });
+    }
+
+    addStudentToClass(classId: number, studentId: number): Observable<MutateResponse> {
+        return this.http.post<MutateResponse>(`${this.baseUrl}/${classId}/students`, { studentId });
     }
 }

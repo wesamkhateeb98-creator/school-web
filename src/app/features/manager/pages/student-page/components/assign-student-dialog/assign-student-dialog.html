@@ -18,7 +18,7 @@
             <input type="text" matInput formControlName="student" [matAutocomplete]="autoStudent">
             <mat-autocomplete #autoStudent="matAutocomplete" [displayWith]="displayStudent" (optionSelected)="onStudentSelected($event)">
               @for (item of student$ | async; track item.id) {
-                <mat-option [value]="item">{{ item.name }}</mat-option>
+                <mat-option [value]="item">{{ item.fullName }}</mat-option>
               }
             </mat-autocomplete>
           </mat-form-field>

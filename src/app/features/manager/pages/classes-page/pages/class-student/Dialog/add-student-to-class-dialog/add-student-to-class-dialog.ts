@@ -122,7 +122,7 @@ export class AddStudentToClassDialog {
         );
         this.dialogRef.close({ reload: true });
       },
-      error: err => {
+      error: (err: any) => {
         this.matSnackBar.open(err.message, this.language.transform('close'), errorMatSnackbarConfig(this.language));
         this.saving.set(false);
       },

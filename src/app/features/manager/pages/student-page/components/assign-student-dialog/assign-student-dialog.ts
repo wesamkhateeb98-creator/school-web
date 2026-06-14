@@ -58,7 +58,7 @@ export class AssignStudentDialog implements OnInit {
   key: string = crypto.randomUUID();
 
   class$ = of<ClassModel[]>([]);
-  student$ = of<{ id: number; name: string }[]>([]);
+  student$ = of<{ id: number; fullName: string }[]>([]);
 
   headerTable: string[] = ['ageGrouoName', 'academicYear', 'section', 'createdAt', 'action'];
   classes = signal<ClassModel[]>([]);
@@ -101,8 +101,12 @@ export class AssignStudentDialog implements OnInit {
     this.class$ = this.form.get('class')!.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
-      switchMap(() => this.classEndpoints.getByOpenAcademicYear(1, 20, this.data.ageGroupId)),
-      map(response => response.content),
+      switchMap(() => {
+        const academicYearId = this.academicYearSvc.selectedId();
+        return academicYearId
+          ? this.classEndpoints.getClassesForStudentAgeGroup(this.data.accountId, academicYearId, 1, 20).pipe(map(r => r.content))
+          : of([] as ClassModel[]);
+      }),
     );
 
     if (this.data.classId) {
@@ -168,8 +172,8 @@ export class AssignStudentDialog implements OnInit {
     return item ? `${item.ageGroupName} ${item.section}` : '';
   }
 
-  displayStudent(item: { id: number; name: string }): string {
-    return item?.name ?? '';
+  displayStudent(item: { id: number; fullName: string }): string {
+    return item?.fullName ?? '';
   }
 
   changeInPage(pageEvent: PageEvent) {
