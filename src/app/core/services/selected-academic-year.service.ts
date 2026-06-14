@@ -1,6 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { AcademicYearEndpoints } from '../../features/manager/shared/endpoints/academic-year-endpoints';
 import { AcademicYearModel } from '../../features/manager/pages/academic-year/model/academic-year-model';
+import { AcademicYearStatus } from '../enums/academic-year-status';
 
 const STORAGE_KEY = 'selectedAcademicYearId';
 
@@ -29,14 +30,19 @@ export class SelectedAcademicYearService {
     this.endpoints.get(1, 100).subscribe({
       next: page => {
         this.academicYears.set(page.content);
-        const savedId = localStorage.getItem(STORAGE_KEY);
-        if (savedId) {
-          const id = Number(savedId);
-          const found = page.content.find(y => y.id === id);
-          this.selectedId.set(found ? id : (page.content[0]?.id ?? null));
+
+        const savedId = Number(localStorage.getItem(STORAGE_KEY));
+        const found = savedId ? page.content.find(y => y.id === savedId) : null;
+
+        if (found) {
+          this.selectedId.set(found.id);
         } else {
-          this.selectedId.set(page.content[0]?.id ?? null);
+          const defaultYear =
+            page.content.find(y => y.status === AcademicYearStatus.Started) ??
+            page.content[0];
+          this.selectedId.set(defaultYear?.id ?? null);
         }
+
         this.loading.set(false);
       },
       error: () => {

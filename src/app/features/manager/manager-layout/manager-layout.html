@@ -34,23 +34,16 @@
                         <mat-icon>refresh</mat-icon>
                     </button>
                 </div>
-            } @else if (academicYearSvc.selected()) {
+            } @else {
                 <mat-form-field class="year-select" subscriptSizing="dynamic" appearance="outline">
                     <mat-select
                         [value]="academicYearSvc.selectedId()"
-                        (selectionChange)="onYearChange($event.value)"
-                        (openedChange)="$event && academicYearSvc.academicYears().length === 0 && academicYearSvc.reload()">
+                        (selectionChange)="onYearChange($event.value)">
                         @for (year of academicYearSvc.academicYears(); track year.id) {
-                            <mat-option [value]="year.id">{{ year.year }}</mat-option>
+                            <mat-option [value]="year.id">{{ year.year - 1 }}/{{ year.year }}</mat-option>
                         }
                     </mat-select>
                 </mat-form-field>
-            } @else {
-                <div class="year-spinner">
-                    <button mat-icon-button (click)="academicYearSvc.reload()">
-                        <mat-icon>refresh</mat-icon>
-                    </button>
-                </div>
             }
         </div>
 
@@ -93,13 +86,7 @@
 
     <!-- Main Content -->
     <div class="content-area" [class.with-mobile-header]="responseScreen.isMobile()">
-        @if (academicYearSvc.loading()) {
-            <div class="content-spinner">
-                <mat-progress-spinner diameter="56" mode="indeterminate"></mat-progress-spinner>
-            </div>
-        } @else {
-            <router-outlet/>
-        }
+        <router-outlet/>
     </div>
 
 </mat-sidenav-container>
