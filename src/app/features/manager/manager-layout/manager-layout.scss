@@ -46,10 +46,12 @@ $toggle-btn-size: 28px;
     flex-shrink: 0;
 
     > img {
-        width: 72px;
-        height: 72px;
+        width: 70%;
+        aspect-ratio: 1 / 1;
         object-fit: contain;
-        mix-blend-mode: multiply;
+        border-radius: 50%;
+        background-color: #eee;
+        padding: 6px;
     }
 
     .sidebar-actions {
