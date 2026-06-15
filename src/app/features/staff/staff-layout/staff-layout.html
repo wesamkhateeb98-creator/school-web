@@ -7,17 +7,17 @@
         class="side-nav"
         [opened]="!responseScreen.isMobile()">
 
-        <!-- Header: Logo + School Name + Bell + Close (mobile) -->
+        <!-- Header: Logo + Bell + Close (mobile) -->
         <div class="sidebar-header">
-            <img src="logo.jpg" alt="Logo" />
-            <span class="school-name">School</span>
-            <span style="flex: 1 1 auto;"></span>
-            <app-notification-bell />
-            @if (responseScreen.isMobile()) {
-                <button mat-icon-button (click)="matSidenav.close()" style="color: var(--mat-sys-on-primary);">
-                    <mat-icon>close</mat-icon>
-                </button>
-            }
+            <img src="logo.png" alt="Logo" />
+            <div class="sidebar-actions">
+                <app-notification-bell />
+                @if (responseScreen.isMobile()) {
+                    <button mat-icon-button (click)="matSidenav.close()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                }
+            </div>
         </div>
 
         <mat-divider></mat-divider>
