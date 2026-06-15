@@ -32,8 +32,7 @@ import { NotificationBellComponent } from '../../shared/components/notification-
     MatDividerModule,
     RouterOutlet,
     SettingButtonComponent,
-    MenuItemComponent,
-    NotificationBellComponent,
+    MenuItemComponent
   ],
   templateUrl: './manager-layout.html',
   styleUrl: './manager-layout.scss',
