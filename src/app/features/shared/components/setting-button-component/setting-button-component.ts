@@ -7,6 +7,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { Theme } from '../../../../core/services/theme';
 import { Language } from '../../../../core/services/language';
 import { AuthService } from '../../../../core/services/auth-service';
+import { HttpHelper } from '../../../../core/services/http-helper';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,13 +20,22 @@ import { Router } from '@angular/router';
 export class SettingButtonComponent {
   constructor(
     public theme:Theme,
-    public language:Language, 
+    public language:Language,
     public authService:AuthService,
-    public router:Router
+    public router:Router,
+    public http:HttpHelper
   ){}
 
   logout(){
-    this.authService.removeAuth();
-    this.router.navigate(['auth/login'])
+    this.http.post('user/logout', {}).subscribe({
+      next: () => {
+        this.authService.removeAuth();
+        this.router.navigate(['auth/login']);
+      },
+      error: () => {
+        this.authService.removeAuth();
+        this.router.navigate(['auth/login']);
+      },
+    });
   }
 }

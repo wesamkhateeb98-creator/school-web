@@ -1,0 +1,46 @@
+<h2 mat-dialog-title>{{ language.transform('student_class_assignments') }} - {{ data.studentName }}</h2>
+
+<mat-dialog-content>
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate" style="margin-bottom: 12px;"></mat-progress-bar>
+  }
+
+  @if (!loading() && assignments().length === 0) {
+    <p style="text-align: center; opacity: 0.5; padding: 24px 0;">{{ language.transform('no_data') }}</p>
+  } @else {
+    <table mat-table [dataSource]="assignments()" style="width: 100%;">
+
+      <ng-container matColumnDef="ageGroupName">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('age_group_title') }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.ageGroupName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="section">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('section_title') }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.section }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="academicYear">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('academic_year_title') }}</th>
+        <td mat-cell *matCellDef="let row">{{ +row.academicYear - 1 }}-{{ row.academicYear }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="studentStatus">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('student_status') }}</th>
+        <td mat-cell *matCellDef="let row">{{ getStatusLabel(row.studentStatus) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>{{ language.transform('created_at_title') }}</th>
+        <td mat-cell *matCellDef="let row">{{ row.createdAt | date:'yyyy-MM-dd' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
+      <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
+    </table>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">{{ language.transform('close') }}</button>
+</mat-dialog-actions>

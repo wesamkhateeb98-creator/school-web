@@ -104,13 +104,9 @@
           <td mat-cell *matCellDef="let row">{{ row.assignmentAt | date:'yyyy-MM-dd' }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="requiredTime">
-          <th mat-header-cell *matHeaderCellDef>{{ language.transform('required_time_title') }}</th>
-          <td mat-cell *matCellDef="let row">
-            <mat-icon [style.color]="row.requiredTime ? 'var(--mat-sys-primary)' : 'var(--mat-sys-outline)'">
-              {{ row.requiredTime ? 'check_circle' : 'cancel' }}
-            </mat-icon>
-          </td>
+        <ng-container matColumnDef="assignmentTime">
+          <th mat-header-cell *matHeaderCellDef>{{ language.transform('time') }}</th>
+          <td mat-cell *matCellDef="let row">{{ row.assignmentTime ?? '-' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="createdAt">

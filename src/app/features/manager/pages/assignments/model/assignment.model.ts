@@ -35,7 +35,7 @@ export interface AssignmentResponse {
   description: string | null;
   type: AssignmentType;
   assignmentAt: string;
-  requiredTime: boolean;
+  assignmentTime: string | null;
   classInfo: AssignmentClassInfo | null;
   subjectAgeGroupId: number;
   subjectName: string;
@@ -65,7 +65,7 @@ export interface AssignmentPayload {
   description?: string;
   type: AssignmentType;
   assignmentAt: string;
-  requiredTime: boolean;
+  assignmentTime?: string;
   classId?: number;
   subjectAgeGroupId: number;
   academicYearSemesterId: number;
@@ -76,7 +76,7 @@ export interface AssignmentUpdatePayload {
   description?: string;
   type: AssignmentType;
   assignmentAt: string;
-  requiredTime: boolean;
+  assignmentTime?: string | null;
   classId?: number;
   subjectAgeGroupId: number;
 }

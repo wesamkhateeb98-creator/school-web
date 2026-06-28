@@ -25,6 +25,7 @@ import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/acc
 import { AgeGroupModel } from '../../shared/endpoints/models/age-group/age-group-model';
 import { StudentEndpoints } from '../../shared/endpoints/student-endpoint';
 import { AssignStudentDialog } from './components/assign-student-dialog/assign-student-dialog';
+import { StudentClassAssignmentsDialog } from './components/student-class-assignments-dialog/student-class-assignments-dialog';
 import { AgeGroupAutoComplete } from "../../shared/components/age-group-auto-complete/age-group-auto-complete";
 import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
 import { AgeGroupViewModel } from '../age-group/model/age-group-view-model';
@@ -300,5 +301,12 @@ export class StudentsPage {
   
   openStudentParentVisitsPage(studentId:number){
     this.router.navigate(["manager/student",studentId,"student-parent-visits"])
+  }
+
+  openClassAssignmentsDialog(student: StudentViewModel) {
+    this.dialog.open(StudentClassAssignmentsDialog, {
+      width: '60%',
+      data: { studentId: student.id, studentName: student.fullName },
+    });
   }
 }

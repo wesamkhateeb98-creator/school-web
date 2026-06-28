@@ -73,7 +73,7 @@ export class AssignmentsPage implements OnInit {
   filterForm!: FormGroup;
   urlSubjectId: number | null = null;
 
-  headerTable = ['title', 'type', 'className', 'subjectName', 'assignmentAt', 'requiredTime', 'createdAt', 'action'];
+  headerTable = ['title', 'type', 'className', 'subjectName', 'assignmentAt', 'assignmentTime', 'createdAt', 'action'];
 
   assignmentTypes = Object.entries(ASSIGNMENT_TYPE_LABELS).map(([value, label]) => ({
     value: +value as AssignmentType,

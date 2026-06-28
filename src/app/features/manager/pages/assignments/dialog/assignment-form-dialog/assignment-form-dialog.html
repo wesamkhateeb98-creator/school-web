@@ -78,37 +78,50 @@
           </mat-checkbox>
         </div>
       </mat-grid-tile>
-
+      
       <mat-grid-tile>
-        @if (form.value.includeTime) {
+        <div style="width: 100%; display: flex; align-items: center;">
+          <mat-checkbox formControlName="isClassAssignment">
+            {{ language.transform('class_assignment') }}
+          </mat-checkbox>
+        </div>
+      </mat-grid-tile>
+
+      @if (form.value.isClassAssignment) {
+
+        <mat-grid-tile>
+          <div style="width: 100%;">
+            <app-subject-age-group-auto-complete
+              [form]="form"
+              [ageGroupId]="ageGroupId()"
+              [required]="true"
+              [initialSubjectAgeGroupId]="data.assignment?.subjectAgeGroupId ?? null" />
+          </div>
+        </mat-grid-tile>
+
+
+        <mat-grid-tile>
+          <mat-form-field style="width: 100%;">
+            <mat-label>{{ language.transform('class_title') }}</mat-label>
+            <mat-select formControlName="classId">
+              <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+              @for (cls of classes(); track cls.id) {
+                <mat-option [value]="cls.id">{{ cls.ageGroupName }} - {{ cls.section }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </mat-grid-tile>
+      }
+
+      
+      @if (form.value.includeTime) {
+        <mat-grid-tile>
           <mat-form-field style="width: 100%;">
             <mat-label>{{ language.transform('time') }}</mat-label>
             <input matInput type="time" formControlName="assignmentTime">
           </mat-form-field>
-        }
-      </mat-grid-tile>
-
-      <mat-grid-tile>
-        <mat-form-field style="width: 100%;">
-          <mat-label>{{ language.transform('class_title') }}</mat-label>
-          <mat-select formControlName="classId">
-            <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
-            @for (cls of classes(); track cls.id) {
-              <mat-option [value]="cls.id">{{ cls.ageGroupName }} - {{ cls.section }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </mat-grid-tile>
-
-      <mat-grid-tile>
-        <div style="width: 100%;">
-          <app-subject-age-group-auto-complete
-            [form]="form"
-            [ageGroupId]="ageGroupId()"
-            [required]="true"
-            [initialSubjectAgeGroupId]="data.assignment?.subjectAgeGroupId ?? null" />
-        </div>
-      </mat-grid-tile>
+        </mat-grid-tile>
+      }
 
     </mat-grid-list>
   </mat-dialog-content>

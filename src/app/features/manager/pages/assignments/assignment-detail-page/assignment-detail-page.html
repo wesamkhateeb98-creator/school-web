@@ -39,10 +39,8 @@
             <td style="padding:8px;">{{ assignment()!.assignmentAt | date:'yyyy-MM-dd' }}</td>
           </tr>
           <tr>
-            <td style="padding:8px; font-weight:600;">{{ language.transform('required_time_title') }}</td>
-            <td style="padding:8px;">
-              <mat-icon>{{ assignment()!.requiredTime ? 'check_circle' : 'cancel' }}</mat-icon>
-            </td>
+            <td style="padding:8px; font-weight:600;">{{ language.transform('time') }}</td>
+            <td style="padding:8px;">{{ assignment()!.assignmentTime ?? '-' }}</td>
           </tr>
           <tr>
             <td style="padding:8px; font-weight:600;">{{ language.transform('created_at_title') }}</td>

@@ -134,6 +134,10 @@
                     <button mat-icon-button [matTooltip]="language.transform('student_parent_visits')" (click)="openStudentParentVisitsPage(element.id)" >
                         <mat-icon class="icon-error ">family_restroom</mat-icon>
                     </button>
+
+                    <button mat-icon-button [matTooltip]="language.transform('student_class_assignments')" (click)="openClassAssignmentsDialog(element)" >
+                        <mat-icon class="icon-success">class</mat-icon>
+                    </button>
                     
                 </div>
             </td>

@@ -8,6 +8,7 @@ import { StudentModel } from './models/student/student-model';
 import { StudentFilterViewModel } from '../../pages/student-page/view-model/student-filter-view-model';
 import { ClassStudentModel } from './models/student/class-student-model';
 import { StudentByIdModel } from './models/student/student-by-id-model';
+import { StudentClassAssignment } from './models/student/student-class-assignment';
 
 @Injectable({
   providedIn: 'root',
@@ -78,5 +79,9 @@ export class StudentEndpoints {
       pageNumber,
       pageSize,
     });
+  }
+
+  getClassAssignments(studentId: number): Observable<StudentClassAssignment[]> {
+    return this.http.get<StudentClassAssignment[]>(`user/student/${studentId}/class-assignments`);
   }
 }

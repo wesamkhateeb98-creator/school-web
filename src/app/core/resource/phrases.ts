@@ -310,6 +310,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         clear: 'امسح',
         time: "الوقت",
         include_time: "تضمين الوقت",
+        class_assignment: "تكليف صف",
         mark_distribution_title: 'توزيع العلامات',
         add_mark_distribution: 'إضافة توزيع علامة',
         update_mark_distribution: 'تعديل توزيع علامة',
@@ -367,6 +368,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         student_assignments: 'تكليفات الطالب',
         completed: 'مكتمل',
         not_completed: 'غير مكتمل',
+        student_class_assignments: 'تكليفات الطالب على الصفوف',
     },
     en:{
         'name':"Name",
@@ -673,6 +675,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         clear: 'Clear',
         time: 'Time',
         include_time: 'Include Time',
+        class_assignment: 'Class Assignment',
         mark_distribution_title: 'Mark Distribution',
         add_mark_distribution: 'Add Mark Distribution',
         update_mark_distribution: 'Update Mark Distribution',
@@ -730,6 +733,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         student_assignments: 'Student Assignments',
         completed: 'Completed',
         not_completed: 'Not Completed',
+        student_class_assignments: 'Student Class Assignments',
     }
 }
 
@@ -1161,6 +1165,7 @@ export type AssignmentPhrases =
   'no_assignments'|
   'time'|
   'include_time'|
+  'class_assignment'|
   'student_evaluations'|
   'evaluation_ratio'|
   'add_evaluation'|
@@ -1169,7 +1174,8 @@ export type AssignmentPhrases =
   'unassigned_students'|
   'student_assignments'|
   'completed'|
-  'not_completed'
+  'not_completed'|
+  'student_class_assignments'
   ;
 
 export type MarkDistributionPhrases =

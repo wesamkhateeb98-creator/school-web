@@ -64,7 +64,9 @@ export class AssignmentFormDialog implements OnInit {
 
   ngOnInit() {
     const a = this.data?.assignment;
-    const existingTime = this.extractTime(a?.assignmentAt);
+    const existingTime = a?.assignmentTime ? a.assignmentTime.substring(0, 5) : null;
+
+    const hasClassAssignment = !!(a?.classInfo?.id);
 
     this.form = this.fb.group({
       title:            [a?.title ?? '',            [Validators.required, Validators.maxLength(200)]],
@@ -73,7 +75,7 @@ export class AssignmentFormDialog implements OnInit {
       assignmentAt:     [a ? new Date(a.assignmentAt) : null, Validators.required],
       includeTime:      [!!existingTime],
       assignmentTime:   [existingTime ?? ''],
-      requiredTime:     [a?.requiredTime ?? false],
+      isClassAssignment:[hasClassAssignment],
       classId:          [a?.classInfo?.id ?? null],
       subjectAgeGroupId:[a?.subjectAgeGroupId ?? null, Validators.required],
     });
@@ -98,22 +100,16 @@ export class AssignmentFormDialog implements OnInit {
     });
   }
 
-  private extractTime(assignmentAt?: string): string | null {
-    if (!assignmentAt || !assignmentAt.includes('T')) return null;
-    const time = assignmentAt.substring(11, 16);
-    return time === '00:00' ? null : time;
+  private buildAssignmentAt(): string {
+    return ToDateOnly(this.form.value.assignmentAt as Date);
   }
 
-  private buildAssignmentAt(): string {
-    const date  = this.form.value.assignmentAt as Date;
-    const year  = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day   = String(date.getDate()).padStart(2, '0');
-
+  private buildAssignmentTime(): string | undefined | null {
     if (this.form.value.includeTime && this.form.value.assignmentTime) {
-      return `${year}-${month}-${day}T${this.form.value.assignmentTime}:00`;
+      const time = this.form.value.assignmentTime as string;
+      return time.length === 5 ? `${time}:00` : time;
     }
-    return ToDateOnly(date);
+    return this.isEdit ? null : undefined;
   }
 
   onNoClick() { this.dialogRef.close(); }
@@ -127,6 +123,9 @@ export class AssignmentFormDialog implements OnInit {
     this.loading.set(true);
 
     const assignmentAt = this.buildAssignmentAt();
+    const assignmentTime = this.buildAssignmentTime();
+
+    const isClassAssignment = this.form.value.isClassAssignment;
 
     if (this.isEdit) {
       this.assignmentEndpoints.update(this.data.assignment!.id, {
@@ -134,8 +133,8 @@ export class AssignmentFormDialog implements OnInit {
         description:       this.form.value.description || undefined,
         type:              this.form.value.type,
         assignmentAt,
-        requiredTime:      this.form.value.requiredTime,
-        classId:           this.form.value.classId || undefined,
+        assignmentTime,
+        classId:           isClassAssignment ? (this.form.value.classId || undefined) : undefined,
         subjectAgeGroupId: this.form.value.subjectAgeGroupId,
       }).subscribe({
         next: () => {
@@ -155,8 +154,8 @@ export class AssignmentFormDialog implements OnInit {
         description:       this.form.value.description || undefined,
         type:              this.form.value.type,
         assignmentAt,
-        requiredTime:      this.form.value.requiredTime,
-        classId:           this.form.value.classId || undefined,
+        assignmentTime:    assignmentTime ?? undefined,
+        classId:           isClassAssignment ? (this.form.value.classId || undefined) : undefined,
         subjectAgeGroupId: this.form.value.subjectAgeGroupId,
         academicYearSemesterId: this.form.value.semesterId,
       }).subscribe({
