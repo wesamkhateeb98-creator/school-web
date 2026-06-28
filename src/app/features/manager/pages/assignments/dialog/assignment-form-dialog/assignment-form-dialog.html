@@ -70,14 +70,6 @@
           }
         </mat-form-field>
       </mat-grid-tile>
-
-      <mat-grid-tile>
-        <div style="width: 100%; display: flex; align-items: center;">
-          <mat-checkbox formControlName="includeTime">
-            {{ language.transform('include_time') }}
-          </mat-checkbox>
-        </div>
-      </mat-grid-tile>
       
       <mat-grid-tile>
         <div style="width: 100%; display: flex; align-items: center;">
@@ -87,19 +79,15 @@
         </div>
       </mat-grid-tile>
 
+      <mat-grid-tile>
+        <div style="width: 100%; display: flex; align-items: center;">
+          <mat-checkbox formControlName="includeTime">
+            {{ language.transform('include_time') }}
+          </mat-checkbox>
+        </div>
+      </mat-grid-tile>
+      
       @if (form.value.isClassAssignment) {
-
-        <mat-grid-tile>
-          <div style="width: 100%;">
-            <app-subject-age-group-auto-complete
-              [form]="form"
-              [ageGroupId]="ageGroupId()"
-              [required]="true"
-              [initialSubjectAgeGroupId]="data.assignment?.subjectAgeGroupId ?? null" />
-          </div>
-        </mat-grid-tile>
-
-
         <mat-grid-tile>
           <mat-form-field style="width: 100%;">
             <mat-label>{{ language.transform('class_title') }}</mat-label>
@@ -110,6 +98,17 @@
               }
             </mat-select>
           </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
+          <div style="width: 100%;">
+            <app-subject-age-group-auto-complete
+              [form]="form"
+              [ageGroupId]="ageGroupId()"
+              [required]="true"
+              [initialSubjectAgeGroupId]="data.assignment?.subjectAgeGroupId ?? null" 
+              />
+          </div>
         </mat-grid-tile>
       }
 

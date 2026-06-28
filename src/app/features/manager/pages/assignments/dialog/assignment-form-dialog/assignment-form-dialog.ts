@@ -77,7 +77,17 @@ export class AssignmentFormDialog implements OnInit {
       assignmentTime:   [existingTime ?? ''],
       isClassAssignment:[hasClassAssignment],
       classId:          [a?.classInfo?.id ?? null],
-      subjectAgeGroupId:[a?.subjectAgeGroupId ?? null, Validators.required],
+      subjectAgeGroupId:[a?.subjectAgeGroupId ?? null],
+    });
+
+    this.toggleClassAssignmentValidators(hasClassAssignment);
+
+    this.form.get('isClassAssignment')!.valueChanges.subscribe(checked => {
+      this.toggleClassAssignmentValidators(checked);
+      if (!checked) {
+        this.form.patchValue({ classId: null, subjectAgeGroupId: null });
+        this.ageGroupId.set(null);
+      }
     });
 
     this.classEndpoints.getByOpenAcademicYear(1, 100).subscribe({
@@ -98,6 +108,20 @@ export class AssignmentFormDialog implements OnInit {
         });
       }
     });
+  }
+
+  private toggleClassAssignmentValidators(isClassAssignment: boolean) {
+    const subjectCtrl = this.form.get('subjectAgeGroupId')!;
+    const classCtrl = this.form.get('classId')!;
+    if (isClassAssignment) {
+      subjectCtrl.setValidators(Validators.required);
+      classCtrl.setValidators(Validators.required);
+    } else {
+      subjectCtrl.clearValidators();
+      classCtrl.clearValidators();
+    }
+    subjectCtrl.updateValueAndValidity();
+    classCtrl.updateValueAndValidity();
   }
 
   private buildAssignmentAt(): string {
@@ -135,7 +159,7 @@ export class AssignmentFormDialog implements OnInit {
         assignmentAt,
         assignmentTime,
         classId:           isClassAssignment ? (this.form.value.classId || undefined) : undefined,
-        subjectAgeGroupId: this.form.value.subjectAgeGroupId,
+        subjectAgeGroupId: isClassAssignment ? this.form.value.subjectAgeGroupId : undefined,
       }).subscribe({
         next: () => {
           this.loading.set(false);
@@ -156,7 +180,7 @@ export class AssignmentFormDialog implements OnInit {
         assignmentAt,
         assignmentTime:    assignmentTime ?? undefined,
         classId:           isClassAssignment ? (this.form.value.classId || undefined) : undefined,
-        subjectAgeGroupId: this.form.value.subjectAgeGroupId,
+        subjectAgeGroupId: isClassAssignment ? this.form.value.subjectAgeGroupId : undefined,
         academicYearSemesterId: this.form.value.semesterId,
       }).subscribe({
         next: () => {

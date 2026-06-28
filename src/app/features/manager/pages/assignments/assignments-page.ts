@@ -95,11 +95,7 @@ export class AssignmentsPage implements OnInit {
       type:             [urlType],
     });
 
-    this.classEndpoints.get({
-      academicYear: this.selectedAcademicYearSvc.selected() ?? undefined,
-      pageNumber: 1,
-      pageSize: 100,
-    }).subscribe({
+    this.classEndpoints.getByOpenAcademicYear(1, 100).subscribe({
       next: res => this.classes.set(res.content),
     });
 
