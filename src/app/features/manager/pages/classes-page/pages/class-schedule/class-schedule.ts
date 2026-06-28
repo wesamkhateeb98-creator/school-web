@@ -84,6 +84,7 @@ export class ClassSchedulePage implements OnInit {
 
   dialyModel:ScheduleClassDailyModel[] = [];
   loading = signal<boolean>(false);
+  tableLoading = signal<boolean>(false);
 
   // ======================================== TABLE VIEW MODEL ========================================
   
@@ -118,6 +119,7 @@ export class ClassSchedulePage implements OnInit {
 
   onLoading(){
     this.loading.set(true);
+    this.tableLoading.set(true);
     this.dialyModel =[];
     this.columns.set([]);
     this.addColumn('day', this.language.transform('day_period_class_schedule_table'),0,true);
@@ -141,14 +143,16 @@ export class ClassSchedulePage implements OnInit {
           this.dialyModel = x.classSchedule.classSchedules.sort((a,b)=>a.day - b.day);
           this.prepareTable();
           this.loading.set(false);
+          this.tableLoading.set(false);
         },
         error: error=>{
           this.matSnackBar.open(error.message || "Error", this.language.transform('close'), errorMatSnackbarConfig(this.language));
           this.loading.set(false);
+          this.tableLoading.set(false);
         }
       });
-      
-    }  
+
+    }
   }
 
   prepareTable(){
@@ -265,6 +269,7 @@ export class ClassSchedulePage implements OnInit {
 
   addClassSchedule(){
     this.loading.set(true);
+    this.tableLoading.set(true);
     this.classEndpoints.addScheduleClass(
       this.key,
       this.classId,
