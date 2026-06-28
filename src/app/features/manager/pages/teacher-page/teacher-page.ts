@@ -13,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TeacherFilterViewModel } from './view-model/teacher-filter-view-model';
 import { Language } from '../../../../core/services/language';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,6 +43,7 @@ import { AddTeacherDialog } from './dialogs/add-teacher-dialog/add-teacher-dialo
     MatGridList,
     MatGridTile,
     MatAutocompleteModule,
+    MatTooltipModule,
     DatePipe
   ],
   templateUrl: './teacher-page.html',

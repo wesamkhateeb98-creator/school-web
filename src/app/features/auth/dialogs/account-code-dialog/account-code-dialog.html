@@ -12,24 +12,16 @@
           <mat-label>{{ language.transform("phonenumber_title") }}</mat-label>
           <input type="text" matInput formControlName="phoneNumber" readonly>
         </mat-form-field>
-        
-        @if(!existingCode()){
-          <div>{{language.transform("no-code-available")}}</div>
-        }
-        @else{
-          <mat-form-field class="example-full-width" style="width: 100%;">
-            <mat-label>{{ language.transform("code") }}</mat-label>
-            <input type="text" matInput formControlName="code" readonly>
-          </mat-form-field>
-      }
+
+        <mat-form-field class="example-full-width" style="width: 100%;">
+          <mat-label>{{ language.transform("code") }}</mat-label>
+          <input type="text" matInput formControlName="code" readonly>
+        </mat-form-field>
     }
   </mat-dialog-content>
 
 </form>
   <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close (click)="dialogRef.close()">{{language.transform('close')}}</button>
-    <button mat-button mat-flat-button (click)="copyToClipboard()" [disabled]="loading() || !(data.phoneNumber && form.value.code)">{{language.transform('copy')}} </button>
-    @if(!existingCode()){
-      <button mat-button mat-flat-button (click)="generateCode()">{{language.transform('generate-code')}} </button>
-    }
+    <button mat-button mat-flat-button (click)="copyToClipboard()" [disabled]="loading() || !form.value.code">{{language.transform('copy')}} </button>
   </mat-dialog-actions>

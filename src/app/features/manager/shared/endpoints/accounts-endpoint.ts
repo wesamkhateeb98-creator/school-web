@@ -11,29 +11,23 @@ export class AccountsEndpoints {
     public http:HttpHelper
   ){}
 
-  getCode(id:number):Observable<AccountCodeModel>{
-    return this.http.get<AccountCodeModel>('account/code',{
-        id:id,
-      })
-  }
-
   generateCode(id:number):Observable<AccountCodeModel>{
-    return this.http.post<AccountCodeModel>('account/generate-code',{
+    return this.http.post<AccountCodeModel>('user/generate-code',{
         id:id
     });
   }
 
   assignStudent(accountId: number, classId: number, key: string, academicYearId: number) {
-    return this.http.post(`account/assign/student/${accountId}/class/${classId}`, { key, academicYearId });
+    return this.http.post(`user/assign/student/${accountId}/class/${classId}`, { key, academicYearId });
   }
 
   assignTeacher(accountId:number ,classId:number , key:string ){
-    return this.http.post(`account/assign/teacher/${accountId}/class/${classId}`,{
+    return this.http.post(`user/assign/teacher/${accountId}/class/${classId}`,{
       key:key
     });
   }
 
   unassingAccount(accountId:number ,accountClassAssignmentId:number){
-    return this.http.delete(`account/unassign/account/${accountId}/assignment/${accountClassAssignmentId}`);
+    return this.http.delete(`user/unassign/account/${accountId}/assignment/${accountClassAssignmentId}`);
   }
 }

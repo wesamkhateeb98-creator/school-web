@@ -68,7 +68,7 @@ export class Login {
     
     this.loading.set(true);
     
-    this.httpHelper.post<AuthModel>('account/sign-in',{
+    this.httpHelper.post<AuthModel>('user/sign-in',{
       phonenumber:this.phonenumber?.value,
       password:this.password?.value
     }).subscribe({

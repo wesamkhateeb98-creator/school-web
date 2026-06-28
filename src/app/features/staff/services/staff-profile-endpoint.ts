@@ -8,6 +8,6 @@ export class StaffProfileEndpoint {
   constructor(private http: HttpHelper) {}
 
   getProfile(): Observable<StaffProfileResponse> {
-    return this.http.get<StaffProfileResponse>('account/profile/administrative-staff');
+    return this.http.get<StaffProfileResponse>('user/profile/administrative-staff');
   }
 }

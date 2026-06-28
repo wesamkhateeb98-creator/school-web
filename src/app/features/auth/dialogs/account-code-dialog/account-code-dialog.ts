@@ -1,4 +1,4 @@
-import { Component, inject, Inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatFormField, MatFormFieldModule, MatLabel } from "@angular/material/form-field";
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -26,7 +26,7 @@ import { AccountsEndpoints } from '../../../manager/shared/endpoints/accounts-en
   styleUrl: './account-code-dialog.scss',
 })
 export class AccountCodeDialog implements OnInit {
-  loading = signal<boolean>(false);
+  loading = signal<boolean>(true);
   form!: FormGroup;
   data = inject(MAT_DIALOG_DATA);
   accountsEndpoints = inject(AccountsEndpoints);
@@ -37,81 +37,54 @@ export class AccountCodeDialog implements OnInit {
   messageService = inject(MessageService);
   matSnackBar = inject(MatSnackBar);
 
-  existingCode = signal<boolean>(true);
-
   ngOnInit() {
     this.form = this.fb.group({
       phoneNumber: [this.data.phoneNumber],
       code: ['']
     });
 
-    this.accountsEndpoints.getCode(this.data.id).subscribe({
-      next: (res) => {
-        
-        this.form.patchValue({code: res.code});
-        
-        this.existingCode.set(true);
-
-        this.loading.set(false);
-      },
-      error: (error) => {
-        this.loading.set(false)
-        if(error.status == 404)
-          this.existingCode.set(false);
-    }});
+    this.generateCode();
   }
 
   copyToClipboard() {
     const textToCopy = `Phone: ${this.data.phoneNumber}\nCode: ${this.form.value.code}`;
     this.clipboard.copy(textToCopy);
-    
+
     this.matSnackBar.open(
-          textToCopy, 
-          this.language.transform('close'), 
+          textToCopy,
+          this.language.transform('close'),
           successMatSnackbarConfig(this.language)
         );
   }
 
   SenMessageToWhatsapp() {
     const textToCopy = `Phone: ${this.data.phoneNumber}\nCode: ${this.form.value.code}`;
-    
+
     this.messageService.sendMessageToWhatsapp(this.data.phoneNumber, textToCopy);
 
     this.matSnackBar.open(
-          textToCopy, 
-          this.language.transform('close'), 
+          textToCopy,
+          this.language.transform('close'),
           successMatSnackbarConfig(this.language)
         );
   }
 
-
-  async generateCode(){
+  generateCode() {
     this.loading.set(true);
-    
+
     this.accountsEndpoints.generateCode(this.data.id).subscribe({
-      next:(success) => {
-        
-        this.matSnackBar.open(
-          this.language.transform("success"), 
-          this.language.transform('close'), 
-          successMatSnackbarConfig(this.language)
-        );
-        
-        this.form.patchValue({code: success.code});
-
+      next: (success) => {
+        this.form.patchValue({ code: success.code });
         this.loading.set(false);
-
-        this.existingCode.set(true);
       },
-      error:(err) => {
+      error: (err) => {
         this.matSnackBar.open(
-                  err.error?.Title || err.message, 
-                  this.language.transform('close'), 
-                  errorMatSnackbarConfig(this.language)
-                );
-
+          err.error?.Title || err.message,
+          this.language.transform('close'),
+          errorMatSnackbarConfig(this.language)
+        );
         this.loading.set(false);
       }
-    })
+    });
   }
 }

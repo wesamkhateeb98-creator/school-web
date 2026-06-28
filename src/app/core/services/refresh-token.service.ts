@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RefreshTokenService {
-  private readonly REFRESH_URL = `${environment.apiBaseUrl}/account/refresh-token`;
+  private readonly REFRESH_URL = `${environment.apiBaseUrl}/user/refresh-token`;
 
   private isRefreshing = false;
   private refreshSubject$ = new BehaviorSubject<AuthModel | null>(null);
