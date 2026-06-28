@@ -19,6 +19,8 @@ import { ClassModel } from '../../../../shared/endpoints/models/class/class-mode
 import { AssignmentType, AssignmentResponse, ASSIGNMENT_TYPE_LABELS } from '../../model/assignment.model';
 import { AcademicYearSemesterAutoComplete } from '../../../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete';
 import { SubjectAgeGroupAutoComplete } from '../../../../shared/components/subject-age-group-auto-complete/subject-age-group-auto-complete';
+import { AgeGroupAutoComplete } from '../../../../shared/components/age-group-auto-complete/age-group-auto-complete';
+import { SelectedAcademicYearService } from '../../../../../../core/services/selected-academic-year.service';
 
 @Component({
   selector: 'app-assignment-form-dialog',
@@ -35,6 +37,7 @@ import { SubjectAgeGroupAutoComplete } from '../../../../shared/components/subje
     MatProgressBarModule,
     AcademicYearSemesterAutoComplete,
     SubjectAgeGroupAutoComplete,
+    AgeGroupAutoComplete,
   ],
   providers: [provideNativeDateAdapter()],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,10 +49,12 @@ export class AssignmentFormDialog implements OnInit {
   language            = inject(Language);
   fb                  = inject(FormBuilder);
   matSnackBar         = inject(MatSnackBar);
-  assignmentEndpoints = inject(AssignmentEndpoints);
-  classEndpoints      = inject(ClassEndpoints);
+  assignmentEndpoints    = inject(AssignmentEndpoints);
+  classEndpoints         = inject(ClassEndpoints);
+  selectedAcademicYearSvc = inject(SelectedAcademicYearService);
   key = crypto.randomUUID();
   loading  = signal(false);
+  ageGroupLoading = signal(false);
   classes  = signal<ClassModel[]>([]);
   ageGroupId = signal<number | null>(null);
 
@@ -86,28 +91,35 @@ export class AssignmentFormDialog implements OnInit {
       this.toggleClassAssignmentValidators(checked);
       if (!checked) {
         this.form.patchValue({ classId: null, subjectAgeGroupId: null });
+        this.form.get('ageGroup')?.setValue(null);
+        this.form.get('ageGroupId')?.setValue(null);
         this.ageGroupId.set(null);
+        this.classes.set([]);
       }
     });
 
-    this.classEndpoints.getByOpenAcademicYear(1, 100).subscribe({
-      next: res => this.classes.set(res.content),
+    this.form.valueChanges.subscribe(() => {
+      const formAgeGroupId = this.form.get('ageGroupId')?.value ?? null;
+      if (formAgeGroupId !== this.ageGroupId()) {
+        this.ageGroupId.set(formAgeGroupId);
+        this.loadClasses(formAgeGroupId);
+      }
     });
+  }
 
-    if (a?.classInfo?.id) {
-      this.classEndpoints.getByIdClassForAdmin(a.classInfo.id).subscribe({
-        next: cls => this.ageGroupId.set(cls.ageGroupId),
+  private loadClasses(ageGroupId: number | null) {
+    this.form.patchValue({ classId: null }, { emitEvent: false });
+    this.classes.set([]);
+    if (ageGroupId) {
+      this.classEndpoints.get({
+        ageGroup: { id: ageGroupId } as any,
+        academicYear: this.selectedAcademicYearSvc.selected() ?? undefined,
+        pageNumber: 1,
+        pageSize: 100,
+      }).subscribe({
+        next: res => this.classes.set(res.content),
       });
     }
-
-    this.form.get('classId')!.valueChanges.subscribe(classId => {
-      this.ageGroupId.set(null);
-      if (classId) {
-        this.classEndpoints.getByIdClassForAdmin(classId).subscribe({
-          next: cls => this.ageGroupId.set(cls.ageGroupId),
-        });
-      }
-    });
   }
 
   private toggleClassAssignmentValidators(isClassAssignment: boolean) {

@@ -16,9 +16,19 @@
     <mat-grid-list [cols]="responsive.isMobile() ? 1 : 2" rowHeight="80px" gutterSize="12">
 
       <mat-grid-tile>
+        <div style="width: 100%;">
+          <app-age-group-auto-complete
+            [form]="filterForm"
+            [ageGroup]="null"
+            [loading]="ageGroupLoading"
+            [checkUrl]="true" />
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
         <mat-form-field style="width: 100%;">
           <mat-label>{{ language.transform('class_title') }}</mat-label>
-          <mat-select formControlName="classId">
+          <mat-select formControlName="classId" [disabled]="!filterAgeGroupId()">
             <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
             @for (cls of classes(); track cls.id) {
               <mat-option [value]="cls.id">{{ cls.ageGroupName }} - {{ cls.section }}</mat-option>

@@ -28,6 +28,7 @@ import { AssignmentFormDialog } from './dialog/assignment-form-dialog/assignment
 import { ParamsService } from '../../../../core/services/params-service';
 import { ResponsiveScreen } from '../../../../core/services/responsive-screen';
 import { SubjectAgeGroupAutoComplete } from '../../shared/components/subject-age-group-auto-complete/subject-age-group-auto-complete';
+import { AgeGroupAutoComplete } from '../../shared/components/age-group-auto-complete/age-group-auto-complete';
 
 @Component({
   selector: 'app-assignments-page',
@@ -46,6 +47,7 @@ import { SubjectAgeGroupAutoComplete } from '../../shared/components/subject-age
     ReactiveFormsModule,
     DatePipe,
     SubjectAgeGroupAutoComplete,
+    AgeGroupAutoComplete,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './assignments-page.html',
@@ -63,6 +65,7 @@ export class AssignmentsPage implements OnInit {
   selectedAcademicYearSvc = inject(SelectedAcademicYearService);
 
   loading        = signal(false);
+  ageGroupLoading = signal(false);
   assignments    = signal<AssignmentResponse[]>([]);
   classes        = signal<ClassModel[]>([]);
   filterAgeGroupId = signal<number | null>(null);
@@ -95,28 +98,31 @@ export class AssignmentsPage implements OnInit {
       type:             [urlType],
     });
 
-    this.classEndpoints.getByOpenAcademicYear(1, 100).subscribe({
-      next: res => this.classes.set(res.content),
-    });
-
-    this.filterForm.get('classId')!.valueChanges.subscribe(classId => {
-      this.filterAgeGroupId.set(null);
-      if (classId) {
-        this.classEndpoints.getByIdClassForAdmin(classId).subscribe({
-          next: cls => this.filterAgeGroupId.set(cls.ageGroupId),
-        });
+    this.filterForm.valueChanges.pipe(debounceTime(300)).subscribe(() => {
+      const ageGroupId = this.filterForm.get('ageGroupId')?.value ?? null;
+      if (ageGroupId !== this.filterAgeGroupId()) {
+        this.filterAgeGroupId.set(ageGroupId);
+        this.loadClasses(ageGroupId);
       }
+      this.applyFilter();
     });
-
-    if (urlClassId) {
-      this.classEndpoints.getByIdClassForAdmin(urlClassId).subscribe({
-        next: cls => this.filterAgeGroupId.set(cls.ageGroupId),
-      });
-    }
-
-    this.filterForm.valueChanges.pipe(debounceTime(300)).subscribe(() => this.applyFilter());
 
     this.load();
+  }
+
+  private loadClasses(ageGroupId: number | null) {
+    this.filterForm.patchValue({ classId: null }, { emitEvent: false });
+    this.classes.set([]);
+    if (ageGroupId) {
+      this.classEndpoints.get({
+        ageGroup: { id: ageGroupId } as any,
+        academicYear: this.selectedAcademicYearSvc.selected() ?? undefined,
+        pageNumber: 1,
+        pageSize: 100,
+      }).subscribe({
+        next: res => this.classes.set(res.content),
+      });
+    }
   }
 
   load() {
@@ -160,8 +166,11 @@ export class AssignmentsPage implements OnInit {
 
   resetFilter() {
     this.filterAgeGroupId.set(null);
+    this.classes.set([]);
     this.pageSize.set(10);
     this.filterForm.reset({ classId: null, subjectAgeGroupId: null, type: null });
+    this.filterForm.get('ageGroup')?.setValue(null);
+    this.filterForm.get('ageGroupId')?.setValue(null);
   }
 
   changePage(event: PageEvent) {

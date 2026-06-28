@@ -89,9 +89,19 @@
       
       @if (form.value.isClassAssignment) {
         <mat-grid-tile>
+          <div style="width: 100%;">
+            <app-age-group-auto-complete
+              [form]="form"
+              [ageGroup]="null"
+              [loading]="ageGroupLoading"
+              [checkUrl]="false" />
+          </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile>
           <mat-form-field style="width: 100%;">
             <mat-label>{{ language.transform('class_title') }}</mat-label>
-            <mat-select formControlName="classId">
+            <mat-select formControlName="classId" [disabled]="!ageGroupId()">
               <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
               @for (cls of classes(); track cls.id) {
                 <mat-option [value]="cls.id">{{ cls.ageGroupName }} - {{ cls.section }}</mat-option>
@@ -106,7 +116,7 @@
               [form]="form"
               [ageGroupId]="ageGroupId()"
               [required]="true"
-              [initialSubjectAgeGroupId]="data.assignment?.subjectAgeGroupId ?? null" 
+              [initialSubjectAgeGroupId]="data.assignment?.subjectAgeGroupId ?? null"
               />
           </div>
         </mat-grid-tile>

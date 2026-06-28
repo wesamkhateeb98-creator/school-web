@@ -7,6 +7,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ClassModel } from '../../endpoints/models/class/class-model';
 import { debounceTime, map, of, startWith, switchMap } from 'rxjs';
 import { ClassEndpoints } from '../../endpoints/class-endpoint';
+import { SelectedAcademicYearService } from '../../../../../core/services/selected-academic-year.service';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -26,6 +27,7 @@ export class ClassAutoComplete implements OnInit,OnChanges {
   language = inject(Language);
 
   classEndpoints = inject(ClassEndpoints);
+  selectedAcademicYearSvc = inject(SelectedAcademicYearService);
 
   ngOnInit(): void {
     this.form.addControl('class', this.fb.control(''));
@@ -53,7 +55,12 @@ export class ClassAutoComplete implements OnInit,OnChanges {
       startWith(''),
       debounceTime(300),
       switchMap(value => {
-        return this.classEndpoints.getByOpenAcademicYear(1, 20,this.ageGroupId);
+        return this.classEndpoints.get({
+          ageGroup: this.ageGroupId ? { id: this.ageGroupId } as any : undefined,
+          academicYear: this.selectedAcademicYearSvc.selected() ?? undefined,
+          pageNumber: 1,
+          pageSize: 20,
+        });
       }),
       map(response => response.content),
     );
