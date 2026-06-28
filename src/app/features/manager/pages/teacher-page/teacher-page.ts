@@ -24,7 +24,6 @@ import { debounceTime } from 'rxjs';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { AccountCodeDialog } from '../../../auth/dialogs/account-code-dialog/account-code-dialog';
-import { SubjectForTeacherDialog } from './dialogs/subject-for-teacher-dialog/subject-for-teacher-dialog';
 import { AddTeacherDialog } from './dialogs/add-teacher-dialog/add-teacher-dialog';
 
 @Component({
@@ -246,15 +245,4 @@ export class TeacherPage {
     });
   }
 
-  openSubjectPage(id:number){
-    this.dialog.open(
-      SubjectForTeacherDialog, 
-      {
-        data:{
-          teacherId: id
-        },
-        width: "80%"
-      }
-    );
-  }
 }

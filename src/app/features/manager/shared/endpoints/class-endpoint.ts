@@ -83,7 +83,7 @@ export class ClassEndpoints {
         teacherId: (number| undefined),
     ): Observable<MutateResponse> {
         return this.http.put<MutateResponse>(`${this.baseUrl}/${classId}/class-schedule/${classScheduleId}`, {
-            subjectId: subjectId,
+            SubjectAgeGroupId: subjectId,
             day: day,
             periodId: periodId,
             teacherId: teacherId,

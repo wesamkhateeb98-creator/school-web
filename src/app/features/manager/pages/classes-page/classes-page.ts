@@ -18,6 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { AddClassDialog } from './add-teacher-dialog/add-class-dialog';
@@ -46,6 +47,7 @@ import { of } from 'rxjs';
     MatGridList,
     MatGridTile,
     MatAutocompleteModule,
+    MatTooltipModule,
     DatePipe,
     AsyncPipe
   ],
