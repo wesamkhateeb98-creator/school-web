@@ -127,16 +127,12 @@ export class AssignmentFormDialog implements OnInit {
   }
 
   private toggleClassAssignmentValidators(isClassAssignment: boolean) {
-    const subjectCtrl = this.form.get('subjectAgeGroupId')!;
     const classCtrl = this.form.get('classId')!;
     if (isClassAssignment) {
-      subjectCtrl.setValidators(Validators.required);
       classCtrl.setValidators(Validators.required);
     } else {
-      subjectCtrl.clearValidators();
       classCtrl.clearValidators();
     }
-    subjectCtrl.updateValueAndValidity();
     classCtrl.updateValueAndValidity();
   }
 
