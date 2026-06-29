@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DatePipe } from '@angular/common';
 import { Language } from '../../../../core/services/language';
 import { Router } from '@angular/router';
@@ -46,6 +47,7 @@ import { AgeGroupAutoComplete } from '../../shared/components/age-group-auto-com
     MatGridListModule,
     ReactiveFormsModule,
     DatePipe,
+    MatProgressBarModule,
     SubjectAgeGroupAutoComplete,
     AgeGroupAutoComplete,
   ],
@@ -66,6 +68,7 @@ export class AssignmentsPage implements OnInit {
 
   loading        = signal(false);
   ageGroupLoading = signal(false);
+  loadingClasses = signal(false);
   assignments    = signal<AssignmentResponse[]>([]);
   classes        = signal<ClassModel[]>([]);
   filterAgeGroupId = signal<number | null>(null);
@@ -112,13 +115,18 @@ export class AssignmentsPage implements OnInit {
     this.filterForm.patchValue({ classId: null }, { emitEvent: false });
     this.classes.set([]);
     if (ageGroupId) {
+      this.loadingClasses.set(true);
       this.classEndpoints.get({
         ageGroup: { id: ageGroupId } as any,
         academicYear: this.selectedAcademicYearSvc.selected() ?? undefined,
         pageNumber: 1,
         pageSize: 100,
       }).subscribe({
-        next: res => this.classes.set(res.content),
+        next: res => {
+          this.classes.set(res.content);
+          this.loadingClasses.set(false);
+        },
+        error: () => this.loadingClasses.set(false),
       });
     }
   }

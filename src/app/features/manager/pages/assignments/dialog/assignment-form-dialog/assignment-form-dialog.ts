@@ -55,6 +55,7 @@ export class AssignmentFormDialog implements OnInit {
   key = crypto.randomUUID();
   loading  = signal(false);
   ageGroupLoading = signal(false);
+  loadingClasses = signal(false);
   classes  = signal<ClassModel[]>([]);
   ageGroupId = signal<number | null>(null);
 
@@ -109,13 +110,18 @@ export class AssignmentFormDialog implements OnInit {
     this.form.patchValue({ classId: null }, { emitEvent: false });
     this.classes.set([]);
     if (ageGroupId) {
+      this.loadingClasses.set(true);
       this.classEndpoints.get({
         ageGroup: { id: ageGroupId } as any,
         academicYear: this.selectedAcademicYearSvc.selected() ?? undefined,
         pageNumber: 1,
         pageSize: 100,
       }).subscribe({
-        next: res => this.classes.set(res.content),
+        next: res => {
+          this.classes.set(res.content);
+          this.loadingClasses.set(false);
+        },
+        error: () => this.loadingClasses.set(false),
       });
     }
   }

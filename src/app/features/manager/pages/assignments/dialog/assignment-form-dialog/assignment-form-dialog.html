@@ -108,6 +108,9 @@
                 <mat-option [value]="cls.id">{{ cls.ageGroupName }} - {{ cls.section }}</mat-option>
               }
             </mat-select>
+            @if (loadingClasses()) {
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            }
           </mat-form-field>
         </mat-grid-tile>
 
