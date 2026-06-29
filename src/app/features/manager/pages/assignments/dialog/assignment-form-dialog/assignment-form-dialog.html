@@ -94,7 +94,8 @@
               [form]="form"
               [ageGroup]="null"
               [loading]="ageGroupLoading"
-              [checkUrl]="false" />
+              [checkUrl]="false"
+              (ageGroupSelected)="onAgeGroupChanged($event)" />
           </div>
         </mat-grid-tile>
 

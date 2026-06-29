@@ -21,7 +21,8 @@
             [form]="filterForm"
             [ageGroup]="null"
             [loading]="ageGroupLoading"
-            [checkUrl]="true" />
+            [checkUrl]="true"
+            (ageGroupSelected)="onAgeGroupChanged($event)" />
         </div>
       </mat-grid-tile>
 

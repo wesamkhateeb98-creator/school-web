@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -26,6 +26,7 @@ export class AgeGroupAutoComplete implements OnInit {
   @Input() ageGroup!: AgeGroupModel|null;
   @Input() loading!: WritableSignal<boolean>;
   @Input() checkUrl!: boolean;
+  @Output() ageGroupSelected = new EventEmitter<number | null>();
 
   fb = inject(FormBuilder);
   language = inject(Language);
@@ -78,11 +79,13 @@ export class AgeGroupAutoComplete implements OnInit {
 
   onAgeGroupSelected(event: any) {
     this.form.patchValue({ ageGroupId: event.option.value.id });
+    this.ageGroupSelected.emit(event.option.value.id);
     this.parmas.setToUrl(({...this.parmas.loadGenericFromUrl(),ageGroupName:event.option.value.name}))
   }
 
   clear(){
     this.form.patchValue({ ageGroupId: null, ageGroup: null });
+    this.ageGroupSelected.emit(null);
     const { ageGroupName, ...r } = this.parmas.loadGenericFromUrl();
     this.parmas.setToUrl(({...r}))
   }

@@ -98,16 +98,14 @@ export class AssignmentsPage implements OnInit {
       type:             [urlType],
     });
 
-    this.filterForm.valueChanges.pipe(debounceTime(300)).subscribe(() => {
-      const ageGroupId = this.filterForm.get('ageGroupId')?.value ?? null;
-      if (ageGroupId !== this.filterAgeGroupId()) {
-        this.filterAgeGroupId.set(ageGroupId);
-        this.loadClasses(ageGroupId);
-      }
-      this.applyFilter();
-    });
+    this.filterForm.valueChanges.pipe(debounceTime(300)).subscribe(() => this.applyFilter());
 
     this.load();
+  }
+
+  onAgeGroupChanged(ageGroupId: number | null) {
+    this.filterAgeGroupId.set(ageGroupId);
+    this.loadClasses(ageGroupId);
   }
 
   private loadClasses(ageGroupId: number | null) {

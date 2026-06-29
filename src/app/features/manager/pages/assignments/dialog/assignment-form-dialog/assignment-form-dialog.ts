@@ -98,13 +98,11 @@ export class AssignmentFormDialog implements OnInit {
       }
     });
 
-    this.form.valueChanges.subscribe(() => {
-      const formAgeGroupId = this.form.get('ageGroupId')?.value ?? null;
-      if (formAgeGroupId !== this.ageGroupId()) {
-        this.ageGroupId.set(formAgeGroupId);
-        this.loadClasses(formAgeGroupId);
-      }
-    });
+  }
+
+  onAgeGroupChanged(ageGroupId: number | null) {
+    this.ageGroupId.set(ageGroupId);
+    this.loadClasses(ageGroupId);
   }
 
   private loadClasses(ageGroupId: number | null) {
