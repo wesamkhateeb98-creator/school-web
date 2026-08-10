@@ -4,7 +4,11 @@
 @use './app/theme/blueTheme.scss' as blueTheme;
 
 html{
-  
+  // Shared gold accent (matches the school seal's dome/wheat gold) — used
+  // wherever a fourth accent beyond primary/secondary/tertiary is needed.
+  --gold-500: #b9862e;
+  --gold-300: #dda63f;
+
   @include mat.form-field-overrides((
     disabled-input-text-placeholder-color: orange,
       filled-active-indicator-color: var(--mat-sys-primary)
@@ -15,6 +19,182 @@ html{
     content-padding:5px 10px,
     actions-padding:5px 10px
   ));  
+}
+
+// Settings menu (mat-menu's overlay renders outside the component's DOM
+// subtree via CDK Overlay too — same reason this can't be scoped locally).
+.settings-menu-panel {
+  border-radius: 14px !important;
+  overflow: hidden;
+  min-width: 220px !important;
+  box-shadow: 0 10px 28px -8px rgba(13, 36, 16, 0.3) !important;
+
+  .mat-mdc-menu-content {
+    padding: 6px !important;
+  }
+
+  .settings-menu-group-label {
+    display: block;
+    padding: 8px 12px 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  .mat-mdc-menu-item {
+    border-radius: 8px;
+    min-height: 40px;
+
+    .mat-icon {
+      color: var(--mat-sys-on-surface-variant);
+    }
+  }
+
+  .settings-menu-item--danger {
+    color: var(--mat-sys-error);
+
+    .mat-icon {
+      color: var(--mat-sys-error);
+    }
+  }
+}
+
+// Academic-year dropdown panel (mat-select's overlay renders outside the
+// sidebar's DOM subtree via CDK Overlay, so this can't be scoped to the
+// sidebar component — panelClass="year-select-panel" targets it globally).
+.year-select-panel {
+  border-radius: 14px !important;
+  overflow: hidden;
+  margin-top: 6px;
+  box-shadow: 0 10px 28px -8px rgba(13, 36, 16, 0.35) !important;
+
+  .mat-mdc-option {
+    min-height: 42px;
+  }
+}
+
+// ─── Page toolbar ──────────────────────────────────────────
+// Shared across manager list pages: the title + action row that sits
+// above a table (Classes, Students, Teachers, Subjects, etc.). Every one
+// of these pages used to hand-roll its own inline-styled flexbox with a
+// bare mat-fab circle for "add" — inconsistent spacing/casing per page,
+// and a plain FAB doesn't match this app's own established button
+// language (pill-shaped filled primary actions, tinted-neutral secondary
+// icon actions — see .panel__cta and .header-settings-btn in the
+// dashboard/manager-header, which this mirrors). Global, not scoped to
+// one component, so every page can opt in with a couple of class names.
+.page-toolbar {
+  // Grid, not flex: with only two real children (title, actions), a plain
+  // flex space-between leaves the title hugging whichever edge it's
+  // written first — not actually centered in the row. The empty 1fr
+  // first column is a real, load-bearing track: it balances the 1fr
+  // actions column so the title's own column lands in the visual middle
+  // of the toolbar regardless of how wide the actions group is.
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  &__title {
+    grid-column: 2;
+    justify-self: center;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--mat-sys-on-surface);
+    text-align: center;
+  }
+
+  &__actions {
+    grid-column: 3;
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--mat-sys-plain-font-family);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: filter 150ms ease, transform 150ms ease, background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+
+  .mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
+
+  // Primary action (Add, Publish...) — filled pill, same language as
+  // .panel__cta in the dashboard.
+  &--primary {
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    box-shadow: 0 2px 10px -3px color-mix(in srgb, var(--mat-sys-primary) 55%, transparent);
+
+    &:hover:not(:disabled) {
+      filter: brightness(1.08);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+  }
+
+  // Secondary action (back, periods, shift...) — icon-only, neutral tint
+  // that picks up primary color on hover, same language as
+  // .header-settings-btn in the manager header.
+  &--secondary {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background-color: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-on-surface-variant);
+
+    .mat-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--mat-sys-primary) 14%, var(--mat-sys-surface-container-high));
+      color: var(--mat-sys-primary);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
 }
 
 .light{

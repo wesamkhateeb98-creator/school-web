@@ -1,15 +1,14 @@
-<div style="display: flex; justify-content: space-between;">
-    <div style="display: flex; justify-content: start; align-items: center;">
-        <h2>{{ language.transform('classes_title') }}</h2>
-        <button mat-fab (click)="openAddDialog()" style="margin: 0 20px">
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{ language.transform('classes_title') }}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('periods_title')" (click)="openPeriodPage()">
+            <mat-icon>timeline</mat-icon>
+        </button>
+        <button class="toolbar-btn toolbar-btn--primary" (click)="openAddDialog()">
             <mat-icon>add</mat-icon>
+            <span>{{ language.transform('add') }}</span>
         </button>
     </div>
-
-    <button matFab (click)="openPeriodPage()" style="margin: 0 20px ">
-        <mat-icon>timeline</mat-icon>
-    </button>
-
 </div>
 
 

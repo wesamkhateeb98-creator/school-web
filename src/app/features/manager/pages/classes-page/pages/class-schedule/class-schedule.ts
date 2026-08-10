@@ -34,6 +34,7 @@ import { PeriodViewModel } from '../period/model/period-view-model';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { UpdateClassScheduleDialog } from './dialog/update-class-schedule-dialog/update-class-schedule-dialog';
 import { MatProgressBar } from "@angular/material/progress-bar";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-class-schedule-component',
@@ -55,7 +56,8 @@ import { MatProgressBar } from "@angular/material/progress-bar";
     MatButtonModule,
     PeriodAutoComplete,
     MatSlideToggleModule,
-    MatProgressBar
+    MatProgressBar,
+    MatTooltipModule
 ],
   templateUrl: './class-schedule.html'
 })

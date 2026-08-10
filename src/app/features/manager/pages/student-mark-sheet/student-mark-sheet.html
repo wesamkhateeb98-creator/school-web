@@ -1,15 +1,16 @@
-<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-  <h2 style="margin: 0;">{{ language.transform('student_mark_sheet_title') }}</h2>
-  <div style="display: flex; gap: 12px; align-items: center;">
+<div class="page-toolbar">
+  <h2 class="page-toolbar__title">{{ language.transform('student_mark_sheet_title') }}</h2>
+  <div class="page-toolbar__actions">
     @if (isAdmin()) {
-      <button mat-fab extended (click)="openPublishDialog()" color="accent">
+      <button class="toolbar-btn toolbar-btn--primary" (click)="openPublishDialog()">
         <mat-icon>send</mat-icon>
-        {{ language.transform('publish_title') }}
+        <span>{{ language.transform('publish_title') }}</span>
       </button>
     }
     @if (canAdd()) {
-      <button mat-fab (click)="openAddDialog()">
+      <button class="toolbar-btn toolbar-btn--primary" (click)="openAddDialog()">
         <mat-icon>add</mat-icon>
+        <span>{{ language.transform('add') }}</span>
       </button>
     }
   </div>

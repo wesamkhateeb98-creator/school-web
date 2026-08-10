@@ -5,18 +5,13 @@
     </div>
 }
 @else{
-    <div style="display: flex; justify-content: space-between;">
-        <div style="display: flex; justify-content: start; align-items: center;">
-            <h2>{{ language.transform('class_title') }}</h2>
-            
-            <div style="margin: 0 10px;"></div>
+    <div class="page-toolbar">
+        <h2 class="page-toolbar__title">{{ language.transform('class_title') }}</h2>
+        <div class="page-toolbar__actions">
+            <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back')" (click)="openClassesPage()">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
         </div>
-
-        
-        <button matFab (click)="openClassesPage()" style="margin: 0 20px ">
-            <mat-icon>arrow_back</mat-icon>
-        </button>
-    
     </div>
 
     <br>

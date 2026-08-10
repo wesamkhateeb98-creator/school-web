@@ -20,6 +20,7 @@ import { PeriodEndpoints } from '../../../../shared/endpoints/period-endpoint';
 import { AddPeriodDialog } from './dialog/add-subject-dialog/add-period-dialog';
 import { AddSubjectDialog } from '../../../subject/dialog/add-subject-dialog/add-subject-dialog';
 import { MatProgressBar } from "@angular/material/progress-bar";
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { PeriodViewModel } from './model/period-view-model';
 import { ShiftPeriodDialog } from './dialog/shift-period-dialog/shift-period-dialog';
 
@@ -32,7 +33,8 @@ import { ShiftPeriodDialog } from './dialog/shift-period-dialog/shift-period-dia
     MatCard,
     MatIconModule,
     MatButtonModule,
-    MatProgressBar
+    MatProgressBar,
+    MatTooltipModule
 ],
   templateUrl: './period.html',
 })

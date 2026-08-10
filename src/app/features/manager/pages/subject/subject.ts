@@ -5,6 +5,7 @@ import { MatCard } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SubjectViewModel } from './model/subject-view-model';
 import { Language } from '../../../../core/services/language';
 import { MatDialog } from '@angular/material/dialog';
@@ -26,7 +27,8 @@ import { SubjectEndpoints } from '../../shared/endpoints/subject-endpoint';
     MatPaginatorModule,
     MatCard,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule
   ],
   templateUrl: './subject.html',
 })

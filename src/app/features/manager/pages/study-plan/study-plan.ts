@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { distinctUntilChanged, filter } from 'rxjs';
@@ -28,6 +29,7 @@ import { EditStudyPlanDialog } from './dialog/edit-study-plan-dialog/edit-study-
     MatProgressSpinnerModule,
     ReactiveFormsModule,
     AcademicYearSemesterAutoComplete,
+    MatTooltipModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './study-plan.html',

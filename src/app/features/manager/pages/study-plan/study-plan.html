@@ -1,11 +1,12 @@
-<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-  <h2 style="margin: 0;">{{ language.transform('study_plan_title') }}</h2>
-  <div style="display: flex; gap: 12px;">
-    <button mat-fab (click)="openAddDialog()">
-      <mat-icon>add</mat-icon>
-    </button>
-    <button mat-fab (click)="goBack()">
+<div class="page-toolbar">
+  <h2 class="page-toolbar__title">{{ language.transform('study_plan_title') }}</h2>
+  <div class="page-toolbar__actions">
+    <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back')" (click)="goBack()">
       <mat-icon>arrow_back</mat-icon>
+    </button>
+    <button class="toolbar-btn toolbar-btn--primary" (click)="openAddDialog()">
+      <mat-icon>add</mat-icon>
+      <span>{{ language.transform('add') }}</span>
     </button>
   </div>
 </div>

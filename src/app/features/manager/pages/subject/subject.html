@@ -1,16 +1,14 @@
-<div style="display: flex; justify-content: space-between;">
-    <div style="display: flex;">
-        <h2 >{{language.transform('subject_title')}}</h2>
-        <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
-            <mat-icon>add</mat-icon>
-        </button>
-    </div>
-    
-    
-    <button matFab (click)="openAcademicYearPage()" style="margin: 0 20px ">
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{language.transform('subject_title')}}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back')" (click)="openAcademicYearPage()">
             <mat-icon>arrow_back</mat-icon>
         </button>
-    
+        <button class="toolbar-btn toolbar-btn--primary" (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
+            <span>{{ language.transform('add') }}</span>
+        </button>
+    </div>
 </div>
 <br/>
 

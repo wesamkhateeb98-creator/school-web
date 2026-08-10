@@ -1,8 +1,11 @@
-<div style="display: flex; justify-content: start;">
-    <h2 >{{language.transform('semester_title')}}</h2>
-    <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
-        <mat-icon>add</mat-icon>
-    </button>
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{language.transform('semester_title')}}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--primary" (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
+            <span>{{ language.transform('add') }}</span>
+        </button>
+    </div>
 </div>
 
 <br/>

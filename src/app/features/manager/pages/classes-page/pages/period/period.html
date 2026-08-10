@@ -1,20 +1,17 @@
-<div style="display: flex; justify-content: space-between;">
-    <div style="display: flex;">
-        <h2 >{{language.transform('periods_title')}}</h2>
-        <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
-            <mat-icon>add</mat-icon>
-        </button>
-    </div>
-    <div>
-        <button matFab (click)="openShiftDialog()" style="margin: 0 20px ">
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{language.transform('periods_title')}}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('shift_period')" (click)="openShiftDialog()">
             <mat-icon>double_arrow</mat-icon>
         </button>
-
-        <button matFab (click)="operClassPage()" style="margin: 0 20px ">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back')" (click)="operClassPage()">
             <mat-icon>arrow_back</mat-icon>
         </button>
+        <button class="toolbar-btn toolbar-btn--primary" (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
+            <span>{{ language.transform('add') }}</span>
+        </button>
     </div>
-
 </div>
 <br/>
 @if(this.loading()) {

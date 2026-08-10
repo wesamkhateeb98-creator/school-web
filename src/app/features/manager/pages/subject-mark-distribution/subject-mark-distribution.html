@@ -1,13 +1,14 @@
-<div style="display: flex; justify-content: space-between; align-items: center;">
-    <div style="display: flex; align-items: center; gap: 16px;">
-        <h2 style="margin: 0;">{{language.transform('mark_distribution_title')}}</h2>
-        <button matFab (click)="openAddDialog()" [disabled]="remaining <= 0">
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{language.transform('mark_distribution_title')}}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back')" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <button class="toolbar-btn toolbar-btn--primary" (click)="openAddDialog()" [disabled]="remaining <= 0">
             <mat-icon>add</mat-icon>
+            <span>{{ language.transform('add') }}</span>
         </button>
     </div>
-    <button matFab (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-    </button>
 </div>
 
 <br/>

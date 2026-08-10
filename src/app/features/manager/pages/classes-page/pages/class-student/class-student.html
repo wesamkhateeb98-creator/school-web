@@ -1,8 +1,8 @@
-<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-    <h2 style="margin: 0;">{{ language.transform('class_title') }}</h2>
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{ language.transform('class_title') }}</h2>
 
-    <div style="display: flex; gap: 8px; align-items: center;">
-        <button mat-icon-button (click)="openClassInfoPage()" [matTooltip]="language.transform('back')">
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back')" (click)="openClassInfoPage()">
             <mat-icon>arrow_back</mat-icon>
         </button>
     </div>

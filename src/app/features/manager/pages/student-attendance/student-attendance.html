@@ -1,19 +1,14 @@
-<div style="display: flex; justify-content: space-between;">
-    <div class="flex-between">
-        <h2 >{{language.transform('attendances')}}</h2>
-        <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{language.transform('attendances')}}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('expel_student_permission')" (click)="openExpelDialog()">
+            <mat-icon>person_remove</mat-icon>
+        </button>
+        <button class="toolbar-btn toolbar-btn--primary" (click)="openAddDialog()">
             <mat-icon>add</mat-icon>
-        </button>
-        <button matButton="elevated" (click)="openExpelDialog()" style="margin: 0 20px ">
-            {{language.transform('expel_student_permission')}}
+            <span>{{ language.transform('add') }}</span>
         </button>
     </div>
-    <div>
-        <button matFab (click)="backPage()" style="margin: 0 20px ">
-            <mat-icon>arrow_back</mat-icon>
-        </button>
-    </div>
-
 </div>
 <br/>
 

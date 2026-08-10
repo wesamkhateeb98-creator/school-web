@@ -1,8 +1,7 @@
-<div style="display: flex; justify-content: space-between;">
-    <h2 >{{language.transform('subjects_age_group')}}</h2> 
-    
-    <div>
-        <button matFab (click)="operAgeGroupPage()" style="margin: 0 20px ">
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{language.transform('subjects_age_group')}}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back')" (click)="operAgeGroupPage()">
             <mat-icon>arrow_back</mat-icon>
         </button>
     </div>
