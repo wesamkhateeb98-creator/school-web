@@ -1,65 +1,529 @@
-.dashboard-container {
-  padding: 16px 8px;
+// ─── Header ──────────────────────────────────────────────
+.dashboard {
+  padding: 20px 12px 40px;
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
-.dashboard-title {
-  margin: 0 0 24px;
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--mat-sys-on-surface);
-}
-
-.quick-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+.dashboard-header {
+  // Was plain stacked text with no motion and a lot of dead space beside
+  // it on wide screens — now a tinted banner (matching the stat cards'
+  // own treatment) that fills that space, plus the same rise-in used by
+  // every other section on this page.
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 16px;
+  margin-bottom: 24px;
+  padding: 22px 28px;
+  border-radius: 20px;
+  // Mixed against surface-container-HIGH, not -lowest: in Material's dark
+  // theme, "-lowest" is darker than the page background (elevation tones
+  // invert direction between light/dark), so a card built on it nearly
+  // vanished into the page in dark mode. "-high" reads as a raised card in
+  // both directions.
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--mat-sys-primary) 10%, var(--mat-sys-surface-container-high)),
+    color-mix(in srgb, var(--mat-sys-primary) 3%, var(--mat-sys-surface-container-high))
+  );
+  border: 1px solid color-mix(in srgb, var(--mat-sys-primary) 14%, transparent);
+  opacity: 0;
+  animation: dash-rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+  &__eyebrow {
+    margin: 0 0 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__title {
+    margin: 0 0 4px;
+    font-family: var(--mat-sys-brand-font-family);
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__subtitle {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    color: color-mix(in srgb, var(--mat-sys-primary) 45%, transparent);
+
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
 }
 
-.quick-card {
+// ─── Stat cards ──────────────────────────────────────────
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  // Every card carries its own hue via --stat-color, sourced from this
+  // app's own palette (primary/secondary/tertiary/gold) — never the
+  // reference design's colors, just applied the same "full pastel card"
+  // way that design uses.
+  --stat-color: var(--mat-sys-primary);
+
+  // Grid items default to min-width:auto, which refuses to shrink below
+  // its content's intrinsic width — on a narrower viewport that silently
+  // overflows the grid instead of respecting the track's minmax, causing
+  // a horizontal scrollbar for the whole page. This is what actually lets
+  // the track shrink.
+  min-width: 0;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--stat-color) 12%, var(--mat-sys-surface-container-high));
+  border: 1px solid color-mix(in srgb, var(--stat-color) 18%, transparent);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+  opacity: 0;
+  animation: dash-rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  overflow: hidden;
+
+  @for $i from 1 through 5 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.06}s;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px -12px rgba(20, 40, 15, 0.28);
+    border-color: color-mix(in srgb, var(--stat-color) 40%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--stat-color);
+    outline-offset: 2px;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    background: var(--stat-color);
+    color: white;
+
+    mat-icon {
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--mat-sys-on-surface);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__skeleton {
+    display: block;
+    width: 48px;
+    height: 1.5rem;
+    border-radius: 6px;
+    background: linear-gradient(
+      90deg,
+      var(--mat-sys-surface-container-high) 25%,
+      var(--mat-sys-surface-container) 50%,
+      var(--mat-sys-surface-container-high) 75%
+    );
+    background-size: 200% 100%;
+    animation: dash-shimmer 1.4s ease-in-out infinite;
+  }
+
+  &__label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__percent {
+    position: absolute;
+    inset-inline-end: 14px;
+    top: 14px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--stat-color);
+    opacity: 0.9;
+  }
+
+  // The lead "Total" card isn't a link and isn't part of the per-category
+  // color set — it always reads in the app's own primary green, same as
+  // the reference design's own first/total card being its most prominent.
+  &--total {
+    background: color-mix(in srgb, var(--mat-sys-primary) 16%, var(--mat-sys-surface-container-high));
+  }
+}
+
+// ─── Two-column content grid ────────────────────────────
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: 16px;
+  // Marks (short, sometimes just an empty-state line) sits next to quick
+  // access (tall, several grouped rows) — stretching both to match height
+  // instead of each hugging its own content is what closes the dead gap
+  // that used to sit under the shorter panel.
+  align-items: stretch;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 18px;
+  background: var(--mat-sys-surface-container-high);
+  border: 1px solid var(--mat-sys-outline-variant);
+  opacity: 0;
+  animation: dash-rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) 0.24s both;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-shrink: 0;
+  }
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &__head-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    mat-icon {
+      color: var(--mat-sys-primary);
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--mat-sys-on-surface);
+    }
+  }
+
+  &__meta {
+    font-size: 0.78rem;
+    color: var(--mat-sys-on-surface-variant);
+    flex-shrink: 0;
+  }
+}
+
+// ─── Mark sheets status ──────────────────────────────────
+.panel__empty {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 24px 0;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    opacity: 0.4;
+  }
+}
+
+.mark-metric {
+  margin-bottom: 18px;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--gold-500) 20%, transparent);
+    color: var(--gold-500);
+
+    mat-icon {
+      font-size: 17px;
+      width: 17px;
+      height: 17px;
+    }
+
+    &--confirmed {
+      background: color-mix(in srgb, var(--mat-sys-primary) 16%, transparent);
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  &__label {
+    flex: 1;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--mat-sys-on-surface);
+  }
+
+  &__value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--mat-sys-on-surface-variant);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__bar {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--mat-sys-surface-container-high);
+    overflow: hidden;
+  }
+
+  &__fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--gold-500);
+    transition: width 0.6s ease;
+
+    &--confirmed {
+      background: var(--mat-sys-primary);
+    }
+  }
+}
+
+// Filled pill CTA closing out the marks panel — same role as a "view
+// report" button, in the app's own primary green.
+.panel__cta {
+  display: flex;
+  align-items: center;
   justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 11px;
+  border-radius: 999px;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: filter 150ms ease, transform 150ms ease;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    filter: brightness(1.08);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// ─── Quick links (inside panel--links) ──────────────────
+// Grouped into categories (academic / people / records) instead of one
+// flat 10-item grid, so the section reads as organized rather than a
+// wall of identical icon tiles.
+.quick-group {
+  &:not(:last-child) {
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+// Rows instead of centered square tiles — closer to the reference design's
+// list-style items (leading icon, label, trailing chevron) rather than an
+// icon-grid of buttons.
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.quick-card {
+  // Same reasoning as .stat-card above — without this, a long label can
+  // hold the whole grid track (and the page) wider than intended.
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
   gap: 12px;
-  padding: 24px 16px;
-  border-radius: 16px;
-  background-color: var(--mat-sys-surface-container-low);
+  padding: 10px 14px;
+  border-radius: 14px;
+  // One tier above .panel's own -high background, so these read as cards
+  // nested inside the panel rather than blending into it.
+  background-color: var(--mat-sys-surface-container-highest);
   border: 1px solid var(--mat-sys-outline-variant);
   text-decoration: none;
   color: var(--mat-sys-on-surface);
   cursor: pointer;
-  transition: transform 120ms ease, box-shadow 120ms ease;
-  position: relative;
-  overflow: hidden;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    box-shadow: 0 8px 20px -10px rgba(20, 40, 15, 0.3);
+    border-color: transparent;
   }
 
   &:active {
     transform: translateY(0);
   }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 2px;
+  }
 }
 
 .card-icon {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: white;
 
   mat-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
   }
 }
 
 .card-label {
-  font-size: 0.85rem;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.82rem;
   font-weight: 500;
-  text-align: center;
   line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-chevron {
+  flex-shrink: 0;
+  color: var(--mat-sys-outline);
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  opacity: 0.6;
+}
+
+// ─── Motion ──────────────────────────────────────────────
+@keyframes dash-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dash-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat-card,
+  .panel,
+  .stat-card__skeleton {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+// ─── Responsive ──────────────────────────────────────────
+@media (max-width: 860px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 599.99px) {
+  .dashboard {
+    padding: 16px 4px 32px;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// Narrow phones: two cramped columns read worse than one clear one.
+@media (max-width: 420px) {
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
 }
