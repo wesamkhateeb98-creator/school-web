@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { Theme } from '../../../../core/services/theme';
 import { Language } from '../../../../core/services/language';
 import { AuthService } from '../../../../core/services/auth-service';
@@ -12,12 +13,17 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-setting-button-component',
-  imports: [MatMenuModule, MatButtonModule, MatIconModule, MatListModule, MatDividerModule],
+  imports: [MatMenuModule, MatButtonModule, MatIconModule, MatListModule, MatDividerModule, MatTooltipModule],
   templateUrl: './setting-button-component.html',
   styleUrl: './setting-button-component.scss',
 })
 
 export class SettingButtonComponent {
+  // 'sidebar' (default): the original full-width nav-list row, unchanged
+  // for existing usages (staff layout). 'header': a compact icon-button
+  // trigger for the manager header — same menu underneath either way.
+  @Input() variant: 'sidebar' | 'header' = 'sidebar';
+
   constructor(
     public theme:Theme,
     public language:Language,

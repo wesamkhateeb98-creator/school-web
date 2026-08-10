@@ -4,8 +4,30 @@
 }
 
 .nav-item {
-  border-radius: 10px !important;
-  transition: background-color 150ms ease;
+  position: relative;
+  border-radius: 12px !important;
+  transition: background-color 150ms ease, box-shadow 150ms ease, transform 100ms ease;
+
+  // Material's built-in ripple is disabled on these items (its default
+  // state-layer color didn't match this dark panel and flashed white on
+  // press). This is the replacement press feedback: a quick, deliberate
+  // scale-down instead of a ripple, tuned per state right below.
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: -8px;
+    top: 50%;
+    transform: translateY(-50%) scaleY(0);
+    width: 3px;
+    height: 60%;
+    border-radius: 3px;
+    background: var(--gold-300);
+    transition: transform 150ms ease;
+  }
 
   .nav-icon {
     color: var(--mat-sys-on-primary);
@@ -14,7 +36,11 @@
   }
 
   .nav-label {
-    font-size: 0.875rem;
+    // Material's list-item styles its label through its own MDC token
+    // (not through --mat-sys-plain-font-family), so it stayed on Roboto
+    // regardless of the font override above — set it directly instead.
+    font-family: var(--mat-sys-plain-font-family);
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--mat-sys-on-primary);
     transition: color 150ms ease;
@@ -26,6 +52,11 @@
     font-size: 20px;
     width: 20px;
     height: 20px;
+    transition: transform 200ms ease, color 150ms ease, opacity 150ms ease;
+
+    &--open {
+      transform: rotate(180deg);
+    }
   }
 
   &:hover:not(.nav-active) {
@@ -37,22 +68,130 @@
     }
   }
 
+  // The browser's default focus ring reads poorly against the dark green
+  // panel — give keyboard navigation a ring that actually shows up.
+  &:focus-visible {
+    outline: 2px solid var(--gold-300);
+    outline-offset: 2px;
+  }
+
+  // White active state as a full-width bar: cancels the host's 8px inline
+  // padding on both sides so it spans the whole row, edge to edge within
+  // the sidebar, rather than a pill inset from either side or crossing
+  // the boundary. The matching `padding-inline: 8px` pulls the icon/label
+  // back in by the same amount, so the box gets wider without the content
+  // inside it visibly jumping sideways the moment an item goes active.
   &.nav-active {
-    background-color: var(--mat-sys-primary-container) !important;
+    background-color: #ffffff !important;
+    margin-inline: -8px;
+    padding-inline: 8px;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.35);
 
     .nav-icon {
-      color: var(--mat-sys-on-primary-container) !important;
+      color: var(--mat-sys-primary) !important;
       opacity: 1;
     }
 
     .nav-label {
-      color: var(--mat-sys-on-primary-container) !important;
-      font-weight: 600;
+      color: var(--mat-sys-primary) !important;
+      font-weight: 700;
     }
 
     .nav-arrow {
-      color: var(--mat-sys-on-primary-container) !important;
+      color: var(--mat-sys-primary) !important;
       opacity: 1;
+    }
+  }
+}
+
+// ─── Collapsed (icon-only) rail ───────────────────────────
+// :host-context reaches the `.side-nav--collapsed` class on the ancestor
+// drawer — this component doesn't get the state passed as an @Input.
+:host-context(.side-nav--collapsed) {
+  padding-inline: 0;
+  display: flex;
+  justify-content: center;
+
+  // MDC reserves spacing around the leading icon sized for a label next to
+  // it, via these tokens — independent of whether the label is actually
+  // visible. Hiding the label alone left the icon off-center, still
+  // carrying that reserved trailing gap. Zero the tokens themselves rather
+  // than fighting the icon's margin with specificity.
+  --mdc-list-list-item-leading-icon-start-space: 0px;
+  --mdc-list-list-item-leading-icon-end-space: 0px;
+
+  // Expandable items (Users, Academic Year, Subject) carry a trailing
+  // "meta" slot for the chevron. Material gives items with both a leading
+  // icon and a trailing meta slot their own grid/flex layout reserving
+  // real estate for both ends regardless of visibility — hiding only the
+  // chevron icon left that reserved space in place, which shoved the
+  // leading icon ~10px off-center (confirmed: icon rect was overflowing
+  // past the item's own right edge). `display: flex !important` here
+  // overrides whatever layout mode Material picked for that case.
+  .nav-item {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding-inline: 0 !important;
+  }
+
+  .nav-label,
+  .nav-arrow {
+    display: none;
+  }
+
+  // The now-empty wrappers the label and chevron used to sit in — remove
+  // them outright so neither can hold residual width open next to the
+  // icon. matListItemMeta compiles to the `matlistitemmeta` attribute.
+  ::ng-deep .mdc-list-item__content,
+  ::ng-deep .mdc-list-item__end,
+  ::ng-deep [matlistitemmeta] {
+    display: none !important;
+  }
+
+  .nav-icon {
+    margin: 0 !important;
+  }
+
+  // Belt-and-suspenders: target MDC's own icon-positioning class directly
+  // (the actual class carrying its default margin in the compiled theme
+  // CSS) rather than relying only on the custom nav-icon class or the
+  // spacing tokens above to win the cascade.
+  ::ng-deep .mdc-list-item__start {
+    margin: 0 !important;
+  }
+
+  // The full-width bar only makes sense at full width. At rail width, the
+  // active row stays transparent and the icon gets a colored circular
+  // badge instead — sized and centered exactly like every other icon
+  // (no margin trick, no size jump relative to its own slot), so nothing
+  // visibly shifts position when an item becomes active. A bulge past the
+  // rail's edge was tried here and kept measuring/reading as a jump; this
+  // contained version can't shift because it never leaves its own 48px
+  // centered slot.
+  .nav-active {
+    margin-inline: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+
+    .nav-icon {
+      // mat-icon's own box only ever matches its glyph size (font-size:
+      // 24px by default) — growing width/height to 36px without this left
+      // the 24px glyph pinned to the box's start corner instead of centered
+      // in the white circle. Flex-centering the enlarged box fixes that.
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50%;
+      background: #ffffff;
+      color: var(--mat-sys-primary) !important;
+      box-shadow: 0 3px 8px -1px rgba(0, 0, 0, 0.35);
+      margin: 0 !important;
     }
   }
 }

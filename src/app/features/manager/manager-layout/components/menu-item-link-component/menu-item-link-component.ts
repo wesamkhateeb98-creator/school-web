@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NavItemViewModel } from '../../../../shared/model/NavItemViewModel';
 import { Language } from '../../../../../core/services/language';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +20,9 @@ export class MenuItemLinkComponent {
   @Input() navItem!:NavItemViewModel;
   @Input() hasItems!:boolean;
 
+  // Emitted only when a real route link is clicked (not the expand/collapse
+  // trigger), so the mobile drawer can close itself on navigation.
+  @Output() linkClick = new EventEmitter<void>();
 
   constructor(public language:Language){}
 

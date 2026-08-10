@@ -22,7 +22,8 @@ mat-nav-list {
     }
 
     span {
-      font-size: 0.875rem;
+      font-family: var(--mat-sys-plain-font-family);
+      font-size: 0.8rem;
       font-weight: 500;
       color: var(--mat-sys-on-primary) !important;
     }
@@ -34,5 +35,60 @@ mat-nav-list {
         opacity: 1;
       }
     }
+
+    &:focus-visible {
+      outline: 2px solid var(--gold-300);
+      outline-offset: 2px;
+    }
+  }
+
+  // Split out from the settings dropdown into its own row — a distinct
+  // warm-red tint marks it as the exit action, separate from the neutral
+  // settings/appearance items above it.
+  .logout-item {
+    mat-icon,
+    span {
+      color: color-mix(in srgb, #ffffff 75%, #ffb4a8) !important;
+    }
+
+    &:hover {
+      background-color: color-mix(in srgb, #ff5449 18%, transparent) !important;
+
+      mat-icon,
+      span {
+        color: #ffffff !important;
+      }
+    }
+  }
+}
+
+// ─── Header variant trigger ───────────────────────────────
+.header-settings-btn {
+  color: var(--mat-sys-on-surface-variant);
+  background-color: var(--mat-sys-surface-container-high);
+  transition: background-color 150ms ease, color 150ms ease;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--mat-sys-primary) 14%, var(--mat-sys-surface-container-high));
+    color: var(--mat-sys-primary);
+  }
+}
+
+:host-context(.side-nav--collapsed) {
+  mat-nav-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  a[mat-list-item] {
+    justify-content: center;
+    width: 48px;
+    margin-inline: 0;
+  }
+
+  .settings-label {
+    display: none;
   }
 }

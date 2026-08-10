@@ -5,16 +5,30 @@
         #matSidenav
         [mode]="responseScreen.isMobile() ? 'over' : 'side'"
         class="side-nav"
+        [class.side-nav--collapsed]="!responseScreen.isMobile() && collapsed()"
         [opened]="!responseScreen.isMobile()">
 
-        <!-- Header: Logo + Bell + Close (mobile) -->
+        <!-- Header: Logo + school name + Collapse toggle (desktop) + Close (mobile) -->
         <div class="sidebar-header">
-            <img src="logo.png" alt="Logo" />
+            <div class="sidebar-brand"
+                 [class.sidebar-brand--clickable]="!responseScreen.isMobile() && collapsed()"
+                 [attr.role]="!responseScreen.isMobile() && collapsed() ? 'button' : null"
+                 [attr.tabindex]="!responseScreen.isMobile() && collapsed() ? 0 : null"
+                 [attr.aria-label]="!responseScreen.isMobile() && collapsed() ? language.transform('toggle_sidebar') : null"
+                 (click)="!responseScreen.isMobile() && collapsed() && toggleCollapsed()"
+                 (keydown.enter)="!responseScreen.isMobile() && collapsed() && toggleCollapsed()">
+                <img src="logo.png" alt="Logo" class="sidebar-brand__logo" />
+                <span class="sidebar-brand__name">{{ language.transform('school_short_name') }}</span>
+            </div>
             <div class="sidebar-actions">
                 <!-- <app-notification-bell /> -->
                 @if (responseScreen.isMobile()) {
-                    <button mat-icon-button (click)="matSidenav.close()">
+                    <button mat-icon-button (click)="matSidenav.close()" [attr.aria-label]="language.transform('close_menu')">
                         <mat-icon>close</mat-icon>
+                    </button>
+                } @else if (!collapsed()) {
+                    <button mat-icon-button class="collapse-toggle-btn" (click)="toggleCollapsed()" [attr.aria-label]="language.transform('toggle_sidebar')">
+                        <mat-icon>chevron_right</mat-icon>
                     </button>
                 }
             </div>
@@ -22,70 +36,68 @@
 
         <mat-divider></mat-divider>
 
-        <!-- Academic Year -->
-        <div class="year-section">
-            @if (academicYearSvc.loading()) {
-                <div class="year-spinner">
-                    <mat-progress-spinner diameter="28" mode="indeterminate"></mat-progress-spinner>
-                </div>
-            } @else if (academicYearSvc.hasError()) {
-                <div class="year-spinner">
-                    <button mat-icon-button (click)="academicYearSvc.reload()">
-                        <mat-icon>refresh</mat-icon>
-                    </button>
-                </div>
-            } @else {
-                <mat-form-field class="year-select" subscriptSizing="dynamic" appearance="outline">
-                    <mat-select
-                        [value]="academicYearSvc.selectedId()"
-                        (selectionChange)="onYearChange($event.value)">
-                        @for (year of academicYearSvc.academicYears(); track year.id) {
-                            <mat-option [value]="year.id">{{ year.year - 1 }}/{{ year.year }}</mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-            }
-        </div>
-
-        <mat-divider></mat-divider>
-
-        <!-- Nav Items (scrollable) + Settings (pinned bottom) -->
+        <!-- Nav Items (scrollable) -->
         <div class="f-column-between">
             <mat-nav-list>
                 @for (item of managerState.navItems; track $index) {
-                    <app-menu-item-component [navItem]="item" [level]="1"/>
+                    <app-menu-item-component [navItem]="item" [level]="1" (itemClick)="onNavItemClick()"/>
                 }
             </mat-nav-list>
+
+            <!-- Settings + Logout, pinned below the scrollable nav list -->
             <app-setting-button-component />
         </div>
-
-        <!-- Desktop border toggle button -->
-        @if (!responseScreen.isMobile()) {
-            <button mat-icon-button class="sidebar-toggle-btn" (click)="matSidenav.toggle()">
-                <mat-icon>chevron_left</mat-icon>
-            </button>
-        }
 
     </mat-sidenav>
 
     <!-- Mobile top bar -->
     @if (responseScreen.isMobile()) {
         <div class="mobile-header">
-            <button mat-icon-button (click)="matSidenav.open()">
+            <button mat-icon-button (click)="matSidenav.open()" [attr.aria-label]="language.transform('open_menu')">
                 <mat-icon>menu</mat-icon>
             </button>
         </div>
     }
 
-    <!-- Desktop open button (shown only when sidebar is closed) -->
-    @if (!responseScreen.isMobile() && !matSidenav.opened) {
-        <button mat-icon-button class="sidebar-open-btn" (click)="matSidenav.open()">
-            <mat-icon>chevron_right</mat-icon>
-        </button>
-    }
-
     <!-- Main Content -->
-    <div class="content-area" [class.with-mobile-header]="responseScreen.isMobile()">
+    <div class="content-area" [class.with-mobile-header]="responseScreen.isMobile()" (scroll)="onContentScroll($event)">
+
+        <header class="manager-header" [class.manager-header--hidden]="headerHidden()">
+            <div class="manager-header__spacer"></div>
+
+            <h1 class="manager-header__title">
+                <mat-icon>space_dashboard</mat-icon>
+                <span>{{ language.transform('admin_panel_title') }}</span>
+            </h1>
+
+            <div class="manager-header__actions">
+                @if (academicYearSvc.loading()) {
+                    <div class="year-spinner">
+                        <mat-progress-spinner diameter="24" mode="indeterminate"></mat-progress-spinner>
+                    </div>
+                } @else if (academicYearSvc.hasError()) {
+                    <div class="year-spinner">
+                        <button mat-icon-button (click)="academicYearSvc.reload()">
+                            <mat-icon>refresh</mat-icon>
+                        </button>
+                    </div>
+                } @else {
+                    <mat-form-field class="year-select" subscriptSizing="dynamic" appearance="outline">
+                        <mat-select
+                            panelClass="year-select-panel"
+                            [value]="academicYearSvc.selectedId()"
+                            (selectionChange)="onYearChange($event.value)">
+                            @for (year of academicYearSvc.academicYears(); track year.id) {
+                                <mat-option [value]="year.id">{{ year.year - 1 }}/{{ year.year }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                }
+
+                <app-setting-button-component variant="header" />
+            </div>
+        </header>
+
         <router-outlet/>
     </div>
 

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { NavItemViewModel } from '../../../../shared/model/NavItemViewModel';
@@ -17,14 +17,18 @@ import { MenuItemLinkComponent } from "../menu-item-link-component/menu-item-lin
   styleUrl: './menu-item-component.scss',
 })
 export class MenuItemComponent {
-  
+
   @Input() navItem!:NavItemViewModel;
 
   @Input() level!:number;
+
+  // Bubbles a real (non-expand-toggle) link click up to the layout, so the
+  // mobile drawer can close itself — forwarded through nested sub-items too.
+  @Output() itemClick = new EventEmitter<void>();
 
   constructor(public language:Language){}
 
   GetWidth(){
     return `border-inline-start: 4px solid var(--mat-sys-surface-variant); `
-  } 
+  }
 }

@@ -1,12 +1,12 @@
 @if(!navItem.subItem){
-  <app-menu-item-link-component [navItem]="navItem" [hasItems]="false"/>
+  <app-menu-item-link-component [navItem]="navItem" [hasItems]="false" (linkClick)="itemClick.emit()"/>
 } @else {
   <app-menu-item-link-component [navItem]="navItem" [hasItems]="true"/>
 
   @if (navItem.isExpended) {
     <div class="sub-items">
       @for (item of navItem.subItem; track $index) {
-        <app-menu-item-component [navItem]="item" [level]="level + 1"/>
+        <app-menu-item-component [navItem]="item" [level]="level + 1" (itemClick)="itemClick.emit()"/>
       }
     </div>
   }

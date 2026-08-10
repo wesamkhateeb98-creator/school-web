@@ -1,4 +1,31 @@
 .sub-items {
   border-inline-start: 2px solid color-mix(in srgb, var(--mat-sys-on-primary) 30%, transparent);
   margin-inline-start: 24px;
+  animation: sub-items-reveal 180ms ease both;
+}
+
+@keyframes sub-items-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sub-items {
+    animation: none;
+  }
+}
+
+// Collapsed rail has no room for the indentation/connector line, but the
+// sub-item icons themselves should still show — dropping only the
+// decoration turns each sub-item into a flush icon-only row stacked
+// directly under its parent, same as every other icon in the rail.
+:host-context(.side-nav--collapsed) .sub-items {
+  border-inline-start: none;
+  margin-inline-start: 0;
 }

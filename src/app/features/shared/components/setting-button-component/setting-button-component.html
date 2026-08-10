@@ -1,47 +1,76 @@
-<mat-divider></mat-divider>
+@if (variant === 'sidebar') {
+  <mat-divider></mat-divider>
 
-<mat-nav-list style="padding-top: 0;">
-    <a mat-list-item
-        [matMenuTriggerFor]="settings"  >
-        <mat-icon matListItemIcon>settings</mat-icon>
-        <span>{{language.transform('settings')}}</span>
-    </a>
-</mat-nav-list>
-        
+  <!-- Settings already lives in the header (variant="header") — the
+       sidebar only needs its own dedicated exit action. -->
+  <mat-nav-list style="padding-top: 0;">
+      <a mat-list-item
+          disableRipple
+          class="logout-item"
+          (click)="logout()">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span class="settings-label">{{language.transform('logout')}}</span>
+      </a>
+  </mat-nav-list>
+} @else {
+  <button mat-icon-button
+      class="header-settings-btn"
+      [matTooltip]="language.transform('settings')"
+      matTooltipPosition="below"
+      [matMenuTriggerFor]="settings">
+      <mat-icon>settings</mat-icon>
+  </button>
+}
 
-
-<mat-menu #settings="matMenu" yPosition="below">
-  <button mat-menu-item [matMenuTriggerFor]="themeMenu">{{language.transform('theme')}}</button>
-  <button mat-menu-item [matMenuTriggerFor]="colorMenu">{{language.transform('color')}}</button>
-  <button mat-menu-item [matMenuTriggerFor]="languageMenu">{{language.transform('language')}}</button>
-  <button mat-menu-item (click)="logout()">
-    <mat-icon>logout</mat-icon>
-    <span>{{language.transform('logout')}}</span>
+<mat-menu #settings="matMenu" yPosition="below" class="settings-menu-panel">
+  <span class="settings-menu-group-label">{{language.transform('appearance_group_title')}}</span>
+  <button mat-menu-item [matMenuTriggerFor]="themeMenu">
+    <mat-icon>dark_mode</mat-icon>
+    <span>{{language.transform('theme')}}</span>
+  </button>
+  <button mat-menu-item [matMenuTriggerFor]="colorMenu">
+    <mat-icon>palette</mat-icon>
+    <span>{{language.transform('color')}}</span>
+  </button>
+  <button mat-menu-item [matMenuTriggerFor]="languageMenu">
+    <mat-icon>translate</mat-icon>
+    <span>{{language.transform('language')}}</span>
   </button>
 </mat-menu>
 
 <mat-menu #languageMenu="matMenu">
-  <button mat-menu-item (click)="language.setLanguage('ar')">{{language.transform('arabic')}}</button>
-  <button mat-menu-item (click)="language.setLanguage('en')">{{language.transform('english')}}</button>
+  <button mat-menu-item (click)="language.setLanguage('ar')">
+    <mat-icon>{{ language.language() === 'ar' ? 'radio_button_checked' : 'radio_button_unchecked' }}</mat-icon>
+    <span>{{language.transform('arabic')}}</span>
+  </button>
+  <button mat-menu-item (click)="language.setLanguage('en')">
+    <mat-icon>{{ language.language() === 'en' ? 'radio_button_checked' : 'radio_button_unchecked' }}</mat-icon>
+    <span>{{language.transform('english')}}</span>
+  </button>
 </mat-menu>
 
 <mat-menu #themeMenu="matMenu">
   <button mat-menu-item (click)="theme.setMode('light')">
-    <mat-icon>light_mode</mat-icon>
+    <mat-icon>{{ theme.theme() === 'light' ? 'radio_button_checked' : 'light_mode' }}</mat-icon>
     <span>{{language.transform('light_mode')}}</span>
   </button>
   <button mat-menu-item (click)="theme.setMode('dark')">
-    <mat-icon>dark_mode</mat-icon>
+    <mat-icon>{{ theme.theme() === 'dark' ? 'radio_button_checked' : 'dark_mode' }}</mat-icon>
     <span>{{language.transform('dark_mode')}}</span>
   </button>
   <button mat-menu-item (click)="theme.setMode('system')">
-    <mat-icon>settings_night_sight</mat-icon>
+    <mat-icon>{{ theme.theme() === 'system' ? 'radio_button_checked' : 'settings_night_sight' }}</mat-icon>
     <span>{{language.transform('system_mode')}}</span>
   </button>
 </mat-menu>
 
 <mat-menu #colorMenu="matMenu">
-  <button mat-menu-item (click)="theme.setColor('green')">{{language.transform('green_color')}}</button>
-  <button mat-menu-item (click)="theme.setColor('blue')">{{language.transform('blue_color')}}</button>
+  <button mat-menu-item (click)="theme.setColor('green')">
+    <mat-icon>{{ theme.color() === 'green' ? 'radio_button_checked' : 'radio_button_unchecked' }}</mat-icon>
+    <span>{{language.transform('green_color')}}</span>
+  </button>
+  <button mat-menu-item (click)="theme.setColor('blue')">
+    <mat-icon>{{ theme.color() === 'blue' ? 'radio_button_checked' : 'radio_button_unchecked' }}</mat-icon>
+    <span>{{language.transform('blue_color')}}</span>
+  </button>
 </mat-menu>
-

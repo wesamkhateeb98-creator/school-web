@@ -3,28 +3,72 @@
 @use "../../../../styles.scss";
 
 $mobile-header-height: 48px;
-$toggle-btn-size: 28px;
 
 // ─── Container ───────────────────────────────────────────
 .sidenav-container {
     height: 100vh;
     position: relative;
+    background-color: var(--mat-sys-surface-container-low);
+
+    // Cairo for the app shell's interface text; El Messiri stays reserved
+    // for the one display headline (dashboard title) — same split as login.
+    // Concrete fallback stack, not a self-reference (see auth-layout.scss
+    // for why that silently breaks every font on the page).
+    --mat-sys-plain-font-family: 'Cairo', Roboto, sans-serif;
+    --mat-sys-brand-font-family: 'El Messiri', 'Cairo', Roboto, sans-serif;
+
+    // mat-sidenav-container always wraps its main-content projection in
+    // its own .mat-drawer-content element, whether or not the explicit
+    // <mat-sidenav-content> tag is used — and that wrapper scrolls by
+    // default. .content-area below is nested inside it and is ALSO its
+    // own scroll container (needed so its sticky header has a scrolling
+    // ancestor), so both were scrolling independently: two scrollbars for
+    // one page. The outer one is redundant — .content-area is the one
+    // real scrolling region.
+    ::ng-deep .mat-drawer-content {
+        overflow: hidden !important;
+    }
 }
 
 // ─── Sidebar ─────────────────────────────────────────────
 .side-nav {
-    background-color: var(--mat-sys-primary);
+    // No `position` override here on purpose: Angular Material's own
+    // `.mat-drawer` CSS already sets `position: absolute`, which is what
+    // makes the push layout work in this app (it uses a plain <div> for
+    // the content area instead of <mat-sidenav-content>). Re-declaring
+    // `position: relative` here — even just to anchor the ::before below —
+    // wins the cascade and knocks the drawer into normal block flow,
+    // which pushes .content-area below it instead of beside it. The
+    // element is already a valid positioning context as-is.
     overflow: visible !important;
+    // Solid brand green — no gradient, no transparency.
+    background-color: var(--mat-sys-primary);
 
+    // Edge-to-edge panel (no floating gap — that fought with other pages'
+    // content, e.g. the students page's filter panel showed through the
+    // gap). container-shape here rounds only the two content-facing
+    // corners for a drawer anchored this way; the outer edge (screen
+    // border, right in RTL) stays flush/square as asked.
     @include mat.sidenav-overrides((
         container-divider-color: color-mix(in srgb, var(--mat-sys-on-primary) 20%, transparent),
-        container-shape: 0,
+        container-shape: 22px,
     ));
 
     --mat-divider-color: color-mix(in srgb, var(--mat-sys-on-primary) 20%, transparent);
 
-    width: 250px;
+    // Material's default ripple/state-layer is a plain dark/white overlay
+    // — uncustomized, that reads as a jarring flash of white on this dark
+    // green panel when a nav item is pressed. Tint it gold instead.
+    --mat-ripple-color: color-mix(in srgb, var(--gold-300) 35%, transparent);
+    --mdc-list-list-item-hover-state-layer-color: var(--gold-300);
+    --mdc-list-list-item-hover-state-layer-opacity: 0.12;
+    --mdc-list-list-item-focus-state-layer-color: var(--gold-300);
+    --mdc-list-list-item-focus-state-layer-opacity: 0.16;
+
+    width: 224px;
     height: 100%;
+    box-shadow: 0 0 24px rgba(13, 36, 16, 0.25);
+    transition: width 200ms ease;
 
     // Allow inner container to flex + overflow visible for the toggle btn
     ::ng-deep .mat-drawer-inner-container {
@@ -33,31 +77,42 @@ $toggle-btn-size: 28px;
         overflow-x: visible !important;
         overflow-y: hidden !important;
         height: 100%;
+        position: relative;
+        z-index: 1;
     }
+}
+
+// In dark mode, --mat-sys-primary/on-primary correctly become a bright
+// tone paired with dark text (fixed in greenTheme.scss/blueTheme.scss —
+// they used to collapse to near-black on near-black). That bright primary
+// is right for buttons and accents, but turning this whole rail bright
+// green reads as jarring next to an otherwise all-dark page. Re-pointing
+// primary/on-primary to the container pair here — one shade lighter than
+// the page instead of inverted-bright — keeps the rail dark and moody
+// like the rest of dark mode, while every nav-item/settings/logout style
+// below (all written against var(--mat-sys-primary)/-on-primary) picks up
+// a properly-contrasting pair for free through normal CSS inheritance.
+:host-context(.dark) .side-nav {
+    background-color: var(--mat-sys-primary-container);
+    --mat-sys-primary: var(--mat-sys-primary-container);
+    --mat-sys-on-primary: var(--mat-sys-on-primary-container);
 }
 
 // ─── Sidebar Header ───────────────────────────────────────
+// A compact row now instead of a big centered portrait: the seal sits at
+// the start with its caption underneath, the toggle sits at the end.
 .sidebar-header {
-    position: relative;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 8px;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 16px 12px 14px;
     flex-shrink: 0;
-
-    > img {
-        width: 70%;
-        aspect-ratio: 1 / 1;
-        object-fit: contain;
-        background-color: transparent;
-        padding: 6px;
-    }
+    gap: 8px;
 
     .sidebar-actions {
-        position: absolute;
-        right: 8px;
         display: flex;
         align-items: center;
+        flex-shrink: 0;
     }
 
     button mat-icon {
@@ -65,45 +120,54 @@ $toggle-btn-size: 28px;
     }
 }
 
-// ─── Year Section ─────────────────────────────────────────
-.year-section {
-    padding: 12px;
-    flex-shrink: 0;
-}
-
-.year-spinner {
+.sidebar-brand {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    padding: 4px 0;
+    gap: 6px;
+    min-width: 0;
 
-    mat-progress-spinner {
-        --mdc-circular-progress-active-indicator-color: var(--mat-sys-on-primary);
+    &__logo {
+        width: 44px;
+        height: 44px;
+        object-fit: contain;
+        border-radius: 50%;
+        flex-shrink: 0;
+        box-shadow:
+            0 4px 10px rgba(0, 0, 0, 0.3),
+            0 0 0 2px color-mix(in srgb, var(--gold-300) 70%, transparent);
     }
 
-    button mat-icon {
+    &__name {
+        font-family: var(--mat-sys-brand-font-family);
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1.25;
         color: var(--mat-sys-on-primary);
+        text-align: center;
+        max-width: 96px;
     }
-}
 
-.year-select {
-    width: 100%;
+    // Only interactive while collapsed — it's standing in for the toggle
+    // button that disappears there (see the removed .collapse-toggle-btn
+    // note below): tapping the seal re-expands the rail.
+    &--clickable {
+        cursor: pointer;
+        border-radius: 12px;
+        padding: 4px;
+        margin: -4px;
+        transition: background-color 150ms ease;
 
-    @include mat.form-field-overrides((
-        outlined-label-text-color: var(--mat-sys-on-primary),
-        outlined-hover-label-text-color: var(--mat-sys-on-primary),
-        outlined-focus-label-text-color: var(--mat-sys-on-primary),
-        outlined-outline-color: var(--mat-sys-on-primary),
-        outlined-hover-outline-color: var(--mat-sys-on-primary),
-        outlined-focus-outline-color: var(--mat-sys-on-primary),
-    ));
+        &:hover,
+        &:focus-visible {
+            background-color: color-mix(in srgb, #ffffff 14%, transparent);
+        }
 
-    @include mat.select-overrides((
-        enabled-trigger-text-color: var(--mat-sys-on-primary),
-        enabled-arrow-color: var(--mat-sys-on-primary),
-        focused-arrow-color: var(--mat-sys-on-primary),
-        panel-background-color: var(--mat-sys-background),
-    ));
+        &:focus-visible {
+            outline: 2px solid var(--gold-300);
+            outline-offset: 2px;
+        }
+    }
 }
 
 // mat-divider inside sidebar (flex-shrink: 0 so it doesn't get squished)
@@ -123,71 +187,65 @@ mat-divider {
         flex: 1;
         min-height: 0;
         overflow-y: auto;
+        // Setting only overflow-y makes overflow-x compute to `auto` per
+        // spec (not `visible`), which would clip the collapsed active
+        // icon's bulge right at this boundary. Keep it explicit.
+        overflow-x: visible;
         padding: 8px 0;
     }
 }
 
-// ─── Border Toggle Button (desktop) ──────────────────────
-.sidebar-toggle-btn {
-    position: absolute;
-    inset-inline-end: calc(-1 * $toggle-btn-size / 2);
-    top: 72px;
-    z-index: 200;
-
-    width: $toggle-btn-size !important;
-    height: $toggle-btn-size !important;
-    min-height: $toggle-btn-size !important;
-    min-width: $toggle-btn-size !important;
-    line-height: $toggle-btn-size !important;
+// ─── Collapse Toggle (desktop, lives in the header now) ──
+// Previously a circle floating on the sidebar's own boundary — that fought
+// with the panel's rounded corners through several redesigns. Anchored
+// inside the header instead: a fixed, predictable spot that never has to
+// negotiate with the panel's shape. Styled as the same white/gold circular
+// badge the old floating version used — just the position that changed.
+.collapse-toggle-btn {
+    width: 32px !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    min-width: 32px !important;
+    padding: 0 !important;
     border-radius: 50% !important;
-    padding: 0 !important;
+    background-color: #ffffff !important;
+    border: 1.5px solid color-mix(in srgb, var(--gold-300) 60%, transparent);
+    box-shadow: 0 2px 6px rgba(13, 36, 16, 0.25);
+    transition: transform 150ms ease, box-shadow 150ms ease;
 
-    background-color: var(--mat-sys-surface-container) !important;
-    border: 1.5px solid var(--mat-sys-outline-variant) !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+    &:hover {
+        transform: scale(1.08);
+        box-shadow: 0 3px 8px rgba(13, 36, 16, 0.3);
+    }
 
     mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-        color: var(--mat-sys-on-surface-variant);
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: var(--mat-sys-primary) !important;
     }
 }
 
-// Flip chevron for RTL
-.sidenav-container[dir="rtl"] .sidebar-toggle-btn mat-icon {
-    transform: scaleX(-1);
-}
+// ─── Collapsed (icon-only) state ──────────────────────────
+.side-nav--collapsed {
+    width: 76px;
 
-// ─── Desktop Open Button (when sidebar is closed) ─────────
-.sidebar-open-btn {
-    position: fixed;
-    inset-inline-start: 0;
-    top: 72px;
-    z-index: 200;
-
-    width: $toggle-btn-size !important;
-    height: $toggle-btn-size !important;
-    min-height: $toggle-btn-size !important;
-    border-radius: 0 50% 50% 0 !important;
-    padding: 0 !important;
-
-    background-color: var(--mat-sys-primary) !important;
-    box-shadow: 2px 0 6px rgba(0,0,0,0.2);
-
-    mat-icon {
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-        color: var(--mat-sys-on-primary);
+    .sidebar-header {
+        flex-direction: column;
+        align-items: center;
+        padding: 16px 8px 12px;
+        gap: 10px;
     }
-}
 
-.sidenav-container[dir="rtl"] .sidebar-open-btn {
-    border-radius: 50% 0 0 50% !important;
+    .sidebar-brand__logo {
+        width: 36px;
+        height: 36px;
+    }
 
-    mat-icon {
-        transform: scaleX(-1);
+    // No room for the caption at rail width — the seal alone still reads
+    // as "this is the school", the toggle stays reachable right below it.
+    .sidebar-brand__name {
+        display: none;
     }
 }
 
@@ -205,10 +263,191 @@ mat-divider {
 .content-area {
     padding: 5px 10px;
     height: 100vh;
-    overflow: auto;
+    overflow-y: auto;
+    // A stray few px of horizontal overflow anywhere inside (long labels,
+    // a grid track rounding) used to surface as a full-width horizontal
+    // scrollbar here, since this is the single scrolling ancestor for the
+    // whole page. Content should reflow/truncate within its width, never
+    // force horizontal scroll.
+    overflow-x: hidden;
 
     &.with-mobile-header {
         height: calc(100vh - #{$mobile-header-height});
+    }
+}
+
+// ─── Manager Header (brand + page title + year/settings) ─
+// Lives inside .content-area (not as a sibling of the sidenav) on purpose:
+// that sibling slot is where the fragile push-layout mechanism lives — see
+// the notes on .side-nav above. Sticky here just needs .content-area to be
+// the scrolling ancestor, which it already is.
+.manager-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: -5px -10px 16px;
+    padding: 12px 20px;
+    // Same tone as the page behind it (.sidenav-container below) — the
+    // header blends into the content area instead of standing apart as its
+    // own bar. No border/shadow either, for the same reason.
+    background-color: var(--mat-sys-surface-container-low);
+    transition: transform 220ms ease;
+
+    // Slides up out of view on scroll-down, slides back in on scroll-up —
+    // still `position: sticky` underneath, this just offsets it further.
+    &--hidden {
+        transform: translateY(-100%);
+    }
+
+    &__spacer {
+        flex: 1;
+    }
+
+    // With the logo/school-name gone, the title is the only thing left in
+    // the header — give it its own presence as a pill-shaped badge rather
+    // than plain centered text floating in empty space.
+    &__title {
+        flex: 1;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: fit-content;
+        margin-inline: auto;
+        padding: 8px 20px;
+        border-radius: 999px;
+        background: linear-gradient(135deg,
+            color-mix(in srgb, var(--mat-sys-primary) 14%, transparent),
+            color-mix(in srgb, var(--mat-sys-primary) 6%, transparent));
+        border: 1px solid color-mix(in srgb, var(--mat-sys-primary) 18%, transparent);
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--mat-sys-primary);
+        white-space: nowrap;
+
+        mat-icon {
+            width: 20px;
+            height: 20px;
+            font-size: 20px;
+            color: var(--mat-sys-primary);
+        }
+    }
+
+    &__actions {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+}
+
+// Light-context year selector (moved here from the dark sidebar panel —
+// same control, different surrounding colors).
+.year-select {
+    // Was clipping the year to "...2025" instead of showing "2024/2025" —
+    // wide enough now to always show the full range.
+    width: 150px;
+    flex-shrink: 0;
+    // Backstop: keeps this control from ever pushing the page wider,
+    // whatever MDC does internally with the outline below.
+    overflow: hidden;
+
+    // Root cause of the year not showing in English: MDC derives its
+    // outline's leading/trailing piece widths directly from this radius
+    // token (roughly radius + a constant, per piece). At 999px that came
+    // out to ~1000px per piece — a ~2000px notch that either blew the
+    // control off-screen or squeezed it to nothing, only in LTR. A radius
+    // at or past half the control's own height (36px) already renders as
+    // a full pill visually, so there's no need for an extreme value here.
+    @include mat.form-field-overrides((
+        outlined-container-shape: 18px,
+        outlined-outline-width: 0px,
+        outlined-focus-outline-width: 0px,
+    ));
+
+    ::ng-deep .mat-mdc-form-field-flex {
+        background: var(--mat-sys-surface-container-high);
+        border: 1.5px solid transparent;
+        border-radius: 999px;
+        overflow: hidden;
+        padding-inline: 14px;
+        box-sizing: border-box;
+        min-height: 36px;
+        transition: background-color 150ms ease, border-color 150ms ease;
+    }
+
+    // MDC's notch-width JS still runs even with the outline hidden above
+    // and was setting the wrapper itself (a parent of .mat-mdc-form-field-
+    // flex, not a descendant — the flex's own overflow:hidden can't
+    // contain it) to a ~2000px inline width in LTR. Forcing it back to
+    // 100% here is what actually keeps the control on-screen.
+    ::ng-deep .mat-mdc-text-field-wrapper {
+        width: 100% !important;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    ::ng-deep .mat-mdc-text-field-wrapper,
+    ::ng-deep .mat-mdc-form-field-infix {
+        min-height: 36px;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    &:hover ::ng-deep .mat-mdc-form-field-flex {
+        border-color: color-mix(in srgb, var(--mat-sys-primary) 40%, transparent);
+    }
+
+    &.mat-focused ::ng-deep .mat-mdc-form-field-flex {
+        border-color: var(--mat-sys-primary);
+    }
+
+    ::ng-deep .mat-mdc-select-value-text {
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--mat-sys-on-surface);
+    }
+
+    @include mat.select-overrides((
+        enabled-arrow-color: var(--mat-sys-primary),
+        focused-arrow-color: var(--mat-sys-primary),
+        panel-background-color: var(--mat-sys-background),
+    ));
+}
+
+.year-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    flex-shrink: 0;
+
+    button mat-icon {
+        color: var(--mat-sys-on-surface-variant);
+    }
+}
+
+@media (max-width: 640px) {
+    .manager-header {
+        gap: 8px;
+        padding: 10px 12px;
+
+        &__school-name {
+            display: none;
+        }
+
+        &__title {
+            font-size: 0.9rem;
+        }
+    }
+
+    .year-select {
+        width: 128px;
     }
 }
 

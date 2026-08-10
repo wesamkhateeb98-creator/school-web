@@ -1,18 +1,23 @@
 @if(hasItems){
-  <a mat-list-item class="nav-item" (click)="navItem.isExpended = !navItem.isExpended">
+  <a mat-list-item class="nav-item"
+     disableRipple
+     (click)="navItem.isExpended = !navItem.isExpended"
+     [attr.aria-expanded]="navItem.isExpended">
     <mat-icon matListItemIcon class="nav-icon">{{ navItem.icon }}</mat-icon>
     <span matListItemTitle class="nav-label">{{ language.transform(navItem.name) }}</span>
     <span matListItemMeta>
-      <mat-icon class="nav-arrow">
-        {{ navItem.isExpended ? 'expand_less' : 'expand_more' }}
-      </mat-icon>
+      <mat-icon class="nav-arrow" [class.nav-arrow--open]="navItem.isExpended">expand_more</mat-icon>
     </span>
   </a>
 } @else {
   <a mat-list-item class="nav-item"
+     disableRipple
      [routerLink]="navItem.url"
      routerLinkActive="nav-active"
-     [routerLinkActiveOptions]="{ exact: true }">
+     #rla="routerLinkActive"
+     [attr.aria-current]="rla.isActive ? 'page' : null"
+     [routerLinkActiveOptions]="{ paths: 'exact', queryParams: 'ignored', matrixParams: 'ignored', fragment: 'ignored' }"
+     (click)="linkClick.emit()">
     <mat-icon matListItemIcon class="nav-icon">{{ navItem.icon }}</mat-icon>
     <span matListItemTitle class="nav-label">{{ language.transform(navItem.name) }}</span>
   </a>
