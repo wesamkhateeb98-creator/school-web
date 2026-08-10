@@ -48,6 +48,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'close':'إغلاق',
         'of':'من',
         'login': 'تسجيل الدخول',
+        'login_control_panel': 'لوحة التحكم',
+        'login_welcome_title': 'مرحباً بعودتك',
+        'login_welcome_subtitle': 'سجّل الدخول للوصول إلى حسابك',
+        'login_motto': 'ميراث النبيين ونهج الصالحين',
+        'password_title': 'كلمة المرور',
         'logout':'تسجيل خروج',
         'notifications': 'الإشعارات',
         'no_notifications': 'لا توجد إشعارات',
@@ -355,8 +360,25 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         final_exam_avg_title: 'مجموع الامتحان',
         total_avg_title: 'المجموع الكلي',
         dashboard: 'لوحة التحكم',
+        dashboard_overview: 'نظرة عامة على المدرسة',
+        quick_access_title: 'الوصول السريع',
+        distribution_title: 'نسبة التوزيع',
+        total_title: 'الإجمالي',
+        mark_sheets_status_title: 'حالة كشوف العلامات',
+        sheets_submitted_title: 'كشوف مُدخلة',
+        sheets_confirmed_title: 'كشوف مؤكدة',
+        group_academic_title: 'الشؤون الأكاديمية',
+        group_people_title: 'الأشخاص',
+        group_records_title: 'السجلات',
+        open_menu: 'فتح القائمة',
+        close_menu: 'إغلاق القائمة',
+        toggle_sidebar: 'طي/فتح الشريط الجانبي',
+        school_short_name: 'المدرسة الشرعية',
+        admin_panel_title: 'لوحة الإدارة',
+        appearance_group_title: 'المظهر',
         back: 'رجوع',
         student: 'طالب',
+        student_profile_title: 'ملف الطالب',
         no_data: 'لا توجد بيانات',
         created_by: 'بواسطة',
         student_evaluations: 'تقييمات الطلاب',
@@ -419,6 +441,11 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         'close':'Close',
         'of':"of",
         'login':'Login',
+        'login_control_panel': 'Control Panel',
+        'login_welcome_title': 'Welcome back',
+        'login_welcome_subtitle': 'Log in to access your account',
+        'login_motto': 'The heritage of the prophets, the path of the righteous',
+        'password_title': 'Password',
         'logout':'logout',
         'notifications': 'Notifications',
         'no_notifications': 'No notifications',
@@ -720,8 +747,25 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         final_exam_avg_title: 'Final Exam Total',
         total_avg_title: 'Grand Total',
         dashboard: 'Dashboard',
+        dashboard_overview: 'School overview',
+        quick_access_title: 'Quick access',
+        distribution_title: 'Distribution',
+        total_title: 'Total',
+        mark_sheets_status_title: 'Mark Sheets Status',
+        sheets_submitted_title: 'Sheets submitted',
+        sheets_confirmed_title: 'Sheets confirmed',
+        group_academic_title: 'Academics',
+        group_people_title: 'People',
+        group_records_title: 'Records',
+        open_menu: 'Open menu',
+        close_menu: 'Close menu',
+        toggle_sidebar: 'Toggle sidebar',
+        school_short_name: "Al-Shar'iyya School",
+        admin_panel_title: 'Admin Panel',
+        appearance_group_title: 'Appearance',
         back: 'Back',
         student: 'Student',
+        student_profile_title: 'Student Profile',
         no_data: 'No data found',
         created_by: 'Created By',
         student_evaluations: 'Student Evaluations',
@@ -1006,16 +1050,38 @@ export type GlobalType =
 'all_title'|
 'select_from_here'|
 'dashboard'|
+'dashboard_overview'|
+'quick_access_title'|
+'distribution_title'|
+'total_title'|
+'mark_sheets_status_title'|
+'sheets_submitted_title'|
+'sheets_confirmed_title'|
+'group_academic_title'|
+'group_people_title'|
+'group_records_title'|
+'open_menu'|
+'close_menu'|
+'toggle_sidebar'|
+'school_short_name'|
+'admin_panel_title'|
+'appearance_group_title'|
 'student'|
+'student_profile_title'|
 'no_data'|
 'created_by'
 
-export type LoginPhrases = 
+export type LoginPhrases =
 'name' |
 'verification-code'|
 'code'|
 'validation_password_pattern'|
-'validation_phonenumber_pattern'
+'validation_phonenumber_pattern'|
+'login_control_panel'|
+'login_welcome_title'|
+'login_welcome_subtitle'|
+'login_motto'|
+'password_title'
 
 export type SettingsPhrases = 
 'settings'|
