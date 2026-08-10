@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from "@angular/material/icon";
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpHelper } from '../../../../core/services/http-helper';
 import { AuthModel } from '../../../../core/model/auth-model';
 import { AuthService } from '../../../../core/services/auth-service';
@@ -19,10 +19,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatCardModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule
 ],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -59,6 +59,17 @@ export class Login {
   
   get password() {
     return this.form.get('password');
+  }
+
+  onPhonenumberInput(event: Event){
+    const input = event.target as HTMLInputElement;
+    const digitsOnly = input.value.replace(/\D/g, '').slice(0, 10);
+
+    if(input.value !== digitsOnly){
+      input.value = digitsOnly;
+    }
+
+    this.phonenumber?.setValue(digitsOnly);
   }
 
   login(){

@@ -1,10 +1,15 @@
+<div class="login-panel">
+  <div class="login-panel__head">
+    <h1>{{language.transform('login_welcome_title')}}</h1>
+    <p>{{language.transform('login_welcome_subtitle')}}</p>
+  </div>
 
-<mat-card class="container-item">
-  <form class="example-form" [formGroup]="form">
-    <mat-form-field class="example-full-width">
-      <mat-label >{{language.transform("phonenumber_title")}}</mat-label>
-      <input type="text" matInput formControlName="phonenumber">
-      
+  <form class="login-form" [formGroup]="form" (ngSubmit)="login()">
+    <mat-form-field appearance="outline" class="login-field">
+      <mat-label>{{language.transform("phonenumber_title")}}</mat-label>
+      <mat-icon matPrefix>call</mat-icon>
+      <input type="text" matInput formControlName="phonenumber" autocomplete="tel" inputmode="numeric" pattern="[0-9]*" maxlength="10" (input)="onPhonenumberInput($event)">
+
       @if(phonenumber?.hasError('required')){
         <mat-error>
           {{language.transform('field_required')}}
@@ -16,13 +21,15 @@
         </mat-error>
       }
     </mat-form-field>
-    
-    <mat-form-field class="example-full-width">
-      <mat-label>Password</mat-label>
-      <input [type]="passwordvisibile?'text':'password'" matInput formControlName="password">
-      <button matSuffix matIconButton (click)="passwordvisibile = !passwordvisibile" >
-        <mat-icon >{{passwordvisibile? "visibility":"visibility_off"}}</mat-icon>
+
+    <mat-form-field appearance="outline" class="login-field">
+      <mat-label>{{language.transform('password_title')}}</mat-label>
+      <mat-icon matPrefix>lock</mat-icon>
+      <input [type]="passwordvisibile?'text':'password'" matInput formControlName="password" autocomplete="current-password">
+      <button type="button" matSuffix matIconButton (click)="passwordvisibile = !passwordvisibile">
+        <mat-icon>{{passwordvisibile? "visibility":"visibility_off"}}</mat-icon>
       </button>
+
       @if(password?.hasError('required')){
         <mat-error>
           {{language.transform('field_required')}}
@@ -33,13 +40,14 @@
           {{language.transform('validation_password_pattern')}}
         </mat-error>
       }
-      
     </mat-form-field>
 
-
-     <div style="display: flex; justify-content: end; width: 100%;">
-        <button matButton="filled" (click)="login()">{{language.transform('login')}}</button>
-     </div>
+    <button class="login-submit" matButton="filled" type="submit" [disabled]="loading()">
+      @if(loading()){
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        <span>{{language.transform('login')}}</span>
+      }
+    </button>
   </form>
-
-</mat-card>
+</div>

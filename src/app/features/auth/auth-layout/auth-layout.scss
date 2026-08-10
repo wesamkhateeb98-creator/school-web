@@ -1,12 +1,299 @@
 @use './../../../../styles.scss';
 
-.container{
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;    
-    background-color: var( --mat-sys-primary ); 
-    padding: 16px; 
-    box-sizing: border-box;
+:host {
+  --auth-forest-100: #eaf7e6;
+  --auth-forest-700: #205120;
+  --auth-forest-800: #163a17;
+  --auth-forest-900: #0d2410;
+  --auth-gold-500: #dda63f;
+  --auth-gold-300: #f0cd85;
 
+  // Cairo carries the interface (labels, body, buttons); El Messiri is
+  // reserved for the one display headline on the form panel.
+  //
+  // No self-reference to the original --mat-sys-* value here: a custom
+  // property that references itself (even through var()) is invalid at
+  // computed-value time per spec, which silently broke every font on this
+  // page down to the browser's serif default. Use a concrete fallback stack.
+  --mat-sys-plain-font-family: 'Cairo', Roboto, sans-serif;
+  --mat-sys-brand-font-family: 'El Messiri', 'Cairo', Roboto, sans-serif;
+}
+
+.auth-shell {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at 15% 15%, color-mix(in srgb, var(--mat-sys-primary) 10%, transparent), transparent 45%),
+    radial-gradient(circle at 85% 85%, color-mix(in srgb, var(--mat-sys-primary) 8%, transparent), transparent 45%),
+    var(--mat-sys-surface-container-low);
+}
+
+.auth-card {
+  width: min(1000px, 100%);
+  min-height: 600px;
+  display: flex;
+  background: var(--mat-sys-surface-container-lowest);
+  border-radius: var(--mat-sys-corner-extra-large);
+  box-shadow: 0 24px 60px -20px rgba(13, 36, 16, 0.35), 0 2px 8px rgba(13, 36, 16, 0.08);
+  overflow: hidden;
+}
+
+.brand-panel {
+  position: relative;
+  flex: 0 0 42%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+  overflow: hidden;
+  color: var(--auth-forest-100);
+  background:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--auth-gold-500) 18%, transparent), transparent 55%),
+    linear-gradient(160deg, #2c5d2a 0%, var(--auth-forest-700) 55%, var(--auth-forest-900) 100%);
+
+  &__pattern {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--auth-gold-300);
+    opacity: 0.08;
+    pointer-events: none;
+  }
+
+  &__arc {
+    position: absolute;
+    inset-inline-end: -70px;
+    top: -70px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 1.5px dashed color-mix(in srgb, var(--auth-gold-300) 55%, transparent);
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  &__body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+  }
+
+  &__seal-wrap {
+    position: relative;
+    width: 176px;
+    height: 176px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    animation: auth-seal-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+
+  &__halo {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--auth-gold-300) 45%, transparent) 0%, transparent 70%);
+    filter: blur(2px);
+    animation: auth-halo-breathe 5s ease-in-out infinite;
+  }
+
+  &__seal {
+    position: relative;
+    width: 148px;
+    height: 148px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
+    animation: auth-seal-float 6s ease-in-out infinite;
+  }
+
+  &__school {
+    font: var(--mat-sys-title-medium);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    margin: 0 0 10px;
+    opacity: 0;
+    animation: auth-fade-up 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s both;
+  }
+
+  &__motto {
+    position: relative;
+    max-width: 230px;
+    min-height: 53px;
+    margin: 0;
+    padding-top: 18px;
+    font-size: 14px;
+    line-height: 1.9;
+    font-weight: 500;
+    color: color-mix(in srgb, var(--auth-forest-100) 82%, transparent);
+    opacity: 0;
+    animation: auth-fade-up 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s both;
+
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 1px;
+      height: 1em;
+      margin-inline-start: 2px;
+      vertical-align: -0.15em;
+      background: var(--auth-gold-300);
+      animation: auth-cursor-blink 0.9s steps(1) infinite;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      // Physical `left` on purpose: mixing this with the (also physical)
+      // translateX centering trick and a logical inset-inline-start broke
+      // centering under RTL, where inline-start resolves to the right edge.
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 3px;
+      border-radius: 3px;
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--auth-gold-500) 30%, transparent),
+        var(--auth-gold-300),
+        color-mix(in srgb, var(--auth-gold-500) 30%, transparent)
+      );
+      background-size: 200% 100%;
+      animation:
+        auth-divider-grow 0.6s ease-out 0.35s both,
+        auth-divider-shimmer 2.6s ease-in-out 1s infinite;
+    }
+  }
+}
+
+.form-panel {
+  flex: 1 1 58%;
+  display: flex;
+  min-width: 0;
+}
+
+@keyframes auth-seal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes auth-seal-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes auth-halo-breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.95; transform: scale(1.08); }
+}
+
+@keyframes auth-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes auth-divider-grow {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 64px;
+    opacity: 1;
+  }
+}
+
+@keyframes auth-divider-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes auth-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-panel__seal-wrap,
+  .brand-panel__seal,
+  .brand-panel__halo,
+  .brand-panel__school,
+  .brand-panel__motto,
+  .brand-panel__motto::before,
+  .brand-panel__motto::after {
+    animation: none !important;
+    opacity: 1;
+  }
+
+  .brand-panel__motto::before {
+    width: 64px;
+  }
+
+  .brand-panel__motto::after {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .auth-card {
+    flex-direction: column;
+    min-height: 0;
+    width: min(480px, 100%);
+  }
+
+  .brand-panel {
+    flex: 0 0 auto;
+    padding: 28px 24px;
+  }
+
+  .brand-panel__seal-wrap {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 12px;
+  }
+
+  .brand-panel__seal {
+    width: 80px;
+    height: 80px;
+  }
+
+  .brand-panel__motto {
+    display: none;
+  }
+}
+
+@media (max-width: 599.99px) {
+  .auth-shell {
+    padding: 0;
+  }
+
+  .auth-card {
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+  }
 }

@@ -1,23 +1,163 @@
 @use '@angular/material' as mat;
-@use "../../../../../styles.scss" ;
+@use "../../../../../styles.scss";
 
-.example-form {
+:host {
+  flex: 1;
+  display: flex;
+}
+
+.login-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 56px 40px;
+  box-sizing: border-box;
+
+  &__head {
+    margin-bottom: 28px;
+
+    h1 {
+      margin: 0 0 6px;
+      font-family: var(--mat-sys-brand-font-family);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--auth-forest-700, var(--mat-sys-primary));
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75), 0 1px 1px rgba(20, 40, 15, 0.12);
+    }
+
+    p {
+      margin: 0;
+      font: var(--mat-sys-body-large);
+      color: var(--mat-sys-on-surface-variant);
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  @include mat.form-field-overrides((
+    outlined-container-shape: 14px,
+    outlined-outline-color: transparent,
+    outlined-hover-outline-color: transparent,
+    outlined-focus-outline-color: transparent,
+    outlined-outline-width: 0px,
+    outlined-label-text-color: var(--mat-sys-on-surface-variant),
+  ));
+
+  // Material computes a leading notch-gap per field from its label width,
+  // which left the phone field's wrapper narrower than the password field's
+  // — force both to the same flush box so the two fields match exactly.
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    padding: 0 !important;
+  }
+
+  // Angular Material's outline API only exposes the border, not the
+  // container fill — the inset "carved" look needs the internal wrapper.
+  ::ng-deep .mat-mdc-form-field-flex {
+    background: linear-gradient(180deg, #e9ede0 0%, #f6f8f1 55%, #fbfcf8 100%);
+    border: 1px solid rgba(20, 40, 15, 0.1);
+    border-radius: 14px;
+    box-shadow:
+      inset 0 2px 5px rgba(20, 40, 15, 0.22),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.9);
+    transition: box-shadow 0.15s ease;
+  }
+
+  ::ng-deep .mat-focused .mat-mdc-form-field-flex {
+    box-shadow:
+      inset 0 2px 5px rgba(20, 40, 15, 0.26),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.9),
+      0 0 0 3px color-mix(in srgb, var(--mat-sys-primary) 22%, transparent);
+  }
+
+  // Material pads the prefix/suffix slots differently by default, which is
+  // what made the two icon badges look mismatched in size — normalize both.
+  ::ng-deep .mat-mdc-form-field-icon-prefix,
+  ::ng-deep .mat-mdc-form-field-icon-suffix {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+  }
+
+  mat-icon[matPrefix] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    color: var(--auth-forest-700, var(--mat-sys-primary));
+    background: linear-gradient(145deg, #dfe4d3, #f8faf3);
+    box-shadow:
+      inset 0 1px 2px rgba(20, 40, 15, 0.2),
+      0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  ::ng-deep [matSuffix].mat-mdc-icon-button {
+    --mdc-icon-button-state-layer-size: 34px;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #dfe4d3, #f8faf3);
+    box-shadow:
+      inset 0 1px 2px rgba(20, 40, 15, 0.18),
+      0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+}
+
+.login-field {
   width: 100%;
 }
 
-.example-full-width {
+.login-submit {
   width: 100%;
-}
+  height: 48px;
+  margin-top: 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #1e4a1c;
+  background: linear-gradient(180deg, #4d8a48 0%, #386935 55%, #2a5828 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25),
+    0 3px 6px rgba(15, 35, 12, 0.35);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.35);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
 
-.container-item{
-    width: 50vw;
-    background-color: var(--mat-sys-background);
-    padding: 20px 10px;
-    box-shadow: 1px 1px 2px #aaa;
+  &:active:not([disabled]) {
+    transform: translateY(1px);
+    box-shadow:
+      inset 0 2px 5px rgba(0, 0, 0, 0.35),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  &[disabled] {
+    opacity: 0.7;
+  }
+
+  mat-spinner {
+    --mdc-circular-progress-active-indicator-color: var(--mat-sys-on-primary);
+  }
 }
 
 @media (max-width: 599.99px) {
-    .container-item{
-        width: 100%;
-    }
+  .login-panel {
+    padding: 40px 24px;
+    max-width: none;
+  }
 }

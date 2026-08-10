@@ -1,3 +1,33 @@
-<div class="container">
-    <router-outlet></router-outlet>
+<div class="auth-shell">
+  <div class="auth-card">
+
+    <aside class="brand-panel" aria-hidden="true">
+      <svg class="brand-panel__pattern" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <pattern id="starTile" width="50" height="50" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+            <rect x="10" y="10" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1"/>
+            <rect x="10" y="10" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(45 22 22)"/>
+          </pattern>
+        </defs>
+        <rect width="200" height="200" fill="url(#starTile)"/>
+      </svg>
+
+      <span class="brand-panel__arc"></span>
+
+      <div class="brand-panel__body">
+        <div class="brand-panel__seal-wrap">
+          <span class="brand-panel__halo"></span>
+          <img src="/logo.png" alt="" class="brand-panel__seal">
+        </div>
+
+        <p class="brand-panel__school">{{language.transform('login_control_panel')}}</p>
+        <p class="brand-panel__motto">{{displayedMotto()}}</p>
+      </div>
+    </aside>
+
+    <section class="form-panel">
+      <router-outlet></router-outlet>
+    </section>
+
+  </div>
 </div>
