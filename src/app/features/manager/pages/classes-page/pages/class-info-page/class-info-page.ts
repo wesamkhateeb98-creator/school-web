@@ -20,6 +20,7 @@ import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
 import { MatGridList, MatGridTile } from "@angular/material/grid-list";
 import { ResponsiveScreen } from '../../../../../../core/services/responsive-screen';
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormatService } from '../../../../../../core/services/format-service';
 
 @Component({
@@ -33,7 +34,8 @@ import { FormatService } from '../../../../../../core/services/format-service';
     MatButtonModule,
     MatFormFieldModule, MatInputModule, ReactiveFormsModule,
     MatAutocompleteModule,
-    MatProgressSpinner
+    MatProgressSpinner,
+    MatTooltipModule
 ],
   templateUrl: './class-info-page.html',
 })
@@ -65,16 +67,18 @@ export class ClassInfoPage implements OnInit{
 
   loadClassViewModel() {
     this.loading.set(true);
-    this.classEndpoints.getByIdClassForAdmin(this.classId).subscribe({
-      next: (success) => {
-        this.classInfo = success;
-        this.loading.set(false);
-      },
-      error: (error) => {
-        this.matSnackBar.open(error.message || "Error", this.language.transform('close'), errorMatSnackbarConfig(this.language));
-        this.loading.set(false);
-      }
-    });
+    if (this.classId > 0) {
+      this.classEndpoints.getByIdClassForAdmin(this.classId).subscribe({
+        next: (success) => {
+          this.classInfo = success;
+          this.loading.set(false);
+        },
+        error: (error) => {
+          this.matSnackBar.open(error.message || "Error", this.language.transform('close'), errorMatSnackbarConfig(this.language));
+          this.loading.set(false);
+        }
+      });
+    }
   }
 
   // #################### Navigation ##################
