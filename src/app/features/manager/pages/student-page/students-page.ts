@@ -287,20 +287,8 @@ export class StudentsPage {
     });
   }
 
-  openStudentNotesPage(studentId:number){
-    this.router.navigate(["manager/student",studentId,"student-notes"])
-  }
-
-  openStudentPointsPage(studentId:number){
-    this.router.navigate(["manager/student",studentId,"student-points"])
-  }
-  
-  openStudentAttendancesPage(studentId:number){
-    this.router.navigate(["manager/student",studentId,"student-attendance"])
-  }
-  
-  openStudentParentVisitsPage(studentId:number){
-    this.router.navigate(["manager/student",studentId,"student-parent-visits"])
+  openStudentProfilePage(studentId: number): void {
+    this.router.navigate(["manager/student",studentId,"profile"])
   }
 
   openClassAssignmentsDialog(student: StudentViewModel) {

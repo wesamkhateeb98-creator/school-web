@@ -32,6 +32,7 @@ import { StudentAssignmentsPage } from "./pages/student-assignments-page/student
 import { SubjectMarkDistributionPage } from "./pages/subject-mark-distribution/subject-mark-distribution";
 import { StudentMarkSheetPage } from "./pages/student-mark-sheet/student-mark-sheet";
 import { SubjectMarkPage } from "./pages/subject-mark/subject-mark";
+import { StudentProfilePage } from "./pages/student-page/student-profile/student-profile";
 
 // ── Staff layout ──────────────────────────────────────────────────────────
 import { StaffLayout } from "../staff/staff-layout/staff-layout";
@@ -72,10 +73,7 @@ export const DASHBOARD_ROUTES: Routes = [
       {
         path: 'student',
         children: [
-          { path: ':id/student-notes',     component: StudentNotesPage,         title: messageTitle('notes') },
-          { path: ':id/student-points',    component: StudentPointsPage,        title: messageTitle('points') },
-          { path: ':id/student-attendance', component: StudentAttendancePage,   title: messageTitle('attendances') },
-          { path: ':id/student-parent-visits', component: StudentParentVisitHistory, title: messageTitle('student_parent_visits') },
+          { path: ':id/profile', component: StudentProfilePage, title: messageTitle('student_profile_title') },
         ],
       },
       {

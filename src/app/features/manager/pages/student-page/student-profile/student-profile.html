@@ -1,0 +1,23 @@
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{ language.transform('student_profile_title') }}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back')" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+    </div>
+</div>
+
+<mat-tab-group>
+    <mat-tab [label]="language.transform('notes')">
+        <app-semester-component />
+    </mat-tab>
+    <mat-tab [label]="language.transform('points')">
+        <app-student-points />
+    </mat-tab>
+    <mat-tab [label]="language.transform('attendances')">
+        <app-student-attendance-component />
+    </mat-tab>
+    <mat-tab [label]="language.transform('student_parent_visits')">
+        <app-student-ParentVisit-component />
+    </mat-tab>
+</mat-tab-group>

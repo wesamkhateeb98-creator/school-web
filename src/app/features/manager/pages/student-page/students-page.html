@@ -1,9 +1,12 @@
 
-<div style="display: flex; justify-content: start;">
-    <h2 >{{language.transform('students_title')}}</h2>
-    <button matFab (click)="openAddDialog()" style="margin: 0 20px ">
-        <mat-icon>add</mat-icon>
-    </button>
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{language.transform('students_title')}}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--primary" (click)="openAddDialog()">
+            <mat-icon>add</mat-icon>
+            <span>{{ language.transform('add') }}</span>
+        </button>
+    </div>
 </div>
 
 
@@ -120,19 +123,8 @@
                     <button mat-icon-button [matTooltip]="language.transform('verification-code')" (click)="openAccountCodeDialog(element.id,element.phoneNumber)" >
                         <mat-icon class="icon-success">verified_user</mat-icon>
                     </button>
-                    <button mat-icon-button [matTooltip]="language.transform('notes')" (click)="openStudentNotesPage(element.id)" >
-                        <mat-icon class="icon-error ">note</mat-icon>
-                    </button>
-                    <button mat-icon-button [matTooltip]="language.transform('points')" (click)="openStudentPointsPage(element.id)" >
-                        <mat-icon class="icon-update">star</mat-icon>
-                    </button>
-
-                    <button mat-icon-button [matTooltip]="language.transform('attendances')" (click)="openStudentAttendancesPage(element.id)" >
-                        <mat-icon class="icon-error ">check_circle</mat-icon>
-                    </button>
-
-                    <button mat-icon-button [matTooltip]="language.transform('student_parent_visits')" (click)="openStudentParentVisitsPage(element.id)" >
-                        <mat-icon class="icon-error ">family_restroom</mat-icon>
+                    <button mat-icon-button [matTooltip]="language.transform('student_profile_title')" (click)="openStudentProfilePage(element.id)" >
+                        <mat-icon>badge</mat-icon>
                     </button>
 
                     <button mat-icon-button [matTooltip]="language.transform('student_class_assignments')" (click)="openClassAssignmentsDialog(element)" >
