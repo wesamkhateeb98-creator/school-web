@@ -4,8 +4,11 @@
   color-scheme: light;
 
   /* Primary palette variables */
-  --mat-sys-primary: light-dark(#3d47e6, #01042e);
-  --mat-sys-on-primary: light-dark(#ffffff, #0005a9);
+  // Same fix as greenTheme.scss: dark-mode primary/on-primary were both
+  // generated too dark to contrast against each other. Swapped to the
+  // tone-80/tone-10 pair already present elsewhere in this file.
+  --mat-sys-primary: light-dark(#3d47e6, #bec2ff);
+  --mat-sys-on-primary: light-dark(#ffffff, #00026c);
   --mat-sys-primary-container: light-dark(#e0e0ff, #1e27cf);
   --mat-sys-on-primary-container: light-dark(#00026c, #e0e0ff);
   --mat-sys-inverse-primary: light-dark(#bec2ff, #3d47e6);

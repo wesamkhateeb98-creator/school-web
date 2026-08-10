@@ -4,8 +4,15 @@
   color-scheme: light;
 
   /* Primary palette variables */
-  --mat-sys-primary: light-dark(#386935, #0a4400);
-  --mat-sys-on-primary: light-dark(#ffffff, #05390b);
+  // Dark-mode primary/on-primary were generated far too dark (#0a4400 bg
+  // with #05390b text — almost no contrast between them), unlike every
+  // other role pair in this file which correctly gets BRIGHTER in dark
+  // mode. Swapped to the tone-80/tone-10 pair already present elsewhere
+  // in this file (inverse-primary's dark value, on-primary-fixed) —
+  // anything using primary as a background (the sidebar itself, buttons,
+  // tinted cards) was unreadable dark-on-dark before this.
+  --mat-sys-primary: light-dark(#386935, #9ed495);
+  --mat-sys-on-primary: light-dark(#ffffff, #002203);
   --mat-sys-primary-container: light-dark(#b9f1af, #205120);
   --mat-sys-on-primary-container: light-dark(#002203, #b9f1af);
   --mat-sys-inverse-primary: light-dark(#9ed495, #386935);
