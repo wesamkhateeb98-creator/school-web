@@ -194,15 +194,11 @@
   }
 }
 
-// ─── Two-column content grid ────────────────────────────
+// ─── Content grid ────────────────────────────────────────
 .dashboard-grid {
   display: grid;
-  grid-template-columns: minmax(280px, 380px) 1fr;
+  grid-template-columns: 1fr;
   gap: 16px;
-  // Marks (short, sometimes just an empty-state line) sits next to quick
-  // access (tall, several grouped rows) — stretching both to match height
-  // instead of each hugging its own content is what closes the dead gap
-  // that used to sit under the shorter panel.
   align-items: stretch;
 }
 

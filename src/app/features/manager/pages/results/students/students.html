@@ -1,0 +1,134 @@
+<p class="tab-hint">{{ language.transform('students_tab_hint') }}</p>
+
+<form [formGroup]="filterForm">
+    <div class="grid grid-two-column">
+        <mat-form-field>
+            <mat-label>{{ language.transform('age_group_title') }}</mat-label>
+            <mat-select [value]="ageGroupId" (selectionChange)="onAgeGroupSelect($event.value)">
+                @for (g of ageGroupItems; track g.id) {
+                    <mat-option [value]="g.id">{{ g.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ language.transform('section_title') }}</mat-label>
+            <mat-select formControlName="classId" (selectionChange)="onFilterChange()" [disabled]="!ageGroupId">
+                <mat-option [value]="null">{{ language.transform('all_classes_title') }}</mat-option>
+                @for (c of classItems(); track c.id) {
+                    <mat-option [value]="c.id">{{ c.section }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ language.transform('name') }}</mat-label>
+            <input matInput formControlName="name" [disabled]="!ageGroupId" />
+        </mat-form-field>
+
+        <div class="pending-only-field" [matTooltip]="language.transform('pending_only_hint')">
+            <mat-slide-toggle
+                [checked]="filterForm.value.pendingOnly"
+                [disabled]="!ageGroupId"
+                (change)="togglePendingOnly()">
+                {{ language.transform('pending_only_filter_title') }}
+            </mat-slide-toggle>
+            <mat-icon class="pending-only-field__hint-icon">info</mat-icon>
+        </div>
+    </div>
+</form>
+
+@if (!ageGroupId) {
+    <div class="empty-state">
+        <mat-icon>groups_3</mat-icon>
+        <p>{{ language.transform('select_age_group_first_message') }}</p>
+    </div>
+}
+
+@if (response(); as r) {
+    <div class="results-summary">
+        <div class="results-summary__item" [matTooltip]="language.transform('max_total_hint')">
+            <span class="results-summary__label">{{ language.transform('max_total_title') }}</span>
+            <span class="results-summary__value">{{ r.ageGroup.maxTotal }}</span>
+        </div>
+        <div class="results-summary__item" [matTooltip]="language.transform('min_total_hint')">
+            <span class="results-summary__label">{{ language.transform('min_total_title') }}</span>
+            <span class="results-summary__value">{{ r.ageGroup.minTotal }}</span>
+        </div>
+
+        <div class="results-legend">
+            @for (item of statusLegend; track item.labelKey) {
+                <span class="results-legend__item">
+                    <span [class]="'results-table__status ' + item.cssClass">
+                        <mat-icon>{{ item.icon }}</mat-icon>
+                        {{ language.transform(item.labelKey) }}
+                    </span>
+                </span>
+            }
+        </div>
+    </div>
+}
+
+@if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+}
+
+@if (response(); as r) {
+    @if (r.students.content.length === 0 && !loading()) {
+        <div class="empty-state">
+            <mat-icon>search_off</mat-icon>
+            <p>{{ language.transform('no_matching_students_message') }}</p>
+        </div>
+    }
+
+    <mat-card style="overflow-x: auto;" [style.display]="r.students.content.length === 0 ? 'none' : 'block'">
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>{{ language.transform('name') }}</th>
+                    @if (r.students.content.length > 0) {
+                        @for (s of r.students.content[0].semesters; track s.academicYearSemesterId) {
+                            <th [matTooltip]="language.transform('semester_total_hint')">{{ s.semesterName }}</th>
+                        }
+                    }
+                    <th [matTooltip]="language.transform('final_total_hint')">{{ language.transform('final_total_title') }}</th>
+                    <th>{{ language.transform('status') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of r.students.content; track item.studentId) {
+                    <tr (click)="openStudent(item)" class="results-table__row">
+                        <td>
+                            <div class="results-table__name">{{ item.fullName }}</div>
+                            @if (item.failedSubjects.length > 0) {
+                                <div class="results-table__failed-subjects">
+                                    @for (fs of item.failedSubjects; track fs.subjectAgeGroupId + '-' + fs.academicYearSemesterId) {
+                                        <span class="results-table__failed-chip">{{ fs.subjectName }} ({{ fs.mark }}/{{ fs.minPassGrade }})</span>
+                                    }
+                                </div>
+                            }
+                        </td>
+                        @for (s of item.semesters; track s.academicYearSemesterId) {
+                            <td>{{ s.total }}</td>
+                        }
+                        <td>{{ item.finalTotal }} / {{ item.maxTotal }}</td>
+                        <td>
+                            <span class="results-table__status" [class]="'results-table__status--' + item.computedStatus + '-' + (item.finalStatus ?? 0)">
+                                <mat-icon>{{ statusIcon(item) }}</mat-icon>
+                                {{ language.transform(statusLabelKey(item)) }}
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <mat-paginator
+            [length]="totalPages() * pageSize()"
+            [pageSize]="pageSize()"
+            [pageIndex]="pageNumber() - 1"
+            [pageSizeOptions]="[10, 20, 50]"
+            (page)="changePage($event)"
+        />
+    </mat-card>
+}

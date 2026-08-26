@@ -30,9 +30,13 @@ import { AssignmentsPage } from "./pages/assignments/assignments-page";
 import { AssignmentDetailPage } from "./pages/assignments/assignment-detail-page/assignment-detail-page";
 import { StudentAssignmentsPage } from "./pages/student-assignments-page/student-assignments-page";
 import { SubjectMarkDistributionPage } from "./pages/subject-mark-distribution/subject-mark-distribution";
-import { StudentMarkSheetPage } from "./pages/student-mark-sheet/student-mark-sheet";
-import { SubjectMarkPage } from "./pages/subject-mark/subject-mark";
 import { StudentProfilePage } from "./pages/student-page/student-profile/student-profile";
+import { ResultsCenterPage } from "./pages/results/results-center/results-center";
+import { StudentResultDetailPage } from "./pages/results/student-detail/student-detail";
+import { TransferLogPage } from "./pages/results/transfer-log/transfer-log";
+import { MarkEntryListPage } from "./pages/mark-entry/mark-entry-list/mark-entry-list";
+import { MarkEntryGridPage } from "./pages/mark-entry/mark-entry-grid/mark-entry-grid";
+import { MarkEntryMatrixPage } from "./pages/mark-entry/mark-entry-matrix/mark-entry-matrix";
 
 // ── Staff layout ──────────────────────────────────────────────────────────
 import { StaffLayout } from "../staff/staff-layout/staff-layout";
@@ -97,8 +101,14 @@ export const DASHBOARD_ROUTES: Routes = [
           { path: 'periods', component: PeriodPage, title: messageTitle('periods_title') },
         ],
       },
-      { path: 'student-mark-sheet', component: StudentMarkSheetPage, title: messageTitle('student_mark_sheet_title') },
-      { path: 'subject-mark-sheed/:markSheetId/subjectAgeGroupId/:subjectAgeGroupId', component: SubjectMarkPage, title: messageTitle('student_mark_title') },
+      {
+        path: 'results',
+        children: [
+          { path: '',                      component: ResultsCenterPage,       title: messageTitle('results_promotion_group_title') },
+          { path: 'students/:id',          component: StudentResultDetailPage, title: messageTitle('student_result_details_title') },
+          { path: 'students/:id/transfer-log', component: TransferLogPage,    title: messageTitle('transfer_log_title') },
+        ],
+      },
       { path: 'dashboard', component: DashboardPage, title: messageTitle('dashboard') },
       { path: '',   redirectTo: 'dashboard', pathMatch: 'full' },
       { path: '**', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -112,16 +122,13 @@ export const DASHBOARD_ROUTES: Routes = [
     component: StaffLayout,
     children: [
       {
-        path: 'student-mark-sheet',
-        component: StudentMarkSheetPage,
-        title: messageTitle('student_mark_sheet_title'),
+        path: 'mark-entry',
         canActivate: [staffPermissionGuard(StaffPermission.GetSubjectMarkSheet)],
-      },
-      {
-        path: 'subject-mark-sheed/:markSheetId/subjectAgeGroupId/:subjectAgeGroupId',
-        component: SubjectMarkPage,
-        title: messageTitle('student_mark_title'),
-        canActivate: [staffPermissionGuard(StaffPermission.GetSubjectMarkEntry)],
+        children: [
+          { path: '',        component: MarkEntryListPage,   title: messageTitle('mark_sheets_list_title') },
+          { path: 'matrix',  component: MarkEntryMatrixPage, title: messageTitle('mark_sheet_matrix_title') },
+          { path: ':id',     component: MarkEntryGridPage,   title: messageTitle('mark_entry_grid_title') },
+        ],
       },
       {
         path: 'assignments',
@@ -140,8 +147,8 @@ export const DASHBOARD_ROUTES: Routes = [
           },
         ],
       },
-      { path: '',   redirectTo: 'student-mark-sheet', pathMatch: 'full' },
-      { path: '**', redirectTo: 'student-mark-sheet', pathMatch: 'full' },
+      { path: '',   redirectTo: 'mark-entry', pathMatch: 'full' },
+      { path: '**', redirectTo: 'mark-entry', pathMatch: 'full' },
     ],
   },
 

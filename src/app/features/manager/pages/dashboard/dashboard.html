@@ -41,62 +41,6 @@
 
   <div class="dashboard-grid">
 
-    <section class="panel panel--marks">
-      <div class="panel__head">
-        <div class="panel__head-title">
-          <mat-icon>grading</mat-icon>
-          <h2>{{ language.transform('mark_sheets_status_title') }}</h2>
-        </div>
-        @if (semesterName()) {
-          <span class="panel__meta">{{ semesterName() }}</span>
-        }
-      </div>
-
-      <div class="panel__body">
-        @if (markSheetUnavailable()) {
-          <p class="panel__empty">
-            <mat-icon>grading</mat-icon>
-            <span>{{ language.transform('no_data') }}</span>
-          </p>
-        } @else if (markSheetSummary(); as summary) {
-          <div class="mark-metric">
-            <div class="mark-metric__row">
-              <span class="mark-metric__icon mark-metric__icon--submitted">
-                <mat-icon>upload_file</mat-icon>
-              </span>
-              <span class="mark-metric__label">{{ language.transform('sheets_submitted_title') }}</span>
-              <span class="mark-metric__value">{{ summary.withSheet }} / {{ summary.total }}</span>
-            </div>
-            <div class="mark-metric__bar">
-              <div class="mark-metric__fill" [style.width.%]="submittedPercent()"></div>
-            </div>
-          </div>
-
-          <div class="mark-metric">
-            <div class="mark-metric__row">
-              <span class="mark-metric__icon mark-metric__icon--confirmed">
-                <mat-icon>verified</mat-icon>
-              </span>
-              <span class="mark-metric__label">{{ language.transform('sheets_confirmed_title') }}</span>
-              <span class="mark-metric__value">{{ summary.confirmed }} / {{ summary.total }}</span>
-            </div>
-            <div class="mark-metric__bar">
-              <div class="mark-metric__fill mark-metric__fill--confirmed" [style.width.%]="confirmedPercent()"></div>
-            </div>
-          </div>
-
-          <a class="panel__cta" routerLink="/manager/student-mark-sheet">
-            <span>{{ language.transform('student_mark_title') }}</span>
-            <mat-icon>arrow_back</mat-icon>
-          </a>
-        } @else {
-          <div class="mark-metric">
-            <span class="stat-card__skeleton"></span>
-          </div>
-        }
-      </div>
-    </section>
-
     <section class="panel panel--links">
       <div class="panel__head">
         <div class="panel__head-title">

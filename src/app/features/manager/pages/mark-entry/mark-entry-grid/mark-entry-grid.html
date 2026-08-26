@@ -1,0 +1,101 @@
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+} @else if (!detail()) {
+  <p class="no-data">{{ language.transform('no_data') }}</p>
+} @else {
+  <div class="page-toolbar">
+    <h2 class="page-toolbar__title">
+      {{ detail()!.sheet.subjectName }} — {{ detail()!.sheet.ageGroupName }} ({{ detail()!.sheet.section }})
+    </h2>
+    <div class="page-toolbar__actions">
+      <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back_to_list_title')" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-card class="grid-meta-card">
+    <div class="grid-meta">
+      <span class="grid-meta__item">{{ language.transform('semester_title') }}: {{ detail()!.sheet.semesterName }}</span>
+      <span class="grid-meta__item">{{ language.transform('completion_title') }}: {{ detail()!.enteredStudentCount }} / {{ detail()!.totalStudentCount }}</span>
+
+      <span class="save-indicator" [class.save-indicator--saving]="saveState() === 'saving' || saveState() === 'pending'">
+        @switch (saveState()) {
+          @case ('saving') { <mat-icon>sync</mat-icon> {{ language.transform('saving_title') }} }
+          @case ('pending') { <mat-icon>sync</mat-icon> {{ language.transform('saving_title') }} }
+          @case ('saved') { <mat-icon>check_circle</mat-icon> {{ language.transform('saved_title') }} }
+          @default {}
+        }
+      </span>
+
+      @if (detail()!.sheet.acceptsEntries) {
+        <button class="toolbar-btn toolbar-btn--primary" [disabled]="!canSubmit || submitting()" (click)="submitSheet()"
+                [matTooltip]="!canSubmit ? language.transform('submit_blocked_message') : ''">
+          <mat-icon>send</mat-icon>
+          <span>{{ language.transform('submit_sheet_title') }}</span>
+        </button>
+      }
+    </div>
+
+    @if (!detail()!.sheet.acceptsEntries) {
+      <div class="banner banner--locked">
+        <mat-icon>lock</mat-icon>
+        {{ language.transform('read_only_sheet_message') }}
+      </div>
+    } @else {
+      <div class="banner banner--help">
+        <mat-icon>keyboard</mat-icon>
+        {{ language.transform('mark_entry_help_message') }}
+      </div>
+    }
+  </mat-card>
+
+  <mat-card class="grid-card">
+    <table class="mark-grid">
+      <thead>
+        <tr>
+          <th class="mark-grid__name-col">{{ language.transform('full_name_title') }}</th>
+          @for (col of detail()!.columns; track col.distributionId) {
+            <th>
+              <div class="mark-grid__col-header">
+                <span>{{ col.name }}</span>
+                <small>/{{ col.maxValue }}</small>
+              </div>
+            </th>
+          }
+          <th>{{ language.transform('total_title') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows(); track row.studentId; let r = $index) {
+          <tr [class.mark-grid__row--failed]="row.isComplete && row.isPassed === false">
+            <td class="mark-grid__name-col">{{ row.fullName }}</td>
+            @for (col of detail()!.columns; track col.distributionId; let c = $index) {
+              <td>
+                <input
+                  type="number"
+                  [id]="'cell-' + r + '-' + c"
+                  class="mark-grid__input"
+                  [disabled]="!detail()!.sheet.acceptsEntries"
+                  [min]="0"
+                  [max]="col.maxValue"
+                  [value]="cellValue(row, col)"
+                  (input)="onCellInput(row, col, $any($event.target).value)"
+                  (blur)="onCellBlur(row, col, $any($event.target).value)"
+                  (keydown)="onKeydown($event, r, c)"
+                />
+              </td>
+            }
+            <td class="mark-grid__total-col">
+              @if (!row.isComplete) {
+                <span class="incomplete-badge">{{ language.transform('incomplete_row_title') }}</span>
+              } @else {
+                {{ row.total }}
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </mat-card>
+}

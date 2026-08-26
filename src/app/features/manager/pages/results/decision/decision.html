@@ -1,0 +1,78 @@
+<p class="tab-hint">{{ language.transform('decision_tab_hint') }}</p>
+
+<mat-form-field style="min-width: 240px;">
+    <mat-label>{{ language.transform('age_group_title') }}</mat-label>
+    <mat-select [value]="ageGroupId" (selectionChange)="onAgeGroupSelect($event.value)">
+        @for (g of ageGroupItems; track g.id) {
+            <mat-option [value]="g.id">{{ g.name }}</mat-option>
+        }
+    </mat-select>
+</mat-form-field>
+
+@if (!ageGroupId) {
+    <div class="empty-state">
+        <mat-icon>gavel</mat-icon>
+        <p>{{ language.transform('select_age_group_first_message') }}</p>
+    </div>
+}
+
+@if (response(); as r) {
+    @if (selectedIds().size > 0) {
+        <div class="bulk-bar">
+            <span class="bulk-bar__count">{{ selectedIds().size }}</span>
+            <button class="toolbar-btn toolbar-btn--primary" type="button" (click)="decideBulk(true)">
+                {{ language.transform('passed_with_help_action_title') }}
+            </button>
+            <button class="toolbar-btn toolbar-btn--secondary" type="button" (click)="decideBulk(false)">
+                {{ language.transform('failed_action_title') }}
+            </button>
+            <span class="bulk-bar__label">{{ language.transform('bulk_decision_title') }}</span>
+        </div>
+    }
+
+    @if (loading()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    @if (r.students.content.length === 0 && !loading()) {
+        <div class="empty-state empty-state--positive">
+            <mat-icon>check_circle</mat-icon>
+            <p>{{ language.transform('no_pending_students_message') }}</p>
+        </div>
+    }
+
+    @for (item of r.students.content; track item.studentId) {
+        <mat-card class="decision-row">
+            <mat-checkbox [checked]="isSelected(item.studentId)" (change)="toggleSelect(item.studentId)" />
+
+            <div class="decision-row__body" (click)="openDetails(item)">
+                <div class="decision-row__name">{{ item.fullName }}</div>
+                <div class="decision-row__total">{{ item.finalTotal }} / {{ item.maxTotal }}</div>
+                @if (item.failedSubjects.length > 0) {
+                    <div class="decision-row__failed-subjects">
+                        @for (fs of item.failedSubjects; track fs.subjectAgeGroupId + '-' + fs.academicYearSemesterId) {
+                            <span class="decision-row__failed-chip">{{ fs.subjectName }} — {{ fs.semesterName }} ({{ fs.mark }}/{{ fs.minPassGrade }})</span>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="decision-row__actions">
+                <button class="toolbar-btn toolbar-btn--primary" type="button" (click)="decideOne(item, true)">
+                    {{ language.transform('passed_with_help_action_title') }}
+                </button>
+                <button class="toolbar-btn toolbar-btn--secondary" type="button" [matTooltip]="language.transform('failed_action_title')" (click)="decideOne(item, false)">
+                    <mat-icon>block</mat-icon>
+                </button>
+            </div>
+        </mat-card>
+    }
+
+    <mat-paginator
+        [length]="totalPages() * pageSize()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageNumber() - 1"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="changePage($event)"
+    />
+}

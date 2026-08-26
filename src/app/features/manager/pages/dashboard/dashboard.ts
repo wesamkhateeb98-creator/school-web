@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
@@ -10,10 +10,6 @@ import { ClassEndpoints } from '../../shared/endpoints/class-endpoint';
 import { SubjectEndpoints } from '../../shared/endpoints/subject-endpoint';
 import { StudentFilterViewModel } from '../student-page/view-model/student-filter-view-model';
 import { TeacherFilterViewModel } from '../teacher-page/view-model/teacher-filter-view-model';
-import { SelectedAcademicYearService } from '../../../../core/services/selected-academic-year.service';
-import { AcademicYearEndpoints } from '../../shared/endpoints/academic-year-endpoints';
-import { StudentMarkSheetEndpoints } from '../../shared/endpoints/student-mark-sheet-endpoint';
-import { MarkSheetReportSummary } from '../../shared/endpoints/models/student-mark-sheet/mark-sheet-report-response';
 
 interface QuickLink {
   name: PhrasesType;
@@ -49,18 +45,11 @@ export class DashboardPage {
   private teacherApi = inject(TeacherEndpoints);
   private classApi = inject(ClassEndpoints);
   private subjectApi = inject(SubjectEndpoints);
-  private academicYearApi = inject(AcademicYearEndpoints);
-  private markSheetApi = inject(StudentMarkSheetEndpoints);
-  private academicYearSvc = inject(SelectedAcademicYearService);
 
   studentsCount = signal<number | null>(null);
   teachersCount = signal<number | null>(null);
   classesCount = signal<number | null>(null);
   subjectsCount = signal<number | null>(null);
-
-  semesterName = signal<string | null>(null);
-  markSheetSummary = signal<MarkSheetReportSummary | null>(null);
-  markSheetUnavailable = signal(false);
 
   today = new Intl.DateTimeFormat(this.language.getLanguageCode(), {
     weekday: 'long',
@@ -88,16 +77,6 @@ export class DashboardPage {
     ];
   });
 
-  submittedPercent = computed(() => {
-    const summary = this.markSheetSummary();
-    return summary && summary.total ? Math.round((summary.withSheet / summary.total) * 100) : 0;
-  });
-
-  confirmedPercent = computed(() => {
-    const summary = this.markSheetSummary();
-    return summary && summary.total ? Math.round((summary.confirmed / summary.total) * 100) : 0;
-  });
-
   quickLinkGroups: QuickLinkGroup[] = [
     {
       title: 'group_academic_title',
@@ -120,8 +99,8 @@ export class DashboardPage {
     {
       title: 'group_records_title',
       links: [
-        { name: 'assignments_title',  icon: 'assignment', url: '/manager/assignments',        color: 'var(--gold-500)' },
-        { name: 'student_mark_title', icon: 'grading',    url: '/manager/student-mark-sheet', color: 'var(--gold-500)' },
+        { name: 'assignments_title',           icon: 'assignment', url: '/manager/assignments', color: 'var(--gold-500)' },
+        { name: 'results_promotion_group_title', icon: 'fact_check', url: '/manager/results',   color: 'var(--gold-500)' },
       ],
     },
   ];
@@ -145,25 +124,6 @@ export class DashboardPage {
     this.subjectApi.get(1, 1).subscribe({
       next: page => this.subjectsCount.set(page.countPages),
       error: () => this.subjectsCount.set(0),
-    });
-
-    effect(() => {
-      const academicYearId = this.academicYearSvc.selectedId();
-      if (academicYearId === null) {
-        return;
-      }
-
-      this.academicYearApi.getSemesterForOpenAcademicYear(academicYearId).subscribe({
-        next: semester => {
-          this.semesterName.set(semester.semesterName);
-
-          this.markSheetApi.getReport(semester.academicYearSemesterId).subscribe({
-            next: report => this.markSheetSummary.set(report.summary),
-            error: () => this.markSheetUnavailable.set(true),
-          });
-        },
-        error: () => this.markSheetUnavailable.set(true),
-      });
     });
   }
 }

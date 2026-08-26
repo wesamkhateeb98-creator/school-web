@@ -26,12 +26,6 @@ export class ManagerNavItemStateService {
       isExpended:false
     },
     {
-      url:"/manager/student-mark-sheet",
-      name:"student_mark_title",
-      icon:"grading",
-      isExpended:false
-    },
-    {
       icon: 'person',
       name: 'user_title',
       isExpended: false,
@@ -94,7 +88,13 @@ export class ManagerNavItemStateService {
         },
       ]
     },
-    
+    {
+      url: '/manager/results',
+      name: 'results_promotion_group_title',
+      icon: 'fact_check',
+      isExpended: false
+    },
+
   ];
 
 }

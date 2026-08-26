@@ -1,0 +1,142 @@
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{ language.transform('mark_sheets_list_title') }}</h2>
+    @if (canGenerate()) {
+        <div class="page-toolbar__actions">
+            <button class="toolbar-btn toolbar-btn--primary" (click)="openGenerateDialog()">
+                <mat-icon>auto_awesome</mat-icon>
+                <span>{{ language.transform('generate_sheets_title') }}</span>
+            </button>
+        </div>
+    }
+</div>
+
+<mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+        <mat-panel-title>{{ language.transform('filter') }}</mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="filterForm">
+        <div class="grid grid-four-column">
+            <mat-form-field>
+                <mat-label>{{ language.transform('semester_title') }}</mat-label>
+                <mat-select formControlName="semesterId" (selectionChange)="onFilterChange()">
+                    @for (s of semesters(); track s.academicYearSemesterId) {
+                        <mat-option [value]="s.academicYearSemesterId">{{ semesterLabel(s) }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ language.transform('age_group_title') }}</mat-label>
+                <mat-select formControlName="ageGroupId" (selectionChange)="onAgeGroupChange()">
+                    <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+                    @for (g of ageGroupItems(); track g.id) {
+                        <mat-option [value]="g.id">{{ g.name }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ language.transform('section_title') }}</mat-label>
+                <mat-select formControlName="classId" (selectionChange)="onFilterChange()" [disabled]="classItems().length === 0">
+                    <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+                    @for (c of classItems(); track c.id) {
+                        <mat-option [value]="c.id">{{ c.section }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ language.transform('subject_title') }}</mat-label>
+                <mat-select formControlName="subjectAgeGroupId" (selectionChange)="onFilterChange()" [disabled]="subjectItems().length === 0">
+                    <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+                    @for (s of subjectItems(); track s.subjectAgeGroupId) {
+                        <mat-option [value]="s.subjectAgeGroupId">{{ s.subjectName }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ language.transform('status') }}</mat-label>
+                <mat-select formControlName="status" (selectionChange)="onFilterChange()">
+                    <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+                    <mat-option [value]="MarkSheetStatus.Draft">{{ language.transform(statusLabelKey(MarkSheetStatus.Draft)) }}</mat-option>
+                    <mat-option [value]="MarkSheetStatus.Submitted">{{ language.transform(statusLabelKey(MarkSheetStatus.Submitted)) }}</mat-option>
+                    <mat-option [value]="MarkSheetStatus.Confirmed">{{ language.transform(statusLabelKey(MarkSheetStatus.Confirmed)) }}</mat-option>
+                    <mat-option [value]="MarkSheetStatus.Published">{{ language.transform(statusLabelKey(MarkSheetStatus.Published)) }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-expansion-panel>
+
+<br/>
+
+<mat-card style="overflow-x: auto;">
+    @if (loading()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+    <table mat-table [dataSource]="records()" style="width: 100%;">
+
+        <ng-container matColumnDef="subjectName">
+            <th mat-header-cell *matHeaderCellDef>{{ language.transform('subject_title') }}</th>
+            <td mat-cell *matCellDef="let row">{{ row.subjectName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="ageGroupName">
+            <th mat-header-cell *matHeaderCellDef>{{ language.transform('age_group_title') }}</th>
+            <td mat-cell *matCellDef="let row">{{ row.ageGroupName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="section">
+            <th mat-header-cell *matHeaderCellDef>{{ language.transform('section_title') }}</th>
+            <td mat-cell *matCellDef="let row">{{ row.section }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>{{ language.transform('status') }}</th>
+            <td mat-cell *matCellDef="let row">
+                <span [class]="statusClass(row.status)">{{ language.transform(statusLabelKey(row.status)) }}</span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="completion">
+            <th mat-header-cell *matHeaderCellDef>{{ language.transform('completion_title') }}</th>
+            <td mat-cell *matCellDef="let row">
+                <div class="completion-cell">
+                    <span class="completion-cell__count">{{ row.enteredStudentCount }} / {{ row.totalStudentCount }}</span>
+                    <mat-progress-bar mode="determinate" [value]="(row.enteredStudentCount / row.totalStudentCount) * 100"></mat-progress-bar>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef>{{ language.transform('action') }}</th>
+            <td mat-cell *matCellDef="let row">
+                <button mat-icon-button [matTooltip]="language.transform('open_sheet_action_title')" (click)="openGrid(row)">
+                    <mat-icon>edit_note</mat-icon>
+                </button>
+                @if (canDelete() && row.status === MarkSheetStatus.Draft) {
+                    <button mat-icon-button color="warn" [matTooltip]="language.transform('delete')" (click)="openDeleteDialog(row)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                }
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="headerTable"></tr>
+        <tr mat-row *matRowDef="let row; columns: headerTable;"></tr>
+    </table>
+
+    @if (!loading() && records().length === 0) {
+        <p class="no-data">{{ language.transform('no_data') }}</p>
+    }
+
+    <mat-paginator
+        [length]="totalPages() * pageSize()"
+        [pageSize]="pageSize()"
+        [pageIndex]="pageNumber() - 1"
+        [pageSizeOptions]="[5, 10, 25]"
+        (page)="changePage($event)"
+    />
+</mat-card>

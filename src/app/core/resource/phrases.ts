@@ -375,6 +375,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         toggle_sidebar: 'طي/فتح الشريط الجانبي',
         school_short_name: 'المدرسة الشرعية',
         admin_panel_title: 'لوحة الإدارة',
+        staff_panel_title: 'لوحة الموجّه',
         appearance_group_title: 'المظهر',
         back: 'رجوع',
         student: 'طالب',
@@ -391,6 +392,139 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         completed: 'مكتمل',
         not_completed: 'غير مكتمل',
         student_class_assignments: 'تكليفات الطالب على الصفوف',
+
+        // ── أ-١ · التصديق وفتح للتعديل ──
+        results_promotion_group_title: 'النتائج والترفيع',
+        confirm_reopen_title: 'التصديق وفتح للتعديل',
+        pending_confirmation_queue_title: 'بانتظار التصديق',
+        mark_sheet_status_draft_title: 'مسودة',
+        mark_sheet_status_submitted_title: 'مُرسَل',
+        mark_sheet_status_confirmed_title: 'مُصدَّق',
+        mark_sheet_status_published_title: 'منشور',
+        confirm_action_title: 'تصديق',
+        reopen_action_title: 'فتح للتعديل',
+        reopen_warning_message: 'بعده تصبح النتائج المولَّدة قديمة، ويُقفل النشر والترفيع حتى يُعاد التوليد.',
+        view_sheet_title: 'عرض الكشف',
+
+        // ── أ-٢ · شريط المراحل ──
+        stage_entry_title: 'إدخال',
+        stage_generation_title: 'بانتظار التوليد',
+        stage_decision_title: 'حسم المعلّقين',
+        stage_publish_title: 'بانتظار النشر',
+        stage_promotion_title: 'الترفيع متاح',
+        stage_completed_title: 'انتهت',
+        results_stale_warning: 'النتائج قديمة — يلزم إعادة التوليد',
+
+        // ── أ-٣ · توليد النتائج ──
+        generate_results_title: 'توليد النتائج',
+        generate_semester_results_title: 'توليد نتائج الفصل',
+        generate_year_results_title: 'توليد نتائج السنة',
+        students_without_marks_title: 'طلاب بلا علامات',
+        projected_passed_title: 'المتوقع ناجح',
+        projected_pending_title: 'المتوقع معلّق',
+        generate_preview_title: 'معاينة التوليد',
+        year_end_scope_title: 'نهاية السنة',
+
+        // ── أ-٤ · شاشة الطلاب ──
+        results_students_title: 'شاشة الطلاب',
+        pending_only_filter_title: 'المعلّقون',
+        max_total_title: 'الحد الأعلى',
+        min_total_title: 'الحد الأدنى',
+        final_total_title: 'المحصلة',
+        failed_subjects_title: 'المواد الراسبة',
+        status_passed_auto_title: 'ناجح',
+        status_pending_decision_title: 'معلّق',
+        status_passed_with_help_title: 'نجح بالمساعدة',
+        status_failed_admin_title: 'راسب',
+
+        // ── أ-٥ · تفاصيل الطالب ──
+        student_result_details_title: 'تفاصيل الطالب',
+        failed_despite_average_warning: 'راسب رغم أن المحصلة فوق الحد الأدنى — بسبب الرسوب في أحد الفصول',
+
+        // ── أ-٦ · الحسم ──
+        decision_title: 'الحسم',
+        passed_with_help_action_title: 'نجح بالمساعدة',
+        failed_action_title: 'راسب',
+        note_title: 'ملاحظة',
+        bulk_decision_title: 'قرار جماعي',
+
+        // ── أ-٧ · النشر ──
+        publish_results_title: 'النشر',
+        publish_readonly_warning: 'بعد النشر تصبح الكشوف للقراءة فقط.',
+        sheet_count_title: 'عدد الكشوف',
+
+        // ── أ-٨ · معالج الترفيع ──
+        promotion_wizard_title: 'معالج الترفيع',
+        select_target_year_title: 'اختيار السنة الهدف',
+        blockers_title: 'الموانع',
+        promotion_preview_title: 'معاينة قابلة للتعديل',
+        execute_title: 'التنفيذ',
+        promoted_count_title: 'ترفيع',
+        repeated_count_title: 'إعادة',
+        graduated_count_title: 'تخرّج',
+        action_enrolled_title: 'تسجيل',
+        action_promoted_title: 'ترفيع',
+        action_repeated_title: 'إعادة',
+        action_graduated_title: 'تخرّج',
+        current_age_group_title: 'المرحلة الحالية',
+        target_age_group_title: 'المرحلة الهدف',
+        warnings_title: 'تحذيرات',
+
+        // ── أ-٩ · سجل النقل ──
+        transfer_log_title: 'سجل النقل',
+
+        // ── و-١ · كشوف الفصل ──
+        mark_entry_group_title: 'إدخال العلامات',
+        mark_sheets_list_title: 'كشوف الفصل',
+        generate_sheets_title: 'توليد الكشوف',
+        generate_sheets_confirm_message: 'سيُنشأ كشف فارغ لكل مادة وشعبة تنقص هذه المرحلة في هذا الفصل.',
+        all_classes_title: 'كل الشعب',
+        completion_title: 'الاكتمال',
+        delete_sheet_confirm_message: 'سيُحذف الكشف نهائياً — لا يمكن التراجع عن هذا الإجراء.',
+
+        // ── و-٢ · شبكة الإدخال ──
+        mark_entry_grid_title: 'شبكة الإدخال',
+        mark_entry_help_message: 'تنقّل بين الخلايا بالأسهم أو Enter أو Tab — التغييرات تُحفظ تلقائياً بعد لحظات من التوقف عن الكتابة.',
+        read_only_sheet_message: 'هذا الكشف مقفل للتعديل — للقراءة فقط.',
+        submit_sheet_title: 'إرسال الكشف',
+        submit_blocked_message: 'أكمل علامات كل الطلاب قبل الإرسال.',
+        saving_title: 'جارٍ الحفظ…',
+        saved_title: 'تم الحفظ',
+        incomplete_row_title: 'ناقص',
+
+        // ── و-٣ · مصفوفة المتابعة ──
+        mark_sheet_matrix_title: 'مصفوفة المتابعة',
+        no_sheet_title: 'لا كشف',
+        open_sheet_action_title: 'فتح',
+        back_to_list_title: 'رجوع للقائمة',
+
+        // ── مركز النتائج والترفيع (تبويبات) ──
+        next: 'التالي',
+        results_center_title: 'مركز النتائج والترفيع',
+        confirm_reopen_tab_hint: 'صدّق كل كشف يرسله الموجّه — هذا أول شرط لأي خطوة بعده. راجع الكشف قبل التصديق، أو أعده لموجّه العلامات للتعديل.',
+        generate_tab_hint: 'احسب نتائج الطلاب من الكشوف المصدَّقة — لكل فصل على حدة، ثم مرة أخيرة لكامل السنة بعد انتهاء كل الفصول.',
+        students_tab_hint: 'تصفّح نتائج طلاب مرحلة معيّنة، وافتح تفاصيل أي طالب لمعرفة سبب حالته.',
+        decision_tab_hint: 'كل طالب هون رسب بمادة بفصل معيّن رغم أن مجموعه العام قد يكون فوق الحد — راجع علاماته واحسم: نجح بالمساعدة، أو راسب. متاح فقط بعد توليد نتائج السنة كاملة.',
+        publish_tab_hint: 'انشر نتائج فصل مصدَّق ومولَّد — تصير عندها ظاهرة للطالب وللقراءة فقط.',
+        promotion_tab_hint: 'انقل الطلاب الناجحين للسنة الدراسية التالية، بعد ما تُحسم كل الحالات المعلّقة وتُنشر كل فصول السنة.',
+        select_age_group_first_message: 'اختر مرحلة عمرية أولاً لعرض البيانات.',
+        no_matching_students_message: 'لا يوجد طلاب مطابقون لهذا الفلتر.',
+        select_target_year_hint: 'اختر السنة الدراسية التي سينتقل إليها الطلاب الناجحون — يجب أن تختلف عن السنة الحالية.',
+        no_other_academic_year_message: 'لا توجد سنة دراسية أخرى بعد. أنشئ سنة جديدة أولاً لتتمكن من الترفيع إليها.',
+        create_academic_year_title: 'إنشاء سنة دراسية جديدة',
+        blockers_hint: 'هذه الأمور يجب أن تكتمل قبل تنفيذ الترفيع — اضغط الزر جانب كل مانع للانتقال وحله.',
+        no_blockers_message: 'لا يوجد أي مانع — الترفيع جاهز للتنفيذ.',
+        promotion_preview_hint: 'هكذا سينتقل كل طالب. يمكنك تغيير مصير أي طالب يدوياً من القائمة قبل التنفيذ.',
+        execute_hint: 'اضغط تنفيذ لتثبيت الترفيع. إعادة التنفيذ آمنة، لكن الزر يُقفل بعد أول نجاح.',
+        no_pending_students_message: 'لا يوجد طلاب معلّقون — كل الحالات محسومة.',
+        max_total_hint: 'أعلى مجموع ممكن لعلامات هذه المرحلة على كل فصول السنة.',
+        min_total_hint: 'أدنى مجموع مطلوب لنجاح المرحلة تلقائياً.',
+        semester_total_hint: 'مجموع علامات الطالب في هذا الفصل وحده.',
+        final_total_hint: 'المحصلة النهائية لمجموع كل فصول السنة.',
+
+        pending_only_hint: 'أظهر فقط الطلاب اللي علاماتهم بانتظار قرارك — يعني حالتهم "معلّق" ولسا ما انحسمت.',
+        generate_success_title: 'تم التوليد',
+        view_results_action_title: 'شاهد النتائج بشاشة الطلاب',
     },
     en:{
         'name':"Name",
@@ -762,6 +896,7 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         toggle_sidebar: 'Toggle sidebar',
         school_short_name: "Al-Shar'iyya School",
         admin_panel_title: 'Admin Panel',
+        staff_panel_title: 'Staff Panel',
         appearance_group_title: 'Appearance',
         back: 'Back',
         student: 'Student',
@@ -778,6 +913,139 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         completed: 'Completed',
         not_completed: 'Not Completed',
         student_class_assignments: 'Student Class Assignments',
+
+        // ── أ-١ · Confirm & Reopen ──
+        results_promotion_group_title: 'Results & Promotion',
+        confirm_reopen_title: 'Confirm & Reopen',
+        pending_confirmation_queue_title: 'Pending Confirmation',
+        mark_sheet_status_draft_title: 'Draft',
+        mark_sheet_status_submitted_title: 'Submitted',
+        mark_sheet_status_confirmed_title: 'Confirmed',
+        mark_sheet_status_published_title: 'Published',
+        confirm_action_title: 'Confirm',
+        reopen_action_title: 'Reopen for Editing',
+        reopen_warning_message: 'Afterward, generated results become stale, and publishing and promotion are locked until results are regenerated.',
+        view_sheet_title: 'View Sheet',
+
+        // ── أ-٢ · Pipeline stage bar ──
+        stage_entry_title: 'Entry',
+        stage_generation_title: 'Awaiting Generation',
+        stage_decision_title: 'Deciding Pending Cases',
+        stage_publish_title: 'Awaiting Publish',
+        stage_promotion_title: 'Promotion Available',
+        stage_completed_title: 'Completed',
+        results_stale_warning: 'Results are stale — regeneration required',
+
+        // ── أ-٣ · Generate results ──
+        generate_results_title: 'Generate Results',
+        generate_semester_results_title: 'Generate Semester Results',
+        generate_year_results_title: 'Generate Year Results',
+        students_without_marks_title: 'Students Without Marks',
+        projected_passed_title: 'Projected Passed',
+        projected_pending_title: 'Projected Pending',
+        generate_preview_title: 'Generation Preview',
+        year_end_scope_title: 'End of Year',
+
+        // ── أ-٤ · Students screen ──
+        results_students_title: 'Students',
+        pending_only_filter_title: 'Pending',
+        max_total_title: 'Max Total',
+        min_total_title: 'Min Total',
+        final_total_title: 'Final Total',
+        failed_subjects_title: 'Failed Subjects',
+        status_passed_auto_title: 'Passed',
+        status_pending_decision_title: 'Pending',
+        status_passed_with_help_title: 'Passed with Help',
+        status_failed_admin_title: 'Failed',
+
+        // ── أ-٥ · Student details ──
+        student_result_details_title: 'Student Details',
+        failed_despite_average_warning: 'Failed despite the total being above the minimum — due to failing in one of the semesters',
+
+        // ── أ-٦ · Decision ──
+        decision_title: 'Decision',
+        passed_with_help_action_title: 'Passed with Help',
+        failed_action_title: 'Failed',
+        note_title: 'Note',
+        bulk_decision_title: 'Bulk Decision',
+
+        // ── أ-٧ · Publish ──
+        publish_results_title: 'Publish',
+        publish_readonly_warning: 'After publishing, sheets become read-only.',
+        sheet_count_title: 'Sheet Count',
+
+        // ── أ-٨ · Promotion wizard ──
+        promotion_wizard_title: 'Promotion Wizard',
+        select_target_year_title: 'Select Target Year',
+        blockers_title: 'Blockers',
+        promotion_preview_title: 'Editable Preview',
+        execute_title: 'Execute',
+        promoted_count_title: 'Promoted',
+        repeated_count_title: 'Repeated',
+        graduated_count_title: 'Graduated',
+        action_enrolled_title: 'Enrolled',
+        action_promoted_title: 'Promoted',
+        action_repeated_title: 'Repeated',
+        action_graduated_title: 'Graduated',
+        current_age_group_title: 'Current Grade',
+        target_age_group_title: 'Target Grade',
+        warnings_title: 'Warnings',
+
+        // ── أ-٩ · Transfer log ──
+        transfer_log_title: 'Transfer Log',
+
+        // ── و-١ · Class sheets ──
+        mark_entry_group_title: 'Mark Entry',
+        mark_sheets_list_title: 'Class Sheets',
+        generate_sheets_title: 'Generate Sheets',
+        generate_sheets_confirm_message: 'An empty sheet will be created for every subject/class missing one in this semester.',
+        all_classes_title: 'All Classes',
+        completion_title: 'Completion',
+        delete_sheet_confirm_message: 'The sheet will be permanently deleted — this cannot be undone.',
+
+        // ── و-٢ · Entry grid ──
+        mark_entry_grid_title: 'Entry Grid',
+        mark_entry_help_message: 'Navigate cells with the arrow keys, Enter, or Tab — changes are saved automatically shortly after you stop typing.',
+        read_only_sheet_message: 'This sheet is locked for editing — read only.',
+        submit_sheet_title: 'Submit Sheet',
+        submit_blocked_message: 'Complete every student\'s marks before submitting.',
+        saving_title: 'Saving…',
+        saved_title: 'Saved',
+        incomplete_row_title: 'Incomplete',
+
+        // ── و-٣ · Follow-up matrix ──
+        mark_sheet_matrix_title: 'Follow-up Matrix',
+        no_sheet_title: 'No Sheet',
+        open_sheet_action_title: 'Open',
+        back_to_list_title: 'Back to List',
+
+        // ── Results & Promotion Center (tabs) ──
+        next: 'Next',
+        results_center_title: 'Results & Promotion Center',
+        confirm_reopen_tab_hint: 'Confirm every sheet the staff submits — the first requirement for every step after it. Review the sheet before confirming, or reopen it for the staff to edit.',
+        generate_tab_hint: 'Calculate student results from confirmed sheets — once per semester, then one more time for the whole year after every semester is done.',
+        students_tab_hint: 'Browse a grade\'s student results, and open any student\'s details to see the reason for their status.',
+        decision_tab_hint: 'Every student here failed a subject in a specific semester even if their overall total may be above the minimum — review their marks and decide: passed with help, or failed. Only available after the full-year results are generated.',
+        publish_tab_hint: 'Publish a confirmed, generated semester — it then becomes visible to the student and read-only.',
+        promotion_tab_hint: 'Move passing students to the next academic year, after every pending case is decided and every semester of the year is published.',
+        select_age_group_first_message: 'Select an age group first to view the data.',
+        no_matching_students_message: 'No students match this filter.',
+        select_target_year_hint: 'Choose the academic year passing students will move into — it must differ from the current year.',
+        no_other_academic_year_message: 'No other academic year exists yet. Create a new one first so you can promote into it.',
+        create_academic_year_title: 'Create New Academic Year',
+        blockers_hint: 'These must be resolved before promotion can run — press the button next to each blocker to go resolve it.',
+        no_blockers_message: 'No blockers — promotion is ready to run.',
+        promotion_preview_hint: 'This is how each student will move. You can change any student\'s fate manually from the list before executing.',
+        execute_hint: 'Press execute to commit the promotion. Re-running is safe, but the button locks after the first success.',
+        no_pending_students_message: 'No pending students — every case has been decided.',
+        max_total_hint: 'The highest possible total for this grade across the whole year.',
+        min_total_hint: 'The minimum total required to pass the grade automatically.',
+        semester_total_hint: 'The student\'s total marks in this semester alone.',
+        final_total_hint: 'The final total across every semester of the year.',
+
+        pending_only_hint: 'Show only students whose marks are awaiting your decision — i.e. their status is "pending" and not yet decided.',
+        generate_success_title: 'Generated',
+        view_results_action_title: 'View Results in Students Tab',
     }
 }
 
@@ -803,7 +1071,119 @@ StudentParentVisitPhrases|
 AssignmentPhrases|
 MarkDistributionPhrases|
 StudentMarkSheetPhrases|
-StudentMarkEntryPhrases;
+StudentMarkEntryPhrases|
+ResultsPromotionPhrases|
+MarkEntryTaskPhrases;
+
+export type MarkEntryTaskPhrases =
+  'mark_entry_group_title'|
+  'mark_sheets_list_title'|
+  'generate_sheets_title'|
+  'generate_sheets_confirm_message'|
+  'all_classes_title'|
+  'completion_title'|
+  'delete_sheet_confirm_message'|
+  'mark_entry_grid_title'|
+  'mark_entry_help_message'|
+  'read_only_sheet_message'|
+  'submit_sheet_title'|
+  'submit_blocked_message'|
+  'saving_title'|
+  'saved_title'|
+  'incomplete_row_title'|
+  'mark_sheet_matrix_title'|
+  'no_sheet_title'|
+  'open_sheet_action_title'|
+  'back_to_list_title'|
+  'next'|
+  'results_center_title'|
+  'confirm_reopen_tab_hint'|
+  'generate_tab_hint'|
+  'students_tab_hint'|
+  'decision_tab_hint'|
+  'publish_tab_hint'|
+  'promotion_tab_hint'|
+  'select_age_group_first_message'|
+  'no_matching_students_message'|
+  'select_target_year_hint'|
+  'no_other_academic_year_message'|
+  'create_academic_year_title'|
+  'blockers_hint'|
+  'no_blockers_message'|
+  'promotion_preview_hint'|
+  'execute_hint'|
+  'no_pending_students_message'|
+  'max_total_hint'|
+  'min_total_hint'|
+  'semester_total_hint'|
+  'final_total_hint'|
+  'pending_only_hint'|
+  'generate_success_title'|
+  'view_results_action_title';
+
+export type ResultsPromotionPhrases =
+  'results_promotion_group_title'|
+  'confirm_reopen_title'|
+  'pending_confirmation_queue_title'|
+  'mark_sheet_status_draft_title'|
+  'mark_sheet_status_submitted_title'|
+  'mark_sheet_status_confirmed_title'|
+  'mark_sheet_status_published_title'|
+  'confirm_action_title'|
+  'reopen_action_title'|
+  'reopen_warning_message'|
+  'view_sheet_title'|
+  'stage_entry_title'|
+  'stage_generation_title'|
+  'stage_decision_title'|
+  'stage_publish_title'|
+  'stage_promotion_title'|
+  'stage_completed_title'|
+  'results_stale_warning'|
+  'generate_results_title'|
+  'generate_semester_results_title'|
+  'generate_year_results_title'|
+  'students_without_marks_title'|
+  'projected_passed_title'|
+  'projected_pending_title'|
+  'generate_preview_title'|
+  'year_end_scope_title'|
+  'results_students_title'|
+  'pending_only_filter_title'|
+  'max_total_title'|
+  'min_total_title'|
+  'final_total_title'|
+  'failed_subjects_title'|
+  'status_passed_auto_title'|
+  'status_pending_decision_title'|
+  'status_passed_with_help_title'|
+  'status_failed_admin_title'|
+  'student_result_details_title'|
+  'failed_despite_average_warning'|
+  'decision_title'|
+  'passed_with_help_action_title'|
+  'failed_action_title'|
+  'note_title'|
+  'bulk_decision_title'|
+  'publish_results_title'|
+  'publish_readonly_warning'|
+  'sheet_count_title'|
+  'promotion_wizard_title'|
+  'select_target_year_title'|
+  'blockers_title'|
+  'promotion_preview_title'|
+  'execute_title'|
+  'promoted_count_title'|
+  'repeated_count_title'|
+  'graduated_count_title'|
+  'action_enrolled_title'|
+  'action_promoted_title'|
+  'action_repeated_title'|
+  'action_graduated_title'|
+  'current_age_group_title'|
+  'target_age_group_title'|
+  'warnings_title'|
+  'transfer_log_title';
 
 export type StudentMarkSheetPhrases =
   'student_mark_title'|
@@ -1065,6 +1445,7 @@ export type GlobalType =
 'toggle_sidebar'|
 'school_short_name'|
 'admin_panel_title'|
+'staff_panel_title'|
 'appearance_group_title'|
 'student'|
 'student_profile_title'|

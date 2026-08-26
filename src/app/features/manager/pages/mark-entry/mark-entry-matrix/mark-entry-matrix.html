@@ -1,0 +1,74 @@
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{ language.transform('mark_sheet_matrix_title') }}</h2>
+</div>
+
+<form [formGroup]="filterForm">
+    <div class="grid grid-two-column">
+        <mat-form-field>
+            <mat-label>{{ language.transform('semester_title') }}</mat-label>
+            <mat-select formControlName="semesterId" (selectionChange)="onFilterChange()">
+                @for (s of semesters(); track s.academicYearSemesterId) {
+                    <mat-option [value]="s.academicYearSemesterId">{{ semesterLabel(s) }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ language.transform('age_group_title') }}</mat-label>
+            <mat-select formControlName="ageGroupId" (selectionChange)="onFilterChange()">
+                @for (g of ageGroupItems(); track g.id) {
+                    <mat-option [value]="g.id">{{ g.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>
+
+<br/>
+
+<mat-card class="matrix-card">
+    @if (loading()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    @if (!loading() && rows().length === 0) {
+        <p class="no-data">{{ language.transform('no_data') }}</p>
+    } @else {
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th class="matrix-table__name-col">{{ language.transform('subject_title') }}</th>
+                    @for (col of columns(); track col.classId) {
+                        <th>{{ language.transform('section_title') }} {{ col.section }}</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for (row of rows(); track row.subjectAgeGroupId) {
+                    <tr>
+                        <td class="matrix-table__name-col">{{ row.subjectName }}</td>
+                        @for (col of columns(); track col.classId) {
+                            <td>
+                                @if (row.cellsByClass.get(col.classId); as cell) {
+                                    <button
+                                        type="button"
+                                        class="matrix-cell"
+                                        [class.matrix-cell--empty]="!cell.markSheetId"
+                                        [disabled]="!cell.markSheetId && !canGenerate()"
+                                        [matTooltip]="cell.markSheetId ? language.transform('open_sheet_action_title') : (canGenerate() ? language.transform('generate_sheets_title') : '')"
+                                        (click)="openCell(row, col)"
+                                    >
+                                        <span [class]="statusClass(cell.status)">{{ language.transform(statusLabelKey(cell.status)) }}</span>
+                                        @if (cell.markSheetId) {
+                                            <small>{{ cell.enteredStudentCount }} / {{ cell.totalStudentCount }}</small>
+                                        }
+                                    </button>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</mat-card>

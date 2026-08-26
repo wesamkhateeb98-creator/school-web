@@ -1,0 +1,18 @@
+:host {
+  display: block;
+}
+
+.tab-panel {
+  padding: 20px 4px;
+}
+
+app-pipeline-stage-bar {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.results-tab-group {
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--mat-sys-surface-container-low);
+}

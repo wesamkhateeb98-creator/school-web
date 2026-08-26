@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>{{ language.transform('view_sheet_title') }}</h2>
+
+<mat-dialog-content>
+  @if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  } @else if (detail(); as d) {
+    <div class="sheet-info">
+      <div class="sheet-info__item">
+        <span class="sheet-info__label">{{ language.transform('subject_title') }}</span>
+        <span class="sheet-info__value">{{ d.sheet.subjectName }}</span>
+      </div>
+      <div class="sheet-info__item">
+        <span class="sheet-info__label">{{ language.transform('age_group_title') }}</span>
+        <span class="sheet-info__value">{{ d.sheet.ageGroupName }}</span>
+      </div>
+      <div class="sheet-info__item">
+        <span class="sheet-info__label">{{ language.transform('section_title') }}</span>
+        <span class="sheet-info__value">{{ d.sheet.section }}</span>
+      </div>
+      <div class="sheet-info__item">
+        <span class="sheet-info__label">{{ language.transform('semester_title') }}</span>
+        <span class="sheet-info__value">{{ d.sheet.semesterName }}</span>
+      </div>
+    </div>
+
+    <div class="sheet-grid-wrap">
+      <table class="sheet-grid">
+        <thead>
+          <tr>
+            <th>{{ language.transform('name') }}</th>
+            @for (col of d.columns; track col.distributionId) {
+              <th>{{ col.name }}</th>
+            }
+            <th>{{ language.transform('total_title') }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of d.rows; track row.studentId) {
+            <tr>
+              <td>{{ row.fullName }}</td>
+              @for (col of d.columns; track col.distributionId) {
+                <td>{{ cellValue(row, col.distributionId) ?? '—' }}</td>
+              }
+              <td>
+                @if (!row.isComplete) {
+                  {{ language.transform('not_completed') }}
+                } @else {
+                  {{ row.total }}
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button matButton (click)="close()">{{ language.transform('close') }}</button>
+
+  @if (detail(); as d) {
+    @if (d.sheet.status === MarkSheetStatus.Submitted) {
+      <button matButton="filled" [disabled]="!hasBeenViewed()" (click)="confirm()">
+        {{ language.transform('confirm_action_title') }}
+      </button>
+    } @else if (d.sheet.status === MarkSheetStatus.Confirmed) {
+      <button matButton="filled" (click)="openReopenConfirm()">
+        {{ language.transform('reopen_action_title') }}
+      </button>
+    }
+  }
+</mat-dialog-actions>

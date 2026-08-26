@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>
+  {{ language.transform(data.passed ? 'passed_with_help_action_title' : 'failed_action_title') }}
+  @if (data.studentIds.length > 1) {
+    ({{ data.studentIds.length }})
+  }
+</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content>
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <mat-form-field style="width: 100%;">
+      <mat-label>{{ language.transform('note_title') }}</mat-label>
+      <textarea matInput formControlName="note" rows="4"></textarea>
+      @if (form.get('note')?.hasError('required') && form.get('note')?.touched) {
+        <mat-error>{{ language.transform('field_required') }}</mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button matButton type="button" (click)="onNoClick()" [disabled]="loading()">{{ language.transform('cancel') }}</button>
+    <button matButton="filled" type="submit" [disabled]="loading()">{{ language.transform('save') }}</button>
+  </mat-dialog-actions>
+</form>

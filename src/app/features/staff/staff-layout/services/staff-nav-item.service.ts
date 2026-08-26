@@ -12,9 +12,15 @@ export class StaffNavItemService {
 
     if (this.staffProfile.hasPermission(StaffPermission.GetSubjectMarkSheet)) {
       items.push({
-        url: '/manager/student-mark-sheet',
-        name: 'student_mark_sheet_title',
+        url: '/manager/mark-entry',
+        name: 'mark_sheets_list_title',
         icon: 'grading',
+        isExpended: false,
+      });
+      items.push({
+        url: '/manager/mark-entry/matrix',
+        name: 'mark_sheet_matrix_title',
+        icon: 'grid_view',
         isExpended: false,
       });
     }

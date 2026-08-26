@@ -1,0 +1,95 @@
+.semester-card {
+  padding: 18px;
+  margin-bottom: 14px;
+
+  h3 {
+    margin: 0 0 12px;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+}
+
+.subject-row {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+
+  &__name {
+    font-weight: 600;
+  }
+
+  &__total {
+    font-weight: 700;
+    color: var(--mat-sys-on-surface-variant);
+
+    small {
+      font-weight: 400;
+      opacity: 0.8;
+    }
+  }
+
+  &__components {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.final-subjects-card {
+  padding: 18px;
+
+  h3 {
+    margin: 0 0 12px;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+}
+
+.final-subjects-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+
+  th, td {
+    padding: 10px 12px;
+    text-align: start;
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+
+  &__passed {
+    color: var(--mat-sys-primary);
+    font-weight: 700;
+  }
+
+  &__failed {
+    color: var(--mat-sys-error);
+    font-weight: 700;
+  }
+
+  &__note {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 0.72rem;
+    color: var(--gold-500);
+
+    mat-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+    }
+  }
+}

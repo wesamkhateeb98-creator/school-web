@@ -1,0 +1,22 @@
+@if (pipeline) {
+  <div class="pipeline-bar">
+    @for (item of stages; track item.stage; let last = $last) {
+      <div class="pipeline-bar__step"
+           [class.pipeline-bar__step--active]="currentStage() === item.stage"
+           [class.pipeline-bar__step--done]="currentStage() !== null && item.stage < currentStage()!">
+        <span class="pipeline-bar__dot"></span>
+        <span class="pipeline-bar__label">{{ language.transform(item.labelKey) }}</span>
+      </div>
+      @if (!last) {
+        <span class="pipeline-bar__connector"></span>
+      }
+    }
+  </div>
+
+  @if (isStale()) {
+    <div class="pipeline-bar__stale">
+      <mat-icon>warning</mat-icon>
+      <span>{{ language.transform('results_stale_warning') }}</span>
+    </div>
+  }
+}

@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>{{ language.transform('generate_sheets_title') }}</h2>
+
+@if (resultCount() === null) {
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-dialog-content>
+      @if (loading()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+
+      <p>{{ language.transform('generate_sheets_confirm_message') }}</p>
+
+      <mat-form-field style="width: 100%;">
+        <mat-label>{{ language.transform('semester_title') }}</mat-label>
+        <mat-select formControlName="semesterId">
+          @for (s of data.semesters; track s.academicYearSemesterId) {
+            <mat-option [value]="s.academicYearSemesterId">{{ s.semesterName }} — {{ s.year }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field style="width: 100%;">
+        <mat-label>{{ language.transform('age_group_title') }}</mat-label>
+        <mat-select formControlName="ageGroupId" (selectionChange)="onAgeGroupChange()">
+          @for (g of data.ageGroupItems; track g.id) {
+            <mat-option [value]="g.id">{{ g.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field style="width: 100%;">
+        <mat-label>{{ language.transform('section_title') }}</mat-label>
+        <mat-select formControlName="classId" [disabled]="classItems().length === 0">
+          <mat-option [value]="null">{{ language.transform('all_classes_title') }}</mat-option>
+          @for (c of classItems(); track c.id) {
+            <mat-option [value]="c.id">{{ c.section }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+      <button matButton type="button" (click)="onNoClick()" [disabled]="loading()">{{ language.transform('cancel') }}</button>
+      <button matButton="filled" type="submit" [disabled]="loading() || form.invalid">{{ language.transform('generate_sheets_title') }}</button>
+    </mat-dialog-actions>
+  </form>
+} @else {
+  <mat-dialog-content>
+    <p class="generate-result">{{ language.transform('success') }} — {{ resultCount() }}</p>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button matButton="filled" (click)="close()">{{ language.transform('close') }}</button>
+  </mat-dialog-actions>
+}

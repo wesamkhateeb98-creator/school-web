@@ -1,0 +1,55 @@
+<p class="tab-hint">{{ language.transform('publish_tab_hint') }}</p>
+
+<form [formGroup]="filterForm">
+    <div class="grid grid-two-column">
+        <mat-form-field>
+            <mat-label>{{ language.transform('age_group_title') }}</mat-label>
+            <mat-select [value]="ageGroupId" (selectionChange)="onAgeGroupSelect($event.value)">
+                @for (g of ageGroupItems; track g.id) {
+                    <mat-option [value]="g.id">{{ g.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ language.transform('semester_title') }}</mat-label>
+            <mat-select formControlName="semesterId" (selectionChange)="onFilterChange()">
+                @for (s of semesters(); track s.academicYearSemesterId) {
+                    <mat-option [value]="s.academicYearSemesterId">{{ semesterLabel(s) }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>
+
+@if (!ageGroupId) {
+    <div class="empty-state">
+        <mat-icon>publish</mat-icon>
+        <p>{{ language.transform('select_age_group_first_message') }}</p>
+    </div>
+}
+
+@if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+} @else if (preview(); as p) {
+    <mat-card class="publish-preview">
+        <div class="publish-preview__stat">
+            <span class="publish-preview__value">{{ p.sheetCount }}</span>
+            <span class="publish-preview__label">{{ language.transform('sheet_count_title') }}</span>
+        </div>
+
+        @if (p.blockers.length > 0) {
+            <ul class="publish-preview__blockers">
+                @for (b of p.blockers; track b.code) {
+                    <li>{{ b.message }}</li>
+                }
+            </ul>
+        }
+
+        <div class="publish-preview__actions">
+            <button matButton="filled" [disabled]="!p.canPublish || publishing()" (click)="confirmPublish()">
+                {{ language.transform('publish_results_title') }}
+            </button>
+        </div>
+    </mat-card>
+}

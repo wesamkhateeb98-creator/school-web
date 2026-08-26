@@ -1,0 +1,253 @@
+<p class="tab-hint">{{ language.transform('promotion_tab_hint') }}</p>
+
+<mat-stepper orientation="horizontal" class="promotion-stepper">
+
+    <!-- Step 1: select target year -->
+    <mat-step [label]="language.transform('select_target_year_title')">
+        <mat-card class="step-card">
+            <p class="step-card__hint">{{ language.transform('select_target_year_hint') }}</p>
+
+            @if (academicYears().length === 0) {
+                <div class="empty-state">
+                    <mat-icon>event_busy</mat-icon>
+                    <p>{{ language.transform('no_other_academic_year_message') }}</p>
+                    <button matButton="filled" type="button" (click)="goCreateAcademicYear()">
+                        {{ language.transform('create_academic_year_title') }}
+                    </button>
+                </div>
+            } @else {
+                <form [formGroup]="form" class="grid grid-two-column">
+                    <mat-form-field>
+                        <mat-label>{{ language.transform('select_target_year_title') }}</mat-label>
+                        <mat-select formControlName="targetAcademicYearId">
+                            @for (y of academicYears(); track y.id) {
+                                <mat-option [value]="y.id">{{ y.year - 1 }}/{{ y.year }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>{{ language.transform('age_group_title') }}</mat-label>
+                        <mat-select formControlName="ageGroupId">
+                            <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+                            @for (g of ageGroupItems(); track g.id) {
+                                <mat-option [value]="g.id">{{ g.name }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
+                </form>
+            }
+        </mat-card>
+
+        <div class="wizard-actions">
+            <button matButton="filled" matStepperNext [disabled]="!form.value.targetAcademicYearId" (click)="loadPreview()">
+                {{ language.transform('next') }}
+            </button>
+        </div>
+    </mat-step>
+
+    <!-- Step 2: blockers -->
+    <mat-step [label]="language.transform('blockers_title')">
+        <mat-card class="step-card">
+            <p class="step-card__hint">{{ language.transform('blockers_hint') }}</p>
+
+            @if (loading()) {
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            } @else if (preview(); as p) {
+                @if (p.blockers.length === 0) {
+                    <div class="empty-state empty-state--positive">
+                        <mat-icon>check_circle</mat-icon>
+                        <p>{{ language.transform('no_blockers_message') }}</p>
+                    </div>
+                } @else {
+                    <ul class="blockers-list">
+                        @for (b of p.blockers; track b.code) {
+                            <li>
+                                <div class="blockers-list__text">
+                                    <mat-icon>warning</mat-icon>
+                                    <span>{{ b.message }}</span>
+                                </div>
+                                @if (b.code === 'PENDING_DECISIONS') {
+                                    <button matButton (click)="goToDecision()">{{ language.transform('decision_title') }}</button>
+                                } @else if (b.code === 'NOT_PUBLISHED') {
+                                    <button matButton (click)="goToPublish()">{{ language.transform('publish_results_title') }}</button>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+        </mat-card>
+
+        <div class="wizard-actions">
+            <button matButton matStepperPrevious>{{ language.transform('back') }}</button>
+            <button matButton="filled" matStepperNext>{{ language.transform('next') }}</button>
+        </div>
+    </mat-step>
+
+    <!-- Step 3: editable preview -->
+    <mat-step [label]="language.transform('promotion_preview_title')">
+        <mat-card class="step-card">
+            <p class="step-card__hint">{{ language.transform('promotion_preview_hint') }}</p>
+
+            @if (preview(); as p) {
+                <div class="promotion-summary">
+                    <div class="promotion-summary__item">
+                        <mat-icon>arrow_upward</mat-icon>
+                        <span class="promotion-summary__value">{{ effectiveCounts().promoted }}</span>
+                        <span class="promotion-summary__label">{{ language.transform('promoted_count_title') }}</span>
+                    </div>
+                    <div class="promotion-summary__item">
+                        <mat-icon>replay</mat-icon>
+                        <span class="promotion-summary__value">{{ effectiveCounts().repeated }}</span>
+                        <span class="promotion-summary__label">{{ language.transform('repeated_count_title') }}</span>
+                    </div>
+                    <div class="promotion-summary__item">
+                        <mat-icon>school</mat-icon>
+                        <span class="promotion-summary__value">{{ effectiveCounts().graduated }}</span>
+                        <span class="promotion-summary__label">{{ language.transform('graduated_count_title') }}</span>
+                    </div>
+                </div>
+
+                @if (p.rows.length === 0) {
+                    <div class="empty-state">
+                        <mat-icon>groups_3</mat-icon>
+                        <p>{{ language.transform('no_data') }}</p>
+                    </div>
+                } @else {
+                    <table class="promotion-table">
+                        <thead>
+                            <tr>
+                                <th>{{ language.transform('name') }}</th>
+                                <th>{{ language.transform('current_age_group_title') }}</th>
+                                <th>{{ language.transform('action') }}</th>
+                                <th>{{ language.transform('target_age_group_title') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (row of p.rows; track row.studentId) {
+                                <tr>
+                                    <td>{{ row.fullName }}</td>
+                                    <td>{{ row.currentAgeGroupName }}</td>
+                                    <td>
+                                        <mat-form-field subscriptSizing="dynamic">
+                                            <mat-select
+                                                [value]="rowOverride(row)?.action ?? row.action"
+                                                (selectionChange)="changeAction(row, $event.value)">
+                                                <mat-option [value]="TransferAction.Promoted">{{ language.transform('action_promoted_title') }}</mat-option>
+                                                <mat-option [value]="TransferAction.Repeated">{{ language.transform('action_repeated_title') }}</mat-option>
+                                                <mat-option [value]="TransferAction.Graduated">{{ language.transform('action_graduated_title') }}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </td>
+                                    <td>
+                                        @if ((rowOverride(row)?.action ?? row.action) === TransferAction.Graduated) {
+                                            <span class="promotion-table__no-target">—</span>
+                                        } @else {
+                                            <mat-form-field subscriptSizing="dynamic">
+                                                <mat-select
+                                                    [value]="rowTargetAgeGroupId(row)"
+                                                    (selectionChange)="changeTarget(row, $event.value)">
+                                                    @for (g of ageGroupItems(); track g.id) {
+                                                        <mat-option [value]="g.id">{{ g.name }}</mat-option>
+                                                    }
+                                                </mat-select>
+                                            </mat-form-field>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+        </mat-card>
+
+        <div class="wizard-actions">
+            <button matButton matStepperPrevious>{{ language.transform('back') }}</button>
+            <button matButton="filled" matStepperNext>{{ language.transform('next') }}</button>
+        </div>
+    </mat-step>
+
+    <!-- Step 4: execute -->
+    <mat-step [label]="language.transform('execute_title')">
+        <mat-card class="step-card">
+            @if (!executed()) {
+                <p class="step-card__hint">{{ language.transform('execute_hint') }}</p>
+
+                @if (preview(); as p) {
+                    <div class="promotion-summary">
+                        <div class="promotion-summary__item">
+                            <mat-icon>arrow_upward</mat-icon>
+                            <span class="promotion-summary__value">{{ effectiveCounts().promoted }}</span>
+                            <span class="promotion-summary__label">{{ language.transform('promoted_count_title') }}</span>
+                        </div>
+                        <div class="promotion-summary__item">
+                            <mat-icon>replay</mat-icon>
+                            <span class="promotion-summary__value">{{ effectiveCounts().repeated }}</span>
+                            <span class="promotion-summary__label">{{ language.transform('repeated_count_title') }}</span>
+                        </div>
+                        <div class="promotion-summary__item">
+                            <mat-icon>school</mat-icon>
+                            <span class="promotion-summary__value">{{ effectiveCounts().graduated }}</span>
+                            <span class="promotion-summary__label">{{ language.transform('graduated_count_title') }}</span>
+                        </div>
+                    </div>
+
+                    @if (!p.canExecute) {
+                        <div class="empty-state">
+                            <mat-icon>block</mat-icon>
+                            <p>{{ language.transform('blockers_hint') }}</p>
+                        </div>
+                    }
+                }
+
+                <div class="wizard-actions">
+                    <button matButton matStepperPrevious [disabled]="executing()">{{ language.transform('back') }}</button>
+                    <button matButton="filled" [disabled]="!preview()?.canExecute || executing()" (click)="execute()">
+                        <mat-icon>move_up</mat-icon>
+                        {{ language.transform('execute_title') }}
+                    </button>
+                </div>
+            } @else if (executeResult(); as r) {
+                <div class="empty-state empty-state--positive">
+                    <mat-icon>check_circle</mat-icon>
+                    <p>{{ language.transform('success') }}</p>
+                </div>
+
+                <div class="promotion-summary">
+                    <div class="promotion-summary__item">
+                        <mat-icon>arrow_upward</mat-icon>
+                        <span class="promotion-summary__value">{{ r.promotedCount }}</span>
+                        <span class="promotion-summary__label">{{ language.transform('promoted_count_title') }}</span>
+                    </div>
+                    <div class="promotion-summary__item">
+                        <mat-icon>replay</mat-icon>
+                        <span class="promotion-summary__value">{{ r.repeatedCount }}</span>
+                        <span class="promotion-summary__label">{{ language.transform('repeated_count_title') }}</span>
+                    </div>
+                    <div class="promotion-summary__item">
+                        <mat-icon>school</mat-icon>
+                        <span class="promotion-summary__value">{{ r.graduatedCount }}</span>
+                        <span class="promotion-summary__label">{{ language.transform('graduated_count_title') }}</span>
+                    </div>
+                </div>
+
+                @if (r.warnings.length > 0) {
+                    <h4>{{ language.transform('warnings_title') }}</h4>
+                    <ul class="blockers-list">
+                        @for (w of r.warnings; track w) {
+                            <li>
+                                <div class="blockers-list__text">
+                                    <mat-icon>warning</mat-icon>
+                                    <span>{{ w }}</span>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+        </mat-card>
+    </mat-step>
+
+</mat-stepper>

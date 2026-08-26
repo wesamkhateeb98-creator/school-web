@@ -1,0 +1,48 @@
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{ language.transform('results_center_title') }}</h2>
+</div>
+
+<app-pipeline-stage-bar [pipeline]="pipeline()" />
+@if (!pipeline()) {
+    <p class="tab-hint">{{ language.transform('select_age_group_first_message') }}</p>
+}
+
+<mat-tab-group class="results-tab-group" [selectedIndex]="selectedTabIndex()" (selectedIndexChange)="selectedTabIndex.set($event)">
+
+    <mat-tab [label]="language.transform('confirm_reopen_title')">
+        <div class="tab-panel">
+            <app-confirm-reopen [ageGroupId]="ageGroupId()" [ageGroupItems]="ageGroupItems()" (ageGroupIdChange)="onAgeGroupChange($event)" (pipelineRefresh)="loadPipeline()" />
+        </div>
+    </mat-tab>
+
+    <mat-tab [label]="language.transform('generate_results_title')">
+        <div class="tab-panel">
+            <app-generate-results [ageGroupId]="ageGroupId()" [ageGroupItems]="ageGroupItems()" (ageGroupIdChange)="onAgeGroupChange($event)" (navigateToStudents)="goToTab(2)" (pipelineRefresh)="loadPipeline()" />
+        </div>
+    </mat-tab>
+
+    <mat-tab [label]="language.transform('results_students_title')">
+        <div class="tab-panel">
+            <app-results-students [ageGroupId]="ageGroupId()" [ageGroupItems]="ageGroupItems()" (ageGroupIdChange)="onAgeGroupChange($event)" />
+        </div>
+    </mat-tab>
+
+    <mat-tab [label]="language.transform('decision_title')">
+        <div class="tab-panel">
+            <app-decision [ageGroupId]="ageGroupId()" [ageGroupItems]="ageGroupItems()" (ageGroupIdChange)="onAgeGroupChange($event)" (pipelineRefresh)="loadPipeline()" />
+        </div>
+    </mat-tab>
+
+    <mat-tab [label]="language.transform('publish_results_title')">
+        <div class="tab-panel">
+            <app-publish-results [ageGroupId]="ageGroupId()" [ageGroupItems]="ageGroupItems()" (ageGroupIdChange)="onAgeGroupChange($event)" (pipelineRefresh)="loadPipeline()" />
+        </div>
+    </mat-tab>
+
+    <mat-tab [label]="language.transform('promotion_wizard_title')">
+        <div class="tab-panel">
+            <app-promotion-wizard [ageGroupId]="ageGroupId()" (navigateToDecision)="goToTab(3)" (navigateToPublish)="goToTab(4)" />
+        </div>
+    </mat-tab>
+
+</mat-tab-group>

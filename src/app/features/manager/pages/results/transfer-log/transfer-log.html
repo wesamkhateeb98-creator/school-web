@@ -1,0 +1,32 @@
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{ language.transform('transfer_log_title') }}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back')" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+    </div>
+</div>
+
+@if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+} @else if (log(); as l) {
+    <h3 style="margin: 0 0 12px;">{{ l.fullName }}</h3>
+
+    @if (l.items.length === 0) {
+        <p>{{ language.transform('no_data') }}</p>
+    }
+
+    @for (item of l.items; track item.academicYearId + '-' + item.performedAt) {
+        <mat-card class="log-item">
+            <div class="log-item__header">
+                <span class="log-item__year">{{ item.year }}</span>
+                <span class="log-item__action">{{ language.transform(actionLabelKey(item.action)) }}</span>
+            </div>
+            <div class="log-item__transition">{{ item.fromAgeGroupName }} ← {{ item.toAgeGroupName }}</div>
+            @if (item.note) {
+                <p class="log-item__note">{{ item.note }}</p>
+            }
+            <div class="log-item__meta">{{ item.performedByName }} — {{ item.performedAt | date:'yyyy-MM-dd HH:mm' }}</div>
+        </mat-card>
+    }
+}

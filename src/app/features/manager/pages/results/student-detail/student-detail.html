@@ -1,0 +1,72 @@
+<div class="page-toolbar">
+    <h2 class="page-toolbar__title">{{ language.transform('student_result_details_title') }}</h2>
+    <div class="page-toolbar__actions">
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('transfer_log_title')" (click)="openTransferLog()">
+            <mat-icon>history</mat-icon>
+        </button>
+        <button class="toolbar-btn toolbar-btn--secondary" [matTooltip]="language.transform('back')" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+    </div>
+</div>
+
+@if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+} @else if (detail(); as d) {
+
+    @for (semester of d.semesters; track semester.academicYearSemesterId) {
+        <mat-card class="semester-card">
+            <h3>{{ semester.semesterName }}</h3>
+
+            @for (subject of semester.subjects; track subject.subjectAgeGroupId) {
+                <div class="subject-row">
+                    <div class="subject-row__header">
+                        <span class="subject-row__name">{{ subject.subjectName }}</span>
+                        <span class="subject-row__total">{{ subject.total ?? '—' }} / {{ subject.maxGrade }}
+                            <small>({{ language.transform('min_total_title') }} {{ subject.minPassGrade }})</small>
+                        </span>
+                    </div>
+                    <div class="subject-row__components">
+                        @for (c of subject.components; track c.name) {
+                            <span class="subject-row__component">{{ c.name }}: {{ c.value ?? '—' }} / {{ c.maxValue }}</span>
+                        }
+                    </div>
+                </div>
+            }
+        </mat-card>
+    }
+
+    <mat-card class="final-subjects-card">
+        <h3>{{ language.transform('final_total_title') }}</h3>
+        <table class="final-subjects-table">
+            <thead>
+                <tr>
+                    <th>{{ language.transform('subject_title') }}</th>
+                    <th>{{ language.transform('final_total_title') }}</th>
+                    <th>{{ language.transform('status') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (subject of d.subjects; track subject.subjectAgeGroupId) {
+                    <tr>
+                        <td>{{ subject.subjectName }}</td>
+                        <td>{{ subject.finalMark }} / {{ subject.maxGrade }}</td>
+                        <td>
+                            @if (subject.isPassed) {
+                                <span class="final-subjects-table__passed">{{ language.transform('status_passed_auto_title') }}</span>
+                            } @else {
+                                <span class="final-subjects-table__failed">{{ language.transform('status_failed_admin_title') }}</span>
+                            }
+                            @if (isFailedDespiteAverage(subject)) {
+                                <div class="final-subjects-table__note">
+                                    <mat-icon>info</mat-icon>
+                                    <span>{{ language.transform('failed_despite_average_warning') }}</span>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </mat-card>
+}

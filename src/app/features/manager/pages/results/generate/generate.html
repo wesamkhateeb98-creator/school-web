@@ -1,0 +1,109 @@
+<p class="tab-hint">{{ language.transform('generate_tab_hint') }}</p>
+
+<form [formGroup]="filterForm">
+    <div class="grid grid-two-column">
+        <mat-form-field>
+            <mat-label>{{ language.transform('age_group_title') }}</mat-label>
+            <mat-select [value]="ageGroupId" (selectionChange)="onAgeGroupSelect($event.value)">
+                @for (g of ageGroupItems; track g.id) {
+                    <mat-option [value]="g.id">{{ g.name }}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>{{ language.transform('semester_title') }}</mat-label>
+            <mat-select formControlName="scope" (selectionChange)="onFilterChange()">
+                @for (s of semesters(); track s.academicYearSemesterId) {
+                    <mat-option [value]="s.academicYearSemesterId">{{ semesterLabel(s) }}</mat-option>
+                }
+                <mat-option value="year">{{ language.transform('year_end_scope_title') }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>
+
+@if (!ageGroupId) {
+    <div class="empty-state">
+        <mat-icon>auto_awesome</mat-icon>
+        <p>{{ language.transform('select_age_group_first_message') }}</p>
+    </div>
+}
+
+@if (lastResult(); as result) {
+    <mat-card class="generate-result">
+        <div class="generate-result__header">
+            <mat-icon>check_circle</mat-icon>
+            <strong>{{ language.transform('generate_success_title') }}</strong>
+        </div>
+        <div class="generate-result__stats">
+            <div class="generate-result__stat">
+                <span class="generate-result__value">{{ result.studentCount }}</span>
+                <span class="generate-result__label">{{ language.transform('students_count_title') }}</span>
+            </div>
+            <div class="generate-result__stat">
+                <span class="generate-result__value">{{ result.passedCount }}</span>
+                <span class="generate-result__label">{{ language.transform('projected_passed_title') }}</span>
+            </div>
+            <div class="generate-result__stat">
+                <span class="generate-result__value">{{ result.pendingCount }}</span>
+                <span class="generate-result__label">{{ language.transform('projected_pending_title') }}</span>
+            </div>
+        </div>
+        <button matButton="filled" (click)="goToStudents()">
+            <mat-icon>groups_3</mat-icon>
+            {{ language.transform('view_results_action_title') }}
+        </button>
+    </mat-card>
+}
+
+@if (loading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+} @else if (preview(); as p) {
+    <mat-card class="generate-preview">
+        <h3>{{ language.transform('generate_preview_title') }}</h3>
+
+        <div class="generate-preview__grid">
+            <div class="generate-preview__stat">
+                <span class="generate-preview__value">{{ p.studentCount }}</span>
+                <span class="generate-preview__label">{{ language.transform('students_count_title') }}</span>
+            </div>
+            <div class="generate-preview__stat">
+                <span class="generate-preview__value">{{ p.confirmedSheetCount }} / {{ p.totalSheetCount }}</span>
+                <span class="generate-preview__label">{{ language.transform('confirm_action_title') }}</span>
+            </div>
+            <div class="generate-preview__stat">
+                <span class="generate-preview__value">{{ p.studentsWithoutMarks }}</span>
+                <span class="generate-preview__label">{{ language.transform('students_without_marks_title') }}</span>
+            </div>
+            <div class="generate-preview__stat">
+                <span class="generate-preview__value">{{ p.projectedPassed }}</span>
+                <span class="generate-preview__label">{{ language.transform('projected_passed_title') }}</span>
+            </div>
+            <div class="generate-preview__stat">
+                <span class="generate-preview__value">{{ p.projectedPending }}</span>
+                <span class="generate-preview__label">{{ language.transform('projected_pending_title') }}</span>
+            </div>
+        </div>
+
+        @if (p.blockers.length > 0) {
+            <ul class="generate-preview__blockers">
+                @for (b of p.blockers; track b.code) {
+                    <li>{{ b.message }}</li>
+                }
+            </ul>
+        }
+
+        <div class="generate-preview__actions">
+            @if (!isYearScope) {
+                <button matButton="filled" [disabled]="!p.canGenerate || generating()" (click)="generate()">
+                    {{ language.transform('generate_semester_results_title') }}
+                </button>
+            } @else {
+                <button matButton="filled" [disabled]="!p.canGenerate || generating()" (click)="generate()">
+                    {{ language.transform('generate_year_results_title') }}
+                </button>
+            }
+        </div>
+    </mat-card>
+}
