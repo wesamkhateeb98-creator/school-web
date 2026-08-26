@@ -9,15 +9,27 @@
 
         <!-- Header: Logo + school name + Close (mobile) -->
         <div class="sidebar-header">
-            <div class="sidebar-brand">
-                <img src="logo.png" alt="Logo" class="sidebar-brand__logo" />
-                <span class="sidebar-brand__name">{{ language.transform('school_short_name') }}</span>
+            <svg class="sidebar-header__pattern" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <defs>
+                    <pattern id="adminStarTile" width="50" height="50" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+                        <rect x="10" y="10" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1"/>
+                        <rect x="10" y="10" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(45 22 22)"/>
+                    </pattern>
+                </defs>
+                <rect width="200" height="200" fill="url(#adminStarTile)"/>
+            </svg>
+
+            <div class="sidebar-header__row">
+                <div class="sidebar-brand">
+                    <img src="logo.png" alt="Logo" class="sidebar-brand__logo" />
+                    <span class="sidebar-brand__name">{{ language.transform('school_short_name') }}</span>
+                </div>
+                @if (responseScreen.isMobile()) {
+                    <button mat-icon-button (click)="matSidenav.close()" [attr.aria-label]="language.transform('close_menu')">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                }
             </div>
-            @if (responseScreen.isMobile()) {
-                <button mat-icon-button (click)="matSidenav.close()" [attr.aria-label]="language.transform('close_menu')">
-                    <mat-icon>close</mat-icon>
-                </button>
-            }
         </div>
 
         <mat-divider></mat-divider>

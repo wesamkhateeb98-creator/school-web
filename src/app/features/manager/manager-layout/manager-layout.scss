@@ -34,7 +34,12 @@
 // collapsed-rail state to keep in sync here.
 .side-nav {
     overflow: visible !important;
-    background-color: var(--mat-sys-primary);
+    // A subtle depth gradient instead of a flat fill — same brand green,
+    // just not as flat as a plain solid panel (matches the staff sidebar).
+    background:
+        linear-gradient(165deg,
+            var(--mat-sys-primary) 0%,
+            color-mix(in srgb, var(--mat-sys-primary) 88%, black) 100%);
 
     @include mat.sidenav-overrides((
         container-divider-color: color-mix(in srgb, var(--mat-sys-on-primary) 20%, transparent),
@@ -85,16 +90,35 @@
 
 // ─── Sidebar Header ───────────────────────────────────────
 .sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    position: relative;
     padding: 18px 16px 16px;
     flex-shrink: 0;
-    gap: 8px;
+    overflow: hidden;
 
     button mat-icon {
         color: var(--mat-sys-on-primary);
     }
+}
+
+// Same faint interlocking-star motif as the staff sidebar and the login
+// screen's brand panel — ties this rail back to the one moment every user
+// already associates with the school's identity, instead of a flat fill.
+.sidebar-header__pattern {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--gold-300);
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.sidebar-header__row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
 }
 
 .sidebar-brand {
