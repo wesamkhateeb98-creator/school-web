@@ -2,8 +2,6 @@
 @use '@angular/material' as mat;
 @use "../../../../styles.scss";
 
-$mobile-header-height: 48px;
-
 // ─── Container ───────────────────────────────────────────
 .sidenav-container {
     height: 100vh;
@@ -31,24 +29,13 @@ $mobile-header-height: 48px;
 }
 
 // ─── Sidebar ─────────────────────────────────────────────
+// Plain open/closed drawer — Material's own mat-drawer transform
+// animation handles slide-in/out, so there's no custom width or
+// collapsed-rail state to keep in sync here.
 .side-nav {
-    // No `position` override here on purpose: Angular Material's own
-    // `.mat-drawer` CSS already sets `position: absolute`, which is what
-    // makes the push layout work in this app (it uses a plain <div> for
-    // the content area instead of <mat-sidenav-content>). Re-declaring
-    // `position: relative` here — even just to anchor the ::before below —
-    // wins the cascade and knocks the drawer into normal block flow,
-    // which pushes .content-area below it instead of beside it. The
-    // element is already a valid positioning context as-is.
     overflow: visible !important;
-    // Solid brand green — no gradient, no transparency.
     background-color: var(--mat-sys-primary);
 
-    // Edge-to-edge panel (no floating gap — that fought with other pages'
-    // content, e.g. the students page's filter panel showed through the
-    // gap). container-shape here rounds only the two content-facing
-    // corners for a drawer anchored this way; the outer edge (screen
-    // border, right in RTL) stays flush/square as asked.
     @include mat.sidenav-overrides((
         container-divider-color: color-mix(in srgb, var(--mat-sys-on-primary) 20%, transparent),
         container-shape: 22px,
@@ -65,12 +52,10 @@ $mobile-header-height: 48px;
     --mdc-list-list-item-focus-state-layer-color: var(--gold-300);
     --mdc-list-list-item-focus-state-layer-opacity: 0.16;
 
-    width: 224px;
+    width: 240px;
     height: 100%;
     box-shadow: 0 0 24px rgba(13, 36, 16, 0.25);
-    transition: width 200ms ease;
 
-    // Allow inner container to flex + overflow visible for the toggle btn
     ::ng-deep .mat-drawer-inner-container {
         display: flex !important;
         flex-direction: column !important;
@@ -99,21 +84,13 @@ $mobile-header-height: 48px;
 }
 
 // ─── Sidebar Header ───────────────────────────────────────
-// A compact row now instead of a big centered portrait: the seal sits at
-// the start with its caption underneath, the toggle sits at the end.
 .sidebar-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    padding: 16px 12px 14px;
+    padding: 18px 16px 16px;
     flex-shrink: 0;
     gap: 8px;
-
-    .sidebar-actions {
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-    }
 
     button mat-icon {
         color: var(--mat-sys-on-primary);
@@ -122,14 +99,13 @@ $mobile-header-height: 48px;
 
 .sidebar-brand {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     min-width: 0;
 
     &__logo {
-        width: 44px;
-        height: 44px;
+        width: 42px;
+        height: 42px;
         object-fit: contain;
         border-radius: 50%;
         flex-shrink: 0;
@@ -140,33 +116,10 @@ $mobile-header-height: 48px;
 
     &__name {
         font-family: var(--mat-sys-brand-font-family);
-        font-size: 0.72rem;
+        font-size: 0.82rem;
         font-weight: 700;
-        line-height: 1.25;
+        line-height: 1.3;
         color: var(--mat-sys-on-primary);
-        text-align: center;
-        max-width: 96px;
-    }
-
-    // Only interactive while collapsed — it's standing in for the toggle
-    // button that disappears there (see the removed .collapse-toggle-btn
-    // note below): tapping the seal re-expands the rail.
-    &--clickable {
-        cursor: pointer;
-        border-radius: 12px;
-        padding: 4px;
-        margin: -4px;
-        transition: background-color 150ms ease;
-
-        &:hover,
-        &:focus-visible {
-            background-color: color-mix(in srgb, #ffffff 14%, transparent);
-        }
-
-        &:focus-visible {
-            outline: 2px solid var(--gold-300);
-            outline-offset: 2px;
-        }
     }
 }
 
@@ -187,76 +140,9 @@ mat-divider {
         flex: 1;
         min-height: 0;
         overflow-y: auto;
-        // Setting only overflow-y makes overflow-x compute to `auto` per
-        // spec (not `visible`), which would clip the collapsed active
-        // icon's bulge right at this boundary. Keep it explicit.
         overflow-x: visible;
         padding: 8px 0;
     }
-}
-
-// ─── Collapse Toggle (desktop, lives in the header now) ──
-// Previously a circle floating on the sidebar's own boundary — that fought
-// with the panel's rounded corners through several redesigns. Anchored
-// inside the header instead: a fixed, predictable spot that never has to
-// negotiate with the panel's shape. Styled as the same white/gold circular
-// badge the old floating version used — just the position that changed.
-.collapse-toggle-btn {
-    width: 32px !important;
-    height: 32px !important;
-    min-height: 32px !important;
-    min-width: 32px !important;
-    padding: 0 !important;
-    border-radius: 50% !important;
-    background-color: #ffffff !important;
-    border: 1.5px solid color-mix(in srgb, var(--gold-300) 60%, transparent);
-    box-shadow: 0 2px 6px rgba(13, 36, 16, 0.25);
-    transition: transform 150ms ease, box-shadow 150ms ease;
-
-    &:hover {
-        transform: scale(1.08);
-        box-shadow: 0 3px 8px rgba(13, 36, 16, 0.3);
-    }
-
-    mat-icon {
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-        color: var(--mat-sys-primary) !important;
-    }
-}
-
-// ─── Collapsed (icon-only) state ──────────────────────────
-.side-nav--collapsed {
-    width: 76px;
-
-    .sidebar-header {
-        flex-direction: column;
-        align-items: center;
-        padding: 16px 8px 12px;
-        gap: 10px;
-    }
-
-    .sidebar-brand__logo {
-        width: 36px;
-        height: 36px;
-    }
-
-    // No room for the caption at rail width — the seal alone still reads
-    // as "this is the school", the toggle stays reachable right below it.
-    .sidebar-brand__name {
-        display: none;
-    }
-}
-
-// ─── Mobile Header ────────────────────────────────────────
-.mobile-header {
-    display: flex;
-    align-items: center;
-    height: $mobile-header-height;
-    padding: 0 4px;
-    background-color: var(--mat-sys-surface);
-    border-bottom: 1px solid var(--mat-sys-outline-variant);
 }
 
 // ─── Content Area ────────────────────────────────────────
@@ -264,23 +150,10 @@ mat-divider {
     padding: 5px 10px;
     height: 100vh;
     overflow-y: auto;
-    // A stray few px of horizontal overflow anywhere inside (long labels,
-    // a grid track rounding) used to surface as a full-width horizontal
-    // scrollbar here, since this is the single scrolling ancestor for the
-    // whole page. Content should reflow/truncate within its width, never
-    // force horizontal scroll.
     overflow-x: hidden;
-
-    &.with-mobile-header {
-        height: calc(100vh - #{$mobile-header-height});
-    }
 }
 
-// ─── Manager Header (brand + page title + year/settings) ─
-// Lives inside .content-area (not as a sibling of the sidenav) on purpose:
-// that sibling slot is where the fragile push-layout mechanism lives — see
-// the notes on .side-nav above. Sticky here just needs .content-area to be
-// the scrolling ancestor, which it already is.
+// ─── Manager Header (toggle + page title + year/settings) ─
 .manager-header {
     position: sticky;
     top: 0;
@@ -290,25 +163,13 @@ mat-divider {
     gap: 16px;
     margin: -5px -10px 16px;
     padding: 12px 20px;
-    // Same tone as the page behind it (.sidenav-container below) — the
-    // header blends into the content area instead of standing apart as its
-    // own bar. No border/shadow either, for the same reason.
     background-color: var(--mat-sys-surface-container-low);
     transition: transform 220ms ease;
 
-    // Slides up out of view on scroll-down, slides back in on scroll-up —
-    // still `position: sticky` underneath, this just offsets it further.
     &--hidden {
         transform: translateY(-100%);
     }
 
-    &__spacer {
-        flex: 1;
-    }
-
-    // With the logo/school-name gone, the title is the only thing left in
-    // the header — give it its own presence as a pill-shaped badge rather
-    // than plain centered text floating in empty space.
     &__title {
         flex: 1;
         margin: 0;
@@ -343,6 +204,20 @@ mat-divider {
         align-items: center;
         justify-content: flex-end;
         gap: 10px;
+    }
+}
+
+// Matches .header-settings-btn / .notification-bell-btn — sits as part of
+// the same paired set of circular badges in the header.
+.sidebar-toggle-btn {
+    color: var(--mat-sys-on-surface-variant);
+    background-color: var(--mat-sys-surface-container-high);
+    transition: background-color 150ms ease, color 150ms ease;
+    flex-shrink: 0;
+
+    &:hover {
+        background-color: color-mix(in srgb, var(--mat-sys-primary) 14%, var(--mat-sys-surface-container-high));
+        color: var(--mat-sys-primary);
     }
 }
 
@@ -436,10 +311,6 @@ mat-divider {
     .manager-header {
         gap: 8px;
         padding: 10px 12px;
-
-        &__school-name {
-            display: none;
-        }
 
         &__title {
             font-size: 0.9rem;

@@ -1,0 +1,12 @@
+// Matches .header-settings-btn exactly so the two sit as a paired set
+// of circular badges in the header, next to each other.
+.notification-bell-btn {
+  color: var(--mat-sys-on-surface-variant);
+  background-color: var(--mat-sys-surface-container-high);
+  transition: background-color 150ms ease, color 150ms ease;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--mat-sys-primary) 14%, var(--mat-sys-surface-container-high));
+    color: var(--mat-sys-primary);
+  }
+}

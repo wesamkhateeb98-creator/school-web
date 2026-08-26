@@ -330,3 +330,47 @@ html{
 .grid-full-line-item {
   grid-column: 1 / -1;
 }
+
+// Shared "nothing to show yet" placeholder — used whenever a screen needs a
+// required filter picked before it has anything meaningful to fetch, or a
+// picked filter legitimately returns zero rows. Silence here reads as
+// "broken"; this makes the reason explicit.
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 20px;
+  color: var(--mat-sys-on-surface-variant);
+  text-align: center;
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    max-width: 360px;
+  }
+
+  &--positive mat-icon {
+    color: var(--mat-sys-primary);
+    opacity: 1;
+  }
+}
+
+// A one-line explainer shown above a tab's content — answers "what is this
+// tab for" without needing a separate help page.
+.tab-hint {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--mat-sys-surface-container-low);
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}

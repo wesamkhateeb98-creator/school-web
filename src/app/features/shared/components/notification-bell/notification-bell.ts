@@ -27,11 +27,12 @@ import { Language } from '../../../../core/services/language';
     DatePipe,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './notification-bell.scss',
   template: `
     <button mat-icon-button
+      class="notification-bell-btn"
       [matMenuTriggerFor]="notifMenu"
       (menuOpened)="onOpen()"
-      style="color: var(--mat-sys-on-primary);"
       [matBadge]="totalCount() > 0 ? totalCount() : null"
       matBadgeColor="warn"
       matBadgeSize="small">

@@ -5,15 +5,27 @@
         #matSidenav
         [mode]="responseScreen.isMobile() ? 'over' : 'side'"
         class="side-nav"
-        [opened]="!responseScreen.isMobile()">
+        [opened]="sidebarOpen()">
 
-        <!-- Header: Logo + Bell + Close (mobile) -->
+        <!-- Header: Logo + school name + Close (mobile) -->
         <div class="sidebar-header">
-            <img src="logo.png" alt="Logo" />
-            <div class="sidebar-actions">
-                <app-notification-bell />
+            <svg class="sidebar-header__pattern" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <defs>
+                    <pattern id="staffStarTile" width="50" height="50" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+                        <rect x="10" y="10" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1"/>
+                        <rect x="10" y="10" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1" transform="rotate(45 22 22)"/>
+                    </pattern>
+                </defs>
+                <rect width="200" height="200" fill="url(#staffStarTile)"/>
+            </svg>
+
+            <div class="sidebar-header__row">
+                <div class="sidebar-brand">
+                    <img src="logo.png" alt="Logo" class="sidebar-brand__logo" />
+                    <span class="sidebar-brand__name">{{ language.transform('school_short_name') }}</span>
+                </div>
                 @if (responseScreen.isMobile()) {
-                    <button mat-icon-button (click)="matSidenav.close()">
+                    <button mat-icon-button (click)="matSidenav.close()" [attr.aria-label]="language.transform('close_menu')">
                         <mat-icon>close</mat-icon>
                     </button>
                 }
@@ -22,44 +34,43 @@
 
         <mat-divider></mat-divider>
 
-        <!-- Nav Items (scrollable) + Settings (pinned bottom) -->
+        <!-- Nav Items (scrollable) -->
         <div class="f-column-between">
             <mat-nav-list>
                 @for (item of staffNav.navItems(); track $index) {
-                    <app-menu-item-component [navItem]="item" [level]="1" />
+                    <app-menu-item-component [navItem]="item" [level]="1" (itemClick)="onNavItemClick()"/>
                 }
             </mat-nav-list>
+
+            <!-- Settings + Logout, pinned below the scrollable nav list -->
             <app-setting-button-component />
         </div>
 
-        <!-- Desktop border toggle button -->
-        @if (!responseScreen.isMobile()) {
-            <button mat-icon-button class="sidebar-toggle-btn" (click)="matSidenav.toggle()">
-                <mat-icon>chevron_left</mat-icon>
-            </button>
-        }
-
     </mat-sidenav>
 
-    <!-- Mobile top bar -->
-    @if (responseScreen.isMobile()) {
-        <div class="mobile-header">
-            <button mat-icon-button (click)="matSidenav.open()">
-                <mat-icon>menu</mat-icon>
-            </button>
-        </div>
-    }
-
-    <!-- Desktop open button (shown only when sidebar is closed) -->
-    @if (!responseScreen.isMobile() && !matSidenav.opened) {
-        <button mat-icon-button class="sidebar-open-btn" (click)="matSidenav.open()">
-            <mat-icon>chevron_right</mat-icon>
-        </button>
-    }
-
     <!-- Main Content -->
-    <div class="content-area" [class.with-mobile-header]="responseScreen.isMobile()">
-        <router-outlet />
+    <div class="content-area" (scroll)="onContentScroll($event)">
+
+        <header class="manager-header" [class.manager-header--hidden]="headerHidden()">
+            <button mat-icon-button
+                    class="sidebar-toggle-btn"
+                    (click)="toggleSidebar()"
+                    [matTooltip]="language.transform('toggle_sidebar')">
+                <mat-icon>{{ sidebarOpen() ? 'menu_open' : 'menu' }}</mat-icon>
+            </button>
+
+            <h1 class="manager-header__title">
+                <mat-icon>space_dashboard</mat-icon>
+                <span>{{ language.transform('staff_panel_title') }}</span>
+            </h1>
+
+            <div class="manager-header__actions">
+                <app-notification-bell />
+                <app-setting-button-component variant="header" />
+            </div>
+        </header>
+
+        <router-outlet/>
     </div>
 
 </mat-sidenav-container>
