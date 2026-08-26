@@ -17,4 +17,13 @@ export enum StaffPermission {
   UpdateStudentAssignmentEvaluation = 38,
   DeleteStudentAssignmentEvaluation = 39,
   GetStudentAssignmentEvaluation    = 40,
+
+  // Results & Promotion (41-47)
+  GenerateResults      = 41,
+  ViewResults           = 42,
+  DecideStudentStatus   = 43,
+  PublishResults        = 44,
+  PromoteStudent        = 45,
+  ViewTransferLog       = 46,
+  ReopenMarkSheet       = 47,
 }
