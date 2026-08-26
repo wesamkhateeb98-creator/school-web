@@ -10,15 +10,6 @@
   </header>
 
   <div class="stat-grid">
-    <div class="stat-card stat-card--total">
-      <div class="stat-card__icon">
-        <mat-icon>space_dashboard</mat-icon>
-      </div>
-      <div class="stat-card__body">
-        <span class="stat-card__value">{{ total() }}</span>
-        <span class="stat-card__label">{{ language.transform('total_title') }}</span>
-      </div>
-    </div>
     @for (stat of stats(); track stat.key) {
       <a class="stat-card" [style.--stat-color]="stat.color" [routerLink]="stat.url" matRipple>
         <div class="stat-card__icon">
@@ -32,12 +23,52 @@
           }
           <span class="stat-card__label">{{ language.transform(stat.key) }}</span>
         </div>
-        @if (stat.value !== null && total() > 0) {
-          <span class="stat-card__percent">{{ stat.percent }}%</span>
-        }
       </a>
     }
   </div>
+
+  <section class="panel panel--grades">
+    <div class="panel__head">
+      <div class="panel__head-title">
+        <mat-icon>groups</mat-icon>
+        <h2>{{ language.transform('students_by_grade_title') }}</h2>
+      </div>
+    </div>
+
+    @if (gradeRowsLoading()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    } @else if (gradeRows().length === 0) {
+      <p class="panel__empty">
+        <mat-icon>groups_3</mat-icon>
+        {{ language.transform('no_data') }}
+      </p>
+    } @else {
+      <div class="grade-table">
+        @for (row of gradeRows(); track row.ageGroupId) {
+          <a class="grade-row" [routerLink]="['/manager/results']" [queryParams]="{ ageGroupId: row.ageGroupId }" matRipple>
+            <span class="grade-row__name">{{ row.name }}</span>
+            <span class="grade-row__students">
+              @if (row.studentCount === null) {
+                <span class="stat-card__skeleton"></span>
+              } @else {
+                <mat-icon>escalator_warning</mat-icon>
+                {{ row.studentCount }}
+              }
+            </span>
+            <span class="grade-row__stage">
+              @if (stageLabel(row.stage); as label) {
+                <span class="grade-row__stage-badge" [class.grade-row__stage-badge--done]="row.stage === 6">
+                  {{ language.transform(label) }}
+                </span>
+              } @else {
+                <span class="grade-row__stage-badge grade-row__stage-badge--muted">—</span>
+              }
+            </span>
+          </a>
+        }
+      </div>
+    }
+  </section>
 
   <div class="dashboard-grid">
 
