@@ -367,8 +367,6 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         mark_sheets_status_title: 'حالة كشوف العلامات',
         sheets_submitted_title: 'كشوف مُدخلة',
         sheets_confirmed_title: 'كشوف مؤكدة',
-        students_by_grade_title: 'توزيع الطلاب والنتائج حسب الصف',
-        results_status_title: 'حالة النتائج',
         group_academic_title: 'الشؤون الأكاديمية',
         group_people_title: 'الأشخاص',
         group_records_title: 'السجلات',
@@ -890,8 +888,6 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         mark_sheets_status_title: 'Mark Sheets Status',
         sheets_submitted_title: 'Sheets submitted',
         sheets_confirmed_title: 'Sheets confirmed',
-        students_by_grade_title: 'Students & Results by Grade',
-        results_status_title: 'Results Status',
         group_academic_title: 'Academics',
         group_people_title: 'People',
         group_records_title: 'Records',
@@ -1441,8 +1437,6 @@ export type GlobalType =
 'mark_sheets_status_title'|
 'sheets_submitted_title'|
 'sheets_confirmed_title'|
-'students_by_grade_title'|
-'results_status_title'|
 'group_academic_title'|
 'group_people_title'|
 'group_records_title'|
