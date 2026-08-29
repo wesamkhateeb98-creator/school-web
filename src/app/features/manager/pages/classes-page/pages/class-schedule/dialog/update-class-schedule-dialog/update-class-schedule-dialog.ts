@@ -21,7 +21,6 @@ import { combineLatest, debounceTime, EMPTY, forkJoin, from, map, Observable, of
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../../../../core/consts';
 import { DayDropDown } from "../../../../../../shared/components/day-drop-down/day-drop-down";
 import { ScheduleClassDailyViewModel } from '../../model/class-schedule-view-model';
-import { SubjectEndpoints } from '../../../../../../shared/endpoints/subject-endpoint';
 import { PeriodEndpoints } from '../../../../../../shared/endpoints/period-endpoint';
 import { TeacherEndpoints } from '../../../../../../shared/endpoints/teacher-endpoint';
 import { Page } from '../../../../../../../shared/model/page';
@@ -67,7 +66,7 @@ export class UpdateClassScheduleDialog implements OnInit {
   public language = inject(Language);
   public matSnackBar = inject(MatSnackBar);
   public classEndpoints = inject(ClassEndpoints);
-  public subjectEndpoints = inject(SubjectEndpoints);
+  public ageGroupEndpoints = inject(AgeGroupEndpoints);
   public periodEndpoints = inject(PeriodEndpoints);
   public teacherEndpoints = inject(TeacherEndpoints);
 
@@ -81,10 +80,11 @@ export class UpdateClassScheduleDialog implements OnInit {
   classId:number = 0;
   classPeriod!:ScheduleClassDailyViewModel
   day:number = 0;
+  ageGroupId:number = 0;
 
   ngOnInit() {
     this.form = this.fb.group({
-      'day':['1'],
+      'day':[1],
       'period':['',Validators.required],
       'periodId':[],
       'teacher':[],
@@ -99,33 +99,40 @@ export class UpdateClassScheduleDialog implements OnInit {
     this.form.get('teacherId')!.valueChanges.subscribe({next: x=> this.assignAllWithTeacherValidatorLogic()})
 
     this.classId = this.data.classId;
-    
+
     this.classPeriod = this.data.classPeriod;
-    
+
     this.day = this.data.day;
-    forkJoin({
-      subject: this.subjectEndpoints.get(1,1,this.classPeriod.subjectName),
-      period: this.periodEndpoints.getById(this.classPeriod.periodId),
-      teacher: this.classPeriod.teacherName? 
-        this.teacherEndpoints.get({
-          pageNumber:1,
-          pageSize:1,
-          name: this.classPeriod.teacherName
-        }):of(null),
-    }).subscribe({
-      next:x=>{
-        this.loading.set(false);
-        this.form.patchValue({
-          day: this.day,
-          period: x.period,
-          periodId: x.period.id??undefined,
-          teacher: x.teacher?.content[0]??undefined,
-          teacherId: x.teacher?.content[0].id??undefined,
-          subject: x.subject.content[0],
-          subjectId: x.subject.content[0]?.id??undefined,
+
+    this.classEndpoints.getByIdClassForAdmin(this.classId).subscribe({
+      next: classInfo => {
+        this.ageGroupId = classInfo.ageGroupId;
+        forkJoin({
+          subject: this.ageGroupEndpoints.getSubjectAgeGroups(classInfo.ageGroupId, this.classPeriod.subjectName, 1, 1),
+          period: this.periodEndpoints.getById(this.classPeriod.periodId),
+          teacher: this.classPeriod.teacherName?
+            this.teacherEndpoints.get({
+              pageNumber:1,
+              pageSize:1,
+              name: this.classPeriod.teacherName
+            }):of(null),
+        }).subscribe({
+          next:x=>{
+            this.loading.set(false);
+            const subjectAgeGroup = x.subject.content[0];
+            this.form.patchValue({
+              day: this.day,
+              period: x.period,
+              periodId: x.period.id??undefined,
+              teacher: x.teacher?.content[0]??undefined,
+              teacherId: x.teacher?.content[0].id??undefined,
+              subject: subjectAgeGroup? { id: subjectAgeGroup.subjectAgeGroupId, name: subjectAgeGroup.subjectName } : undefined,
+              subjectId: subjectAgeGroup?.subjectAgeGroupId??undefined,
+            })
+          }
         })
       }
-    })
+    });
   }
 
   // ======================================== Validation ========================================

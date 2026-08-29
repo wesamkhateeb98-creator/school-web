@@ -69,7 +69,12 @@ export class ClassEndpoints {
         return this.http.post(`${this.baseUrl}/${classId}/class-schedule`, {
             key: key,
             day: day,
-            classScheduleDay: subjectsInSchedule
+            // The backend's DTO field is SubjectAgeGroupId, not subjectId — same rename updateScheduleClass already does below.
+            classScheduleDay: subjectsInSchedule.map(s => ({
+                subjectAgeGroupId: s.subjectId,
+                periodId: s.periodId,
+                teacherId: s.teacherId,
+            }))
         });
     }
 

@@ -1,0 +1,32 @@
+// The weekly schedule has 8 columns (day + 7 periods), each with a long
+// header like "الحصة-1 ( 8:00 ص => 8:45 ص )" — with no scroll container this
+// either got clipped or forced the whole page to scroll sideways under the
+// fixed sidebar. This makes the table itself the scroll region instead, so
+// every period column stays reachable regardless of viewport width.
+.schedule-table-wrap {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.schedule-table {
+    width: max-content;
+    min-width: 100%;
+
+    th, td {
+        white-space: nowrap;
+        padding-inline: 16px;
+    }
+
+    // Sticky day column / sticky-end last period column only actually pin in
+    // place while scrolling once there's a scroll container to pin against —
+    // give them a background and edge shadow so they read as "frozen", not
+    // just plain cells that happen to not move.
+    ::ng-deep .mat-mdc-header-cell.mdc-data-table__header-cell--sticky,
+    ::ng-deep .mat-mdc-cell.mdc-data-table__cell--sticky {
+        background-color: var(--mat-sys-surface);
+    }
+
+    ::ng-deep .mat-mdc-header-cell.mdc-data-table__header-cell--sticky {
+        background-color: var(--mat-sys-primary);
+    }
+}

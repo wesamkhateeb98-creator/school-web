@@ -59,7 +59,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatProgressBar,
     MatTooltipModule
 ],
-  templateUrl: './class-schedule.html'
+  templateUrl: './class-schedule.html',
+  styleUrl: './class-schedule.scss'
 })
 export class ClassSchedulePage implements OnInit {
 
@@ -78,6 +79,7 @@ export class ClassSchedulePage implements OnInit {
 
   // ======================================== INPUT PARAMETERS ========================================
   classId :number;
+  ageGroupId = signal<number | null>(null);
 
   // ======================================== TABLE VIEW MODEL ========================================
   columns = signal<ClassScheduleTableSchema[]>([]);
@@ -97,7 +99,7 @@ export class ClassSchedulePage implements OnInit {
       'teacher':[''],
       'period':['',Validators.required],
       'subject':['',Validators.required],
-      'day':['1']
+      'day':[1]
     });
     this.classId = +(this.route.snapshot.paramMap.get('id')??'0');
     effect(x=>{
@@ -107,6 +109,11 @@ export class ClassSchedulePage implements OnInit {
   
   ngOnInit(): void {
     this.onLoading();
+    if (this.classId > 0) {
+      this.classEndpoints.getByIdClassForAdmin(this.classId).subscribe({
+        next: x => this.ageGroupId.set(x.ageGroupId),
+      });
+    }
   }
 
   // ======================================== Table LOGIC ( LOAD PERIOD + CLASS_SCHEDULE ) THEN PRESENT IT IN TABLE ========================================
@@ -279,7 +286,7 @@ export class ClassSchedulePage implements OnInit {
       this.addViewModel().map(x=>({
         subjectId:x.subject.id,
         periodId:x.period.id,
-        teacherId:x.teacher.id
+        teacherId:x.teacher?.id
       }))
     ).subscribe({
       next:()=>{

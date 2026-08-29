@@ -10,6 +10,13 @@ import { MatIconButton } from '@angular/material/button';
 import { ParamsService } from '../../../../../core/services/params-service';1
 import { SubjectViewModel } from '../../../pages/subject/model/subject-view-model';
 import { SubjectEndpoints } from '../../endpoints/subject-endpoint';
+import { AgeGroupEndpoints } from '../../endpoints/age-group-endpoint';
+
+/** What the autocomplete actually needs — a raw Subject and a Subject-scoped-to-an-age-group don't share a type, but both have these. */
+interface SubjectOption {
+  id: number;
+  name: string;
+}
 
 @Component({
   selector: 'app-subject-auto-complete',
@@ -26,13 +33,16 @@ export class SubjectAutoComplete implements OnInit {
   @Input() subject!: SubjectViewModel|null;
   @Input() loading!: WritableSignal<boolean>;
   @Input() checkUrl!: boolean;
+  /** When set, this scopes the list to subjects taught in this specific age group, and the selected id becomes that SubjectAgeGroup's id — the class-schedule endpoints require that, not the raw Subject id. Omit for the plain school-wide subject list. */
+  @Input() ageGroupId?: number;
 
 
-  
+
   fb = inject(FormBuilder);
   language = inject(Language);
   parmas = inject(ParamsService);
   subjectEndpoints = inject(SubjectEndpoints);
+  ageGroupEndpoints = inject(AgeGroupEndpoints);
 
   ngOnInit(): void {
     this.form.addControl('subject', this.fb.control(this.subject));
@@ -52,31 +62,35 @@ export class SubjectAutoComplete implements OnInit {
         })
   }
 
-  subjectItems= signal<SubjectViewModel[]>([]);
-  
+  subjectItems= signal<SubjectOption[]>([]);
+
   setupAutocompletes() {
     const paramsItem = this.parmas.loadGenericFromUrl();
-    
+
     const hasParam = !!paramsItem['subjectName'];
 
     let source$ = this.form.get('subject')!.valueChanges;
-    
+
     if (!hasParam) {
       source$ = source$.pipe(startWith(''));
     }
 
     source$.pipe(
       debounceTime(300),
-      switchMap(value => this.subjectEndpoints.get(1, 20,value)),
-      map(response => response.content),
+      switchMap(value => this.ageGroupId
+        ? this.ageGroupEndpoints.getSubjectAgeGroups(this.ageGroupId, value, 1, 20)
+          .pipe(map(response => response.content.map(s => ({ id: s.subjectAgeGroupId, name: s.subjectName }))))
+        : this.subjectEndpoints.get(1, 20, value)
+          .pipe(map(response => response.content.map(s => ({ id: s.id, name: s.name }))))
+      ),
       tap(() => this.loading.set(false))
     ).subscribe(x => {
       this.subjectItems.set(x);
     });
   }
-  
 
-  displayFn = (option?: SubjectViewModel): string =>  {
+
+  displayFn = (option?: SubjectOption): string =>  {
     return option ? option.name : '';
   }
 

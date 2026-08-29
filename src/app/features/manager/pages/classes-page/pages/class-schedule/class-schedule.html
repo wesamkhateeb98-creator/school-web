@@ -14,34 +14,38 @@
             <mat-panel-title style="font-weight: bold;"> {{ language.transform('add_class_period_title') }}</mat-panel-title>
         </mat-expansion-panel-header>
         
-            <form [formGroup]="form" (ngSubmit)="addToTable()">
-                <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
-                    <mat-grid-tile >
-                        <div style="width: 100%;">
-                            <app-day-drop-down [form]="form" [checkUrl]="false" />
-                        </div>
-                    </mat-grid-tile>
-                    <mat-grid-tile >
-                        <div style="width: 100%;">
-                            <app-period-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
-                        </div>
-                    </mat-grid-tile>
-                    <mat-grid-tile >
-                        <div style="width: 100%;">
-                            <app-subject-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
-                        </div>
-                    </mat-grid-tile>
-                    <mat-grid-tile >
-                        <div style="width: 100%;">
-                            <app-teacher-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
-                        </div>
-                    </mat-grid-tile>
+            @if (ageGroupId(); as agId) {
+                <form [formGroup]="form" (ngSubmit)="addToTable()">
+                    <mat-grid-list [cols]="responsive.isMobile()?1:2" rowHeight="70px" gutterSize="10px">
+                        <mat-grid-tile >
+                            <div style="width: 100%;">
+                                <app-day-drop-down [form]="form" [checkUrl]="false" />
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile >
+                            <div style="width: 100%;">
+                                <app-period-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile >
+                            <div style="width: 100%;">
+                                <app-subject-auto-complete [form]="form" [loading]="loading" [checkUrl]="false" [ageGroupId]="agId"/>
+                            </div>
+                        </mat-grid-tile>
+                        <mat-grid-tile >
+                            <div style="width: 100%;">
+                                <app-teacher-auto-complete [form]="form" [loading]="loading" [checkUrl]="false"/>
+                            </div>
+                        </mat-grid-tile>
 
-                </mat-grid-list>
-                <button mat-flat-button color="primary" type="submit">
-                    {{ language.transform('insert') }}
-                </button>
-            </form>
+                    </mat-grid-list>
+                    <button mat-flat-button color="primary" type="submit">
+                        {{ language.transform('insert') }}
+                    </button>
+                </form>
+            } @else {
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            }
         <br/>
         @if(addViewModel().length > 0){
             <mat-card>
@@ -113,43 +117,45 @@
     {
         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     }
-    <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8">
-        @for (column of columns(); track column.key) {
-            <ng-container [matColumnDef]="column.key" [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">
+    <div class="schedule-table-wrap">
+        <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8 schedule-table">
+            @for (column of columns(); track column.key) {
+                <ng-container [matColumnDef]="column.key" [sticky]="column.sticky" [stickyEnd]="column.stickyEnd">
 
-                
-                <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background-color: var(--mat-sys-primary); color: var(--mat-sys-primary-fixed); white-space: nowrap;">
-                    {{column.label}}
-                </th>
 
-                <td mat-cell *matCellDef="let element">
-                    @if(column.id == 0){
-                        <strong>
-                            {{dayService.getDaysById(element.day)?.name}}
-                        </strong>
-                    }@else{
-                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            {{ getSubjectName(element, column.id) }} {{ getTeacherName(element, column.id) }}
+                    <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background-color: var(--mat-sys-primary); color: var(--mat-sys-primary-fixed); white-space: nowrap;">
+                        {{column.label}}
+                    </th>
 
-                            {{element.name}}
-                            @if(enableUpdateButtonInTable(element, column.id)){
-                                <button matIconButton  (click)="update(element, column.id)" style="margin: 0 20px ">
-                                    <mat-icon class="icon-update">edit</mat-icon>
-                                </button>
+                    <td mat-cell *matCellDef="let element">
+                        @if(column.id == 0){
+                            <strong>
+                                {{dayService.getDaysById(element.day)?.name}}
+                            </strong>
+                        }@else{
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                {{ getSubjectName(element, column.id) }} {{ getTeacherName(element, column.id) }}
+
+                                {{element.name}}
+                                @if(enableUpdateButtonInTable(element, column.id)){
+                                    <button matIconButton  (click)="update(element, column.id)" style="margin: 0 20px ">
+                                        <mat-icon class="icon-update">edit</mat-icon>
+                                    </button>
+                                }
+                            </div>
+
                             }
-                        </div>
-                            
-                        }
-                    
-                </td>
 
-            </ng-container>
-        }
+                    </td>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+                </ng-container>
+            }
 
-    </table>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+
+        </table>
+    </div>
 </mat-card>
 
 
