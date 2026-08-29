@@ -63,9 +63,12 @@ export class AddStudyPlanDialog {
 
     this.loading.set(true);
 
+    // The "semesterId" control actually holds academicYearSemesterId (the per-year assignment)
+    // — this endpoint needs the semester template's own id instead, which only lives on the
+    // full "semester" object the picker also stores.
     const body = {
       key: crypto.randomUUID(),
-      semesterId: this.form.value.semesterId,
+      semesterId: this.form.value.semester?.semesterId,
       weeks: [{
         weekNumber: +this.form.value.weekNumber,
         title: this.form.value.titles as string[]

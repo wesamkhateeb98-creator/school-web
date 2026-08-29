@@ -87,7 +87,11 @@ export class AgeGroupEndpoints {
   }
 
   addStudyPlan(ageGroupId:number, ageGroupSubjectId:number, body:{key:string, semesterId:number, weeks:StudyPlanWeekRequest[]}): Observable<MutateResponse>{
-    return this.http.post<MutateResponse>(`age-group/${ageGroupId}/age-group-subject/${ageGroupSubjectId}/study-plan`, body);
+    return this.http.post<MutateResponse>(`age-group/${ageGroupId}/age-group-subject/${ageGroupSubjectId}/study-plan`, {
+      key: body.key,
+      semesterId: body.semesterId,
+      weeks: body.weeks,
+    });
   }
 
   updateStudyPlan(ageGroupId:number, ageGroupSubjectId:number, studyPlanId:number, title:string): Observable<MutateResponse>{

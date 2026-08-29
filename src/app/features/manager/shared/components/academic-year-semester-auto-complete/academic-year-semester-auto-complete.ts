@@ -92,8 +92,16 @@ export class AcademicYearSemesterAutoComplete implements OnInit {
         }else{
           item = x.find(x=>x.isActive);
         }
-        this.form.patchValue({  semesterId: item?.academicYearSemesterId ?? null });
-        this.form.patchValue({ semester: item ?? null ,semesterFirstTime:true},{emitEvent:false});
+        // "semester" must land before "semesterId" in this same patch — FormGroup.patchValue
+        // fires each control's own valueChanges as it sets that control, in object-key order.
+        // Consumers that listen for semesterId changing and then read the full semester object
+        // (its own template/date fields, not just the id) would otherwise see it still null,
+        // since the previous two-call version emitted semesterId's change before semester was set.
+        this.form.patchValue({
+          semester: item ?? null,
+          semesterId: item?.academicYearSemesterId ?? null,
+          semesterFirstTime: true,
+        });
       }
     });
   }

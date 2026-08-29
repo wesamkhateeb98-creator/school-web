@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -9,12 +9,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { distinctUntilChanged, filter } from 'rxjs';
+import { distinctUntilChanged, filter, map } from 'rxjs';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../core/consts';
 import { Language } from '../../../../core/services/language';
 import { DeleteDialog } from '../../../shared/components/dialogs/delete-dialog/delete-dialog';
 import { AgeGroupEndpoints } from '../../shared/endpoints/age-group-endpoint';
 import { StudyPlanTitleModel, StudyPlanWeekModel } from '../../shared/endpoints/models/subject/study-plan-week-model';
+import { GetSemesterByAcademicYearModel } from '../../shared/endpoints/models/semester/getSemesterByAcademicYearModel';
 import { AcademicYearSemesterAutoComplete } from '../../shared/components/academic-year-semester-auto-complete/academic-year-semester-auto-complete';
 import { AddStudyPlanDialog } from './dialog/add-study-plan-dialog/add-study-plan-dialog';
 import { EditStudyPlanDialog } from './dialog/edit-study-plan-dialog/edit-study-plan-dialog';
@@ -34,7 +35,7 @@ import { EditStudyPlanDialog } from './dialog/edit-study-plan-dialog/edit-study-
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './study-plan.html',
 })
-export class StudyPlan implements AfterViewInit {
+export class StudyPlan {
   language     = inject(Language);
   dialog       = inject(MatDialog);
   matSnackBar  = inject(MatSnackBar);
@@ -53,20 +54,30 @@ export class StudyPlan implements AfterViewInit {
     this.ageGroupId        = +(this.route.snapshot.paramMap.get('ageGroupId') ?? '0');
     this.ageGroupSubjectId = +(this.route.snapshot.paramMap.get('subject')    ?? '0');
     this.filterForm = this.fb.group({});
+
+    // Subscribing directly to a control's own valueChanges only works once that control
+    // exists — but the picker adds "semester"/"semesterId" to this group asynchronously
+    // (ngOnInit of a child component, after an HTTP round trip), so a hook like
+    // ngAfterViewInit that fires once at startup can end up wiring up nothing yet, or racing
+    // the control's creation. The group's own valueChanges exists from the very first line
+    // above and re-fires on every addControl/patchValue inside it, so it always catches the
+    // eventual semester selection regardless of when the child resolves it.
+    this.filterForm.valueChanges.pipe(
+      map(() => this.filterForm.value.semester as GetSemesterByAcademicYearModel | null),
+      filter((semester): semester is GetSemesterByAcademicYearModel => !!semester),
+      distinctUntilChanged((a, b) => a.semesterId === b.semesterId),
+    ).subscribe(() => this.loadStudyPlan());
   }
 
-  ngAfterViewInit() {
-    this.filterForm.get('semesterId')!.valueChanges.pipe(
-      distinctUntilChanged(),
-      filter((id): id is number => !!id && +id > 0),
-    ).subscribe(id => this.loadStudyPlan(id));
-  }
-
-  loadStudyPlan(semesterId?: number) {
+  /** The "semesterId" control actually holds academicYearSemesterId (the per-year assignment)
+   * — the study-plan endpoints need the semester template's own id instead, which only lives
+   * on the full "semester" object the picker also stores. */
+  loadStudyPlan() {
+    const semester = this.filterForm.value.semester as GetSemesterByAcademicYearModel | null;
+    if (!semester) return;
     this.loading.set(true);
-    const id = semesterId ?? (this.filterForm.value.semesterId as number);
 
-    this.ageGroupEndpoints.getStudyPlan(this.ageGroupId, this.ageGroupSubjectId, id)
+    this.ageGroupEndpoints.getStudyPlan(this.ageGroupId, this.ageGroupSubjectId, semester.semesterId)
       .subscribe({
         next: weeks => {
           this.weeks.set(weeks);
@@ -86,7 +97,7 @@ export class StudyPlan implements AfterViewInit {
     });
 
     ref.afterClosed().subscribe(result => {
-      if (result?.reload) this.loadStudyPlan(this.filterForm.value.semesterId);
+      if (result?.reload) this.loadStudyPlan();
     });
   }
 
