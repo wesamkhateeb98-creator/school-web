@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://your-production-api.com/api/v1.0',
+  apiBaseUrl: 'http://school-2026.runasp.net/api/v1.0',
 };
