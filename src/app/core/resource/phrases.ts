@@ -440,6 +440,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         // ── أ-٥ · تفاصيل الطالب ──
         student_result_details_title: 'تفاصيل الطالب',
         failed_despite_average_warning: 'راسب رغم أن المحصلة فوق الحد الأدنى — بسبب الرسوب في أحد الفصول',
+        results_not_published_message: 'لم تُنشر نتائج الطالب بعد.',
+        year_total_not_generated_message: 'لسا ما انعمل توليد نهاية السنة — المحصلة السنوية غير متوفرة بعد.',
 
         // ── أ-٦ · الحسم ──
         decision_title: 'الحسم',
@@ -957,6 +959,8 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         // ── أ-٥ · Student details ──
         student_result_details_title: 'Student Details',
         failed_despite_average_warning: 'Failed despite the total being above the minimum — due to failing in one of the semesters',
+        results_not_published_message: 'This student\'s results have not been published yet.',
+        year_total_not_generated_message: 'The year-end generate hasn\'t run yet — the yearly total isn\'t available.',
 
         // ── أ-٦ · Decision ──
         decision_title: 'Decision',
@@ -1150,6 +1154,8 @@ export type ResultsPromotionPhrases =
   'status_failed_admin_title'|
   'student_result_details_title'|
   'failed_despite_average_warning'|
+  'results_not_published_message'|
+  'year_total_not_generated_message'|
   'decision_title'|
   'passed_with_help_action_title'|
   'failed_action_title'|

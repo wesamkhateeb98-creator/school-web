@@ -33,4 +33,8 @@ export interface StudentResultDetailResponse {
   fullName: string;
   semesters: StudentResultSemesterDetail[];
   subjects: StudentResultFinalSubject[];
+  /** null until a year-result row exists for this student (i.e. before the year-end generate has run). */
+  finalTotal: number | null;
+  maxTotal: number | null;
+  minTotal: number | null;
 }

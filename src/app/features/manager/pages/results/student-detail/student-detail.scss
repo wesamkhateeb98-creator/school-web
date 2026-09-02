@@ -55,6 +55,33 @@
     font-size: 1rem;
     font-weight: 700;
   }
+
+  &__total {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  &__total-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--mat-sys-primary);
+  }
+
+  &__total-hint {
+    font-size: 0.8rem;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &__pending {
+    margin: 0 0 14px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--mat-sys-surface-container-high);
+    color: var(--mat-sys-on-surface-variant);
+    font-size: 0.85rem;
+  }
 }
 
 .final-subjects-table {
