@@ -63,7 +63,7 @@ export class AcademicYearEndpoints {
   addSemester(key:string,academicYearId:number, semesterId:number, startDate:Date , endDate:Date):Observable<MutateResponse>{
     return this.http.post<MutateResponse>(`academic-year/${academicYearId}/semester/assign`,{
       key:key,
-      semsterId:semesterId,
+      semesterId:semesterId,
       startDate: ToDateOnly(startDate),
       endDate: ToDateOnly(endDate)
     })
@@ -80,7 +80,7 @@ export class AcademicYearEndpoints {
   updateSemester(academicYearId:number, semesterInAcademicYearId:number, semesterId:number, startDate:Date , endDate:Date):Observable<MutateResponse>{
     
     return this.http.put<MutateResponse>(`academic-year/${academicYearId}/semester-in-academic-year/${semesterInAcademicYearId}`,{
-      semsterId:semesterId,
+      semesterId:semesterId,
       startDate: ToDateOnly(startDate),
       endDate: ToDateOnly(endDate)
     })
