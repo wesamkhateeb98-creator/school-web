@@ -455,7 +455,6 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
 
         // ── أ-٨ · معالج الترفيع ──
         promotion_wizard_title: 'معالج الترفيع',
-        select_target_year_title: 'اختيار السنة الهدف',
         blockers_title: 'الموانع',
         promotion_preview_title: 'معاينة قابلة للتعديل',
         execute_title: 'التنفيذ',
@@ -468,7 +467,6 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         action_graduated_title: 'تخرّج',
         current_age_group_title: 'المرحلة الحالية',
         target_age_group_title: 'المرحلة الهدف',
-        warnings_title: 'تحذيرات',
 
         // ── أ-٩ · سجل النقل ──
         transfer_log_title: 'سجل النقل',
@@ -506,12 +504,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         students_tab_hint: 'تصفّح نتائج طلاب مرحلة معيّنة، وافتح تفاصيل أي طالب لمعرفة سبب حالته.',
         decision_tab_hint: 'كل طالب هون رسب بمادة بفصل معيّن رغم أن مجموعه العام قد يكون فوق الحد — راجع علاماته واحسم: نجح بالمساعدة، أو راسب. متاح فقط بعد توليد نتائج السنة كاملة.',
         publish_tab_hint: 'انشر نتائج فصل مصدَّق ومولَّد — تصير عندها ظاهرة للطالب وللقراءة فقط.',
-        promotion_tab_hint: 'انقل الطلاب الناجحين للسنة الدراسية التالية، بعد ما تُحسم كل الحالات المعلّقة وتُنشر كل فصول السنة.',
+        promotion_tab_hint: 'ارفع الفئة العمرية للطلاب الناجحين بسجلاتهم، بعد ما تُحسم كل الحالات المعلّقة وتُنشر كل فصول السنة. إسناد الطلاب لصفوف السنة الجديدة يصير بعدها كخطوة منفصلة من شاشة الصفوف.',
         select_age_group_first_message: 'اختر مرحلة عمرية أولاً لعرض البيانات.',
         no_matching_students_message: 'لا يوجد طلاب مطابقون لهذا الفلتر.',
-        select_target_year_hint: 'اختر السنة الدراسية التي سينتقل إليها الطلاب الناجحون — يجب أن تختلف عن السنة الحالية.',
-        no_other_academic_year_message: 'لا توجد سنة دراسية أخرى بعد. أنشئ سنة جديدة أولاً لتتمكن من الترفيع إليها.',
-        create_academic_year_title: 'إنشاء سنة دراسية جديدة',
+        select_promotion_scope_hint: 'اختر مرحلة عمرية لترفيعها لحالها، أو اتركه فاضي لترفيع كل المراحل دفعة وحدة.',
         blockers_hint: 'هذه الأمور يجب أن تكتمل قبل تنفيذ الترفيع — اضغط الزر جانب كل مانع للانتقال وحله.',
         no_blockers_message: 'لا يوجد أي مانع — الترفيع جاهز للتنفيذ.',
         promotion_preview_hint: 'هكذا سينتقل كل طالب. يمكنك تغيير مصير أي طالب يدوياً من القائمة قبل التنفيذ.',
@@ -976,7 +972,6 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
 
         // ── أ-٨ · Promotion wizard ──
         promotion_wizard_title: 'Promotion Wizard',
-        select_target_year_title: 'Select Target Year',
         blockers_title: 'Blockers',
         promotion_preview_title: 'Editable Preview',
         execute_title: 'Execute',
@@ -989,7 +984,6 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         action_graduated_title: 'Graduated',
         current_age_group_title: 'Current Grade',
         target_age_group_title: 'Target Grade',
-        warnings_title: 'Warnings',
 
         // ── أ-٩ · Transfer log ──
         transfer_log_title: 'Transfer Log',
@@ -1027,12 +1021,10 @@ export const Phrases: Record<'ar' | 'en', Record<PhrasesType, string>> = {
         students_tab_hint: 'Browse a grade\'s student results, and open any student\'s details to see the reason for their status.',
         decision_tab_hint: 'Every student here failed a subject in a specific semester even if their overall total may be above the minimum — review their marks and decide: passed with help, or failed. Only available after the full-year results are generated.',
         publish_tab_hint: 'Publish a confirmed, generated semester — it then becomes visible to the student and read-only.',
-        promotion_tab_hint: 'Move passing students to the next academic year, after every pending case is decided and every semester of the year is published.',
+        promotion_tab_hint: 'Advance passing students\' grade in their own record, after every pending case is decided and every semester of the year is published. Assigning students to next year\'s classes happens afterward as a separate step from the Classes screen.',
         select_age_group_first_message: 'Select an age group first to view the data.',
         no_matching_students_message: 'No students match this filter.',
-        select_target_year_hint: 'Choose the academic year passing students will move into — it must differ from the current year.',
-        no_other_academic_year_message: 'No other academic year exists yet. Create a new one first so you can promote into it.',
-        create_academic_year_title: 'Create New Academic Year',
+        select_promotion_scope_hint: 'Pick a single grade to promote, or leave it empty to promote every grade at once.',
         blockers_hint: 'These must be resolved before promotion can run — press the button next to each blocker to go resolve it.',
         no_blockers_message: 'No blockers — promotion is ready to run.',
         promotion_preview_hint: 'This is how each student will move. You can change any student\'s fate manually from the list before executing.',
@@ -1105,9 +1097,7 @@ export type MarkEntryTaskPhrases =
   'promotion_tab_hint'|
   'select_age_group_first_message'|
   'no_matching_students_message'|
-  'select_target_year_hint'|
-  'no_other_academic_year_message'|
-  'create_academic_year_title'|
+  'select_promotion_scope_hint'|
   'blockers_hint'|
   'no_blockers_message'|
   'promotion_preview_hint'|
@@ -1169,7 +1159,6 @@ export type ResultsPromotionPhrases =
   'publish_readonly_warning'|
   'sheet_count_title'|
   'promotion_wizard_title'|
-  'select_target_year_title'|
   'blockers_title'|
   'promotion_preview_title'|
   'execute_title'|
@@ -1182,7 +1171,6 @@ export type ResultsPromotionPhrases =
   'action_graduated_title'|
   'current_age_group_title'|
   'target_age_group_title'|
-  'warnings_title'|
   'transfer_log_title';
 
 export type StudentMarkSheetPhrases =

@@ -2,45 +2,26 @@
 
 <mat-stepper orientation="horizontal" class="promotion-stepper">
 
-    <!-- Step 1: select target year -->
-    <mat-step [label]="language.transform('select_target_year_title')">
+    <!-- Step 1: pick a grade to promote (optional — all grades if left empty) -->
+    <mat-step [label]="language.transform('age_group_title')">
         <mat-card class="step-card">
-            <p class="step-card__hint">{{ language.transform('select_target_year_hint') }}</p>
+            <p class="step-card__hint">{{ language.transform('select_promotion_scope_hint') }}</p>
 
-            @if (academicYears().length === 0) {
-                <div class="empty-state">
-                    <mat-icon>event_busy</mat-icon>
-                    <p>{{ language.transform('no_other_academic_year_message') }}</p>
-                    <button matButton="filled" type="button" (click)="goCreateAcademicYear()">
-                        {{ language.transform('create_academic_year_title') }}
-                    </button>
-                </div>
-            } @else {
-                <form [formGroup]="form" class="grid grid-two-column">
-                    <mat-form-field>
-                        <mat-label>{{ language.transform('select_target_year_title') }}</mat-label>
-                        <mat-select formControlName="targetAcademicYearId">
-                            @for (y of academicYears(); track y.id) {
-                                <mat-option [value]="y.id">{{ y.year - 1 }}/{{ y.year }}</mat-option>
-                            }
-                        </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field>
-                        <mat-label>{{ language.transform('age_group_title') }}</mat-label>
-                        <mat-select formControlName="ageGroupId">
-                            <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
-                            @for (g of ageGroupItems(); track g.id) {
-                                <mat-option [value]="g.id">{{ g.name }}</mat-option>
-                            }
-                        </mat-select>
-                    </mat-form-field>
-                </form>
-            }
+            <form [formGroup]="form" class="grid grid-two-column">
+                <mat-form-field>
+                    <mat-label>{{ language.transform('age_group_title') }}</mat-label>
+                    <mat-select formControlName="ageGroupId">
+                        <mat-option [value]="null">{{ language.transform('all_title') }}</mat-option>
+                        @for (g of ageGroupItems(); track g.id) {
+                            <mat-option [value]="g.id">{{ g.name }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </form>
         </mat-card>
 
         <div class="wizard-actions">
-            <button matButton="filled" matStepperNext [disabled]="!form.value.targetAcademicYearId" (click)="loadPreview()">
+            <button matButton="filled" matStepperNext (click)="loadPreview()">
                 {{ language.transform('next') }}
             </button>
         </div>
@@ -232,20 +213,6 @@
                         <span class="promotion-summary__label">{{ language.transform('graduated_count_title') }}</span>
                     </div>
                 </div>
-
-                @if (r.warnings.length > 0) {
-                    <h4>{{ language.transform('warnings_title') }}</h4>
-                    <ul class="blockers-list">
-                        @for (w of r.warnings; track w) {
-                            <li>
-                                <div class="blockers-list__text">
-                                    <mat-icon>warning</mat-icon>
-                                    <span>{{ w }}</span>
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                }
             }
         </mat-card>
     </mat-step>

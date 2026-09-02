@@ -7,7 +7,6 @@ export interface PromotionOverride {
 
 export interface PromotionExecuteRequest {
   academicYearId: number;
-  targetAcademicYearId: number;
   ageGroupId: number | null;
   overrides: PromotionOverride[];
 }

@@ -1,6 +1,5 @@
 import { Component, computed, EventEmitter, inject, Input, OnInit, Output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,8 +11,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { Language } from '../../../../../core/services/language';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../core/consts';
 import { SelectedAcademicYearService } from '../../../../../core/services/selected-academic-year.service';
-import { AcademicYearEndpoints } from '../../../shared/endpoints/academic-year-endpoints';
-import { AcademicYearModel } from '../../academic-year/model/academic-year-model';
 import { AgeGroupEndpoints } from '../../../shared/endpoints/age-group-endpoint';
 import { AgeGroupModel } from '../../../shared/endpoints/models/age-group/age-group-model';
 import { PromotionEndpoints } from '../../../shared/endpoints/promotion-endpoint';
@@ -39,9 +36,7 @@ import { TransferAction } from '../../../../../core/enums/transfer-action';
 export class PromotionWizardPage implements OnInit {
   language = inject(Language);
   matSnackBar = inject(MatSnackBar);
-  router = inject(Router);
   fb = inject(FormBuilder);
-  academicYearEndpoints = inject(AcademicYearEndpoints);
   ageGroupEndpoints = inject(AgeGroupEndpoints);
   promotionEndpoints = inject(PromotionEndpoints);
   selectedAcademicYearSvc = inject(SelectedAcademicYearService);
@@ -55,7 +50,6 @@ export class PromotionWizardPage implements OnInit {
 
   TransferAction = TransferAction;
 
-  academicYears = signal<AcademicYearModel[]>([]);
   ageGroupItems = signal<AgeGroupModel[]>([]);
   preview = signal<PromotionPreviewResponse | null>(null);
   loading = signal(false);
@@ -72,12 +66,7 @@ export class PromotionWizardPage implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      targetAcademicYearId: [null],
       ageGroupId: [this.ageGroupId],
-    });
-
-    this.academicYearEndpoints.get(1, 100).subscribe({
-      next: page => this.academicYears.set(page.content.filter(y => y.id !== this.sourceAcademicYearId)),
     });
 
     this.ageGroupEndpoints.get('', 1, 100).subscribe({
@@ -164,7 +153,7 @@ export class PromotionWizardPage implements OnInit {
 
   execute(): void {
     const p = this.preview();
-    if (!p || !this.sourceAcademicYearId || !this.form.value.targetAcademicYearId) return;
+    if (!p || !this.sourceAcademicYearId) return;
     this.executing.set(true);
     const overrides = Array.from(this.overrides().entries()).map(([studentId, o]) => ({
       studentId,
@@ -174,7 +163,6 @@ export class PromotionWizardPage implements OnInit {
     }));
     this.promotionEndpoints.execute({
       academicYearId: this.sourceAcademicYearId,
-      targetAcademicYearId: this.form.value.targetAcademicYearId,
       ageGroupId: this.form.value.ageGroupId ?? null,
       overrides,
     }).subscribe({
@@ -197,9 +185,5 @@ export class PromotionWizardPage implements OnInit {
 
   goToPublish(): void {
     this.navigateToPublish.emit();
-  }
-
-  goCreateAcademicYear(): void {
-    this.router.navigate(['/manager/academic-year']);
   }
 }
