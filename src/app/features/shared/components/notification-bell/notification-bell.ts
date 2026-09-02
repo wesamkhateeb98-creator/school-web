@@ -156,6 +156,9 @@ export class NotificationBellComponent implements OnInit {
       case 1: return 'family_restroom'; // ParentVisit
       case 2: return 'check_circle';  // StudentAttendance
       case 3: return 'star';          // Points
+      case 4: return 'assignment';    // Assignment
+      case 6: return 'grade';         // Results published
+      case 8: return 'move_up';       // Promoted / Repeated / Graduated
       default: return 'notifications';
     }
   }
