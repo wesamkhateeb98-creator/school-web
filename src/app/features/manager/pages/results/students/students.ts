@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output, signal, SimpleChanges } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -17,6 +17,7 @@ import { debounceTime } from 'rxjs';
 import { Language } from '../../../../../core/services/language';
 import { errorMatSnackbarConfig } from '../../../../../core/consts';
 import { SelectedAcademicYearService } from '../../../../../core/services/selected-academic-year.service';
+import { AgeGroupEndpoints } from '../../../shared/endpoints/age-group-endpoint';
 import { AgeGroupModel } from '../../../shared/endpoints/models/age-group/age-group-model';
 import { ClassEndpoints } from '../../../shared/endpoints/class-endpoint';
 import { ClassModel } from '../../../shared/endpoints/models/class/class-model';
@@ -44,20 +45,19 @@ import { YearFinalStatus } from '../../../../../core/enums/year-final-status';
   templateUrl: './students.html',
   styleUrl: './students.scss',
 })
-export class ResultsStudentsPage implements OnInit, OnChanges {
+export class ResultsStudentsPage implements OnInit {
   language = inject(Language);
   matSnackBar = inject(MatSnackBar);
   router = inject(Router);
   route = inject(ActivatedRoute);
   fb = inject(FormBuilder);
+  ageGroupEndpoints = inject(AgeGroupEndpoints);
   classEndpoints = inject(ClassEndpoints);
   resultsEndpoints = inject(ResultsEndpoints);
   selectedAcademicYearSvc = inject(SelectedAcademicYearService);
 
-  /** Shared with the results center — changing it here updates every other tab too. */
-  @Input() ageGroupId: number | null = null;
-  @Input() ageGroupItems: AgeGroupModel[] = [];
-  @Output() ageGroupIdChange = new EventEmitter<number | null>();
+  ageGroupId = signal<number | null>(null);
+  ageGroupItems = signal<AgeGroupModel[]>([]);
 
   YearComputedStatus = YearComputedStatus;
   YearFinalStatus = YearFinalStatus;
@@ -99,6 +99,12 @@ export class ResultsStudentsPage implements OnInit, OnChanges {
 
   ngOnInit(): void {
     const snap = this.route.snapshot.queryParams;
+
+    this.ageGroupEndpoints.get('', 1, 100).subscribe({
+      next: page => this.ageGroupItems.set(page.content),
+    });
+
+    if (snap['ageGroupId']) this.ageGroupId.set(+snap['ageGroupId']);
     if (snap['pageNumber']) this.pageNumber.set(+snap['pageNumber']);
     if (snap['pageSize']) this.pageSize.set(+snap['pageSize']);
 
@@ -108,25 +114,20 @@ export class ResultsStudentsPage implements OnInit, OnChanges {
       name: [snap['name'] ?? null],
     });
 
-    if (this.ageGroupId) {
-      this.loadClasses(this.ageGroupId);
+    if (this.ageGroupId()) {
+      this.loadClasses(this.ageGroupId()!);
       this.loadRecords();
     }
 
     this.filterForm.get('name')!.valueChanges.pipe(debounceTime(400)).subscribe(() => this.onFilterChange());
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['ageGroupId'] && !changes['ageGroupId'].firstChange && this.filterForm) {
-      this.filterForm.patchValue({ classId: null }, { emitEvent: false });
-      this.classItems.set([]);
-      if (this.ageGroupId) this.loadClasses(this.ageGroupId);
-      this.onFilterChange();
-    }
-  }
-
   onAgeGroupSelect(value: number | null): void {
-    this.ageGroupIdChange.emit(value);
+    this.ageGroupId.set(value);
+    this.filterForm.patchValue({ classId: null }, { emitEvent: false });
+    this.classItems.set([]);
+    if (value) this.loadClasses(value);
+    this.onFilterChange();
   }
 
   togglePendingOnly(): void {
@@ -149,7 +150,7 @@ export class ResultsStudentsPage implements OnInit, OnChanges {
 
   openStudent(item: StudentResultListItem): void {
     this.router.navigate(['/manager/results/students', item.studentId], {
-      queryParams: { ageGroupId: this.ageGroupId, returnTab: 'students' },
+      queryParams: { ageGroupId: this.ageGroupId(), returnTab: 'students' },
     });
   }
 
@@ -165,15 +166,16 @@ export class ResultsStudentsPage implements OnInit, OnChanges {
   }
 
   private loadRecords(): void {
+    const ageGroupId = this.ageGroupId();
     const { classId, pendingOnly, name } = this.filterForm.value;
-    if (!this.ageGroupId || !this.academicYearId) {
+    if (!ageGroupId || !this.academicYearId) {
       this.response.set(null);
       return;
     }
     this.loading.set(true);
     this.resultsEndpoints.getStudents(
       this.academicYearId,
-      this.ageGroupId,
+      ageGroupId,
       this.pageNumber(),
       this.pageSize(),
       classId ?? null,
@@ -198,6 +200,7 @@ export class ResultsStudentsPage implements OnInit, OnChanges {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
+        ageGroupId: this.ageGroupId(),
         classId: classId ?? null,
         pendingOnly: pendingOnly ? 'true' : null,
         name: name || null,

@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { Language } from '../../../../../core/services/language';
 import { errorMatSnackbarConfig, successMatSnackbarConfig } from '../../../../../core/consts';
 import { SelectedAcademicYearService } from '../../../../../core/services/selected-academic-year.service';
@@ -36,6 +37,7 @@ const YEAR_SCOPE = 'year';
 export class GenerateResultsPage implements OnInit, OnChanges {
   language = inject(Language);
   matSnackBar = inject(MatSnackBar);
+  router = inject(Router);
   fb = inject(FormBuilder);
   semesterEndpoints = inject(SemesterEndpoints);
   resultsEndpoints = inject(ResultsEndpoints);
@@ -45,9 +47,6 @@ export class GenerateResultsPage implements OnInit, OnChanges {
   @Input() ageGroupId: number | null = null;
   @Input() ageGroupItems: AgeGroupModel[] = [];
   @Output() ageGroupIdChange = new EventEmitter<number | null>();
-
-  /** The results center hosts Students as a sibling tab — let it switch tabs so the admin can see where the marks landed. */
-  @Output() navigateToStudents = new EventEmitter<void>();
 
   /** Generating results moves the year-scope pipeline stage — tell the results center to refresh its shared bar. */
   @Output() pipelineRefresh = new EventEmitter<void>();
@@ -144,7 +143,9 @@ export class GenerateResultsPage implements OnInit, OnChanges {
   }
 
   goToStudents(): void {
-    this.navigateToStudents.emit();
+    this.router.navigate(['/manager/results/students'], {
+      queryParams: { ageGroupId: this.ageGroupId },
+    });
   }
 
   onAgeGroupSelect(value: number | null): void {

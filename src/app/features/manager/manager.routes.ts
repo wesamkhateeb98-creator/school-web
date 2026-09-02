@@ -32,6 +32,7 @@ import { StudentAssignmentsPage } from "./pages/student-assignments-page/student
 import { SubjectMarkDistributionPage } from "./pages/subject-mark-distribution/subject-mark-distribution";
 import { StudentProfilePage } from "./pages/student-page/student-profile/student-profile";
 import { ResultsCenterPage } from "./pages/results/results-center/results-center";
+import { ResultsStudentsPage } from "./pages/results/students/students";
 import { StudentResultDetailPage } from "./pages/results/student-detail/student-detail";
 import { TransferLogPage } from "./pages/results/transfer-log/transfer-log";
 import { MarkEntryListPage } from "./pages/mark-entry/mark-entry-list/mark-entry-list";
@@ -105,6 +106,7 @@ export const DASHBOARD_ROUTES: Routes = [
         path: 'results',
         children: [
           { path: '',                      component: ResultsCenterPage,       title: messageTitle('results_promotion_group_title') },
+          { path: 'students',              component: ResultsStudentsPage,     title: messageTitle('results_students_title') },
           { path: 'students/:id',          component: StudentResultDetailPage, title: messageTitle('student_result_details_title') },
           { path: 'students/:id/transfer-log', component: TransferLogPage,    title: messageTitle('transfer_log_title') },
         ],

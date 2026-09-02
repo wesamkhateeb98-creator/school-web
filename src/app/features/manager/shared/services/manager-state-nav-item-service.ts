@@ -89,10 +89,23 @@ export class ManagerNavItemStateService {
       ]
     },
     {
-      url: '/manager/results',
-      name: 'results_promotion_group_title',
       icon: 'fact_check',
-      isExpended: false
+      name: 'results_promotion_group_title',
+      isExpended: false,
+      subItem: [
+        {
+          url: '/manager/results',
+          name: 'results_center_title',
+          icon: 'fact_check',
+          isExpended: false
+        },
+        {
+          url: '/manager/results/students',
+          name: 'results_students_title',
+          icon: 'groups_3',
+          isExpended: false
+        },
+      ]
     },
 
   ];

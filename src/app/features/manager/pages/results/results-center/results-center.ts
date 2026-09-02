@@ -15,22 +15,19 @@ import { PipelineResponse } from '../../../shared/endpoints/models/results/pipel
 import { PipelineStageBarComponent } from '../components/pipeline-stage-bar/pipeline-stage-bar';
 import { ConfirmReopenPage } from '../confirm-reopen/confirm-reopen';
 import { GenerateResultsPage } from '../generate/generate';
-import { ResultsStudentsPage } from '../students/students';
 import { DecisionPage } from '../decision/decision';
 import { PublishResultsPage } from '../publish/publish';
 import { PromotionWizardPage } from '../promotion/promotion';
 
 export const TAB_CONFIRM = 0;
 export const TAB_GENERATE = 1;
-export const TAB_STUDENTS = 2;
-export const TAB_DECISION = 3;
-export const TAB_PUBLISH = 4;
-export const TAB_PROMOTION = 5;
+export const TAB_DECISION = 2;
+export const TAB_PUBLISH = 3;
+export const TAB_PROMOTION = 4;
 
 const TAB_BY_NAME: Record<string, number> = {
   'confirm-reopen': TAB_CONFIRM,
   generate: TAB_GENERATE,
-  students: TAB_STUDENTS,
   decision: TAB_DECISION,
   publish: TAB_PUBLISH,
   promotion: TAB_PROMOTION,
@@ -46,7 +43,6 @@ const TAB_BY_NAME: Record<string, number> = {
     PipelineStageBarComponent,
     ConfirmReopenPage,
     GenerateResultsPage,
-    ResultsStudentsPage,
     DecisionPage,
     PublishResultsPage,
     PromotionWizardPage,

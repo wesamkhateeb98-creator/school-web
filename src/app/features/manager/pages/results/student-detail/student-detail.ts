@@ -55,8 +55,14 @@ export class StudentResultDetailPage implements OnInit {
 
   goBack(): void {
     const { ageGroupId, returnTab } = this.route.snapshot.queryParams;
+    if (!returnTab || returnTab === 'students') {
+      this.router.navigate(['/manager/results/students'], {
+        queryParams: { ageGroupId: ageGroupId ?? null },
+      });
+      return;
+    }
     this.router.navigate(['/manager/results'], {
-      queryParams: { ageGroupId: ageGroupId ?? null, tab: returnTab ?? 'students' },
+      queryParams: { ageGroupId: ageGroupId ?? null, tab: returnTab },
     });
   }
 

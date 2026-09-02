@@ -17,13 +17,7 @@
 
     <mat-tab [label]="language.transform('generate_results_title')">
         <div class="tab-panel">
-            <app-generate-results [ageGroupId]="ageGroupId()" [ageGroupItems]="ageGroupItems()" (ageGroupIdChange)="onAgeGroupChange($event)" (navigateToStudents)="goToTab(2)" (pipelineRefresh)="loadPipeline()" />
-        </div>
-    </mat-tab>
-
-    <mat-tab [label]="language.transform('results_students_title')">
-        <div class="tab-panel">
-            <app-results-students [ageGroupId]="ageGroupId()" [ageGroupItems]="ageGroupItems()" (ageGroupIdChange)="onAgeGroupChange($event)" />
+            <app-generate-results [ageGroupId]="ageGroupId()" [ageGroupItems]="ageGroupItems()" (ageGroupIdChange)="onAgeGroupChange($event)" (pipelineRefresh)="loadPipeline()" />
         </div>
     </mat-tab>
 
@@ -41,7 +35,7 @@
 
     <mat-tab [label]="language.transform('promotion_wizard_title')">
         <div class="tab-panel">
-            <app-promotion-wizard [ageGroupId]="ageGroupId()" (navigateToDecision)="goToTab(3)" (navigateToPublish)="goToTab(4)" />
+            <app-promotion-wizard [ageGroupId]="ageGroupId()" (navigateToDecision)="goToTab(2)" (navigateToPublish)="goToTab(3)" />
         </div>
     </mat-tab>
 
